@@ -12,20 +12,28 @@ import {
   Clock,
   Sparkles,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Network,
+  LayoutGrid
 } from 'lucide-react';
+import { OrgChartView } from './OrgChartView';
 
 interface AgentDirectoryViewProps {
   agents: Agent[];
   onSelectAgent: (agentId: string) => void;
   onOpenProfile: (agent: Agent) => void;
+  onUpdateReportingLine?: (agentId: string, newReportsToId: string | undefined) => void;
+  initialMode?: 'grid' | 'org_chart';
 }
 
 export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
   agents,
   onSelectAgent,
-  onOpenProfile
+  onOpenProfile,
+  onUpdateReportingLine,
+  initialMode = 'grid'
 }) => {
+  const [viewMode, setViewMode] = useState<'grid' | 'org_chart'>(initialMode);
   const [search, setSearch] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
 
@@ -35,11 +43,53 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
     const matchSearch =
       a.displayName.toLowerCase().includes(search.toLowerCase()) ||
       a.jobTitle.toLowerCase().includes(search.toLowerCase()) ||
-      a.skills.some((s) => s.toLowerCase().includes(search.toLowerCase()));
+      (a.skills && a.skills.some((s) => s.toLowerCase().includes(search.toLowerCase()))) ||
+      (a.expertise && a.expertise.some((e) => e.toLowerCase().includes(search.toLowerCase())));
     if (!matchSearch) return false;
     if (departmentFilter !== 'all' && a.department !== departmentFilter) return false;
     return true;
   });
+
+  if (viewMode === 'org_chart') {
+    return (
+      <div className="flex-1 flex flex-col h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
+        {/* Switcher Bar in Org Chart mode */}
+        <div className="px-6 py-3 border-b border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#888]">Directory View:</span>
+            <div className="flex items-center gap-1 bg-[#0F0F0F] p-0.5 rounded border border-[#222]">
+              <button
+                id="btn-switch-to-grid"
+                onClick={() => setViewMode('grid')}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs text-[#888] hover:text-[#FFF] cursor-pointer transition"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Grid</span>
+              </button>
+              <button
+                id="btn-switch-to-org"
+                onClick={() => setViewMode('org_chart')}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs bg-[#1A1A1A] text-[#C5A358] border border-[#C5A358]/30 font-medium cursor-pointer shadow-sm"
+              >
+                <Network className="w-3.5 h-3.5" />
+                <span>Org Hierarchy</span>
+              </button>
+            </div>
+          </div>
+          <span className="text-xs px-2.5 py-1 rounded border border-[#C5A358]/30 bg-[#C5A358]/5 font-mono text-[#C5A358]">
+            {agents.length} AI Agents
+          </span>
+        </div>
+
+        <OrgChartView
+          agents={agents}
+          onSelectAgent={onSelectAgent}
+          onOpenProfile={onOpenProfile}
+          onUpdateReportingLine={onUpdateReportingLine}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col h-screen bg-[#050505] text-[#E0E0E0] overflow-y-auto">
@@ -57,7 +107,35 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-[#0F0F0F] p-0.5 rounded border border-[#222]">
+            <button
+              id="btn-view-grid"
+              onClick={() => setViewMode('grid')}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs cursor-pointer transition ${
+                viewMode === 'grid'
+                  ? 'bg-[#1A1A1A] text-[#C5A358] border border-[#C5A358]/30 font-medium'
+                  : 'text-[#888] hover:text-[#FFF]'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Grid</span>
+            </button>
+            <button
+              id="btn-view-org"
+              onClick={() => setViewMode('org_chart')}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs cursor-pointer transition ${
+                viewMode === 'org_chart'
+                  ? 'bg-[#1A1A1A] text-[#C5A358] border border-[#C5A358]/30 font-medium'
+                  : 'text-[#888] hover:text-[#FFF]'
+              }`}
+            >
+              <Network className="w-3.5 h-3.5" />
+              <span>Org Hierarchy</span>
+            </button>
+          </div>
+
           <span className="text-xs px-3 py-1 rounded border border-[#C5A358]/30 bg-[#C5A358]/5 font-mono text-[#C5A358]">
             {agents.length} Deployed Agents
           </span>

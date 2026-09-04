@@ -11,6 +11,7 @@ import { CollaborationView } from './components/CollaborationView';
 import { TasksView } from './components/TasksView';
 import { MemoryHubView } from './components/MemoryHubView';
 import { AgentDirectoryView } from './components/AgentDirectoryView';
+import { OrgChartView } from './components/OrgChartView';
 import { AgentWizardModal } from './components/AgentWizardModal';
 import { ContextInspectorModal } from './components/ContextInspectorModal';
 import { ArtifactModal } from './components/ArtifactModal';
@@ -31,7 +32,7 @@ export const App: React.FC = () => {
   const [events, setEvents] = useState<TaskEvent[]>([]);
 
   // Navigation State
-  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'memory' | 'security' | 'settings'>('chat');
+  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings'>('chat');
   const [selectedAgentId, setSelectedAgentId] = useState<string>('agent-sarah');
   const [selectedProjectId, setSelectedProjectId] = useState<string>('proj-phoenix');
 
@@ -379,17 +380,6 @@ What executive decision or multi-agent delegation would you like me to coordinat
     } finally {
       setIsCollaborating(false);
     }
-  };
-
-  // Run the Full Success Test Scenario (Section 61)
-  const handleRunSuccessDemo = async () => {
-    setSelectedAgentId('agent-sarah');
-    setSelectedProjectId('proj-phoenix');
-    await handleTriggerMultiAgentTask(
-      'Determine whether Phoenix should migrate from Firebase to PostgreSQL. Use the team.',
-      'agent-sarah',
-      'proj-phoenix'
-    );
   };
 
   // Memory Promotion
@@ -765,6 +755,22 @@ What executive decision or multi-agent delegation would you like me to coordinat
     }
   };
 
+  const handleUpdateAgentReportingLine = async (agentId: string, newReportsToId: string | undefined) => {
+    setAgents((prev) =>
+      prev.map((a) => (a.id === agentId ? { ...a, reportsTo: newReportsToId } : a))
+    );
+    setProfileAgent((prev) => (prev && prev.id === agentId ? { ...prev, reportsTo: newReportsToId } : prev));
+    try {
+      await fetch(`/api/agents/${agentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportsTo: newReportsToId })
+      });
+    } catch (e) {
+      console.error('Agent reporting line update API error:', e);
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen bg-neutral-950 text-neutral-100 overflow-hidden font-sans antialiased">
       {/* Sidebar Navigation */}
@@ -785,8 +791,6 @@ What executive decision or multi-agent delegation would you like me to coordinat
         }}
         activeTasks={tasks}
         onOpenWizard={() => setIsWizardOpen(true)}
-        onRunSuccessDemo={handleRunSuccessDemo}
-        isDemoRunning={isCollaborating}
       />
 
       {/* Main Panel Router */}
@@ -864,6 +868,19 @@ What executive decision or multi-agent delegation would you like me to coordinat
               setCurrentTab('chat');
             }}
             onOpenProfile={(a) => setProfileAgent(a)}
+            onUpdateReportingLine={handleUpdateAgentReportingLine}
+          />
+        )}
+
+        {currentTab === 'org_chart' && (
+          <OrgChartView
+            agents={agents}
+            onSelectAgent={(id) => {
+              setSelectedAgentId(id);
+              setCurrentTab('chat');
+            }}
+            onOpenProfile={(a) => setProfileAgent(a)}
+            onUpdateReportingLine={handleUpdateAgentReportingLine}
           />
         )}
 
@@ -908,6 +925,7 @@ What executive decision or multi-agent delegation would you like me to coordinat
         onCreateAgent={handleCreateAgent}
         tools={tools}
         onAddGlobalTool={handleAddTool}
+        existingAgents={agents}
       />
 
       <ContextInspectorModal
@@ -935,6 +953,8 @@ What executive decision or multi-agent delegation would you like me to coordinat
           tools={tools}
           onUpdateAgentTools={handleUpdateAgentTools}
           onAddTool={handleAddTool}
+          allAgents={agents}
+          onUpdateReportingLine={handleUpdateAgentReportingLine}
         />
       )}
     </div>

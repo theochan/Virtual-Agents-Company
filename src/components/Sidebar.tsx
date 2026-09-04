@@ -15,12 +15,13 @@ import {
   Building2,
   Sparkles,
   Settings,
-  Wrench
+  Wrench,
+  Network
 } from 'lucide-react';
 
 interface SidebarProps {
-  currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'memory' | 'security' | 'settings';
-  onSelectTab: (tab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'memory' | 'security' | 'settings') => void;
+  currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings';
+  onSelectTab: (tab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings') => void;
   agents: Agent[];
   selectedAgentId: string;
   onSelectAgent: (agentId: string) => void;
@@ -29,8 +30,6 @@ interface SidebarProps {
   onSelectProject: (projectId: string) => void;
   activeTasks: Task[];
   onOpenWizard: () => void;
-  onRunSuccessDemo: () => void;
-  isDemoRunning: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -43,9 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   selectedProjectId,
   onSelectProject,
   activeTasks,
-  onOpenWizard,
-  onRunSuccessDemo,
-  isDemoRunning
+  onOpenWizard
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [agentStatusFilter, setAgentStatusFilter] = useState<'all' | 'working' | 'idle'>('all');
@@ -109,17 +106,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             Online
           </span>
         </div>
-
-        {/* Quick Workflow Demo Trigger */}
-        <button
-          id="btn-run-success-scenario"
-          onClick={onRunSuccessDemo}
-          disabled={isDemoRunning}
-          className="mt-3 w-full py-2 px-3 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 hover:bg-[#C5A358]/20 text-[#C5A358] text-xs font-medium flex items-center justify-center gap-2 transition shadow-sm disabled:opacity-50 cursor-pointer"
-        >
-          <Sparkles className={`w-3.5 h-3.5 text-[#C5A358] ${isDemoRunning ? 'animate-spin' : ''}`} />
-          <span>{isDemoRunning ? 'Orchestrating Specialists...' : 'Run Phoenix Multi-Agent Demo'}</span>
-        </button>
       </div>
 
       {/* Main Navigation Tabs */}
@@ -177,6 +163,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         <button
+          id="nav-tab-org-chart"
+          onClick={() => onSelectTab('org_chart')}
+          className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded font-medium transition cursor-pointer text-xs ${
+            currentTab === 'org_chart'
+              ? 'bg-[#111] text-[#C5A358] border border-[#C5A358]/30 shadow-sm font-semibold'
+              : 'text-[#888] hover:text-[#E0E0E0] hover:bg-[#0E0E0E]'
+          }`}
+          title="Executive Tree & Organizational Hierarchy"
+        >
+          <Network className="w-3.5 h-3.5" />
+          <span>Org Chart</span>
+        </button>
+
+        <button
           id="nav-tab-memory"
           onClick={() => onSelectTab('memory')}
           className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded font-medium transition cursor-pointer text-xs ${
@@ -188,41 +188,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Brain className="w-3.5 h-3.5" />
           <span>Memory</span>
         </button>
+      </div>
 
+      {/* Utilities bar: Tools & Admin Settings */}
+      <div className="px-3 pb-2 pt-1 grid grid-cols-2 gap-1.5">
         <button
           id="nav-tab-tools"
           onClick={() => onSelectTab('security')}
           className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded font-medium transition cursor-pointer text-xs ${
             currentTab === 'security'
               ? 'bg-[#111] text-[#C5A358] border border-[#C5A358]/30 shadow-sm'
-              : 'text-[#888] hover:text-[#E0E0E0] hover:bg-[#0E0E0E]'
+              : 'text-[#888] hover:text-[#E0E0E0] hover:bg-[#0E0E0E] border border-[#1A1A1A]'
           }`}
           title="Enterprise Tools & Security Approvals"
         >
-          <Wrench className="w-3.5 h-3.5" />
+          <Wrench className="w-3.5 h-3.5 text-[#C5A358]" />
           <span>Tools</span>
         </button>
-      </div>
 
-      {/* Admin LLM Settings Dedicated Bar */}
-      <div className="px-3 pb-2">
         <button
           id="nav-tab-settings"
           onClick={() => onSelectTab('settings')}
-          className={`w-full flex items-center justify-between py-1.5 px-2.5 rounded font-medium transition cursor-pointer text-xs ${
+          className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded font-medium transition cursor-pointer text-xs ${
             currentTab === 'settings'
               ? 'bg-[#C5A358]/15 text-[#C5A358] border border-[#C5A358]/40 shadow-sm font-semibold'
               : 'text-[#888] hover:text-[#E0E0E0] hover:bg-[#0E0E0E] border border-[#1A1A1A]'
           }`}
           title="LLM Models & API Keys Settings"
         >
-          <div className="flex items-center gap-2">
-            <Settings className="w-3.5 h-3.5 text-[#C5A358]" />
-            <span>Admin Settings</span>
-          </div>
-          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#C5A358]/10 text-[#C5A358] border border-[#C5A358]/20">
-            LLM Config
-          </span>
+          <Settings className="w-3.5 h-3.5 text-[#C5A358]" />
+          <span>Settings</span>
         </button>
       </div>
 

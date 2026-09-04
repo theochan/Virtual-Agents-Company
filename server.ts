@@ -235,18 +235,23 @@ app.patch('/api/agents/:id', (req, res) => {
   const agent = agents.find((a) => a.id === req.params.id);
   if (!agent) return res.status(404).json({ error: 'Agent not found' });
 
-  const { tools: agentTools, toolIds, displayName, jobTitle, department, avatarUrl, defaultModel, runtimeState } = req.body;
+  const { tools: agentTools, toolIds, displayName, jobTitle, department, departmentRole, reportsTo, avatarUrl, defaultModel, runtimeState } = req.body;
   if (agentTools !== undefined) agent.tools = agentTools;
   if (toolIds !== undefined) agent.toolIds = toolIds;
   if (displayName !== undefined) agent.displayName = displayName;
   if (jobTitle !== undefined) agent.jobTitle = jobTitle;
   if (department !== undefined) agent.department = department;
+  if (departmentRole !== undefined) agent.departmentRole = departmentRole;
+  if (reportsTo !== undefined) agent.reportsTo = reportsTo;
   if (avatarUrl !== undefined) agent.avatarUrl = avatarUrl;
   if (defaultModel !== undefined) {
     agent.defaultModel = defaultModel;
     if (agent.llmConfig) agent.llmConfig.model = defaultModel;
   }
   if (runtimeState !== undefined) agent.runtimeState = { ...agent.runtimeState, ...runtimeState };
+
+  // Sync orchestrator instance with updated agent definitions
+  orchestrator = new MultiAgentOrchestrator(agents, projects, memoryStore, artifacts);
 
   res.json(agent);
 });

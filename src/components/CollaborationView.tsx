@@ -39,9 +39,7 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
   isExecuting,
   onOpenArtifact
 }) => {
-  const [instruction, setInstruction] = useState(
-    'Determine whether Phoenix should migrate from Firebase to PostgreSQL. Use the team.'
-  );
+  const [instruction, setInstruction] = useState('');
   const [selectedLeadId, setSelectedLeadId] = useState('agent-sarah');
   const [selectedProjectId, setSelectedProjectId] = useState('proj-phoenix');
 
@@ -114,13 +112,13 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                 disabled={isExecuting}
                 rows={2}
                 className="w-full p-3 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358] disabled:opacity-50"
-                placeholder="Describe the multi-agent task..."
+                placeholder="e.g. Evaluate migration strategy, conduct market and security benchmarks, and formulate a phased rollout recommendation..."
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[10px] uppercase tracking-wider text-[#777] mb-1">Single Lead Agent (Section 42)</label>
+                <label className="block text-[10px] uppercase tracking-wider text-[#777] mb-1">Single Lead Agent</label>
                 <select
                   value={selectedLeadId}
                   onChange={(e) => setSelectedLeadId(e.target.value)}
@@ -322,7 +320,7 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
               <div className="p-5 rounded border border-[#C5A358]/30 bg-[#0A0A0A] space-y-4">
                 <div className="flex items-center gap-2 text-[#C5A358] text-[10px] font-semibold uppercase tracking-widest">
                   <AlertTriangle className="w-3.5 h-3.5 text-[#C5A358]" />
-                  <span>Agent Disagreement & Lead Synthesis (Section 46)</span>
+                  <span>Agent Disagreement & Lead Synthesis</span>
                 </div>
 
                 {displayTask.disagreements.map((dis, i) => (

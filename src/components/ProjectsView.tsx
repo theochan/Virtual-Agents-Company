@@ -491,7 +491,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           <div className="p-4 rounded border border-amber-800/40 bg-amber-950/20 text-amber-200 text-xs flex items-center gap-3">
             <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0" />
             <div>
-              <span className="font-semibold block">Multi-Tenant Workstream Isolation Active (Section 61)</span>
+              <span className="font-semibold block">Multi-Tenant Workstream Isolation Active</span>
               <span>
                 Atlas agents have access ONLY to Project Atlas memory and global Organization memory. They cannot access Project Phoenix decisions or PostgreSQL benchmarks unless explicitly shared.
               </span>

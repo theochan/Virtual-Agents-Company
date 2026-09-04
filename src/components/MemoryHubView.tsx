@@ -206,7 +206,7 @@ export const MemoryHubView: React.FC<MemoryHubViewProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#C5A358]" />
-              Interactive Priority Retrieval Tester (Section 37)
+              Interactive Priority Retrieval Tester
             </span>
             <span className="text-[10px] text-[#555] font-mono">
               Priority: Conversation → Project → Agent → Org

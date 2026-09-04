@@ -142,6 +142,8 @@ export interface Agent {
   avatarUrl: string;
   jobTitle: string;
   department: string;
+  departmentRole?: 'lead' | 'member';
+  reportsTo?: string; // ID of the manager agent
   seniority: 'Junior' | 'Mid' | 'Senior' | 'Staff / Principal' | 'Lead / Executive' | string;
   primaryResponsibility: string;
   secondaryResponsibilities: string[];

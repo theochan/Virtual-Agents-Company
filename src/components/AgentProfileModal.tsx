@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Agent, MemoryItem, LLMConfig, Tool, ToolPermission } from '../types';
-import { X, Sliders, Brain, Users, Cpu, Shield, Sparkles, MessageSquare, Check, Zap, Wrench, Plus } from 'lucide-react';
+import { X, Sliders, Brain, Users, Cpu, Shield, Sparkles, MessageSquare, Check, Zap, Wrench, Plus, Network, GitBranch } from 'lucide-react';
 import { SUPPORTED_MODELS, getModelDetails } from '../lib/models';
 
 interface AgentProfileModalProps {
@@ -11,6 +11,8 @@ interface AgentProfileModalProps {
   tools?: Tool[];
   onUpdateAgentTools?: (agentId: string, newTools: string[]) => void;
   onAddTool?: (newTool: Tool) => void;
+  allAgents?: Agent[];
+  onUpdateReportingLine?: (agentId: string, newReportsToId: string | undefined) => void;
 }
 
 export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
@@ -20,13 +22,16 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   onUpdateLLMConfig,
   tools = [],
   onUpdateAgentTools,
-  onAddTool
+  onAddTool,
+  allAgents = [],
+  onUpdateReportingLine
 }) => {
   const [selectedModel, setSelectedModel] = useState<string>(agent?.llmConfig?.model || 'gemini-3.8-flash');
   const [temperature, setTemperature] = useState<number>(agent?.llmConfig?.temperature ?? 0.2);
   const [maxTokens, setMaxTokens] = useState<number>(agent?.llmConfig?.maxTokens || 4096);
   const [isSaved, setIsSaved] = useState(false);
   const [toolSavedFeedback, setToolSavedFeedback] = useState<string | null>(null);
+  const [hierarchyFeedback, setHierarchyFeedback] = useState<string | null>(null);
 
   // New Tool creation state
   const [isAddingCustomTool, setIsAddingCustomTool] = useState(false);
@@ -179,6 +184,87 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
             <p className="text-xs text-[#CCC] leading-relaxed bg-[#070707] p-3.5 rounded border border-[#1A1A1A]">
               {agent.primaryResponsibility}
             </p>
+          </div>
+
+          {/* Organizational Hierarchy & Governance */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#C5A358] flex items-center gap-2">
+                <Network className="w-3.5 h-3.5" />
+                <span>Organizational Hierarchy & Reporting Line</span>
+              </h4>
+              {hierarchyFeedback && (
+                <span className="text-[10px] text-emerald-400 font-mono animate-fadeIn">
+                  {hierarchyFeedback}
+                </span>
+              )}
+            </div>
+
+            <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] space-y-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-[#777] uppercase tracking-wider mb-1">
+                    Direct Supervisor / Manager
+                  </label>
+                  <select
+                    value={agent.reportsTo || 'none'}
+                    onChange={(e) => {
+                      const newReportsTo = e.target.value === 'none' ? undefined : e.target.value;
+                      if (onUpdateReportingLine) {
+                        onUpdateReportingLine(agent.id, newReportsTo);
+                        setHierarchyFeedback('Reporting line updated');
+                        setTimeout(() => setHierarchyFeedback(null), 2500);
+                      }
+                    }}
+                    className="w-full bg-[#111] text-[#E0E0E0] border border-[#222] focus:border-[#C5A358] rounded p-2 text-xs focus:outline-none"
+                  >
+                    <option value="none">None (Top Executive / Independent)</option>
+                    {allAgents
+                      .filter((a) => a.id !== agent.id)
+                      .map((mgr) => (
+                        <option key={mgr.id} value={mgr.id}>
+                          {mgr.displayName} — {mgr.jobTitle} ({mgr.department})
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-[#777] uppercase tracking-wider mb-1">
+                    Departmental Role
+                  </label>
+                  <div className="flex items-center gap-2 p-2 rounded bg-[#111] border border-[#222] text-[#AAA]">
+                    <span className="font-medium text-[#E0E0E0]">
+                      {agent.departmentRole === 'lead' ? 'Department Lead / Principal' : 'Team Contributor'}
+                    </span>
+                    <span className="text-[10px] text-[#666]">({agent.department})</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Direct Reports Preview */}
+              {allAgents.filter((a) => a.reportsTo === agent.id).length > 0 && (
+                <div className="pt-2 border-t border-[#141414]">
+                  <span className="text-[10px] text-[#777] uppercase tracking-wider block mb-1.5">
+                    Direct Reports ({allAgents.filter((a) => a.reportsTo === agent.id).length})
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {allAgents
+                      .filter((a) => a.reportsTo === agent.id)
+                      .map((sub) => (
+                        <span
+                          key={sub.id}
+                          className="px-2 py-1 rounded bg-[#121212] border border-[#222] text-[11px] text-[#CCC] flex items-center gap-1.5"
+                        >
+                          <img src={sub.avatarUrl} alt="" className="w-3.5 h-3.5 rounded object-cover" />
+                          <span>{sub.displayName}</span>
+                          <span className="text-[9px] text-[#666]">({sub.jobTitle})</span>
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Layer 2 Memory: Agent Private Memory Scope */}

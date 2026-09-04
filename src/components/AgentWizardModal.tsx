@@ -29,6 +29,7 @@ interface AgentWizardModalProps {
   onCreateAgent: (agent: Partial<Agent>) => void;
   tools?: Tool[];
   onAddGlobalTool?: (newTool: Tool) => void;
+  existingAgents?: Agent[];
 }
 
 export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
@@ -36,7 +37,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   onClose,
   onCreateAgent,
   tools = [],
-  onAddGlobalTool
+  onAddGlobalTool,
+  existingAgents = []
 }) => {
   const [step, setStep] = useState<number>(1);
   const [isCreating, setIsCreating] = useState(false);
@@ -89,6 +91,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   // Step 2: Professional Role
   const [jobTitle, setJobTitle] = useState('Principal Security Architect');
   const [department, setDepartment] = useState('Security & Compliance');
+  const [reportsTo, setReportsTo] = useState<string | undefined>('agent-sarah');
+  const [departmentRole, setDepartmentRole] = useState<'lead' | 'member'>('member');
   const [seniority, setSeniority] = useState<'junior' | 'mid' | 'senior' | 'staff' | 'principal' | 'lead' | 'executive'>('principal');
   const [primaryResponsibility, setPrimaryResponsibility] = useState('Audit architecture and enforce zero-trust security postures.');
   const [skillsInput, setSkillsInput] = useState('Threat Modeling, OAuth2, Zero-Trust, SOC2 Compliance, Cryptography');
@@ -236,6 +240,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
       avatarUrl,
       jobTitle,
       department,
+      departmentRole,
+      reportsTo: reportsTo === 'none' ? undefined : reportsTo,
       seniority,
       gender,
       age,
@@ -647,6 +653,36 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Hierarchy & Reporting Line */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-neutral-300 mb-1">Reports To (Manager)</label>
+                  <select
+                    value={reportsTo || 'none'}
+                    onChange={(e) => setReportsTo(e.target.value === 'none' ? undefined : e.target.value)}
+                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                  >
+                    <option value="none">None (Top Executive)</option>
+                    {existingAgents.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.displayName} — {a.jobTitle} ({a.department})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-neutral-300 mb-1">Department Role</label>
+                  <select
+                    value={departmentRole}
+                    onChange={(e) => setDepartmentRole(e.target.value as 'lead' | 'member')}
+                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                  >
+                    <option value="member">Team Member / Contributor</option>
+                    <option value="lead">Department Lead / Principal</option>
+                  </select>
+                </div>
               </div>
 
               <div>
