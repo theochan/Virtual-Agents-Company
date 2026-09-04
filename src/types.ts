@@ -119,7 +119,21 @@ export interface CommunicationStyle {
   proactivelySuggestsImprovements: boolean;
 }
 
-export type ModelProvider = 'google' | 'openai' | 'anthropic' | 'ollama' | 'openrouter' | 'Gemini' | 'OpenAI' | 'Anthropic' | 'Ollama' | 'OpenRouter';
+export type ModelProvider =
+  | 'google'
+  | 'openai'
+  | 'anthropic'
+  | 'ollama'
+  | 'huggingface'
+  | 'openrouter'
+  | 'qwen'
+  | 'local'
+  | 'Gemini'
+  | 'OpenAI'
+  | 'Anthropic'
+  | 'Ollama'
+  | 'HuggingFace'
+  | 'OpenRouter';
 
 export interface LLMConfig {
   provider: ModelProvider;
@@ -128,6 +142,12 @@ export interface LLMConfig {
   maxTokens: number;
   contextLimit?: number;
   reasoningEffort?: 'low' | 'medium' | 'high';
+  // Local models downloaded via Ollama or Hugging Face
+  isLocal?: boolean;
+  localSource?: 'ollama' | 'huggingface' | 'vllm' | 'custom';
+  localEndpoint?: string; // e.g. "http://localhost:11434" or "http://localhost:8000/v1"
+  hfRepoId?: string; // e.g. "meta-llama/Llama-3.2-3B-Instruct"
+  quantization?: string; // e.g. "Q4_K_M", "Q8_0", "FP16"
 }
 
 export type AutonomyLevel = 1 | 2 | 3 | 4; // 1: Advisory, 2: Delegation, 3: Tool Exec, 4: Autonomous
@@ -463,6 +483,14 @@ export interface ChatMessage {
       totalItems: number;
       completedItems: number;
       assignedAgents: string[];
+    };
+    localInference?: {
+      provider: string;
+      model: string;
+      status: string;
+      endpoint?: string;
+      latencyMs?: number;
+      localSource?: string;
     };
   };
 }
