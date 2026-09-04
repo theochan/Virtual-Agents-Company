@@ -188,6 +188,37 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
 
   // 3. IN-PROGRESS
   {
+    id: 'wi-atlas-sync',
+    workspaceId: 'ws-default',
+    projectId: 'proj-atlas',
+    title: 'Field SQLite Offline Delta Sync Protocol Engine',
+    description: 'Active engineering task on Project Atlas: Marcus is testing SQLite local delta merge protocol and vector cache replication before field mobile release.',
+    status: 'in_progress',
+    priority: 'urgent',
+    assignedAgentId: 'agent-marcus',
+    createdByAgentId: 'agent-marcus',
+    createdByName: 'Marcus',
+    lastUpdatedByAgentId: 'agent-marcus',
+    tags: ['Mobile', 'SQLite', 'Offline-First'],
+    estimatedHours: 24,
+    actualHours: 19,
+    progressPercent: 80,
+    history: [
+      {
+        id: 'hist-atlas-1',
+        agentId: 'agent-marcus',
+        authorName: 'Marcus (Staff Software Architect)',
+        timestamp: '2026-09-02T10:00:00.000Z',
+        previousStatus: 'todo',
+        newStatus: 'in_progress',
+        comment: 'Actively profiling vector cache replication on Project Atlas mobile client.',
+        progressPercent: 80
+      }
+    ],
+    createdAt: '2026-09-01T09:00:00.000Z',
+    updatedAt: '2026-09-02T10:00:00.000Z'
+  },
+  {
     id: 'wi-7',
     workspaceId: 'ws-default',
     projectId: 'proj-phoenix',

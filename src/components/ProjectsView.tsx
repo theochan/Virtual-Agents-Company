@@ -34,8 +34,7 @@ interface ProjectsViewProps {
   artifacts: Artifact[];
   tasks: Task[];
   onOpenArtifact: (artifact: Artifact) => void;
-  onRunProjectTask: () => void;
-  isCollaborating: boolean;
+  isCollaborating?: boolean;
   onCreateProject?: (newProj: Partial<Project>) => void;
   onUpdateProjectStatus?: (projectId: string, status: Project['status']) => void;
   onDeleteProject?: (projectId: string) => void;
@@ -50,7 +49,6 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   artifacts,
   tasks,
   onOpenArtifact,
-  onRunProjectTask,
   isCollaborating,
   onCreateProject,
   onUpdateProjectStatus,
@@ -471,16 +469,6 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               <span>New</span>
             </button>
           )}
-
-          {/* Run Multi-Agent Task on Current Project */}
-          <button
-            onClick={onRunProjectTask}
-            disabled={isCollaborating || project.status === 'archived'}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-[#C5A358]/40 bg-[#C5A358]/15 hover:bg-[#C5A358]/25 text-[#C5A358] text-xs font-semibold shadow transition disabled:opacity-50 cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#C5A358]" />
-            <span>Run Task</span>
-          </button>
         </div>
       </div>
 

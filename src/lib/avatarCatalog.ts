@@ -266,3 +266,16 @@ export function getCuratedAvatarSuite(
     variations: variations.length > 0 ? variations : matched.slice(0, 4)
   };
 }
+
+export const DEFAULT_FALLBACK_AVATAR =
+  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format';
+
+export function handleAvatarError(
+  event: any,
+  fallbackUrl: string = DEFAULT_FALLBACK_AVATAR
+) {
+  const target = event?.currentTarget;
+  if (target && target.src !== fallbackUrl) {
+    target.src = fallbackUrl;
+  }
+}

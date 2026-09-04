@@ -17,6 +17,7 @@ import {
   LayoutGrid
 } from 'lucide-react';
 import { OrgChartView } from './OrgChartView';
+import { handleAvatarError } from '../lib/avatarCatalog';
 
 interface AgentDirectoryViewProps {
   agents: Agent[];
@@ -190,6 +191,8 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
                       <img
                         src={agent.avatarUrl}
                         alt={agent.displayName}
+                        referrerPolicy="no-referrer"
+                        onError={(e) => handleAvatarError(e)}
                         className="w-13 h-13 rounded object-cover border border-[#222] shadow"
                       />
                       <span

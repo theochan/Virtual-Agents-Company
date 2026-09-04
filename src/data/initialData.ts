@@ -70,8 +70,8 @@ export const INITIAL_AGENTS: Agent[] = [
       reasoningEffort: 'high'
     },
     autonomyLevel: 4,
-    toolIds: ['tool-web-search', 'tool-calendar', 'tool-doc-gen', 'tool-task-delegator'],
-    tools: ['tool-web-search', 'tool-calendar', 'tool-doc-gen', 'tool-task-delegator'],
+    toolIds: ['tool-task-delegator', 'tool-calendar', 'tool-doc-gen'],
+    tools: ['tool-task-delegator', 'tool-calendar', 'tool-doc-gen'],
     capabilities: [
       { agentId: 'agent-sarah', capability: 'planning', proficiency: 98, description: 'Multi-phase planning and task scoping' },
       { agentId: 'agent-sarah', capability: 'delegation', proficiency: 98, description: 'Matching specialist skills to subtask contracts' },
@@ -161,8 +161,8 @@ export const INITIAL_AGENTS: Agent[] = [
       reasoningEffort: 'high'
     },
     autonomyLevel: 3,
-    toolIds: ['tool-web-search', 'tool-code-exec', 'tool-db-query', 'tool-github'],
-    tools: ['tool-web-search', 'tool-code-exec', 'tool-db-query', 'tool-github'],
+    toolIds: ['tool-code-exec', 'tool-db-query', 'tool-github'],
+    tools: ['tool-code-exec', 'tool-db-query', 'tool-github'],
     capabilities: [
       { agentId: 'agent-marcus', capability: 'software_architecture', proficiency: 96, description: 'Microservices, monolith splitting, distributed data' },
       { agentId: 'agent-marcus', capability: 'database_design', proficiency: 94, description: 'PostgreSQL, relational schemas, indexing, migrations' },
@@ -371,7 +371,7 @@ export const INITIAL_AGENTS: Agent[] = [
     nationality: 'American',
     language: 'English',
     timezone: 'America/San_Francisco (PST)',
-    avatarUrl: 'https://images.unsplash.com/photo-1534751516642-a171ed28a0e5?q=80&w=400&auto=format&fit=crop',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
     jobTitle: 'Principal Product Designer',
     department: 'Design',
     departmentRole: 'lead',

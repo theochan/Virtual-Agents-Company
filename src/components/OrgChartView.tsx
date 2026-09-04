@@ -17,6 +17,7 @@ import {
   Check,
   AlertCircle
 } from 'lucide-react';
+import { handleAvatarError } from '../lib/avatarCatalog';
 
 interface DepartmentStat {
   count: number;
@@ -173,6 +174,8 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
             <img
               src={agent.avatarUrl}
               alt={agent.displayName}
+              referrerPolicy="no-referrer"
+              onError={(e) => handleAvatarError(e)}
               className="w-12 h-12 rounded object-cover border border-[#222] shrink-0"
             />
             <div className="flex-1 min-w-0">

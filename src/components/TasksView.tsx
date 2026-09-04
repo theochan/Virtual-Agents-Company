@@ -602,6 +602,20 @@ export const TasksView: React.FC<TasksViewProps> = ({
                               </div>
                             )}
 
+                            {/* Backlog Busy Agent Warning */}
+                            {item.status === 'backlog' &&
+                              workItems.some(
+                                (w) =>
+                                  w.assignedAgentId === item.assignedAgentId &&
+                                  w.projectId !== item.projectId &&
+                                  w.status === 'in_progress'
+                              ) && (
+                                <div className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded bg-amber-950/40 text-amber-300 border border-amber-800/40 font-mono">
+                                  <AlertCircle className="w-2.5 h-2.5 shrink-0" />
+                                  <span>Agent busy on another project</span>
+                                </div>
+                              )}
+
                             {/* Progress Bar (For in-progress or done) */}
                             {(item.status === 'in_progress' || item.status === 'done') && (
                               <div className="space-y-1">

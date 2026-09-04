@@ -23,18 +23,21 @@ export interface MemoryItem {
   agentId?: string; // set if agent scope
   projectId?: string; // set if project scope
   scope: MemoryScope;
-  type: 'decision' | 'preference' | 'lesson' | 'fact' | 'policy' | 'technical_discovery' | 'constraint';
+  type: 'decision' | 'preference' | 'lesson' | 'fact' | 'policy' | 'technical_discovery' | 'constraint' | 'insight';
   content: string;
   summary: string;
   importance: number; // 1-10
   confidence: number; // 0.0 - 1.0
   status: MemoryStatus;
   supersededBy?: string; // id of memory that superseded this
-  sourceType: 'conversation' | 'task_output' | 'agent_reflection' | 'user_instruction' | 'promotion';
+  sourceType?: 'conversation' | 'task_output' | 'agent_reflection' | 'user_instruction' | 'promotion';
   sourceId?: string;
-  provenance: MemoryProvenance;
+  provenance?: MemoryProvenance;
   createdAt: string;
   updatedAt: string;
+  lastAccessedAt?: string;
+  accessCount?: number;
+  durabilityScore?: number;
   expiresAt?: string;
   tags: string[];
 }
@@ -72,6 +75,8 @@ export type AgentStatus = 'offline' | 'idle' | 'thinking' | 'working' | 'waiting
 export interface AgentRuntimeState {
   agentId?: string;
   status: AgentStatus;
+  currentStatus?: AgentStatus;
+  currentActivity?: string;
   currentTaskId?: string;
   currentProjectId?: string;
   statusMessage?: string;
@@ -194,8 +199,10 @@ export interface Project {
   name: string;
   description: string;
   status: 'active' | 'planning' | 'paused' | 'completed' | 'archived';
-  objective: string;
-  ownerAgentId: string;
+  objective?: string;
+  ownerAgentId?: string;
+  leadAgentId?: string;
+  assignedAgentIds?: string[];
   members: ProjectMember[];
   recentDecisions: Array<{
     id: string;
@@ -422,6 +429,41 @@ export interface ChatMessage {
     taskPlan?: any;
     disagreements?: any[];
     promotedMemories?: MemoryItem[];
+    autoCreatedWorkItems?: WorkItem[];
+    executionStatus?: 'completed' | 'in_progress';
+    linkedProjectId?: string;
+    linkedProjectName?: string;
+    isDelegated?: boolean;
+    delegationChain?: {
+      delegatorId: string;
+      delegatorName: string;
+      subordinateId: string;
+      subordinateName: string;
+      subordinateRole?: string;
+      toolUsed: string;
+      status: 'pending' | 'in_progress' | 'completed';
+      workItemId?: string;
+      query?: string;
+    };
+    pendingWorkItemId?: string;
+    isBacklogPipeline?: boolean;
+    backlogPipeline?: {
+      pipelineId: string;
+      leadAgentId: string;
+      leadAgentName: string;
+      status: 'holding_busy' | 'staged_todo' | 'executing' | 'completed';
+      step: number; // 1: Decomposed to Backlog, 2: Cross-Project Busy Check, 3: Staged to Todo Queue, 4: Sequential Execution, 5: Completed
+      busyAgentsNotice?: Array<{
+        agentId: string;
+        agentName: string;
+        otherProjectId: string;
+        otherProjectName: string;
+        activeWorkItemTitle: string;
+      }>;
+      totalItems: number;
+      completedItems: number;
+      assignedAgents: string[];
+    };
   };
 }
 

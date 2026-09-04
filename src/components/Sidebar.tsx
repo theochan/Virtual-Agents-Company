@@ -18,6 +18,7 @@ import {
   Wrench,
   Network
 } from 'lucide-react';
+import { handleAvatarError } from '../lib/avatarCatalog';
 
 interface SidebarProps {
   currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings';
@@ -412,6 +413,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <img
                       src={agent.avatarUrl}
                       alt={agent.displayName}
+                      referrerPolicy="no-referrer"
+                      onError={(e) => handleAvatarError(e)}
                       className="w-9 h-9 rounded object-cover border border-[#222]"
                     />
                     <span
