@@ -175,6 +175,7 @@ export interface Agent {
     allowedScopes: MemoryScope[];
     projectIds: string[];
   };
+  defaultModel?: string;
   createdAt: string;
 }
 

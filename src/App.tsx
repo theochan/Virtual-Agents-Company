@@ -679,6 +679,92 @@ What executive decision or multi-agent delegation would you like me to coordinat
     setWorkItems((prev) => prev.filter((w) => w.id !== id));
   };
 
+  const handleAddTool = async (newTool: Tool) => {
+    setTools((prev) => {
+      const idx = prev.findIndex((t) => t.id === newTool.id);
+      if (idx !== -1) {
+        const next = [...prev];
+        next[idx] = newTool;
+        return next;
+      }
+      return [...prev, newTool];
+    });
+    try {
+      await fetch('/api/tools', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTool)
+      });
+    } catch (e) {
+      console.error('Tool sync API error:', e);
+    }
+  };
+
+  const handleAssignAgentTool = async (agentId: string, toolId: string, assign: boolean) => {
+    let updatedTools: string[] = [];
+    setAgents((prev) =>
+      prev.map((a) => {
+        if (a.id !== agentId) return a;
+        const current = a.tools || a.toolIds || [];
+        const updated = assign
+          ? Array.from(new Set([...current, toolId]))
+          : current.filter((t) => t !== toolId);
+        updatedTools = updated;
+        return { ...a, tools: updated, toolIds: updated };
+      })
+    );
+    try {
+      await fetch(`/api/agents/${agentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tools: updatedTools, toolIds: updatedTools })
+      });
+    } catch (e) {
+      console.error('Agent tool assign API error:', e);
+    }
+  };
+
+  const handleUpdateAgentTools = async (agentId: string, newTools: string[]) => {
+    setAgents((prev) =>
+      prev.map((a) => (a.id === agentId ? { ...a, tools: newTools, toolIds: newTools } : a))
+    );
+    setProfileAgent((prev) => (prev && prev.id === agentId ? { ...prev, tools: newTools, toolIds: newTools } : prev));
+    try {
+      await fetch(`/api/agents/${agentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tools: newTools, toolIds: newTools })
+      });
+    } catch (e) {
+      console.error('Agent tools update API error:', e);
+    }
+  };
+
+  const handleUpdateAgentModel = async (agentId: string, model: string) => {
+    setAgents((prev) =>
+      prev.map((a) =>
+        a.id === agentId
+          ? {
+              ...a,
+              defaultModel: model,
+              llmConfig: a.llmConfig
+                ? { ...a.llmConfig, model }
+                : { provider: 'google', model, temperature: 0.2, maxTokens: 4096 }
+            }
+          : a
+      )
+    );
+    try {
+      await fetch(`/api/agents/${agentId}/llm`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model })
+      });
+    } catch (e) {
+      console.error('Agent model update API error:', e);
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen bg-neutral-950 text-neutral-100 overflow-hidden font-sans antialiased">
       {/* Sidebar Navigation */}
@@ -800,19 +886,8 @@ What executive decision or multi-agent delegation would you like me to coordinat
                 approvals={approvals}
                 onDecideApproval={handleDecideApproval}
                 agents={agents}
-                onAddTool={(newTool) => setTools((prev) => [...prev, newTool])}
-                onAssignAgentTool={(agentId, toolId, assign) => {
-                  setAgents((prev) =>
-                    prev.map((a) => {
-                      if (a.id !== agentId) return a;
-                      const current = a.tools || a.toolIds || [];
-                      const updated = assign
-                        ? Array.from(new Set([...current, toolId]))
-                        : current.filter((t) => t !== toolId);
-                      return { ...a, tools: updated, toolIds: updated };
-                    })
-                  );
-                }}
+                onAddTool={handleAddTool}
+                onAssignAgentTool={handleAssignAgentTool}
               />
             </div>
           </div>
@@ -821,13 +896,7 @@ What executive decision or multi-agent delegation would you like me to coordinat
         {currentTab === 'settings' && (
           <AdminSettingsView
             agents={agents}
-            onUpdateAgentModel={(agentId, model) => {
-              setAgents((prev) =>
-                prev.map((a) =>
-                  a.id === agentId ? { ...a, defaultModel: model } : a
-                )
-              );
-            }}
+            onUpdateAgentModel={handleUpdateAgentModel}
           />
         )}
       </main>
@@ -838,7 +907,7 @@ What executive decision or multi-agent delegation would you like me to coordinat
         onClose={() => setIsWizardOpen(false)}
         onCreateAgent={handleCreateAgent}
         tools={tools}
-        onAddGlobalTool={(newTool) => setTools((prev) => [...prev, newTool])}
+        onAddGlobalTool={handleAddTool}
       />
 
       <ContextInspectorModal
@@ -864,15 +933,8 @@ What executive decision or multi-agent delegation would you like me to coordinat
           memories={memories}
           onUpdateLLMConfig={handleUpdateAgentLLMConfig}
           tools={tools}
-          onUpdateAgentTools={(agentId, newTools) => {
-            setAgents((prev) =>
-              prev.map((a) => (a.id === agentId ? { ...a, tools: newTools, toolIds: newTools } : a))
-            );
-            setProfileAgent((prev) => (prev && prev.id === agentId ? { ...prev, tools: newTools, toolIds: newTools } : prev));
-          }}
-          onAddTool={(newTool) => {
-            setTools((prev) => [...prev, newTool]);
-          }}
+          onUpdateAgentTools={handleUpdateAgentTools}
+          onAddTool={handleAddTool}
         />
       )}
     </div>

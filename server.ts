@@ -45,6 +45,31 @@ let tasks: Task[] = [];
 let workItems: WorkItem[] = JSON.parse(JSON.stringify(INITIAL_WORK_ITEMS));
 let pendingApprovals: ApprovalRequest[] = [];
 
+// Admin LLM Provider Settings (Server-side secure credential store)
+let adminLLMSettings = {
+  gemini: {
+    defaultModel: 'gemini-3.8-flash',
+    apiKeyMasked: process.env.GEMINI_API_KEY
+      ? `${process.env.GEMINI_API_KEY.slice(0, 4)}••••••••${process.env.GEMINI_API_KEY.slice(-4)}`
+      : '',
+    isConfigured: Boolean(process.env.GEMINI_API_KEY)
+  },
+  openai: {
+    defaultModel: 'gpt-4o',
+    apiKeyMasked: process.env.OPENAI_API_KEY
+      ? `sk-••••••••${process.env.OPENAI_API_KEY.slice(-4)}`
+      : '',
+    isConfigured: Boolean(process.env.OPENAI_API_KEY)
+  },
+  qwen: {
+    defaultModel: 'qwen-plus',
+    apiKeyMasked: process.env.DASHSCOPE_API_KEY
+      ? `••••••••${process.env.DASHSCOPE_API_KEY.slice(-4)}`
+      : '',
+    isConfigured: Boolean(process.env.DASHSCOPE_API_KEY)
+  }
+};
+
 // Orchestration engine instance
 let orchestrator = new MultiAgentOrchestrator(agents, projects, memoryStore, artifacts);
 
@@ -203,6 +228,27 @@ app.patch('/api/agents/:id/llm', (req, res) => {
 
   console.log(`[Agent LLM Config Updated] ${agent.displayName} (${agent.id}): model=${agent.llmConfig.model}, temp=${agent.llmConfig.temperature}`);
   res.json({ success: true, agent });
+});
+
+// Update Agent General Properties (Tools, Role, Profile)
+app.patch('/api/agents/:id', (req, res) => {
+  const agent = agents.find((a) => a.id === req.params.id);
+  if (!agent) return res.status(404).json({ error: 'Agent not found' });
+
+  const { tools: agentTools, toolIds, displayName, jobTitle, department, avatarUrl, defaultModel, runtimeState } = req.body;
+  if (agentTools !== undefined) agent.tools = agentTools;
+  if (toolIds !== undefined) agent.toolIds = toolIds;
+  if (displayName !== undefined) agent.displayName = displayName;
+  if (jobTitle !== undefined) agent.jobTitle = jobTitle;
+  if (department !== undefined) agent.department = department;
+  if (avatarUrl !== undefined) agent.avatarUrl = avatarUrl;
+  if (defaultModel !== undefined) {
+    agent.defaultModel = defaultModel;
+    if (agent.llmConfig) agent.llmConfig.model = defaultModel;
+  }
+  if (runtimeState !== undefined) agent.runtimeState = { ...agent.runtimeState, ...runtimeState };
+
+  res.json(agent);
 });
 
 // 2. Projects
@@ -807,6 +853,25 @@ app.get('/api/tools', (req, res) => {
   res.json(tools);
 });
 
+app.post('/api/tools', (req, res) => {
+  const newTool: Tool = req.body;
+  if (!newTool || !newTool.name) {
+    return res.status(400).json({ error: 'Tool name is required' });
+  }
+  if (!newTool.id) {
+    const slug = newTool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    newTool.id = `tool-${slug || Date.now()}`;
+  }
+  const existingIdx = tools.findIndex((t) => t.id === newTool.id);
+  if (existingIdx !== -1) {
+    tools[existingIdx] = newTool;
+  } else {
+    tools.push(newTool);
+  }
+  console.log(`[Tool Registered] ${newTool.name} (${newTool.id}) - Category: ${newTool.category}, Perm: ${newTool.permission}`);
+  res.status(201).json(newTool);
+});
+
 app.post('/api/tools/execute', (req, res) => {
   const { toolId, agentId, taskId, parameters } = req.body;
   const tool = tools.find((t) => t.id === toolId);
@@ -862,6 +927,55 @@ app.post('/api/seed', (req, res) => {
   pendingApprovals = [];
   orchestrator = new MultiAgentOrchestrator(agents, projects, memoryStore, artifacts);
   res.json({ status: 'reset_complete' });
+});
+
+// 9. Admin LLM Provider Settings (Multi-Provider: Gemini, OpenAI, Qwen/DashScope)
+app.get('/api/admin/llm-settings', (req, res) => {
+  // Sync real-time environment variable presence
+  if (process.env.GEMINI_API_KEY && !adminLLMSettings.gemini.isConfigured) {
+    adminLLMSettings.gemini.isConfigured = true;
+    adminLLMSettings.gemini.apiKeyMasked = `${process.env.GEMINI_API_KEY.slice(0, 4)}••••••••${process.env.GEMINI_API_KEY.slice(-4)}`;
+  }
+  if (process.env.OPENAI_API_KEY && !adminLLMSettings.openai.isConfigured) {
+    adminLLMSettings.openai.isConfigured = true;
+    adminLLMSettings.openai.apiKeyMasked = `sk-••••••••${process.env.OPENAI_API_KEY.slice(-4)}`;
+  }
+  if (process.env.DASHSCOPE_API_KEY && !adminLLMSettings.qwen.isConfigured) {
+    adminLLMSettings.qwen.isConfigured = true;
+    adminLLMSettings.qwen.apiKeyMasked = `••••••••${process.env.DASHSCOPE_API_KEY.slice(-4)}`;
+  }
+
+  res.json(adminLLMSettings);
+});
+
+app.post('/api/admin/llm-settings', (req, res) => {
+  const { provider, apiKey, defaultModel } = req.body;
+  if (!provider || !(provider in adminLLMSettings)) {
+    return res.status(400).json({ error: `Invalid provider: ${provider}` });
+  }
+
+  const p = adminLLMSettings[provider as keyof typeof adminLLMSettings];
+  if (defaultModel) {
+    p.defaultModel = defaultModel;
+  }
+
+  if (apiKey && typeof apiKey === 'string' && apiKey.trim()) {
+    const trimmed = apiKey.trim();
+    p.isConfigured = true;
+    p.apiKeyMasked = `${trimmed.slice(0, 4)}••••••••${trimmed.slice(-4)}`;
+
+    if (provider === 'gemini') {
+      process.env.GEMINI_API_KEY = trimmed;
+      aiClient = null; // Re-instantiate lazy client on next call
+    } else if (provider === 'openai') {
+      process.env.OPENAI_API_KEY = trimmed;
+    } else if (provider === 'qwen') {
+      process.env.DASHSCOPE_API_KEY = trimmed;
+    }
+  }
+
+  console.log(`[Admin LLM Settings Updated] Provider=${provider}, Model=${p.defaultModel}, isConfigured=${p.isConfigured}`);
+  res.json({ success: true, settings: adminLLMSettings });
 });
 
 // Vite middleware setup
