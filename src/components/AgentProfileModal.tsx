@@ -31,15 +31,8 @@ import {
   Bell
 } from 'lucide-react';
 import { SUPPORTED_MODELS, getModelDetails } from '../lib/models';
-import {
-  AVATAR_STYLES,
-  AvatarStyle,
-  buildAvatarPrompt,
-  getCuratedAvatarSuite,
-  getSlotFallbackAvatar,
-  DEFAULT_FALLBACK_AVATAR,
-  handleAvatarError
-} from '../lib/avatarCatalog';
+import { getSlotFallbackAvatar, handleAvatarError } from '../lib/avatarCatalog';
+import { StockPortraitPicker } from './StockPortraitPicker';
 
 type ProfileTab = 'tools' | 'avatar' | 'notifications' | 'memory';
 
@@ -56,13 +49,6 @@ interface AgentProfileModalProps {
   onUpdateAvatar?: (agentId: string, newAvatarUrl: string) => void;
   onDeleteAgent?: (agentId: string) => void;
 }
-
-const STYLE_ARCHETYPES = [
-  { id: 'innovator', label: 'Innovator', style: 'tech' as AvatarStyle },
-  { id: 'strategist', label: 'Strategist', style: 'corporate' as AvatarStyle },
-  { id: 'creative', label: 'Creative', style: 'creative' as AvatarStyle },
-  { id: 'efficient', label: 'Efficient', style: 'research' as AvatarStyle }
-];
 
 export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   agent,
@@ -90,20 +76,6 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   const [currentAvatar, setCurrentAvatar] = useState<string>(
     agent?.avatarUrl || getSlotFallbackAvatar(agent?.gender, agent?.avatarStyle, 0)
   );
-  const [currentFallbackUrl, setCurrentFallbackUrl] = useState<string>(
-    getSlotFallbackAvatar(agent?.gender, agent?.avatarStyle, 0)
-  );
-  const [avatarStyle, setAvatarStyle] = useState<AvatarStyle>('creative');
-  const [selectedArchetype, setSelectedArchetype] = useState<string>('innovator');
-  const [avatarPrompt, setAvatarPrompt] = useState<string>('');
-  const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
-  const [avatarSource, setAvatarSource] = useState<'neural_ai_generated' | 'ai_curated_neural' | 'custom_url'>('ai_curated_neural');
-  const [avatarModel, setAvatarModel] = useState('Neural Portrait Engine (Photorealistic)');
-  const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; fallbackUrl?: string; label: string; badge?: string }>>([]);
-  const [customUrlInput, setCustomUrlInput] = useState('');
-  const [showCustomUrl, setShowCustomUrl] = useState(false);
-  const [avatarSaveSuccess, setAvatarSaveSuccess] = useState(false);
-
   // New Tool creation state
   const [isAddingCustomTool, setIsAddingCustomTool] = useState(false);
   const [customToolName, setCustomToolName] = useState('');
@@ -116,14 +88,6 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   const [toolSearchQuery, setToolSearchQuery] = useState('');
   const [selectedToolCategory, setSelectedToolCategory] = useState<string>('Engineering');
 
-  const getInitialStyle = (a: Agent): AvatarStyle => {
-    if (a.department === 'Design') return 'creative';
-    if (a.department === 'Engineering' || a.department === 'Architecture') return 'tech';
-    if (a.department === 'Security') return 'cyber';
-    if (a.department === 'Research') return 'research';
-    return 'corporate';
-  };
-
   useEffect(() => {
     if (agent) {
       setSelectedModel(agent.llmConfig?.model || 'claude-3-5-sonnet');
@@ -131,44 +95,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
       setMaxTokens(agent.llmConfig?.maxTokens || 4096);
       setIsSaved(false);
 
-      const style = getInitialStyle(agent);
-      setAvatarStyle(style);
-      const initialFallback = getSlotFallbackAvatar(agent.gender, style, 0);
-      setCurrentAvatar(agent.avatarUrl || initialFallback);
-      setCurrentFallbackUrl(initialFallback);
-      setAvatarSaveSuccess(false);
-
-      const matchedArch = STYLE_ARCHETYPES.find((a) => a.style === style);
-      if (matchedArch) setSelectedArchetype(matchedArch.id);
-
-      const computedPrompt = buildAvatarPrompt({
-        firstName: agent.firstName || agent.displayName,
-        lastName: agent.lastName || '',
-        gender: agent.gender || 'female',
-        age: agent.approxAge || 31,
-        nationality: agent.nationality || 'American',
-        jobTitle: agent.jobTitle || 'Specialist',
-        department: agent.department || 'Operations',
-        style
-      });
-      setAvatarPrompt(computedPrompt);
-
-      const suite = getCuratedAvatarSuite(
-        agent.gender || 'female',
-        style,
-        `${agent.displayName}-${agent.id}`
-      );
-      if (suite.primary.fallbackUrl) {
-        setCurrentFallbackUrl(suite.primary.fallbackUrl);
-      }
-      setAvatarVariations(
-        suite.variations.map((v) => ({
-          url: v.url,
-          fallbackUrl: v.fallbackUrl || v.url,
-          label: v.label,
-          badge: v.style
-        }))
-      );
+      setCurrentAvatar(agent.avatarUrl || getSlotFallbackAvatar(agent.gender));
     }
   }, [agent]);
 
@@ -266,132 +193,6 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
     setIsAddingCustomTool(false);
   };
 
-  // Avatar Studio Handlers
-  const handleGenerateAvatar = async (targetStyle?: AvatarStyle, explicitPrompt?: string) => {
-    setIsGeneratingAvatar(true);
-    const chosenStyle = targetStyle || avatarStyle;
-    const firstName = agent.firstName || agent.displayName || 'Specialist';
-    const lastName = agent.lastName || '';
-    const gender = agent.gender || 'female';
-    const age = agent.approxAge || 31;
-    const nationality = agent.nationality || 'American';
-    const jobTitle = agent.jobTitle || 'Specialist';
-    const department = agent.department || 'Operations';
-
-    let computedPrompt: string;
-    if (explicitPrompt !== undefined && explicitPrompt.trim().length > 0) {
-      computedPrompt = explicitPrompt.trim();
-    } else {
-      const lightingModifiers = [
-        'cinematic warm studio lighting, 3/4 turn angle, crisp rimlight',
-        'diffuse natural window daylight, subtle contrast, approachable authentic expression',
-        'sleek dramatic edge illumination, sharp focal plane, commanding executive gaze',
-        'soft neutral boardroom studio lighting, shallow depth of field',
-        'clean architectural lighting, confident direct gaze, refined executive framing'
-      ];
-      const randomModifier = lightingModifiers[Math.floor(Math.random() * lightingModifiers.length)];
-      computedPrompt = buildAvatarPrompt({
-        firstName,
-        lastName,
-        gender,
-        age,
-        nationality,
-        jobTitle,
-        department,
-        style: chosenStyle
-      }) + `, ${randomModifier}`;
-    }
-
-    setAvatarPrompt(computedPrompt);
-
-    try {
-      const res = await fetch('/api/agents/generate-avatar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          gender,
-          age,
-          nationality,
-          jobTitle,
-          department,
-          style: chosenStyle,
-          customPrompt: computedPrompt
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.avatarUrl) {
-          setCurrentAvatar(data.avatarUrl);
-          if (data.fallbackUrl) {
-            setCurrentFallbackUrl(data.fallbackUrl);
-          }
-          setAvatarSource(data.source || 'ai_generated');
-          setAvatarModel(data.model || 'Neural Portrait Engine (Flux)');
-          if (data.variations) {
-            setAvatarVariations(data.variations);
-          }
-          if (data.promptUsed) {
-            setAvatarPrompt(data.promptUsed);
-          }
-          setAvatarSaveSuccess(false);
-        }
-      } else {
-        throw new Error('Avatar API response failed');
-      }
-    } catch (err) {
-      console.warn('Avatar generation notice:', err);
-      const fallback = getCuratedAvatarSuite(gender, chosenStyle, `${firstName}-${Date.now()}`);
-      setCurrentAvatar(fallback.primary.url);
-      setCurrentFallbackUrl(fallback.primary.fallbackUrl || DEFAULT_FALLBACK_AVATAR);
-      setAvatarVariations(
-        fallback.variations.map((v) => ({
-          url: v.url,
-          fallbackUrl: v.fallbackUrl || v.url,
-          label: v.label,
-          badge: v.badge || v.style
-        }))
-      );
-      setAvatarSource('ai_generated');
-      setAvatarModel('Neural Portrait Engine (Photorealistic)');
-    } finally {
-      setIsGeneratingAvatar(false);
-    }
-  };
-
-  const handleSelectVariation = (url: string) => {
-    setCurrentAvatar(url);
-    setCurrentFallbackUrl(url);
-    setAvatarSource('ai_curated_neural');
-    setAvatarSaveSuccess(false);
-    if (onUpdateAvatar && agent) {
-      onUpdateAvatar(agent.id, url);
-    }
-  };
-
-  const handleApplyCustomUrl = () => {
-    if (customUrlInput.trim()) {
-      setCurrentAvatar(customUrlInput.trim());
-      setAvatarSource('custom_url');
-      setAvatarSaveSuccess(false);
-      if (onUpdateAvatar && agent) {
-        onUpdateAvatar(agent.id, customUrlInput.trim());
-      }
-    }
-  };
-
-  const handleSaveAvatar = () => {
-    if (onUpdateAvatar && agent) {
-      onUpdateAvatar(agent.id, currentAvatar);
-      setAvatarSaveSuccess(true);
-      setTimeout(() => setAvatarSaveSuccess(false), 3500);
-    }
-  };
-
-  const hasUnsavedAvatar = currentAvatar !== agent.avatarUrl;
-
   // Filter tools for the Tools & Skills tab
   const filteredTools = tools.filter((t) => {
     if (selectedToolCategory !== 'All') {
@@ -444,138 +245,13 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
 
         {/* 2-Column Balanced Modal Content */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
-          {/* LEFT COLUMN: Agent Portrait, Style Archetype, Generation Button, Variations */}
-          <div className="w-full md:w-72 lg:w-80 border-b md:border-b-0 md:border-r border-slate-200 p-6 flex flex-col gap-4.5 shrink-0 overflow-y-auto bg-white">
-            {/* Portrait Preview */}
-            <div className="relative w-full aspect-square rounded-2xl overflow-hidden border border-slate-200 shadow-xs bg-slate-100 group">
-              <img
-                src={currentAvatar}
-                alt={agent.displayName}
-                referrerPolicy="no-referrer"
-                onError={(e) => handleAvatarError(e, currentFallbackUrl, agent.gender, avatarStyle, 0)}
-                className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-102 ${
-                  isGeneratingAvatar ? 'opacity-30 blur-xs' : 'opacity-100'
-                }`}
-              />
-
-              {isGeneratingAvatar && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/75 p-3 text-center">
-                  <Loader2 className="w-7 h-7 text-amber-400 animate-spin mb-1.5" />
-                  <span className="text-xs font-semibold text-white">Synthesizing...</span>
-                  <span className="text-[10px] text-slate-300 font-mono mt-0.5">Neural Archetype Gen</span>
-                </div>
-              )}
-            </div>
-
-            {/* Style Archetype Section */}
-            <div>
-              <label className="text-xs font-semibold text-slate-800 block mb-2">Style Archetype</label>
-              <div className="flex flex-wrap gap-1.5">
-                {STYLE_ARCHETYPES.map((arch) => {
-                  const isSelected = selectedArchetype === arch.id;
-                  return (
-                    <button
-                      key={arch.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedArchetype(arch.id);
-                        setAvatarStyle(arch.style);
-                        handleGenerateAvatar(arch.style);
-                      }}
-                      className={`px-3 py-1 rounded-full text-xs font-medium border transition cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#faebd7] border-[#c59b4b] text-[#7a5310] shadow-xs'
-                          : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
-                    >
-                      {arch.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Warm Gold Generate Button */}
-            <button
-              type="button"
-              onClick={() => handleGenerateAvatar(avatarStyle)}
-              disabled={isGeneratingAvatar}
-              className="w-full py-2.5 px-3 rounded-xl bg-[#c59b4b] hover:bg-[#b38a3e] text-white text-xs font-semibold shadow-xs flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
-            >
-              {isGeneratingAvatar ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span>Synthesizing...</span>
-                </>
-              ) : (
-                <>
-                  <Wand2 className="w-3.5 h-3.5 text-white" />
-                  <span>Generate New AI Portrait</span>
-                </>
-              )}
-            </button>
-
-            {/* Variations Section */}
-            <div>
-              <label className="text-xs font-semibold text-slate-800 block mb-2">Variations</label>
-              <div className="grid grid-cols-4 gap-2">
-                {avatarVariations.slice(0, 4).map((variant, idx) => {
-                  const isSelected = currentAvatar === variant.url;
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => handleSelectVariation(variant.url)}
-                      className={`aspect-square rounded-xl overflow-hidden border cursor-pointer transition relative group ${
-                        isSelected
-                          ? 'border-[#c59b4b] ring-2 ring-[#c59b4b]/40 shadow-xs'
-                          : 'border-slate-200 hover:border-[#c59b4b]/80'
-                      }`}
-                      title={variant.label}
-                    >
-                      <img
-                        src={variant.url}
-                        alt={`Variation ${idx + 1}`}
-                        referrerPolicy="no-referrer"
-                        onError={(e) => handleAvatarError(e, variant.fallbackUrl, agent.gender, avatarStyle, idx + 1)}
-                        className="w-full h-full object-cover group-hover:scale-105 transition"
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Direct Image URL Accordion Toggle */}
-            <div className="pt-1">
-              <button
-                type="button"
-                onClick={() => setShowCustomUrl(!showCustomUrl)}
-                className="text-[11px] text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"
-              >
-                <LinkIcon className="w-3 h-3" />
-                <span>{showCustomUrl ? 'Hide Custom URL' : 'Use Custom Image URL'}</span>
-              </button>
-
-              {showCustomUrl && (
-                <div className="mt-2 space-y-1.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <input
-                    type="text"
-                    placeholder="https://images.unsplash.com/..."
-                    value={customUrlInput}
-                    onChange={(e) => setCustomUrlInput(e.target.value)}
-                    className="w-full p-2 rounded-lg border border-slate-200 bg-white text-[11px] text-slate-900 focus:outline-none focus:border-[#c59b4b]"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleApplyCustomUrl}
-                    className="w-full py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium cursor-pointer"
-                  >
-                    Apply Image
-                  </button>
-                </div>
-              )}
-            </div>
+          <div className="w-full md:w-80 shrink-0 p-5 border-r border-slate-200 overflow-y-auto">
+            <h4 className="text-base font-semibold text-slate-900">{agent.displayName}</h4>
+            <p className="mb-4 text-xs text-slate-600">{agent.jobTitle}</p>
+            <StockPortraitPicker gender={agent.gender || 'female'} value={currentAvatar} onChange={(url) => {
+              setCurrentAvatar(url);
+              onUpdateAvatar?.(agent.id, url);
+            }} />
           </div>
 
           {/* RIGHT COLUMN: Tabs, Category Filters, Equipped Skills, Skills Grid */}
@@ -812,57 +488,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Active AI Prompt Tuning */}
-                  <div className="space-y-2 pt-2 border-t border-slate-200">
-                    <div className="flex items-center justify-between">
-                      <label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                        <span>Active AI Synthesis Prompt</span>
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const defaultPrompt = buildAvatarPrompt({
-                            firstName: agent.firstName || agent.displayName,
-                            lastName: agent.lastName || '',
-                            gender: agent.gender || 'female',
-                            age: agent.approxAge || 31,
-                            nationality: agent.nationality || 'American',
-                            jobTitle: agent.jobTitle || 'Specialist',
-                            department: agent.department || 'Operations',
-                            style: avatarStyle
-                          });
-                          setAvatarPrompt(defaultPrompt);
-                        }}
-                        className="text-[11px] text-amber-800 hover:text-amber-900 hover:underline cursor-pointer font-medium"
-                      >
-                        Reset Prompt
-                      </button>
-                    </div>
 
-                    <textarea
-                      value={avatarPrompt}
-                      onChange={(e) => setAvatarPrompt(e.target.value)}
-                      rows={3}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-800 focus:outline-none focus:border-[#c59b4b] font-mono leading-relaxed shadow-2xs"
-                      placeholder="Describe executive portrait styling, backdrop lighting..."
-                    />
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-slate-400">
-                        Engine: <span className="text-slate-600 font-medium">{avatarModel}</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleGenerateAvatar(avatarStyle, avatarPrompt)}
-                        disabled={isGeneratingAvatar}
-                        className="py-1.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-xs"
-                      >
-                        <RefreshCw className={`w-3 h-3 text-amber-400 ${isGeneratingAvatar ? 'animate-spin' : ''}`} />
-                        <span>Regenerate with Prompt</span>
-                      </button>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -1006,21 +632,11 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
               </button>
             )}
 
-            {hasUnsavedAvatar && (
-              <span className="text-amber-800 font-medium">Avatar updated — click Save Avatar to apply across system</span>
-            )}
+
           </div>
 
           <div className="flex items-center gap-2">
-            {hasUnsavedAvatar && (
-              <button
-                onClick={handleSaveAvatar}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer shadow-xs flex items-center gap-1.5"
-              >
-                <Check className="w-3.5 h-3.5" />
-                <span>Save Avatar</span>
-              </button>
-            )}
+
 
             <button
               onClick={onClose}

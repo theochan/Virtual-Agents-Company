@@ -6,9 +6,9 @@
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC.svg)](https://tailwindcss.com/)
 [![Anthropic Claude](https://img.shields.io/badge/Anthropic_Claude-3.5_Sonnet-orange.svg)](https://www.anthropic.com/)
 [![Skills Catalog](https://img.shields.io/badge/Claude_Skills-388_Integrated-purple.svg)](https://github.com/alirezarezvani/claude-skills)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
-An enterprise-grade autonomous AI organization platform operating specialized, human-like virtual coworkers. Powered by **4-layer memory scopes**, **hierarchical multi-agent delegation**, **391 business & engineering skills with Python CLI execution**, **photorealistic neural avatar synthesis**, and a **hybrid Cloud / Local LLM inference engine** (Anthropic Claude, OpenAI, Ollama, Hugging Face, OmniRoute).
+An enterprise-grade autonomous AI organization platform operating specialized, human-like virtual coworkers. Powered by **4-layer memory scopes**, **hierarchical multi-agent delegation**, **391 business & engineering skills with Python CLI execution**, **stock-photo agent portraits**, and a **hybrid Cloud / Local LLM inference engine** (Anthropic Claude, OpenAI, Ollama, Hugging Face, OmniRoute).
 
 ---
 
@@ -19,7 +19,7 @@ An enterprise-grade autonomous AI organization platform operating specialized, h
   - [1. Hierarchical Multi-Agent Orchestration](#1-hierarchical-multi-agent-orchestration)
   - [2. 4-Layer Memory Architecture](#2-4-layer-memory-architecture)
   - [3. 391 Integrated Enterprise Skills & CLI Execution Engine](#3-391-integrated-enterprise-skills--cli-execution-engine)
-  - [4. Neural Avatar Studio & Identity Engine](#4-neural-avatar-studio--identity-engine)
+  - [4. Stock Portrait Picker](#4-stock-portrait-picker)
   - [5. Hybrid Cloud & Local LLM Provider Support](#5-hybrid-cloud--local-llm-provider-support)
   - [6. Workstreams, Kanban & Artifact Production](#6-workstreams-kanban--artifact-production)
 - [Default Virtual Executive Team](#default-virtual-executive-team)
@@ -53,7 +53,7 @@ Whether you need a CTO to design microservice architectures, a CFO to model SaaS
 ### 1. Hierarchical Multi-Agent Orchestration
 - **Organizational Chart & Reporting Lines**: Direct reports, managers, and leadership structures. Agents know their role, autonomy level (1–5), and who to escalate or delegate tasks to.
 - **Autonomous Delegation**: When given complex tasks, leadership agents (e.g., Sarah, Chief of Staff) automatically decompose requests and route sub-tasks to specialized domain agents (e.g., Marcus for architecture, Daniel for finance, Emma for market analysis).
-- **Agent Creation Wizard**: Step-by-step onboarding for new virtual coworkers—configure role, department, seniority, autonomy clearance, 9-dimensional personality sliders, avatar styling, and initial tool sets.
+- **Agent Creation Wizard**: Step-by-step onboarding for new virtual coworkers—configure role, department, seniority, autonomy clearance, 9-dimensional personality sliders, portrait selection, and initial tool sets.
 - **Agent Management & Deletion**: Update LLM parameters, reassign reporting lines, equip/unequip skills, or delete custom agents with persistent disk synchronization.
 
 ### 2. 4-Layer Memory Architecture
@@ -78,20 +78,13 @@ Fully integrated catalog of **388 skills** from [alirezarezvani/claude-skills](h
 - **Real Python CLI Script Execution**: Includes **254 zero-dependency Python scripts** executed directly on the host machine via `python3` stdlib with structured JSON outputs.
 - **Interactive UI Filtering**: Quick-filter pills by domain, real-time keyword search, and equipped quick-strips with `⚡ CLI Script` indicators.
 
-### 4. Neural Avatar Studio & Identity Engine
-- **Role-Grounded Photorealistic Portraits**: Generates tailored corporate portraits reflecting department, age, nationality, and chosen style.
-- **5 Executive Archetypes**:
-  - *Corporate Executive*: Tailored suits, formal boardroom lighting, neutral executive backdrop.
-  - *Cybersecurity & Defense*: Tactical technical blazer, cool edge illumination, dark silhouette.
-  - *Silicon Valley Engineering*: Modern minimalist knitwear, warm ambient campus lighting.
-  - *Design & Product Director*: Contemporary architectural styling, gallery bokeh, creative daylight.
-  - *Principal Research Scientist*: Tweed blazer, Oxford shirt, warm mahogany library lighting.
-- **Dynamic AI Synthesis vs. Custom Prompt Regeneration**:
-  - **Generate New AI Portrait**: Generates a randomized portrait variation cycling through dynamic studio lighting angles and fresh seeds.
-  - **Regenerate with Prompt**: Allows fine-tuning prompt text (attire, physical traits, lighting) and synthesizes strictly according to custom text.
-- **Instant High-Res Curated Variations**: Previews 4 curated candidate variations per archetype that load instantly with zero rate limits.
-- **Multi-Slot Deterministic Fallback**: Automatic slot-specific fallbacks guarantee that portraits never collapse into duplicates even under network disconnection.
-- **Custom Image URL**: Direct support for custom external image links (Unsplash, company headshots, S3/CDN URLs).
+### 4. Stock Portrait Picker
+- **40 Stock Photos**: Choose from 20 female and 20 male portrait options in the creation wizard and existing agent profiles. The non-binary selection offers all 40 photos without assigning gender identities to their subjects.
+- **Simple Identity Form**: Enter an agent name, select gender, and choose a portrait. Age, nationality/heritage, archetypes, and synthesis prompts are no longer required or collected by the wizard.
+- **Custom Image URL**: Use your own HTTP(S) image URL instead of a stock photo.
+- **No Image Generation**: Portraits do not call AI providers. Image-generation controls, routes, and image-model settings have been removed. OmniRoute remains available for agent chat.
+- **Image Availability**: Stock photos load from Unsplash and require internet access. Unavailable gallery photos are disabled rather than silently replaced with duplicates.
+- **Photo Rights**: Stock photos remain subject to the [Unsplash License](https://unsplash.com/license) and applicable third-party rights. Depicted people are not employees and do not endorse the agents.
 
 ### 5. Hybrid Cloud & Local LLM Provider Support
 - **Cloud Models**: Native Anthropic Claude (`claude-3-5-sonnet`, `claude-3-7-sonnet`, `claude-3-5-haiku`) and OpenAI (`gpt-4o`, `gpt-4o-mini`) integration.
@@ -175,7 +168,7 @@ Virtual-Agents-Company/
 │   │   ├── initialData.ts          # Core agents, default tools, and initial state
 │   │   └── initialWorkItems.ts     # Initial Kanban work items
 │   ├── lib/
-│   │   ├── avatarCatalog.ts        # Avatar styles, curated portraits, and fallback engine
+│   │   ├── avatarCatalog.ts        # 40 stock portraits and shared display fallbacks
 │   │   └── models.ts               # Model registry (Anthropic, OpenAI, Ollama, Hugging Face)
 │   ├── types.ts                    # TypeScript definitions for agents, tools, memory
 │   ├── App.tsx                     # Main layout & navigation container
@@ -302,7 +295,6 @@ To run agents entirely on local hardware without sending data to external APIs:
 | `PATCH`| `/api/agents/:id/llm` | Update agent LLM parameters (model, temperature, tokens) |
 | `PATCH`| `/api/agents/:id/tools` | Update equipped tools and skills for an agent |
 | `PATCH`| `/api/agents/:id/avatar`| Save new avatar URL to agent profile |
-| `POST` | `/api/agents/generate-avatar` | Generate photorealistic portrait & curated variations |
 | `GET` | `/api/tools` | Fetch all 391 available tools & Claude skills catalog |
 | `POST` | `/api/tools/execute` | Execute an equipped Python CLI skill script |
 | `GET` | `/api/projects` | List projects and active Kanban work items |
@@ -316,9 +308,10 @@ To run agents entirely on local hardware without sending data to external APIs:
 
 ## Troubleshooting & FAQ
 
-#### 1. Why are avatar images failing to load or showing fallbacks?
-- Avatar Studio attempts photorealistic synthesis with deterministic fallbacks. If an adblocker or corporate firewall blocks third-party AI image APIs, the system automatically falls back to distinct high-res curated Unsplash portraits matching the agent's gender and archetype.
-- You can also click any of the 4 candidate variations in the gallery or enter a direct image URL in the "Or enter custom image URL" field.
+#### 1. How do I choose an agent portrait?
+Select a stock photo in the creation wizard or the agent profile. Female and male selections each have 20 choices; non-binary agents can use any of the 40. You can also enter a custom image URL. No AI provider, age, nationality, or synthesis prompt is needed. Existing agents retain their saved portraits and legacy identity data until explicitly changed.
+
+If a stock photo cannot load, check internet access to `images.unsplash.com` or choose another photo. The image-generation endpoints and `OMNIROUTE_IMAGE_MODEL` setting are no longer used; old `data/portrait-settings.json` files can be discarded.
 
 #### 2. How do Python CLI tools run?
 - The backend uses Node.js `child_process.execFile` calling `python3`. Make sure `python3` is available on your system `PATH`.
@@ -337,5 +330,6 @@ To run agents entirely on local hardware without sending data to external APIs:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-Ingested Claude skills are sourced from [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) under their respective licenses.
+The original project code in this version is proprietary. See [LICENSE](LICENSE) for the reservation of rights and the requirement for separate written permission to use, modify, redistribute, host, or sell it. This repository is not offered under an open-source license.
+
+This notice applies only to code owned by the project copyright holder. It does not revoke rights validly granted for earlier versions or override third-party licenses. The bundled `claude-skills/` materials retain their own licenses and copyright notices, including the [upstream MIT notice](claude-skills/LICENSE); dependencies and stock photos retain their respective terms. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

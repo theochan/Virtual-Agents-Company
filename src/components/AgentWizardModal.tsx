@@ -21,7 +21,8 @@ import {
   Search,
   Terminal
 } from 'lucide-react';
-import { AVATAR_STYLES, AvatarStyle, buildAvatarPrompt, getCuratedAvatarSuite, handleAvatarError } from '../lib/avatarCatalog';
+import { getStockPortraits } from '../lib/avatarCatalog';
+import { StockPortraitPicker } from './StockPortraitPicker';
 import { SUPPORTED_MODELS, getModelDetails } from '../lib/models';
 
 interface AgentWizardModalProps {
@@ -49,49 +50,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   const [firstName, setFirstName] = useState('Elena');
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState<'female' | 'male' | 'non-binary'>('female');
-  const [age, setAge] = useState(32);
-  const [nationality, setNationality] = useState('Swedish');
-
-  // AI-Generated Portrait Studio State (Prior to Agent Creation)
-  const [avatarStyle, setAvatarStyle] = useState<AvatarStyle>('cyber');
-  const [avatarUrl, setAvatarUrl] = useState(
-    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format'
-  );
-  const [avatarPrompt, setAvatarPrompt] = useState(
-    'High-end photorealistic 8k close-up headshot portrait avatar of a 32-year-old Swedish professional woman, Principal Security Architect in Security & Compliance. Wearing sleek charcoal technical blazer, dark turtleneck, security clearance lanyard, cinematic soft studio lighting, sharp focus on eyes, authentic skin texture, shallow depth of field, centered 1:1 square composition, executive portrait photography, neutral executive background.'
-  );
-  const [isEditingPrompt, setIsEditingPrompt] = useState(false);
-  const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
-  const [avatarSource, setAvatarSource] = useState<'neural_ai_generated' | 'ai_curated_neural'>('ai_curated_neural');
-  const [avatarModel, setAvatarModel] = useState('Claude 3.5 Sonnet Neural Synthesis');
-  const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; fallbackUrl?: string; label: string; badge?: string }>>([
-    {
-      url: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      fallbackUrl: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      label: 'Variant 1 - Cryptographer',
-      badge: 'Security'
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      fallbackUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      label: 'Variant 2 - Systems Architect',
-      badge: 'Tech'
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      fallbackUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      label: 'Variant 3 - Strategic Systems',
-      badge: 'Creative'
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      fallbackUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
-      label: 'Variant 4 - Security Fellow',
-      badge: 'Research'
-    }
-  ]);
-  const [customUrlInput, setCustomUrlInput] = useState('');
-  const [showCustomUrl, setShowCustomUrl] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(getStockPortraits('female')[0].url);
 
   // Step 2: Professional Role
   const [jobTitle, setJobTitle] = useState('Principal Security Architect');
@@ -151,74 +110,6 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
   const selectedModelDetails = getModelDetails(model);
 
-  const handleGenerateAvatar = async (targetStyle?: AvatarStyle) => {
-    setIsGeneratingAvatar(true);
-    const chosenStyle = targetStyle || avatarStyle;
-
-    const computedPrompt =
-      isEditingPrompt && avatarPrompt.trim().length > 10
-        ? avatarPrompt.trim()
-        : buildAvatarPrompt({
-            firstName,
-            lastName,
-            gender,
-            age,
-            nationality,
-            jobTitle,
-            department,
-            style: chosenStyle
-          });
-
-    setAvatarPrompt(computedPrompt);
-
-    try {
-      const res = await fetch('/api/agents/generate-avatar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          gender,
-          age,
-          nationality,
-          jobTitle,
-          department,
-          style: chosenStyle,
-          customPrompt: isEditingPrompt ? avatarPrompt : undefined
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.avatarUrl) {
-          setAvatarUrl(data.avatarUrl);
-        }
-        if (data.source) {
-          setAvatarSource(data.source);
-        }
-        if (data.model) {
-          setAvatarModel(data.model);
-        }
-        if (data.variations && data.variations.length > 0) {
-          setAvatarVariations(data.variations);
-        }
-        if (!isEditingPrompt && data.promptUsed) {
-          setAvatarPrompt(data.promptUsed);
-        }
-      } else {
-        throw new Error('API request failed');
-      }
-    } catch (err) {
-      console.log('Serving dynamic executive neural portrait suite for agent');
-      const fallback = getCuratedAvatarSuite(gender, chosenStyle, `${firstName}-${Date.now()}`);
-      setAvatarUrl(fallback.primary.url);
-      setAvatarVariations(fallback.variations.map((v) => ({ url: v.url, fallbackUrl: v.fallbackUrl || v.url, label: v.label, badge: v.badge || v.style })));
-      setAvatarSource('ai_generated');
-    } finally {
-      setIsGeneratingAvatar(false);
-    }
-  };
-
   if (!isOpen) return null;
 
   const handleFinish = async () => {
@@ -226,7 +117,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
     const stages = [
       'Synthesizing persistent identity...',
-      'Assigning photorealistic portrait avatar...',
+      'Assigning selected portrait...',
       'Compiling behavioral system prompt from personality dimensions...',
       'Configuring 4-layer memory scopes...',
       'Provisioning security clearance & tools...',
@@ -249,9 +140,6 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
       reportsTo: reportsTo === 'none' ? undefined : reportsTo,
       seniority,
       gender,
-      age,
-      approxAge: age,
-      nationality,
       primaryResponsibility,
       secondaryResponsibilities: ['Security incident forensics', 'Access control validation'],
       expertise: skillsInput.split(',').map((s) => s.trim()).filter(Boolean),
@@ -377,6 +265,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     onChange={(e) => {
                       const val = e.target.value as any;
                       setGender(val);
+                      setAvatarUrl(getStockPortraits(val)[0].url);
                     }}
                     className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs"
                   >
@@ -386,258 +275,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] text-slate-600 mb-1 font-medium">Age</label>
-                  <input
-                    type="number"
-                    value={age}
-                    onChange={(e) => setAge(Number(e.target.value))}
-                    className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] text-slate-600 mb-1 font-medium">Nationality / Heritage</label>
-                  <input
-                    type="text"
-                    value={nationality}
-                    onChange={(e) => setNationality(e.target.value)}
-                    className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs"
-                  />
-                </div>
               </div>
-
-              {/* AI PORTRAIT GENERATION STUDIO */}
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3.5 shadow-2xs">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg border border-amber-300/80 bg-amber-50 flex items-center justify-center text-amber-700 shadow-2xs">
-                      <Wand2 className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-semibold text-slate-900">AI Portrait Synthesis Studio</h4>
-                      <p className="text-[10px] text-slate-500">
-                        Generate high-fidelity photorealistic headshots prior to agent deployment
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 font-mono font-medium shadow-2xs">
-                    {avatarSource === 'neural_ai_generated' ? 'NEURAL SYNTHESIZED' : 'NEURAL ARCHETYPE ENGINE'}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-start">
-                  {/* Portrait Preview Box */}
-                  <div className="sm:col-span-4 flex flex-col items-center gap-2">
-                    <div className="relative w-full aspect-square rounded-xl border border-slate-200 overflow-hidden bg-slate-100 group shadow-md">
-                      <img
-                        src={avatarUrl}
-                        alt="AI Avatar Preview"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => handleAvatarError(e, undefined, gender, avatarStyle, 0)}
-                        className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-                          isGeneratingAvatar ? 'opacity-40 blur-xs' : 'opacity-100'
-                        }`}
-                      />
-
-                      {isGeneratingAvatar && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 p-2 text-center">
-                          <Loader2 className="w-6 h-6 text-amber-400 animate-spin mb-1.5" />
-                          <span className="text-[11px] font-medium text-white">Synthesizing Portrait...</span>
-                          <span className="text-[9px] text-slate-300 font-mono">Computing facial geometry</span>
-                        </div>
-                      )}
-
-                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent p-2 pt-4 flex items-center justify-between text-[9px] font-mono text-white">
-                        <span className="truncate">{firstName} {lastName}</span>
-                        <span className="text-amber-300 capitalize">{avatarStyle}</span>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleGenerateAvatar()}
-                      disabled={isGeneratingAvatar}
-                      className="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer disabled:opacity-50"
-                    >
-                      {isGeneratingAvatar ? (
-                        <>
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          <span>Generating AI Portrait...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Wand2 className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Generate AI Portrait</span>
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setShowCustomUrl(!showCustomUrl)}
-                      className="text-[10px] text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer transition"
-                    >
-                      <LinkIcon className="w-3 h-3" />
-                      <span>{showCustomUrl ? 'Hide Custom Image URL' : 'Or enter custom image URL'}</span>
-                    </button>
-
-                    {showCustomUrl && (
-                      <div className="w-full space-y-1.5 p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs mt-1">
-                        <input
-                          type="text"
-                          placeholder="https://..."
-                          value={customUrlInput}
-                          onChange={(e) => setCustomUrlInput(e.target.value)}
-                          className="w-full p-2 rounded-lg border border-slate-200 bg-slate-50 text-[10px] text-slate-900"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (customUrlInput.trim()) {
-                              setAvatarUrl(customUrlInput.trim());
-                              setAvatarSource('ai_curated_neural');
-                            }
-                          }}
-                          className="w-full py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-medium cursor-pointer shadow-xs"
-                        >
-                          Apply URL
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Archetype & Prompt Configuration */}
-                  <div className="sm:col-span-8 space-y-3">
-                    <div>
-                      <label className="block text-[11px] font-semibold text-slate-800 mb-1.5">
-                        Select Executive Archetype & Style
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                        {AVATAR_STYLES.map((st) => {
-                          const isSelected = avatarStyle === st.id;
-                          return (
-                            <button
-                              key={st.id}
-                              type="button"
-                              onClick={() => {
-                                setAvatarStyle(st.id);
-                                handleGenerateAvatar(st.id);
-                              }}
-                              className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
-                                isSelected
-                                  ? 'border-amber-400 bg-amber-50/80 shadow-xs'
-                                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between mb-0.5">
-                                <span
-                                  className={`text-xs font-semibold ${
-                                    isSelected ? 'text-amber-900' : 'text-slate-900'
-                                  }`}
-                                >
-                                  {st.label}
-                                </span>
-                                <span className="text-[9px] px-1.5 py-0.2 rounded border border-slate-200 text-slate-500 font-mono bg-slate-50">
-                                  {st.badge}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-slate-500 leading-tight line-clamp-1">{st.description}</p>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Prompt Inspector / Customizer */}
-                    <div className="p-3 rounded-xl border border-slate-200 bg-white space-y-1.5 shadow-2xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-semibold text-slate-700 flex items-center gap-1 font-mono">
-                          <Cpu className="w-3 h-3 text-amber-600" />
-                          Synthesis Prompt Configuration
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setIsEditingPrompt(!isEditingPrompt)}
-                          className="text-[10px] text-amber-800 hover:text-amber-900 font-medium hover:underline cursor-pointer"
-                        >
-                          {isEditingPrompt ? 'Collapse Prompt' : 'Fine-Tune Prompt'}
-                        </button>
-                      </div>
-
-                      {isEditingPrompt ? (
-                        <div className="space-y-1.5">
-                          <textarea
-                            value={avatarPrompt}
-                            onChange={(e) => setAvatarPrompt(e.target.value)}
-                            rows={3}
-                            className="w-full p-2 rounded-lg border border-slate-200 bg-slate-50 text-[10px] text-slate-800 font-mono focus:outline-none focus:border-amber-500"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleGenerateAvatar()}
-                            className="px-3 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-medium cursor-pointer shadow-xs"
-                          >
-                            Re-synthesize with Custom Prompt
-                          </button>
-                        </div>
-                      ) : (
-                        <p className="text-[10px] text-slate-500 font-mono line-clamp-2 leading-relaxed">
-                          {avatarPrompt}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Alternate Candidate Variations */}
-                    <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-semibold text-slate-700 uppercase tracking-wider">
-                          Alternative AI Candidate Portraits
-                        </span>
-                        <span className="text-[9px] text-slate-400">Click to swap active portrait</span>
-                      </div>
-
-                      <div className="grid grid-cols-4 gap-2">
-                        {avatarVariations.slice(0, 4).map((variant, idx) => {
-                          const isCurrent = avatarUrl === variant.url;
-                          return (
-                            <div
-                              key={idx}
-                              onClick={() => {
-                                setAvatarUrl(variant.url);
-                                setAvatarSource('ai_curated_neural');
-                              }}
-                              className={`group relative rounded-xl border aspect-square overflow-hidden cursor-pointer transition ${
-                                isCurrent
-                                  ? 'border-amber-500 ring-2 ring-amber-400/50 shadow-xs'
-                                  : 'border-slate-200 opacity-80 hover:opacity-100 hover:border-slate-400 shadow-2xs'
-                              }`}
-                            >
-                              <img
-                                src={variant.url}
-                                alt={variant.label}
-                                referrerPolicy="no-referrer"
-                                onError={(e) => handleAvatarError(e, variant.fallbackUrl, gender, avatarStyle, idx + 1)}
-                                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                              />
-                              {isCurrent && (
-                                <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[9px] font-bold shadow-xs">
-                                  ✓
-                                </div>
-                              )}
-                              <div className="absolute bottom-0 inset-x-0 bg-slate-900/80 p-0.5 text-center">
-                                <span className="text-[8px] text-white block truncate">
-                                  {variant.badge || `Candidate ${idx + 1}`}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <StockPortraitPicker gender={gender} value={avatarUrl} onChange={setAvatarUrl} />
             </div>
           )}
 

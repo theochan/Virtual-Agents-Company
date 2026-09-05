@@ -9,7 +9,6 @@ import { INITIAL_WORK_ITEMS } from './src/data/initialWorkItems';
 import { MemoryManager } from './src/lib/memory/memoryManager';
 import { MultiAgentOrchestrator } from './src/lib/orchestration/orchestrator';
 import { AgentPromptCompiler } from './src/lib/agents/agentCompiler';
-import { buildAvatarPrompt, getCuratedAvatarSuite, createDynamicAvatarUrl } from './src/lib/avatarCatalog';
 import { Agent, Project, MemoryItem, Artifact, Tool, ApprovalRequest, Task, WorkItem, WorkItemStatus, ChatMessage } from './src/types';
 
 dotenv.config();
@@ -207,77 +206,6 @@ app.get('/api/agents/:id', (req, res) => {
   if (!agent) return res.status(404).json({ error: 'Agent not found' });
   res.json(agent);
 });
-
-// AI Portrait Generation (Prior to Agent Creation)
-const handleAvatarGeneration = async (req: express.Request, res: express.Response) => {
-  try {
-    const {
-      firstName,
-      lastName,
-      gender,
-      age,
-      nationality,
-      jobTitle,
-      department,
-      style,
-      customPrompt
-    } = req.body;
-
-    const finalPrompt = buildAvatarPrompt({
-      firstName,
-      lastName,
-      gender,
-      age,
-      nationality,
-      jobTitle,
-      department,
-      style,
-      customPrompt
-    });
-
-    const primarySeed = Math.floor(Math.random() * 100000000);
-    const primaryUrl = createDynamicAvatarUrl(finalPrompt, primarySeed);
-
-    const suite = getCuratedAvatarSuite(
-      (gender as any) || 'female',
-      (style as any) || 'corporate',
-      `${firstName || 'agent'}-${primarySeed}`
-    );
-
-    res.json({
-      avatarUrl: primaryUrl,
-      fallbackUrl: suite.primary.fallbackUrl,
-      promptUsed: finalPrompt,
-      source: 'ai_generated',
-      model: 'Flux / Neural Portrait Engine (Photorealistic)',
-      variations: suite.variations.map((v) => ({
-        url: v.url,
-        fallbackUrl: v.url,
-        label: v.label,
-        badge: v.badge || v.style
-      }))
-    });
-  } catch (err: any) {
-    console.error('[Avatar Studio] Avatar generation error:', err);
-    const fallbackSuite = getCuratedAvatarSuite('female', 'corporate', `agent-fallback-${Date.now()}`);
-    res.json({
-      avatarUrl: fallbackSuite.primary.url,
-      fallbackUrl: fallbackSuite.primary.fallbackUrl,
-      promptUsed: 'Executive photorealistic portrait',
-      source: 'ai_generated',
-      model: 'Flux / Neural Portrait Engine (Photorealistic)',
-      variations: fallbackSuite.variations.map((v) => ({
-        url: v.url,
-        fallbackUrl: v.url,
-        label: v.label,
-        badge: v.badge || v.style
-      }))
-    });
-  }
-};
-
-app.post('/api/agents/generate-avatar', handleAvatarGeneration);
-app.post('/api/generate-avatar', handleAvatarGeneration);
 
 app.post('/api/agents', (req, res) => {
   const newAgent: Agent = {
