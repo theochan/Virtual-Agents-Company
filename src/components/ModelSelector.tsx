@@ -16,7 +16,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
   const [showCustomInput, setShowCustomInput] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const currentModelId = agent.llmConfig?.model || 'gemini-3.8-flash';
+  const currentModelId = agent.llmConfig?.model || 'claude-3-5-sonnet';
   const currentDetails = getModelDetails(currentModelId);
   const currentTemp = agent.llmConfig?.temperature ?? 0.2;
 
@@ -46,7 +46,9 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
         ? modelDef.localSource === 'ollama'
           ? 'ollama'
           : 'huggingface'
-        : 'google'
+        : modelDef.provider.toLowerCase().includes('anthropic')
+        ? 'Anthropic'
+        : 'OpenAI'
     });
   };
 

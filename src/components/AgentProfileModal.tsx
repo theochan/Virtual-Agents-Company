@@ -79,7 +79,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('tools');
 
-  const [selectedModel, setSelectedModel] = useState<string>(agent?.llmConfig?.model || 'gemini-3.8-flash');
+  const [selectedModel, setSelectedModel] = useState<string>(agent?.llmConfig?.model || 'claude-3-5-sonnet');
   const [temperature, setTemperature] = useState<number>(agent?.llmConfig?.temperature ?? 0.2);
   const [maxTokens, setMaxTokens] = useState<number>(agent?.llmConfig?.maxTokens || 4096);
   const [isSaved, setIsSaved] = useState(false);
@@ -97,7 +97,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   const [selectedArchetype, setSelectedArchetype] = useState<string>('innovator');
   const [avatarPrompt, setAvatarPrompt] = useState<string>('');
   const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
-  const [avatarSource, setAvatarSource] = useState<'gemini_ai_generated' | 'ai_curated_neural' | 'custom_url'>('ai_curated_neural');
+  const [avatarSource, setAvatarSource] = useState<'neural_ai_generated' | 'ai_curated_neural' | 'custom_url'>('ai_curated_neural');
   const [avatarModel, setAvatarModel] = useState('Neural Portrait Engine (Photorealistic)');
   const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; fallbackUrl?: string; label: string; badge?: string }>>([]);
   const [customUrlInput, setCustomUrlInput] = useState('');
@@ -126,7 +126,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
 
   useEffect(() => {
     if (agent) {
-      setSelectedModel(agent.llmConfig?.model || 'gemini-3.8-flash');
+      setSelectedModel(agent.llmConfig?.model || 'claude-3-5-sonnet');
       setTemperature(agent.llmConfig?.temperature ?? 0.2);
       setMaxTokens(agent.llmConfig?.maxTokens || 4096);
       setIsSaved(false);

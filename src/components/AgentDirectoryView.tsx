@@ -245,7 +245,7 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
                     <div className="flex items-center justify-between font-mono text-[10px]">
                       <span className="text-slate-700 flex items-center gap-1 font-medium">
                         <Cpu className="w-3 h-3 text-amber-600" />
-                        {agent.llmConfig?.model || 'gemini-3.8-flash'}
+                        {agent.llmConfig?.model || 'claude-3-5-sonnet'}
                       </span>
                       <span className="text-slate-500">{(agent.llmConfig?.temperature ?? 0.2).toFixed(2)} temp</span>
                     </div>

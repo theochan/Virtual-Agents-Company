@@ -1,6 +1,5 @@
 {
   "name": "Agent Company",
   "description": "Enterprise AI organization operating autonomous human-like agents with 4-layer memory, structured multi-agent collaboration, and workstream management.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "requestFramePermissions": []
 }

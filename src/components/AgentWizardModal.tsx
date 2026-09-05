@@ -62,8 +62,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   );
   const [isEditingPrompt, setIsEditingPrompt] = useState(false);
   const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
-  const [avatarSource, setAvatarSource] = useState<'gemini_ai_generated' | 'ai_curated_neural'>('ai_curated_neural');
-  const [avatarModel, setAvatarModel] = useState('Gemini 3.1 Flash Image Synthesis');
+  const [avatarSource, setAvatarSource] = useState<'neural_ai_generated' | 'ai_curated_neural'>('ai_curated_neural');
+  const [avatarModel, setAvatarModel] = useState('Claude 3.5 Sonnet Neural Synthesis');
   const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; fallbackUrl?: string; label: string; badge?: string }>>([
     {
       url: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
@@ -131,8 +131,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   });
 
   // Step 5: Model & Tools
-  const [provider, setProvider] = useState<ModelProvider>('google');
-  const [model, setModel] = useState('gemini-3.8-flash');
+  const [provider, setProvider] = useState<ModelProvider>('anthropic');
+  const [model, setModel] = useState('claude-3-5-sonnet');
   const [temperature, setTemperature] = useState(0.2);
   const [maxTokens, setMaxTokens] = useState(4096);
   const [autonomyLevel, setAutonomyLevel] = useState<1 | 2 | 3 | 4>(3);
@@ -404,7 +404,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     </div>
                   </div>
                   <span className="text-[9px] px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 font-mono font-medium shadow-2xs">
-                    {avatarSource === 'gemini_ai_generated' ? 'GEMINI 3.1 SYNTHESIZED' : 'NEURAL ARCHETYPE ENGINE'}
+                    {avatarSource === 'neural_ai_generated' ? 'NEURAL SYNTHESIZED' : 'NEURAL ARCHETYPE ENGINE'}
                   </span>
                 </div>
 
@@ -866,9 +866,9 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     onChange={(e) => setProvider(e.target.value as any)}
                     className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500 capitalize"
                   >
-                    <option value="google">Google DeepMind (Gemini)</option>
+                    <option value="anthropic">Anthropic (Claude)</option>
                     <option value="openai">OpenAI</option>
-                    <option value="anthropic">Anthropic</option>
+                    <option value="ollama">Ollama (Local)</option>
                   </select>
                 </div>
 

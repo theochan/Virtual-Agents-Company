@@ -120,7 +120,6 @@ export interface CommunicationStyle {
 }
 
 export type ModelProvider =
-  | 'google'
   | 'openai'
   | 'anthropic'
   | 'ollama'
@@ -129,7 +128,6 @@ export type ModelProvider =
   | 'qwen'
   | 'local'
   | 'omniroute'
-  | 'Gemini'
   | 'OpenAI'
   | 'Anthropic'
   | 'Ollama'

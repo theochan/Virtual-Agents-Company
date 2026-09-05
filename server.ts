@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import { execFile } from 'child_process';
 import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { INITIAL_AGENTS, INITIAL_PROJECTS, INITIAL_MEMORIES, INITIAL_ARTIFACTS, INITIAL_TOOLS } from './src/data/initialData';
 import { INITIAL_WORK_ITEMS } from './src/data/initialWorkItems';
@@ -20,21 +19,8 @@ app.use(express.json({ limit: '10mb' }));
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
-// Lazy server-side Gemini client
-let aiClient: GoogleGenAI | null = null;
-function getGenAI(): GoogleGenAI | null {
-  if (!process.env.GEMINI_API_KEY) return null;
-  if (!aiClient) {
-    aiClient = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build'
-        }
-      }
-    });
-  }
-  return aiClient;
+function getGenAI(): any {
+  return null;
 }
 
 // Local Persistent Storage on Disk
@@ -121,12 +107,12 @@ loadStateFromDisk();
 
 // Admin LLM Provider Settings (Server-side secure credential & local model engine store)
 let adminLLMSettings = {
-  gemini: {
-    defaultModel: 'gemini-3.8-flash',
-    apiKeyMasked: process.env.GEMINI_API_KEY
-      ? `${process.env.GEMINI_API_KEY.slice(0, 4)}••••••••${process.env.GEMINI_API_KEY.slice(-4)}`
+  claude: {
+    defaultModel: 'claude-3-5-sonnet',
+    apiKeyMasked: process.env.ANTHROPIC_API_KEY
+      ? `${process.env.ANTHROPIC_API_KEY.slice(0, 7)}••••••••${process.env.ANTHROPIC_API_KEY.slice(-4)}`
       : '',
-    isConfigured: Boolean(process.env.GEMINI_API_KEY)
+    isConfigured: Boolean(process.env.ANTHROPIC_API_KEY)
   },
   openai: {
     defaultModel: 'gpt-4o',
@@ -188,7 +174,7 @@ let adminLLMSettings = {
       'auto/cheap',
       'claude-3-7-sonnet',
       'gpt-4o',
-      'gemini-2.5-flash',
+      'claude-3-5-sonnet',
       'deepseek-r1'
     ],
     status: 'ready'
@@ -207,7 +193,7 @@ app.get('/api/health', (req, res) => {
     projectsCount: projects.length,
     memoriesCount: memoryStore.getAllMemories().length,
     workItemsCount: workItems.length,
-    hasGeminiKey: Boolean(process.env.GEMINI_API_KEY)
+    hasClaudeKey: Boolean(process.env.ANTHROPIC_API_KEY)
   });
 });
 
@@ -316,8 +302,8 @@ app.patch('/api/agents/:id/llm', (req, res) => {
   const { model, temperature, maxTokens, provider } = req.body;
   if (!agent.llmConfig) {
     agent.llmConfig = {
-      provider: 'google',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.2,
       maxTokens: 4096
     };
@@ -809,7 +795,7 @@ ${customPrompt ? `Specific focus requested: ${customPrompt}` : ''}
 Write a professional, concise executive work log entry (2-4 sentences) explaining the technical/analytical deliverable or status update you have just produced. Speak directly in first-person with high domain precision.`;
 
       const generatePromise = ai.models.generateContent({
-        model: agent.llmConfig?.model || 'gemini-3.8-flash',
+        model: agent.llmConfig?.model || 'claude-3-5-sonnet',
         contents: prompt,
         config: {
           temperature: agent.llmConfig?.temperature ?? 0.2
@@ -819,7 +805,7 @@ Write a professional, concise executive work log entry (2-4 sentences) explainin
       const response: any = await Promise.race([generatePromise, timeoutPromise]);
       generatedComment = response.text?.trim() || '';
     } catch (e) {
-      console.log('Gemini notice on agent work item comment:', (e as any)?.message);
+      console.log('LLM notice on agent work item comment:', (e as any)?.message);
     }
   }
 
@@ -897,7 +883,7 @@ Output valid JSON ONLY in this format:
 ]`;
 
       const generatePromise = ai.models.generateContent({
-        model: agent.llmConfig?.model || 'gemini-3.8-flash',
+        model: agent.llmConfig?.model || 'claude-3-5-sonnet',
         contents: prompt,
         config: {
           responseMimeType: 'application/json',
@@ -1290,7 +1276,7 @@ async function runAsyncWebSearchDelegation(params: {
     if (ai && !liveSearch.isStockQuote) {
       try {
         const searchRes = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
+          model: 'claude-3-5-sonnet',
           contents: `You are ${agent2.displayName}, ${agent2.jobTitle}.
 Your team lead ${agent.displayName} (${agent.jobTitle}) delegated an internet research task to you because they do not have the Web Search tool equipped.
 USER'S RESEARCH REQUEST:
@@ -1961,7 +1947,7 @@ app.post('/api/chat/agent', async (req, res) => {
     const targetProject = projects.find((p) => p.id === projectId) || projects[0] || DEFAULT_FALLBACK_PROJECT;
 
     // Dynamic model resolution
-    const targetModel = clientModel || agent.llmConfig?.model || 'gemini-3.8-flash';
+    const targetModel = clientModel || agent.llmConfig?.model || 'claude-3-5-sonnet';
     const targetTemp = clientTemp !== undefined ? Number(clientTemp) : (agent.llmConfig?.temperature ?? 0.2);
 
     // Persist incoming user message
@@ -2670,7 +2656,7 @@ If the user is purely asking an informational question with zero request for wor
             }
           });
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Gemini API call timed out')), 8000)
+            setTimeout(() => reject(new Error('LLM API call timed out')), 8000)
           );
           const response: any = await Promise.race([generatePromise, timeoutPromise]);
           const responseJson = JSON.parse(response.text || '{}');
@@ -2678,8 +2664,8 @@ If the user is purely asking an informational question with zero request for wor
           if (Array.isArray(responseJson.workItems) && responseJson.workItems.length > 0) {
             parsedWorkItems = responseJson.workItems;
           }
-        } catch (geminiError: any) {
-          console.log('[Agent Chat] Notice on Gemini API call:', geminiError?.status || geminiError?.message || 'utilizing agent context persona fallback');
+        } catch (llmError: any) {
+          console.log('[Agent Chat] Notice on LLM API call:', llmError?.status || llmError?.message || 'utilizing agent context persona fallback');
         }
       }
     }
@@ -2710,7 +2696,7 @@ I have completed the market benchmark and compliance verification, logged the de
       }
     }
 
-    // If task requested but no work items were parsed from Gemini, construct domain-specific closed work items
+    // If task requested but no work items were parsed from LLM, construct domain-specific closed work items
     if (isTaskRequest && parsedWorkItems.length === 0) {
       const sanitizedTitle = userMessage.slice(0, 60).replace(/[^\w\s-]/g, '').trim();
       parsedWorkItems = [
@@ -3221,7 +3207,7 @@ ${sharedContext.projectMemories.map((m) => `- ${m.summary}: ${m.content}`).join(
 Respond directly in first-person as ${toAgent.displayName}. Keep your answer professional, clear, domain-accurate, and concise (2-4 sentences).`;
 
       const generatePromise = ai.models.generateContent({
-        model: toAgent.llmConfig?.model || 'gemini-3.8-flash',
+        model: toAgent.llmConfig?.model || 'claude-3-5-sonnet',
         contents: prompt,
         config: { temperature: 0.2 }
       });
@@ -3229,7 +3215,7 @@ Respond directly in first-person as ${toAgent.displayName}. Keep your answer pro
       const response: any = await Promise.race([generatePromise, timeoutPromise]);
       responseText = response.text || '';
     } catch (e) {
-      console.log('Notice on agent communication Gemini call:', (e as any)?.message);
+      console.log('Notice on agent communication LLM call:', (e as any)?.message);
     }
   }
 
@@ -3281,12 +3267,12 @@ app.post('/api/seed', (req, res) => {
   res.json({ status: 'reset_complete' });
 });
 
-// 9. Admin LLM Provider Settings (Multi-Provider: Gemini, OpenAI, Qwen/DashScope)
+// 9. Admin LLM Provider Settings (Multi-Provider: Claude, OpenAI, Qwen/DashScope)
 app.get('/api/admin/llm-settings', (req, res) => {
   // Sync real-time environment variable presence
-  if (process.env.GEMINI_API_KEY && !adminLLMSettings.gemini.isConfigured) {
-    adminLLMSettings.gemini.isConfigured = true;
-    adminLLMSettings.gemini.apiKeyMasked = `${process.env.GEMINI_API_KEY.slice(0, 4)}••••••••${process.env.GEMINI_API_KEY.slice(-4)}`;
+  if (process.env.ANTHROPIC_API_KEY && !adminLLMSettings.claude.isConfigured) {
+    adminLLMSettings.claude.isConfigured = true;
+    adminLLMSettings.claude.apiKeyMasked = `${process.env.ANTHROPIC_API_KEY.slice(0, 7)}••••••••${process.env.ANTHROPIC_API_KEY.slice(-4)}`;
   }
   if (process.env.OPENAI_API_KEY && !adminLLMSettings.openai.isConfigured) {
     adminLLMSettings.openai.isConfigured = true;
@@ -3335,9 +3321,8 @@ app.post('/api/admin/llm-settings', (req, res) => {
     p.isConfigured = true;
     p.apiKeyMasked = `${trimmed.slice(0, 4)}••••••••${trimmed.slice(-4)}`;
 
-    if (provider === 'gemini') {
-      process.env.GEMINI_API_KEY = trimmed;
-      aiClient = null; // Re-instantiate lazy client on next call
+    if (provider === 'claude') {
+      process.env.ANTHROPIC_API_KEY = trimmed;
     } else if (provider === 'openai') {
       process.env.OPENAI_API_KEY = trimmed;
     } else if (provider === 'qwen') {

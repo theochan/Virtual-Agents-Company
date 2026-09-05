@@ -16,54 +16,66 @@ export interface ModelOption {
 }
 
 export const SUPPORTED_MODELS: ModelOption[] = [
-  // Cloud Foundation Models
+  // Cloud Foundation Models (Anthropic & OpenAI)
   {
-    id: 'gemini-3.8-flash',
-    name: 'Gemini 3.8 Flash',
-    provider: 'Google Gemini',
+    id: 'claude-3-5-sonnet',
+    name: 'Claude 3.5 Sonnet',
+    provider: 'Anthropic Claude',
     badge: 'Recommended',
-    badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
-    description: 'Next-gen enterprise workhorse with fast reasoning and low latency across complex tasks.',
-    recommendedFor: '4-layer memory synthesis, proactive suggestions, balanced execution',
+    badgeColor: 'border-amber-500/30 text-amber-700 bg-amber-500/10',
+    description: 'State-of-the-art enterprise reasoning, code generation, and complex multi-agent execution.',
+    recommendedFor: 'Strategic synthesis, architectural design, autonomous task orchestration',
     defaultTemp: 0.2,
-    maxTokens: 4096,
+    maxTokens: 8192,
     speed: 'Fast'
   },
   {
-    id: 'gemini-2.5-flash',
-    name: 'Gemini 2.5 Flash',
-    provider: 'Google Gemini',
-    badge: 'Balanced',
-    badgeColor: 'border-sky-500/30 text-sky-400 bg-sky-500/10',
-    description: 'Balanced foundation model offering dependable latency and multimodal comprehension.',
-    recommendedFor: 'Interactive chat, tool orchestration, responsive conversation flows',
+    id: 'claude-3-5-haiku',
+    name: 'Claude 3.5 Haiku',
+    provider: 'Anthropic Claude',
+    badge: 'Ultra Fast',
+    badgeColor: 'border-emerald-500/30 text-emerald-700 bg-emerald-500/10',
+    description: 'Sub-second latency with exceptional reasoning for agile turnarounds and high-speed execution.',
+    recommendedFor: 'Rapid subtasks, quick tool triage, live conversation flows',
+    defaultTemp: 0.2,
+    maxTokens: 4096,
+    speed: 'Ultra Fast'
+  },
+  {
+    id: 'claude-3-7-sonnet',
+    name: 'Claude 3.7 Sonnet (Thinking)',
+    provider: 'Anthropic Claude',
+    badge: 'Deep Reasoning',
+    badgeColor: 'border-purple-500/30 text-purple-700 bg-purple-500/10',
+    description: 'Hybrid reasoning architecture dynamically switching between instant answers and extended thought chains.',
+    recommendedFor: 'Complex algorithmic deduction, multi-tier financial models, deep codebase refactors',
+    defaultTemp: 0.2,
+    maxTokens: 8192,
+    speed: 'Deep'
+  },
+  {
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    provider: 'OpenAI',
+    badge: 'Multimodal',
+    badgeColor: 'border-sky-500/30 text-sky-700 bg-sky-500/10',
+    description: 'Flagship omni model combining fast multimodal intelligence with broad knowledge bases.',
+    recommendedFor: 'Cross-functional analysis, executive correspondence, structured JSON generation',
     defaultTemp: 0.3,
     maxTokens: 4096,
     speed: 'Fast'
   },
   {
-    id: 'gemini-3.1-flash-lite',
-    name: 'Gemini 3.1 Flash Lite',
-    provider: 'Google Gemini',
-    badge: 'Ultra Fast',
-    badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
-    description: 'High-frequency inference with minimal latency, optimal for automated subtasks and rapid turnarounds.',
-    recommendedFor: 'High-frequency subtasks, lightweight fact-checking, rapid tool calls',
-    defaultTemp: 0.1,
-    maxTokens: 2048,
-    speed: 'Ultra Fast'
-  },
-  {
-    id: 'gemini-3.1-pro-preview',
-    name: 'Gemini 3.1 Pro Preview',
-    provider: 'Google Gemini',
-    badge: 'Deep Reasoning',
-    badgeColor: 'border-purple-500/30 text-purple-400 bg-purple-500/10',
-    description: 'Maximum reasoning power for intricate software architecture, math, logic, and deep analysis.',
-    recommendedFor: 'Multi-layer system design, contract scrutiny, complex trade-off matrices',
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    provider: 'OpenAI',
+    badge: 'Fast & Affordable',
+    badgeColor: 'border-teal-500/30 text-teal-700 bg-teal-500/10',
+    description: 'Lightweight, cost-effective model optimized for high-volume background tasks and quick responses.',
+    recommendedFor: 'Background data parsing, status summaries, task item classification',
     defaultTemp: 0.2,
-    maxTokens: 8192,
-    speed: 'Deep'
+    maxTokens: 4096,
+    speed: 'Ultra Fast'
   },
 
   // OmniRoute Gateway Models
@@ -297,7 +309,7 @@ export const SUPPORTED_MODELS: ModelOption[] = [
   }
 ];
 
-export const DEFAULT_MODEL_ID = 'gemini-3.8-flash';
+export const DEFAULT_MODEL_ID = 'claude-3-5-sonnet';
 
 export function getModelDetails(modelId?: string): ModelOption {
   if (!modelId) return SUPPORTED_MODELS[0];
@@ -392,7 +404,7 @@ export function isHuggingFaceModel(modelId?: string): boolean {
 }
 
 export function getCleanModelTag(modelId?: string): string {
-  if (!modelId) return 'gemini-3.8-flash';
+  if (!modelId) return 'claude-3-5-sonnet';
   if (modelId.startsWith('omniroute:')) return modelId.replace('omniroute:', '');
   if (modelId.startsWith('ollama:')) return modelId.replace('ollama:', '');
   if (modelId.startsWith('hf:')) return modelId.replace('hf:', '');

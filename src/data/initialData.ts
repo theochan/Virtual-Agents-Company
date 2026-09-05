@@ -63,8 +63,8 @@ export const INITIAL_AGENTS: Agent[] = [
       proactiveSuggestions: true
     },
     llmConfig: {
-      provider: 'Gemini',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.2,
       maxTokens: 2048,
       contextLimit: 32000,
@@ -154,8 +154,8 @@ export const INITIAL_AGENTS: Agent[] = [
       proactiveSuggestions: true
     },
     llmConfig: {
-      provider: 'Gemini',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.1,
       maxTokens: 3000,
       contextLimit: 32000,
@@ -245,8 +245,8 @@ export const INITIAL_AGENTS: Agent[] = [
       proactiveSuggestions: true
     },
     llmConfig: {
-      provider: 'Gemini',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.3,
       maxTokens: 2500,
       contextLimit: 32000
@@ -334,8 +334,8 @@ export const INITIAL_AGENTS: Agent[] = [
       proactiveSuggestions: true
     },
     llmConfig: {
-      provider: 'Gemini',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.1,
       maxTokens: 2000,
       contextLimit: 32000
@@ -423,8 +423,8 @@ export const INITIAL_AGENTS: Agent[] = [
       proactiveSuggestions: true
     },
     llmConfig: {
-      provider: 'Gemini',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.4,
       maxTokens: 2000,
       contextLimit: 32000
@@ -510,8 +510,8 @@ export const INITIAL_AGENTS: Agent[] = [
       proactiveSuggestions: true
     },
     llmConfig: {
-      provider: 'Gemini',
-      model: 'gemini-3.8-flash',
+      provider: 'Anthropic',
+      model: 'claude-3-5-sonnet',
       temperature: 0.4,
       maxTokens: 2000,
       contextLimit: 32000

@@ -124,14 +124,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
               />
             </div>
 
-            <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-serif italic font-semibold text-slate-900 tracking-tight">
                   {agent.displayName} — Enterprise Strategy Optimization
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 bg-slate-100 text-slate-600 font-medium">
-                  {agent.jobTitle}
-                </span>
                 {/* Linked Project Selector */}
                 {projects.length > 0 && onSelectProject ? (
                   <div className="relative inline-flex items-center">
@@ -155,31 +151,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                   </span>
                 ) : null}
               </div>
-              <p className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
-                <span className="capitalize text-emerald-700 font-medium">● Online</span>
-                <span>•</span>
-                <span className="text-slate-600 font-mono">{agent.llmConfig?.model || 'gemini-3.8-flash'}</span>
-                <span className="text-slate-400">({(agent.llmConfig?.temperature ?? 0.2).toFixed(2)} temp)</span>
-              </p>
             </div>
-          </div>
 
           {/* Action Controls */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => {}}
-              className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
-              title="Typography font scale"
-            >
-              <Type className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => {}}
-              className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
-              title="More options"
-            >
-              <MoreHorizontal className="w-4 h-4" />
-            </button>
 
             {onViewProject && activeProject && (
               <button

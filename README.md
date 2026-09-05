@@ -4,11 +4,11 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.2-646CFF.svg)](https://vitejs.dev/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC.svg)](https://tailwindcss.com/)
-[![Gemini API](https://img.shields.io/badge/Google_Gemini-2.5_Flash_%2F_Pro-orange.svg)](https://ai.google.dev/)
+[![Anthropic Claude](https://img.shields.io/badge/Anthropic_Claude-3.5_Sonnet-orange.svg)](https://www.anthropic.com/)
 [![Skills Catalog](https://img.shields.io/badge/Claude_Skills-388_Integrated-purple.svg)](https://github.com/alirezarezvani/claude-skills)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-An enterprise-grade autonomous AI organization platform operating specialized, human-like virtual coworkers. Powered by **4-layer memory scopes**, **hierarchical multi-agent delegation**, **391 business & engineering skills with Python CLI execution**, **photorealistic neural avatar synthesis**, and a **hybrid Cloud / Local LLM inference engine** (Gemini, Ollama, Hugging Face, OmniRoute).
+An enterprise-grade autonomous AI organization platform operating specialized, human-like virtual coworkers. Powered by **4-layer memory scopes**, **hierarchical multi-agent delegation**, **391 business & engineering skills with Python CLI execution**, **photorealistic neural avatar synthesis**, and a **hybrid Cloud / Local LLM inference engine** (Anthropic Claude, OpenAI, Ollama, Hugging Face, OmniRoute).
 
 ---
 
@@ -94,7 +94,7 @@ Fully integrated catalog of **388 skills** from [alirezarezvani/claude-skills](h
 - **Custom Image URL**: Direct support for custom external image links (Unsplash, company headshots, S3/CDN URLs).
 
 ### 5. Hybrid Cloud & Local LLM Provider Support
-- **Cloud Models**: Native Google Gemini integration (`gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-1.5-flash`, `gemini-1.5-pro`).
+- **Cloud Models**: Native Anthropic Claude (`claude-3-5-sonnet`, `claude-3-7-sonnet`, `claude-3-5-haiku`) and OpenAI (`gpt-4o`, `gpt-4o-mini`) integration.
 - **Local & Self-Hosted Providers**:
   - **Ollama**: Connect directly to `http://localhost:11434` to run Llama 3, Mistral, Qwen, DeepSeek, or CodeLlama locally with zero cloud API costs.
   - **OmniRoute / OpenAI-Compatible**: Route to local or remote multi-provider gateways (`http://localhost:20128/v1`).
@@ -133,7 +133,7 @@ Fully integrated catalog of **388 skills** from [alirezarezvani/claude-skills](h
   - [Node.js](https://nodejs.org/) & [Express](https://expressjs.com/)
   - [tsx](https://github.com/privatenumber/tsx) (TypeScript execution)
   - [esbuild](https://esbuild.github.io/) (High-speed server bundling)
-  - [@google/genai](https://www.npmjs.com/package/@google/genai) (Gemini SDK)
+  - Anthropic & OpenAI API integrations
   - Native Node `child_process` for secure Python CLI execution
 - **Execution & Storage**:
   - Python 3 (standard library CLI execution for 254 tools)
@@ -162,7 +162,7 @@ Virtual-Agents-Company/
 ├── public/                      # Static assets & icons
 ├── src/
 │   ├── components/
-│   │   ├── AdminSettingsView.tsx   # LLM provider settings (Gemini, Ollama, OmniRoute)
+│   │   ├── AdminSettingsView.tsx   # LLM provider settings (Anthropic, OpenAI, Ollama, OmniRoute)
 │   │   ├── AgentDirectoryView.tsx  # Agent cards, status filters, and search
 │   │   ├── AgentProfileModal.tsx   # Agent fine-tuning, Avatar Studio, Tool equipping
 │   │   ├── AgentWizardModal.tsx    # Step-by-step new agent onboarding wizard
@@ -176,7 +176,7 @@ Virtual-Agents-Company/
 │   │   └── initialWorkItems.ts     # Initial Kanban work items
 │   ├── lib/
 │   │   ├── avatarCatalog.ts        # Avatar styles, curated portraits, and fallback engine
-│   │   └── models.ts               # Model registry (Gemini, Ollama, Hugging Face)
+│   │   └── models.ts               # Model registry (Anthropic, OpenAI, Ollama, Hugging Face)
 │   ├── types.ts                    # TypeScript definitions for agents, tools, memory
 │   ├── App.tsx                     # Main layout & navigation container
 │   └── main.tsx                    # React application entry point
@@ -218,8 +218,11 @@ cp .env.example .env
 
 Open `.env` and configure your keys:
 ```env
-# Required for Google Gemini models:
-GEMINI_API_KEY="your_gemini_api_key_here"
+# Required for Anthropic Claude models:
+ANTHROPIC_API_KEY="your_anthropic_api_key_here"
+
+# Optional for OpenAI models:
+OPENAI_API_KEY="your_openai_api_key_here"
 
 # Application URL (default for local development):
 APP_URL="http://localhost:3001"
@@ -229,7 +232,7 @@ OMNIROUTE_ENDPOINT="http://localhost:20128/v1"
 OMNIROUTE_API_KEY="your_omniroute_key"
 ```
 
-> **Note**: You can get a free Gemini API key from [Google AI Studio](https://aistudio.google.com/). If you run only local models via Ollama, you can leave `GEMINI_API_KEY` blank and configure Ollama in the Admin Settings UI.
+> **Note**: You can get an API key from [Anthropic Console](https://console.anthropic.com/) or [OpenAI Platform](https://platform.openai.com/). If you run only local models via Ollama, you can leave API keys blank and configure Ollama in the Admin Settings UI.
 
 ### 4. Start Development Server
 ```bash
@@ -257,13 +260,14 @@ npm run start
 
 | Variable | Required | Description | Default |
 | :--- | :---: | :--- | :--- |
-| `GEMINI_API_KEY` | Optional* | API key for Google Gemini models (`gemini-2.5-flash`, `gemini-2.5-pro`) | None |
+| `ANTHROPIC_API_KEY` | Optional* | API key for Anthropic Claude models (`claude-3-5-sonnet`, `claude-3-7-sonnet`, `claude-3-5-haiku`) | None |
+| `OPENAI_API_KEY` | Optional* | API key for OpenAI models (`gpt-4o`, `gpt-4o-mini`) | None |
 | `APP_URL` | Yes | Host URL for API endpoints and asset resolution | `http://localhost:3001` |
 | `PORT` | Optional | Port on which the Express server listens | `3001` |
 | `OMNIROUTE_ENDPOINT`| Optional | Base URL for OpenAI-compatible gateway | `http://localhost:20128/v1`|
 | `OMNIROUTE_API_KEY` | Optional | Bearer authentication token for gateway | None |
 
-*\*Required if you plan to use Google Gemini models. Not required if running strictly with local Ollama models.*
+*\*Required if you plan to use Anthropic Claude or OpenAI cloud models. Not required if running strictly with local Ollama models.*
 
 ---
 

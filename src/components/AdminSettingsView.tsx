@@ -38,7 +38,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   onUpdateAgentModel,
 }) => {
   const [settings, setSettings] = useState<Record<string, ProviderConfig>>({
-    gemini: { defaultModel: 'gemini-3.8-flash', apiKeyMasked: '', isConfigured: false },
+    claude: { defaultModel: 'claude-3-5-sonnet', apiKeyMasked: '', isConfigured: false },
     openai: { defaultModel: 'gpt-4o', apiKeyMasked: '', isConfigured: false },
     qwen: { defaultModel: 'qwen-plus', apiKeyMasked: '', isConfigured: false },
     ollama: {
@@ -73,7 +73,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
 
   const [openaiKeyInput, setOpenaiKeyInput] = useState('');
   const [qwenKeyInput, setQwenKeyInput] = useState('');
-  const [geminiKeyInput, setGeminiKeyInput] = useState('');
+  const [claudeKeyInput, setClaudeKeyInput] = useState('');
   const [hfTokenInput, setHfTokenInput] = useState('');
   const [omnirouteKeyInput, setOmnirouteKeyInput] = useState('');
   const [omnirouteEndpointInput, setOmnirouteEndpointInput] = useState('http://127.0.0.1:20128/v1');
@@ -126,7 +126,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
         setSaveSuccess(provider);
         if (provider === 'openai') setOpenaiKeyInput('');
         if (provider === 'qwen') setQwenKeyInput('');
-        if (provider === 'gemini') setGeminiKeyInput('');
+        if (provider === 'claude') setClaudeKeyInput('');
         if (provider === 'huggingface') setHfTokenInput('');
         if (provider === 'omniroute') setOmnirouteKeyInput('');
         setTimeout(() => setSaveSuccess(null), 3000);
@@ -293,7 +293,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           <div className="space-y-1">
             <span className="font-semibold text-slate-900 block font-serif">Hybrid Cloud & Local Model Infrastructure</span>
             <p className="leading-relaxed text-slate-600">
-              You can run agents on Google Gemini or execute completely locally on your hardware via <strong>Ollama</strong> (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:11434</code>) or <strong>Hugging Face Hub</strong> weights (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:8000</code>). Local models maintain zero-cloud data egress and operate seamlessly even offline.
+              You can run agents on Anthropic Claude, OpenAI, or execute completely locally on your hardware via <strong>Ollama</strong> (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:11434</code>) or <strong>Hugging Face Hub</strong> weights (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:8000</code>). Local models maintain zero-cloud data egress and operate seamlessly even offline.
             </p>
           </div>
         </div>
@@ -631,7 +631,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   </span>
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Unified endpoint routing across 350+ providers (Claude, GPT-4o, Gemini, DeepSeek) with quota-aware auto-fallback.
+                  Unified endpoint routing across 350+ providers (Claude, GPT-4o, Mistral, DeepSeek) with quota-aware auto-fallback.
                 </p>
               </div>
             </div>
@@ -758,28 +758,28 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             <div className="flex items-center gap-2 text-amber-800">
               <Server className="w-4 h-4" />
               <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900 font-mono">
-                Cloud AI Providers (Gemini, OpenAI, Qwen)
+                Cloud AI Providers (Anthropic, OpenAI, Qwen)
               </h3>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* 1. Google Gemini */}
+            {/* 1. Anthropic Claude */}
             <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs flex flex-col justify-between space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
                     <Cpu className="w-4 h-4 text-amber-700" />
-                    Google Gemini
+                    Anthropic Claude
                   </span>
                   <span
                     className={`text-[9px] px-2 py-0.5 rounded font-mono ${
-                      settings.gemini?.isConfigured
+                      settings.claude?.isConfigured
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold'
                         : 'bg-slate-100 text-slate-500 border border-slate-200'
                     }`}
                   >
-                    {settings.gemini?.isConfigured ? 'ACTIVE' : 'NOT SET'}
+                    {settings.claude?.isConfigured ? 'ACTIVE' : 'NOT SET'}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mb-3">Primary cloud engine for reasoning, synthesis, and memory.</p>
@@ -788,18 +788,18 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   <div>
                     <label className="text-[10px] uppercase font-mono text-slate-500 block mb-1 font-medium">Default Model</label>
                     <select
-                      value={settings.gemini?.defaultModel || 'gemini-3.8-flash'}
+                      value={settings.claude?.defaultModel || 'claude-3-5-sonnet'}
                       onChange={(e) =>
                         setSettings((prev) => ({
                           ...prev,
-                          gemini: { ...prev.gemini, defaultModel: e.target.value },
+                          claude: { ...prev.claude, defaultModel: e.target.value },
                         }))
                       }
                       className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 outline-none cursor-pointer focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600"
                     >
-                      <option value="gemini-3.8-flash">Gemini 3.8 Flash (Fast & Scaled)</option>
-                      <option value="gemini-2.5-pro">Gemini 2.5 Pro (Deep Reasoning)</option>
-                      <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                      <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Recommended)</option>
+                      <option value="claude-3-5-haiku">Claude 3.5 Haiku (Fast)</option>
+                      <option value="claude-3-7-sonnet">Claude 3.7 Sonnet (Thinking)</option>
                     </select>
                   </div>
 
@@ -807,9 +807,9 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                     <label className="text-[10px] uppercase font-mono text-slate-500 block mb-1 font-medium">API Key</label>
                     <input
                       type="password"
-                      placeholder={settings.gemini?.apiKeyMasked || 'Enter Gemini API key...'}
-                      value={geminiKeyInput}
-                      onChange={(e) => setGeminiKeyInput(e.target.value)}
+                      placeholder={settings.claude?.apiKeyMasked || 'Enter Anthropic API key (sk-ant-...)'}
+                      value={claudeKeyInput}
+                      onChange={(e) => setClaudeKeyInput(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600"
                     />
                   </div>
@@ -818,15 +818,15 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
 
               <button
                 onClick={() =>
-                  handleSaveProvider('gemini', {
-                    apiKey: geminiKeyInput,
-                    defaultModel: settings.gemini?.defaultModel || 'gemini-3.8-flash'
+                  handleSaveProvider('claude', {
+                    apiKey: claudeKeyInput,
+                    defaultModel: settings.claude?.defaultModel || 'claude-3-5-sonnet'
                   })
                 }
-                disabled={savingProvider === 'gemini'}
+                disabled={savingProvider === 'claude'}
                 className="w-full py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
               >
-                {saveSuccess === 'gemini' ? (
+                {saveSuccess === 'claude' ? (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                     <span className="text-emerald-400">Saved</span>
@@ -834,7 +834,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                 ) : (
                   <>
                     <Save className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Update Gemini</span>
+                    <span>Update Claude</span>
                   </>
                 )}
               </button>
@@ -1028,7 +1028,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                     {agent.department}
                   </span>
                   <select
-                    value={agent.llmConfig?.model || agent.defaultModel || 'gemini-3.8-flash'}
+                    value={agent.llmConfig?.model || agent.defaultModel || 'claude-3-5-sonnet'}
                     onChange={(e) => onUpdateAgentModel && onUpdateAgentModel(agent.id, e.target.value)}
                     className="px-3 py-1.5 rounded-lg bg-white border border-slate-300 focus:border-amber-600 text-xs text-slate-900 outline-none transition cursor-pointer font-mono shadow-2xs"
                   >
@@ -1046,10 +1046,10 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                         </option>
                       ))}
                     </optgroup>
-                    <optgroup label="Google Gemini (Cloud)">
-                      <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
-                      <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-                      <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                    <optgroup label="Anthropic Claude (Cloud)">
+                      <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                      <option value="claude-3-5-haiku">Claude 3.5 Haiku</option>
+                      <option value="claude-3-7-sonnet">Claude 3.7 Sonnet</option>
                     </optgroup>
                     <optgroup label="OpenAI (Cloud)">
                       <option value="gpt-4o">GPT-4o</option>

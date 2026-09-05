@@ -595,8 +595,8 @@ I have finalized the deliverables and logged the closed work items to the projec
       },
       autonomyLevel: newAgentData.autonomyLevel || 3,
       llmConfig: newAgentData.llmConfig || {
-        provider: 'google',
-        model: 'gemini-3.8-flash',
+        provider: 'Anthropic',
+        model: 'claude-3-5-sonnet',
         temperature: 0.2,
         maxTokens: 4096
       },
@@ -929,7 +929,7 @@ I have finalized the deliverables and logged the closed work items to the projec
               defaultModel: model,
               llmConfig: a.llmConfig
                 ? { ...a.llmConfig, model }
-                : { provider: 'google', model, temperature: 0.2, maxTokens: 4096 }
+                : { provider: 'Anthropic', model, temperature: 0.2, maxTokens: 4096 }
             }
           : a
       )
