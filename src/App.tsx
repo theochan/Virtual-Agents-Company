@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Agent, Project, MemoryItem, Artifact, Tool, ApprovalRequest, Task, TaskEvent, ChatMessage, ContextPacket, MemoryScope, LLMConfig, WorkItem, WorkItemStatus } from './types';
-import { INITIAL_AGENTS, INITIAL_PROJECTS, INITIAL_MEMORIES, INITIAL_ARTIFACTS, INITIAL_TOOLS } from './data/initialData';
-import { INITIAL_WORK_ITEMS } from './data/initialWorkItems';
-import { MemoryManager } from './lib/memory/memoryManager';
-import { MultiAgentOrchestrator } from './lib/orchestration/orchestrator';
 import { Sidebar } from './components/Sidebar';
 import { ChatPanel } from './components/ChatPanel';
 import { ProjectsView } from './components/ProjectsView';
-import { CollaborationView } from './components/CollaborationView';
 import { TasksView } from './components/TasksView';
 import { MemoryHubView } from './components/MemoryHubView';
 import { AgentDirectoryView } from './components/AgentDirectoryView';
@@ -19,966 +14,110 @@ import { ToolSecurityModal } from './components/ToolSecurityModal';
 import { AgentProfileModal } from './components/AgentProfileModal';
 import { AdminSettingsView } from './components/AdminSettingsView';
 
+
+import { api } from './lib/api';
+import { RunReviewView } from './components/RunReviewView';
+
 export const App: React.FC = () => {
-  // Core Enterprise State
-  const [agents, setAgents] = useState<Agent[]>(() => {
-    try {
-      const saved = localStorage.getItem('vac_agents');
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return INITIAL_AGENTS;
-  });
-  const [projects, setProjects] = useState<Project[]>(() => {
-    try {
-      const saved = localStorage.getItem('vac_projects');
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return INITIAL_PROJECTS;
-  });
-  const [memories, setMemories] = useState<MemoryItem[]>(INITIAL_MEMORIES);
-  const [artifacts, setArtifacts] = useState<Artifact[]>(INITIAL_ARTIFACTS);
-  const [tools, setTools] = useState<Tool[]>(INITIAL_TOOLS);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [memories, setMemories] = useState<MemoryItem[]>([]);
+  const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [tools, setTools] = useState<Tool[]>([]);
   const [approvals, setApprovals] = useState<ApprovalRequest[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [workItems, setWorkItems] = useState<WorkItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('vac_work_items');
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return INITIAL_WORK_ITEMS;
-  });
-  const [events, setEvents] = useState<TaskEvent[]>([]);
-
-  // Local persistence sync
-  useEffect(() => {
-    try {
-      localStorage.setItem('vac_agents', JSON.stringify(agents));
-    } catch {}
-  }, [agents]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('vac_projects', JSON.stringify(projects));
-    } catch {}
-  }, [projects]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('vac_work_items', JSON.stringify(workItems));
-    } catch {}
-  }, [workItems]);
-
-  // Navigation State
-  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings'>('chat');
-  const [selectedAgentId, setSelectedAgentId] = useState<string>('agent-sarah');
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('proj-phoenix');
-
-  // Interactive Task & Chat State
-  const [activeTask, setActiveTask] = useState<Task | undefined>(undefined);
-  const [isCollaborating, setIsCollaborating] = useState<boolean>(false);
-  const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
+  const [workItems, setWorkItems] = useState<WorkItem[]>([]);
+  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs'>('chat');
+  const [selectedAgentId, setSelectedAgentId] = useState('');
+  const [selectedProjectId, setSelectedProjectId] = useState('');
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [messagesByAgent, setMessagesByAgent] = useState<Record<string, ChatMessage[]>>({});
-
-  // Modals State
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [profileAgent, setProfileAgent] = useState<Agent | null>(null);
   const [isContextInspectorOpen, setIsContextInspectorOpen] = useState(false);
   const [activeArtifact, setActiveArtifact] = useState<Artifact | null>(null);
-  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
-  const [latestContextPacket, setLatestContextPacket] = useState<ContextPacket | undefined>(undefined);
+  const [error, setError] = useState('');
+  const latestContextPacket: ContextPacket | undefined = undefined;
+  const selectedAgent = agents.find(a => a.id === selectedAgentId) || agents[0];
+  const selectedProject = projects.find(p => p.id === selectedProjectId) || projects[0];
+  const conversationKey = `${selectedProject?.id}:${selectedAgent?.id}`;
+  const activeTask = [...tasks].reverse().find(t => t.projectId === selectedProject?.id && t.leadAgentId === selectedAgent?.id);
+  const events: TaskEvent[] = tasks.flatMap(t => (t as any).events || []);
+  const isCollaborating = tasks.some(t => ['queued', 'working', 'waiting'].includes(t.status));
 
-  // Sync with Backend on Mount & Poll for background delegation progress
   useEffect(() => {
-    fetch('/api/health')
-      .then((r) => r.json())
-      .catch((e) => console.log('Using local client state until server ready'));
-
-    const syncProjects = () => {
-      fetch('/api/projects')
-        .then((r) => r.json())
-        .then((data) => {
-          if (Array.isArray(data)) {
-            setProjects(data);
-          }
-        })
-        .catch((e) => console.log('Using local projects until server ready'));
+    const listener = (event: Event) => setError((event as CustomEvent).detail);
+    window.addEventListener('workspace-error', listener);
+    return () => window.removeEventListener('workspace-error', listener);
+  }, []);
+  const refresh = useCallback(async () => {
+    const [a, p, m, ar, to, ap, ta, w] = await Promise.all([
+      api<Agent[]>('/api/agents'), api<Project[]>('/api/projects'), api<MemoryItem[]>('/api/memories'),
+      api<Artifact[]>('/api/artifacts'), api<Tool[]>('/api/tools'), api<ApprovalRequest[]>('/api/approvals'),
+      api<Task[]>('/api/tasks'), api<WorkItem[]>('/api/work-items'),
+    ]);
+    setAgents(a); setProjects(p); setMemories(m); setArtifacts(ar); setTools(to); setApprovals(ap); setTasks(ta); setWorkItems(w);
+    setSelectedAgentId(old => a.some(v => v.id === old) ? old : a[0]?.id || '');
+    setSelectedProjectId(old => p.some(v => v.id === old) ? old : p[0]?.id || '');
+    setProfileAgent(old => old ? a.find(v => v.id === old.id) || null : null);
+  }, []);
+  useEffect(() => { void refresh().catch(() => {}); const timer = setInterval(() => void refresh().catch(() => {}), 3000); return () => clearInterval(timer); }, [refresh]);
+  useEffect(() => {
+    if (!selectedAgent?.id || !selectedProject?.id) return;
+    let disposed = false;
+    const poll = async () => {
+      try {
+        const messages = await api<ChatMessage[]>(`/api/chat/messages?agentId=${encodeURIComponent(selectedAgent.id)}&projectId=${encodeURIComponent(selectedProject.id)}`);
+        if (!disposed) setMessagesByAgent(prev => ({ ...prev, [conversationKey]: messages }));
+      } catch {}
     };
-
-    const syncWorkItems = () => {
-      fetch('/api/work-items')
-        .then((r) => r.json())
-        .then((data) => {
-          if (Array.isArray(data)) {
-            setWorkItems(data);
-          }
-        })
-        .catch((e) => console.log('Work items sync note:', e));
-    };
-
-    const syncAgents = () => {
-      fetch('/api/agents')
-        .then((r) => r.json())
-        .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            setAgents(data);
-          }
-        })
-        .catch((e) => console.log('Using local agents until server ready'));
-    };
-
-    const syncMessages = (agentId: string) => {
-      fetch(`/api/chat/messages?agentId=${agentId}`)
-        .then((r) => r.json())
-        .then((serverMsgs) => {
-          if (Array.isArray(serverMsgs)) {
-            setMessagesByAgent((prev) => {
-              const currentList = prev[agentId] || [];
-              // If server has different message count or different latest status, update
-              if (
-                serverMsgs.length !== currentList.length ||
-                (serverMsgs.length > 0 &&
-                  JSON.stringify(serverMsgs[serverMsgs.length - 1]?.metadata) !==
-                    JSON.stringify(currentList[currentList.length - 1]?.metadata))
-              ) {
-                return {
-                  ...prev,
-                  [agentId]: serverMsgs
-                };
-              }
-              return prev;
-            });
-          }
-        })
-        .catch((e) => console.log('Messages sync note:', e));
-    };
-
-    // Initial load
-    syncAgents();
-    syncProjects();
-    syncWorkItems();
-    syncMessages(selectedAgentId);
-
-    // Polling interval (every 2.5s) to capture async background delegation from Agent 1 -> Agent 2 -> completion
-    const interval = setInterval(() => {
-      syncAgents();
-      syncProjects();
-      syncWorkItems();
-      syncMessages(selectedAgentId);
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [selectedAgentId]);
-
-  const selectedAgent = agents.find((a) => a.id === selectedAgentId) || agents[0];
-  const selectedProject = projects.find((p) => p.id === selectedProjectId) || (projects.length > 0 ? projects[0] : undefined);
-
-  // Project lifecycle handlers
-  const handleCreateProject = async (newProjData: Partial<Project>) => {
-    try {
-      const res = await fetch('/api/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProjData)
-      });
-      if (res.ok) {
-        const created: Project = await res.json();
-        setProjects((prev) => [...prev, created]);
-        setSelectedProjectId(created.id);
-      }
-    } catch (err) {
-      console.error('Failed to create project:', err);
-    }
+    void poll(); const timer = setInterval(poll, 1000);
+    return () => { disposed = true; clearInterval(timer); };
+  }, [selectedAgent?.id, selectedProject?.id, conversationKey]);
+  const change = async (url: string, method: string, body?: unknown) => {
+    try { setError(''); const result = await api(url, method, body); await refresh(); return result; }
+    catch (e) { setError(e instanceof Error ? e.message : 'Operation failed'); return undefined; }
   };
-
-  const handleUpdateProjectStatus = async (projectId: string, status: Project['status']) => {
-    try {
-      const res = await fetch(`/api/projects/${projectId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-      if (res.ok) {
-        const updated: Project = await res.json();
-        setProjects((prev) => prev.map((p) => (p.id === projectId ? updated : p)));
-      }
-    } catch (err) {
-      console.error('Failed to update project status:', err);
-    }
-  };
-
-  const handleDeleteProject = async (projectId: string) => {
-    try {
-      const res = await fetch(`/api/projects/${projectId}`, {
-        method: 'DELETE'
-      });
-      if (res.ok) {
-        setProjects((prev) => {
-          const remaining = prev.filter((p) => p.id !== projectId);
-          if (selectedProjectId === projectId) {
-            setSelectedProjectId(remaining[0]?.id || '');
-          }
-          return remaining;
-        });
-        // Cascade delete work items for this project
-        setWorkItems((prev) => prev.filter((wi) => wi.projectId !== projectId));
-        // Cascade delete artifacts for this project
-        setArtifacts((prev) => prev.filter((art) => art.projectId !== projectId));
-      }
-    } catch (err) {
-      console.error('Failed to delete project:', err);
-    }
-  };
-
-  // Send Direct Message to an Agent
-  const handleSendMessage = async (text: string) => {
+  const handleCreateProject = async (data: Partial<Project>) => { const created = await change('/api/projects', 'POST', data); if (created) setSelectedProjectId(created.id); return Boolean(created); };
+  const handleUpdateProjectStatus = async (id: string, status: Project['status']) => { await change(`/api/projects/${id}`, 'PATCH', { status }); };
+  const handleDeleteProject = async (id: string) => { await change(`/api/projects/${id}`, 'DELETE'); };
+  const handleSendMessage = async (userMessage: string) => {
+    if (!selectedAgent || !selectedProject) { setError('Create an agent and project first.'); return; }
     setIsSendingMessage(true);
-
-    const userMsg: ChatMessage = {
-      id: `usr-${Date.now()}`,
-      senderType: 'user',
-      content: text,
-      timestamp: new Date().toISOString()
-    };
-
-    setMessagesByAgent((prev) => ({
-      ...prev,
-      [selectedAgent.id]: [...(prev[selectedAgent.id] || []), userMsg]
-    }));
-
-    try {
-      const res = await fetch('/api/chat/agent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          agentId: selectedAgent.id,
-          userMessage: text,
-          projectId: selectedProjectId,
-          model: selectedAgent.llmConfig?.model,
-          temperature: selectedAgent.llmConfig?.temperature
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setLatestContextPacket(data.contextPacket);
-
-        if (Array.isArray(data.autoCreatedWorkItems) && data.autoCreatedWorkItems.length > 0) {
-          setWorkItems((prev) => {
-            const existingIds = new Set(prev.map((w) => w.id));
-            const newItems = data.autoCreatedWorkItems.filter((w: WorkItem) => !existingIds.has(w.id));
-            return [...newItems, ...prev];
-          });
-        }
-
-        if (Array.isArray(data.createdArtifacts) && data.createdArtifacts.length > 0) {
-          setArtifacts((prev) => {
-            const existingIds = new Set(prev.map((a) => a.id));
-            const newArts = data.createdArtifacts.filter((a: Artifact) => !existingIds.has(a.id));
-            return [...newArts, ...prev];
-          });
-        }
-
-        const agentReplyMsg: ChatMessage = {
-          id: `agt-${Date.now()}`,
-          agentId: selectedAgent.id,
-          senderType: 'agent',
-          content: data.reply,
-          timestamp: new Date().toISOString(),
-          attachments: data.createdArtifacts || [],
-          metadata: {
-            autoCreatedWorkItems: data.autoCreatedWorkItems || [],
-            executionStatus: data.isDelegated ? 'in_progress' : 'completed',
-            isDelegated: data.isDelegated,
-            delegationChain: data.isDelegated
-              ? {
-                  delegatorId: selectedAgent.id,
-                  delegatorName: selectedAgent.displayName,
-                  subordinateId: 'agent-emma',
-                  subordinateName: 'Emma Vance',
-                  subordinateRole: 'Senior Research Analyst',
-                  toolUsed: 'tool-web-search',
-                  status: 'pending',
-                  workItemId: data.autoCreatedWorkItems?.[0]?.id,
-                  query: data.autoCreatedWorkItems?.[0]?.title || text
-                }
-              : undefined,
-            pendingWorkItemId: data.autoCreatedWorkItems?.[0]?.id,
-            linkedProjectId: data.linkedProjectId || selectedProjectId,
-            linkedProjectName: data.linkedProjectName || selectedProject?.name
-          }
-        };
-
-        setMessagesByAgent((prev) => ({
-          ...prev,
-          [selectedAgent.id]: [...(prev[selectedAgent.id] || []), agentReplyMsg]
-        }));
-      } else {
-        throw new Error('Server chat failed');
-      }
-    } catch (err) {
-      // High-fidelity fallback adhering strictly to agent personality & 4-layer memory (Section 61)
-      let reply = '';
-      if (selectedAgent.id === 'agent-emma') {
-        if (text.toLowerCase().includes('database') || text.toLowerCase().includes('phoenix')) {
-          reply = `Based on Project Phoenix project memory: We selected **PostgreSQL** over Firebase.
-
-**Rationale & Key Factors**:
-1. **Relational Integrity & Complex Queries**: Phoenix requires strict foreign key relationships and multi-tenant indexing.
-2. **pgvector & Semantic Search**: Native vector search needed for our upcoming knowledge analytics.
-3. **Execution Decision**: Sarah approved a phased rollout—building the repository boundary first, with production cutover in Q1 2027.
-
-I have finalized the deliverables and logged the closed work items to the project board.`;
-        } else {
-          reply = `I have investigated the domain, synthesized relevant research benchmarks, and registered the completed deliverables on the project board.`;
-        }
-      } else if (selectedAgent.id === 'agent-marcus') {
-        reply = `From an architectural standpoint: I have implemented the core module boundaries, verified schema constraints, and closed the work item on the project board.`;
-      } else if (selectedAgent.id === 'agent-sarah') {
-        reply = `**Conclusion First**: I have taken your directive, organized the technical deliverables across the team, and closed out the work items on the project board.`;
-      } else {
-        reply = `Understood. I have executed the requested scope in alignment with our standards and closed the work item on the project board.`;
-      }
-
-      // Generate a fallback closed work item if this was a task
-      const fallbackWorkItem: WorkItem = {
-        id: `wi-${Date.now()}`,
-        workspaceId: 'ws-default',
-        projectId: selectedProjectId,
-        title: text.slice(0, 60).replace(/[^\w\s-]/g, '').trim() || 'Autonomous Work Item',
-        description: `Deliverable executed based on user instruction: "${text.slice(0, 100)}"`,
-        status: 'done',
-        priority: 'high',
-        assignedAgentId: selectedAgent.id,
-        createdByAgentId: selectedAgent.id,
-        createdByName: `${selectedAgent.displayName} (${selectedAgent.jobTitle})`,
-        lastUpdatedByAgentId: selectedAgent.id,
-        tags: [selectedAgent.jobTitle.split(' ')[0] || 'Task', 'Autonomous'],
-        estimatedHours: 8,
-        actualHours: 6,
-        progressPercent: 100,
-        history: [
-          {
-            id: `hist-fallback-${Date.now()}`,
-            agentId: selectedAgent.id,
-            authorName: `${selectedAgent.displayName} (${selectedAgent.jobTitle})`,
-            timestamp: new Date().toISOString(),
-            previousStatus: 'in_progress',
-            newStatus: 'done',
-            comment: `Completed deliverable implementation and closed work item.`,
-            progressPercent: 100
-          }
-        ],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      setWorkItems((prev) => [fallbackWorkItem, ...prev]);
-
-      const fallbackMsg: ChatMessage = {
-        id: `agt-${Date.now()}`,
-        agentId: selectedAgent.id,
-        senderType: 'agent',
-        content: reply,
-        timestamp: new Date().toISOString(),
-        metadata: {
-          autoCreatedWorkItems: [fallbackWorkItem],
-          executionStatus: 'completed',
-          linkedProjectId: selectedProjectId,
-          linkedProjectName: selectedProject?.name
-        }
-      };
-
-      setMessagesByAgent((prev) => ({
-        ...prev,
-        [selectedAgent.id]: [...(prev[selectedAgent.id] || []), fallbackMsg]
-      }));
-    } finally {
-      setIsSendingMessage(false);
-    }
+    await change('/api/chat/agent', 'POST', { agentId: selectedAgent.id, projectId: selectedProject.id, userMessage });
+    setIsSendingMessage(false);
   };
-
-  // Update Agent Foundation Model and Inference Parameters
-  const handleUpdateAgentLLMConfig = async (agentId: string, newConfig: Partial<LLMConfig>) => {
-    setAgents((prev) =>
-      prev.map((a) => {
-        if (a.id === agentId) {
-          return {
-            ...a,
-            llmConfig: {
-              ...a.llmConfig,
-              ...newConfig
-            }
-          };
-        }
-        return a;
-      })
-    );
-
-    setProfileAgent((prev) => {
-      if (prev && prev.id === agentId) {
-        return {
-          ...prev,
-          llmConfig: {
-            ...prev.llmConfig,
-            ...newConfig
-          }
-        };
-      }
-      return prev;
-    });
-
-    try {
-      await fetch(`/api/agents/${agentId}/llm`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newConfig)
-      });
-    } catch (err) {
-      console.log('Using local client state for agent LLM config');
-    }
+  const handleTriggerMultiAgentTask = async (userInstruction: string, leadAgentId = selectedAgent?.id, projectId = selectedProject?.id) => {
+    const result = await change('/api/orchestrate/run', 'POST', { userInstruction, leadAgentId, projectId });
+    if (result) setCurrentTab('runs');
   };
-
-  // Run Collaborative Multi-Agent Orchestration (Section 54, 61)
-  const handleTriggerMultiAgentTask = async (
-    instruction: string,
-    leadId: string = 'agent-sarah',
-    projId: string = 'proj-phoenix'
-  ) => {
-    setIsCollaborating(true);
-    setCurrentTab('collaborate');
-
-    try {
-      const memoryManager = new MemoryManager(memories);
-      const orchestrator = new MultiAgentOrchestrator(agents, projects, memoryManager, artifacts, (evt) => {
-        setEvents((prev) => [...prev, evt]);
-      });
-
-      const result = await orchestrator.executeCollaborativeTask({
-        userInstruction: instruction,
-        leadAgentId: leadId,
-        projectId: projId,
-        onProgressUpdate: (updatedTask) => {
-          setActiveTask({ ...updatedTask });
-          setTasks((prev) => {
-            const idx = prev.findIndex((t) => t.id === updatedTask.id);
-            if (idx >= 0) {
-              const copy = [...prev];
-              copy[idx] = { ...updatedTask };
-              return copy;
-            }
-            return [...prev, { ...updatedTask }];
-          });
-        }
-      });
-
-      // Update global artifacts & memories
-      setArtifacts((prev) => [...prev, ...result.task.workspace.artifacts]);
-      setMemories(memoryManager.getAllMemories());
-
-      // Update Project recent decisions
-      setProjects((prev) =>
-        prev.map((p) => {
-          if (p.id === projId) {
-            return {
-              ...p,
-              recentDecisions: [
-                {
-                  id: `dec-${Date.now()}`,
-                  title: 'Phased PostgreSQL Migration',
-                  decision:
-                    'Approved phased migration to PostgreSQL: build adapter layer in Q4; execute data cutover in Q1 2027 to satisfy financial limits.',
-                  decidedAt: new Date().toISOString(),
-                  agentId: leadId
-                },
-                ...p.recentDecisions
-              ]
-            };
-          }
-          return p;
-        })
-      );
-
-      // Append multi-agent summary card to Lead Agent's Chat
-      const leadAgent = agents.find((a) => a.id === leadId);
-      if (leadAgent) {
-        const collabSummaryMsg: ChatMessage = {
-          id: `collab-${Date.now()}`,
-          agentId: leadAgent.id,
-          senderType: 'agent',
-          content: result.finalSummary,
-          timestamp: new Date().toISOString(),
-          metadata: {
-            isMultiAgentExecution: true,
-            internalActivities: [
-              { text: 'Sarah formulated 3-step specialist delegation plan' },
-              { text: 'Marcus completed PostgreSQL Architecture RFC' },
-              { text: 'Emma compiled Ecosystem & Tooling Benchmark' },
-              { text: 'Daniel flagged Q4 capital limit ($38.4k vs $20k runway)' },
-              { text: 'Sarah synthesized disagreement into phased Q4/Q1 plan' }
-            ],
-            promotedMemories: result.promotedMemories
-          },
-          attachments: result.task.workspace.artifacts
-        };
-
-        setMessagesByAgent((prev) => ({
-          ...prev,
-          [leadAgent.id]: [...(prev[leadAgent.id] || []), collabSummaryMsg]
-        }));
-      }
-    } catch (err) {
-      console.error('Orchestration error:', err);
-    } finally {
-      setIsCollaborating(false);
-    }
+  const handleUpdateAgentLLMConfig = async (id: string, config: Partial<LLMConfig>) => { await change(`/api/agents/${id}/llm`, 'PATCH', config); };
+  const handlePromoteMemory = async (data: { memoryId: string; targetScope: MemoryScope; promotedByAgentId: string; reason: string; targetProjectId?: string }) => { await change('/api/memories/promote', 'POST', data); };
+  const handleCreateAgent = async (data: Partial<Agent>) => { const result = await change('/api/agents', 'POST', data); if (result) { setSelectedAgentId(result.id); setCurrentTab('chat'); } return Boolean(result); };
+  const handleDeleteAgent = async (id: string) => { await change(`/api/agents/${id}`, 'DELETE'); };
+  const handleDecideApproval = async (id: string, decision: 'approved' | 'rejected') => { await change(`/api/approvals/${id}`, 'POST', { decision }); };
+  const handleAddWorkItem = async (data: Partial<WorkItem>) => { await change('/api/work-items', 'POST', data); };
+  const handleUpdateWorkItem = async (id: string, data: Partial<WorkItem> & { updatedByAgentId?: string; comment?: string }) => { await change(`/api/work-items/${id}`, 'PATCH', data); };
+  const handleAgentWorkOnItem = async (id: string, agentId: string, actionType: string, customPrompt?: string) => { const result = await change(`/api/work-items/${id}/agent-work`, 'POST', { agentId, actionType, customPrompt }); if (result) setCurrentTab('runs'); };
+  const handleAgentGenerateItems = async (agentId: string, projectId: string, goal?: string) => { const result = await change('/api/work-items/agent-generate', 'POST', { agentId, projectId, goal }); if (result) setCurrentTab('runs'); };
+  const handleDeleteWorkItem = async (id: string) => { await change(`/api/work-items/${id}`, 'DELETE'); };
+  const handleAddTool = async (_tool: Tool) => { setError('Tools are server-controlled. Custom tools and Python scripts are disabled.'); };
+  const handleUpdateAgentTools = async (id: string, toolIds: string[]) => { await change(`/api/agents/${id}`, 'PATCH', { toolIds }); };
+  const handleAssignAgentTool = async (id: string, toolId: string, assign: boolean) => {
+    const ids = agents.find(a => a.id === id)?.toolIds || [];
+    await handleUpdateAgentTools(id, assign ? [...new Set([...ids, toolId])] : ids.filter(t => t !== toolId));
   };
-
-  // Memory Promotion
-  const handlePromoteMemory = (params: {
-    memoryId: string;
-    targetScope: MemoryScope;
-    promotedByAgentId: string;
-    reason: string;
-    targetProjectId?: string;
-  }) => {
-    const memMgr = new MemoryManager(memories);
-    const updated = memMgr.promoteMemory(params);
-    if (updated) {
-      setMemories(memMgr.getAllMemories());
-    }
-  };
-
-  // Create Agent via 5-step Wizard
-  const handleCreateAgent = async (newAgentData: Partial<Agent>) => {
-    const fullAgent: Agent = {
-      id: `agent-${Date.now()}`,
-      workspaceId: 'ws-default',
-      firstName: newAgentData.firstName || 'New',
-      lastName: newAgentData.lastName || 'Agent',
-      displayName: newAgentData.displayName || 'New Coworker',
-      avatarUrl:
-        newAgentData.avatarUrl ||
-        'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80',
-      jobTitle: newAgentData.jobTitle || 'Specialist',
-      department: newAgentData.department || 'General',
-      seniority: newAgentData.seniority || 'Senior',
-      gender: newAgentData.gender || 'non-binary',
-      approxAge: newAgentData.approxAge || newAgentData.age || 30,
-      age: newAgentData.age || 30,
-      nationality: newAgentData.nationality || 'Global',
-      primaryResponsibility: newAgentData.primaryResponsibility || 'Assist team goals',
-      secondaryResponsibilities: newAgentData.secondaryResponsibilities || [],
-      expertise: newAgentData.expertise || newAgentData.skills || ['Planning'],
-      skills: newAgentData.skills || ['Planning'],
-      temperament: newAgentData.temperament || 'analytical',
-      personalityDescription: newAgentData.personalityDescription || 'Focused and dependable.',
-      personalityDimensions: newAgentData.personalityDimensions || {
-        analyticalVsIntuitive: 80,
-        formalVsCasual: 60,
-        verboseVsConcise: 50,
-        cautiousVsFast: 70,
-        independentVsCollaborative: 70,
-        assertiveVsDeferential: 60,
-        detailVsBigPicture: 80,
-        theoreticalVsPragmatic: 75,
-        optimisticVsSkeptical: 40,
-        methodicalVsExperimental: 80
-      },
-      communicationMode: (newAgentData.communicationMode || 'Technical expert') as any,
-      communicationStyle: newAgentData.communicationStyle || {
-        mode: 'conclusion_first',
-        verbosity: 'concise',
-        jargonLevel: 'expert',
-        humorLevel: 'none',
-        challengesUserDecisions: true,
-        proactivelySuggestsImprovements: true
-      },
-      autonomyLevel: newAgentData.autonomyLevel || 3,
-      llmConfig: newAgentData.llmConfig || {
-        provider: 'Anthropic',
-        model: 'claude-3-5-sonnet',
-        temperature: 0.2,
-        maxTokens: 4096
-      },
-      toolIds: newAgentData.toolIds || newAgentData.tools || ['tool-web-search'],
-      tools: newAgentData.tools || newAgentData.toolIds || ['tool-web-search'],
-      memoryAccess: {
-        allowedScopes: ['conversation', 'agent', 'project', 'organization'],
-        projectIds: [selectedProjectId]
-      },
-      runtimeState: {
-        status: 'idle'
-      },
-      tokenUsage: {
-        inputTokens: 0,
-        outputTokens: 0,
-        estimatedCost: 0
-      },
-      createdAt: new Date().toISOString()
-    };
-
-    try {
-      const res = await fetch('/api/agents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fullAgent)
-      });
-      if (res.ok) {
-        const saved = await res.json();
-        setAgents((prev) => [...prev.filter((a) => a.id !== saved.id), saved]);
-        setSelectedAgentId(saved.id);
-        setCurrentTab('chat');
-        return;
-      }
-    } catch (e) {
-      console.log('Agent creation server fallback:', e);
-    }
-
-    setAgents((prev) => [...prev, fullAgent]);
-    setSelectedAgentId(fullAgent.id);
-    setCurrentTab('chat');
-  };
-
-  const handleDeleteAgent = async (agentId: string) => {
-    try {
-      const res = await fetch(`/api/agents/${agentId}`, {
-        method: 'DELETE'
-      });
-      if (res.ok) {
-        setAgents((prev) => {
-          const remaining = prev.filter((a) => a.id !== agentId);
-          if (selectedAgentId === agentId) {
-            setSelectedAgentId(remaining[0]?.id || '');
-          }
-          return remaining;
-        });
-        if (profileAgent?.id === agentId) {
-          setProfileAgent(null);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to delete agent:', err);
-    }
-  };
-
-  // Tool Security Approval Decision
-  const handleDecideApproval = (id: string, decision: 'approved' | 'rejected') => {
-    setApprovals((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, status: decision } : a))
-    );
-  };
-
-  // Work Item Operations (Backlogs, Todo, In-progress, Done - added & updated by agents)
-  const handleAddWorkItem = async (itemData: Partial<WorkItem>) => {
-    try {
-      const res = await fetch('/api/work-items', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(itemData)
-      });
-      if (res.ok) {
-        const created = await res.json();
-        setWorkItems((prev) => [created, ...prev]);
-        return;
-      }
-    } catch (e) {
-      console.error('Work item add API error, using local fallback:', e);
-    }
-
-    const creator = agents.find((a) => a.id === (itemData.createdByAgentId || 'agent-sarah'));
-    const now = new Date().toISOString();
-    const fallbackItem: WorkItem = {
-      id: `wi-${Date.now()}`,
-      workspaceId: 'ws-default',
-      projectId: itemData.projectId || selectedProjectId || 'proj-phoenix',
-      title: itemData.title || 'New Work Item',
-      description: itemData.description || '',
-      status: itemData.status || 'backlog',
-      priority: itemData.priority || 'medium',
-      assignedAgentId: itemData.assignedAgentId || 'agent-sarah',
-      createdByAgentId: itemData.createdByAgentId || 'agent-sarah',
-      createdByName: creator ? creator.displayName : 'Agent Lead',
-      lastUpdatedByAgentId: itemData.createdByAgentId || 'agent-sarah',
-      tags: itemData.tags || ['Task'],
-      estimatedHours: itemData.estimatedHours || 8,
-      actualHours: 0,
-      progressPercent: itemData.status === 'done' ? 100 : (itemData.status === 'in_progress' ? 25 : 0),
-      history: [
-        {
-          id: `hist-${Date.now()}`,
-          agentId: itemData.createdByAgentId,
-          authorName: creator ? creator.displayName : 'Agent',
-          timestamp: now,
-          newStatus: itemData.status || 'backlog',
-          comment: `Work item registered in ${itemData.status?.toUpperCase() || 'BACKLOG'} stage.`,
-          progressPercent: itemData.status === 'done' ? 100 : 0
-        }
-      ],
-      createdAt: now,
-      updatedAt: now
-    };
-    setWorkItems((prev) => [fallbackItem, ...prev]);
-  };
-
-  const handleUpdateWorkItem = async (id: string, updates: Partial<WorkItem> & { updatedByAgentId?: string; comment?: string }) => {
-    try {
-      const res = await fetch(`/api/work-items/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-      if (res.ok) {
-        const updated = await res.json();
-        setWorkItems((prev) => prev.map((w) => (w.id === id ? updated : w)));
-        return;
-      }
-    } catch (e) {
-      console.error('Work item update API error, applying local state:', e);
-    }
-
-    const now = new Date().toISOString();
-    const updater = agents.find((a) => a.id === updates.updatedByAgentId);
-    setWorkItems((prev) =>
-      prev.map((item) => {
-        if (item.id !== id) return item;
-        const prevStatus = item.status;
-        const nextStatus = updates.status || item.status;
-        const newProgress =
-          updates.progressPercent !== undefined
-            ? updates.progressPercent
-            : nextStatus === 'done'
-            ? 100
-            : item.progressPercent;
-
-        const newHistory = [...item.history];
-        if (updates.comment || (updates.status && updates.status !== prevStatus)) {
-          newHistory.push({
-            id: `hist-${Date.now()}`,
-            agentId: updates.updatedByAgentId,
-            authorName: updater ? updater.displayName : 'Agent',
-            timestamp: now,
-            previousStatus: prevStatus !== nextStatus ? prevStatus : undefined,
-            newStatus: nextStatus,
-            comment: updates.comment || `Moved to ${nextStatus.toUpperCase()}`,
-            progressPercent: newProgress
-          });
-        }
-
-        return {
-          ...item,
-          ...updates,
-          status: nextStatus,
-          progressPercent: newProgress,
-          history: newHistory,
-          updatedAt: now
-        };
-      })
-    );
-  };
-
-  const handleAgentWorkOnItem = async (id: string, agentId: string, actionType: string, customPrompt?: string) => {
-    try {
-      const res = await fetch(`/api/work-items/${id}/agent-work`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId, actionType, customPrompt })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.item) {
-          setWorkItems((prev) => prev.map((w) => (w.id === id ? data.item : w)));
-          return;
-        }
-      }
-    } catch (e) {
-      console.error('Agent work API error, using local simulation:', e);
-    }
-
-    const agent = agents.find((a) => a.id === agentId) || agents[0];
-    const item = workItems.find((w) => w.id === id);
-    if (!item) return;
-
-    let newStatus = item.status;
-    let newProgress = item.progressPercent || 0;
-    if (actionType === 'advance_stage') {
-      if (item.status === 'backlog') {
-        newStatus = 'todo';
-        newProgress = 0;
-      } else if (item.status === 'todo') {
-        newStatus = 'in_progress';
-        newProgress = 35;
-      } else if (item.status === 'in_progress') {
-        newStatus = 'done';
-        newProgress = 100;
-      }
-    } else if (actionType === 'complete') {
-      newStatus = 'done';
-      newProgress = 100;
-    } else {
-      if (item.status === 'backlog' || item.status === 'todo') {
-        newStatus = 'in_progress';
-        newProgress = 30;
-      } else if (item.status === 'in_progress') {
-        newProgress = Math.min(95, newProgress + 25);
-      }
-    }
-
-    await handleUpdateWorkItem(id, {
-      status: newStatus,
-      progressPercent: newProgress,
-      updatedByAgentId: agent.id,
-      comment: `Agent ${agent.displayName} performed technical deliverable execution and moved stage to ${newStatus.toUpperCase()}.`
-    });
-  };
-
-  const handleAgentGenerateItems = async (agentId: string, projectId: string, goal?: string) => {
-    try {
-      const res = await fetch('/api/work-items/agent-generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId, projectId, goal })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data.createdItems)) {
-          setWorkItems((prev) => [...data.createdItems, ...prev]);
-          return;
-        }
-      }
-    } catch (e) {
-      console.error('Agent generate work items API error:', e);
-    }
-  };
-
-  const handleDeleteWorkItem = async (id: string) => {
-    try {
-      await fetch(`/api/work-items/${id}`, { method: 'DELETE' });
-    } catch (e) {
-      console.error('Delete work item API error:', e);
-    }
-    setWorkItems((prev) => prev.filter((w) => w.id !== id));
-  };
-
-  const handleAddTool = async (newTool: Tool) => {
-    setTools((prev) => {
-      const idx = prev.findIndex((t) => t.id === newTool.id);
-      if (idx !== -1) {
-        const next = [...prev];
-        next[idx] = newTool;
-        return next;
-      }
-      return [...prev, newTool];
-    });
-    try {
-      await fetch('/api/tools', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTool)
-      });
-    } catch (e) {
-      console.error('Tool sync API error:', e);
-    }
-  };
-
-  const handleAssignAgentTool = async (agentId: string, toolId: string, assign: boolean) => {
-    let updatedTools: string[] = [];
-    setAgents((prev) =>
-      prev.map((a) => {
-        if (a.id !== agentId) return a;
-        const current = a.tools || a.toolIds || [];
-        const updated = assign
-          ? Array.from(new Set([...current, toolId]))
-          : current.filter((t) => t !== toolId);
-        updatedTools = updated;
-        return { ...a, tools: updated, toolIds: updated };
-      })
-    );
-    try {
-      await fetch(`/api/agents/${agentId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tools: updatedTools, toolIds: updatedTools })
-      });
-    } catch (e) {
-      console.error('Agent tool assign API error:', e);
-    }
-  };
-
-  const handleUpdateAgentTools = async (agentId: string, newTools: string[]) => {
-    setAgents((prev) =>
-      prev.map((a) => (a.id === agentId ? { ...a, tools: newTools, toolIds: newTools } : a))
-    );
-    setProfileAgent((prev) => (prev && prev.id === agentId ? { ...prev, tools: newTools, toolIds: newTools } : prev));
-    try {
-      await fetch(`/api/agents/${agentId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tools: newTools, toolIds: newTools })
-      });
-    } catch (e) {
-      console.error('Agent tools update API error:', e);
-    }
-  };
-
-  const handleUpdateAgentModel = async (agentId: string, model: string) => {
-    setAgents((prev) =>
-      prev.map((a) =>
-        a.id === agentId
-          ? {
-              ...a,
-              defaultModel: model,
-              llmConfig: a.llmConfig
-                ? { ...a.llmConfig, model }
-                : { provider: 'Anthropic', model, temperature: 0.2, maxTokens: 4096 }
-            }
-          : a
-      )
-    );
-    try {
-      await fetch(`/api/agents/${agentId}/llm`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model })
-      });
-    } catch (e) {
-      console.error('Agent model update API error:', e);
-    }
-  };
-
-  const handleUpdateAgentReportingLine = async (agentId: string, newReportsToId: string | undefined) => {
-    setAgents((prev) =>
-      prev.map((a) => (a.id === agentId ? { ...a, reportsTo: newReportsToId } : a))
-    );
-    setProfileAgent((prev) => (prev && prev.id === agentId ? { ...prev, reportsTo: newReportsToId } : prev));
-    try {
-      await fetch(`/api/agents/${agentId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reportsTo: newReportsToId })
-      });
-    } catch (e) {
-      console.error('Agent reporting line update API error:', e);
-    }
-  };
-
-  const handleUpdateAgentAvatar = async (agentId: string, avatarUrl: string) => {
-    setAgents((prev) =>
-      prev.map((a) => (a.id === agentId ? { ...a, avatarUrl } : a))
-    );
-    setProfileAgent((prev) => (prev && prev.id === agentId ? { ...prev, avatarUrl } : prev));
-    try {
-      await fetch(`/api/agents/${agentId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ avatarUrl })
-      });
-    } catch (e) {
-      console.error('Agent avatar update API error:', e);
-    }
-  };
-
+  const handleUpdateAgentModel = async (id: string, model: string) => { await handleUpdateAgentLLMConfig(id, { model }); };
+  const handleUpdateAgentReportingLine = async (id: string, reportsTo?: string) => { await change(`/api/agents/${id}`, 'PATCH', { reportsTo: reportsTo || null }); };
+  const handleUpdateAgentAvatar = async (id: string, avatarUrl: string) => { await change(`/api/agents/${id}`, 'PATCH', { avatarUrl }); };
   return (
-    <div className="flex h-screen w-screen bg-[#F8F9FA] text-slate-900 overflow-hidden font-sans antialiased">
+    <div className="flex flex-col h-screen w-screen bg-[#F8F9FA] text-slate-900 overflow-hidden font-sans antialiased">
+      <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs flex justify-between gap-4">
+        <span>Experimental · Single-agent drafts · Host scripts disabled · Imported legacy records are unverified</span>
+        <button className="font-semibold underline" onClick={() => setCurrentTab('runs')}>Runs and approvals ({approvals.filter(a => a.status === 'pending').length})</button>
+      </div>
+      {error && <div role="alert" className="shrink-0 bg-red-50 text-red-800 px-4 py-2 text-sm">{error} <button className="underline ml-3" onClick={() => setError('')}>Dismiss</button></div>}
+      <div className="flex flex-1 min-h-0">
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}
@@ -1001,15 +140,17 @@ I have finalized the deliverables and logged the closed work items to the projec
 
       {/* Main Panel Router */}
       <main className="flex-1 flex overflow-hidden">
-        {currentTab === 'chat' && (
+        {currentTab === 'runs' && <RunReviewView runs={tasks} approvals={approvals} onDecide={handleDecideApproval} onAction={async (id, action, reason) => { await change(`/api/runs/${id}/${action}`, 'POST', reason ? { reason } : {}); }} />}
+        {currentTab === 'chat' && (!selectedAgent || !selectedProject) && <div className="p-8">Create an agent and a project to start a conversation.</div>}
+        {currentTab === 'chat' && selectedAgent && selectedProject && (
           <ChatPanel
             agent={selectedAgent}
             allAgents={agents}
             projects={projects}
             activeProject={selectedProject}
-            messages={messagesByAgent[selectedAgent.id] || []}
+            messages={messagesByAgent[conversationKey] || []}
             onSendMessage={handleSendMessage}
-            isSending={isSendingMessage}
+            isSending={isSendingMessage || Boolean(activeTask && ['queued', 'working', 'waiting'].includes(activeTask.status))}
             onOpenProfile={(a) => setProfileAgent(a)}
             onOpenContextInspector={() => setIsContextInspectorOpen(true)}
             onOpenArtifact={(art) => setActiveArtifact(art)}
@@ -1110,7 +251,7 @@ I have finalized the deliverables and logged the closed work items to the projec
                 approvals={approvals}
                 onDecideApproval={handleDecideApproval}
                 agents={agents}
-                onAddTool={handleAddTool}
+
                 onAssignAgentTool={handleAssignAgentTool}
               />
             </div>
@@ -1131,17 +272,17 @@ I have finalized the deliverables and logged the closed work items to the projec
         onClose={() => setIsWizardOpen(false)}
         onCreateAgent={handleCreateAgent}
         tools={tools}
-        onAddGlobalTool={handleAddTool}
+
         existingAgents={agents}
       />
 
-      <ContextInspectorModal
+      {selectedAgent && <ContextInspectorModal
         isOpen={isContextInspectorOpen}
         onClose={() => setIsContextInspectorOpen(false)}
         agent={selectedAgent}
         contextPacket={latestContextPacket}
         project={selectedProject}
-      />
+      />}
 
       {activeArtifact && (
         <ArtifactModal
@@ -1159,13 +300,14 @@ I have finalized the deliverables and logged the closed work items to the projec
           onUpdateLLMConfig={handleUpdateAgentLLMConfig}
           tools={tools}
           onUpdateAgentTools={handleUpdateAgentTools}
-          onAddTool={handleAddTool}
+
           allAgents={agents}
           onUpdateReportingLine={handleUpdateAgentReportingLine}
           onUpdateAvatar={handleUpdateAgentAvatar}
           onDeleteAgent={handleDeleteAgent}
         />
       )}
+      </div>
     </div>
   );
 };

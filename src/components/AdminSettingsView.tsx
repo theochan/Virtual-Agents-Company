@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import React, { useState, useEffect } from 'react';
 import {
   Key,
@@ -44,30 +45,25 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     ollama: {
       defaultModel: 'llama3.2:latest',
       endpoint: 'http://localhost:11434',
-      downloadedModels: ['llama3.2:latest', 'deepseek-r1:8b', 'mistral:latest', 'qwen2.5-coder:7b'],
-      isConfigured: true,
-      status: 'ready'
+      downloadedModels: [],
+      isConfigured: false,
+      status: 'not-tested'
     },
     huggingface: {
       defaultModel: 'meta-llama/Llama-3.2-3B-Instruct',
       endpoint: 'http://localhost:8000/v1',
-      downloadedModels: [
-        'meta-llama/Llama-3.2-3B-Instruct',
-        'mistralai/Mistral-7B-Instruct-v0.3',
-        'Qwen/Qwen2.5-7B-Instruct',
-        'microsoft/Phi-3.5-mini-instruct'
-      ],
+      downloadedModels: [],
       localCacheDir: '~/.cache/huggingface/hub',
-      isConfigured: true,
-      status: 'ready'
+      isConfigured: false,
+      status: 'not-tested'
     },
     omniroute: {
       defaultModel: 'auto',
       endpoint: 'http://localhost:20128/v1',
       apiKeyMasked: '',
       isConfigured: false,
-      status: 'ready',
-      downloadedModels: ['auto', 'auto/coding', 'auto/fast', 'auto/cheap']
+      status: 'not-tested',
+      downloadedModels: []
     }
   });
 
@@ -98,7 +94,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/admin/llm-settings')
+    apiFetch('/api/admin/llm-settings')
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data === 'object') {
@@ -115,7 +111,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     setSavingProvider(provider);
     setSaveSuccess(null);
     try {
-      const res = await fetch('/api/admin/llm-settings', {
+      const res = await apiFetch('/api/admin/llm-settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, ...payload }),
@@ -142,7 +138,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     setTestingOmniroute(true);
     setOmnirouteTestResult(null);
     try {
-      const res = await fetch('/api/admin/omniroute/test-connection', {
+      const res = await apiFetch('/api/admin/omniroute/test-connection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -187,7 +183,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
 
     try {
       const endpoint = source === 'ollama' ? ollamaEndpointInput : hfEndpointInput;
-      const res = await fetch('/api/admin/local-models/test-connection', {
+      const res = await apiFetch('/api/admin/local-models/test-connection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source, endpoint }),
@@ -202,12 +198,12 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
       } else {
         setHfTestResult({
           connected: data.connected,
-          message: data.message || (data.connected ? 'Endpoint reachable' : 'Cache verified'),
+          message: data.message || (data.connected ? 'Model catalog reachable' : 'Connection failed'),
           latencyMs: data.latencyMs
         });
       }
     } catch {
-      const result = { connected: false, message: 'Local port verified (standby mode ready)', latencyMs: 14 };
+      const result = { connected: false, message: 'Connection failed. No local model or cache was verified.', latencyMs: 0 };
       if (source === 'ollama') setOllamaTestResult(result);
       else setHfTestResult(result);
     } finally {
@@ -219,7 +215,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const handleAddLocalModel = async (source: 'ollama' | 'huggingface', modelTag: string) => {
     if (!modelTag.trim()) return;
     try {
-      const res = await fetch('/api/admin/local-models/add', {
+      const res = await apiFetch('/api/admin/local-models/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source, modelTag: modelTag.trim() }),
@@ -243,7 +239,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
 
   const handleRemoveLocalModel = async (source: 'ollama' | 'huggingface', modelTag: string) => {
     try {
-      const res = await fetch('/api/admin/local-models/remove', {
+      const res = await apiFetch('/api/admin/local-models/remove', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source, modelTag }),
@@ -631,7 +627,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   </span>
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Unified endpoint routing across 350+ providers (Claude, GPT-4o, Mistral, DeepSeek) with quota-aware auto-fallback.
+                  OpenAI-compatible gateway. Actual routing and inference location depend on your gateway configuration.
                 </p>
               </div>
             </div>
@@ -1004,7 +1000,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
               </h3>
             </div>
             <span className="text-[10px] font-mono text-slate-500">
-              {agents.length} Autonomous Agents Loaded
+              {agents.length} Agent Profiles Loaded
             </span>
           </div>
 

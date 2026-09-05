@@ -206,7 +206,7 @@ export const MemoryHubView: React.FC<MemoryHubViewProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest flex items-center gap-1.5 font-mono">
               <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-              Interactive Priority Retrieval Tester
+              Local Memory Text Preview
             </span>
             <span className="text-[10px] text-slate-400 font-mono">
               Priority: Conversation → Project → Agent → Org
@@ -225,18 +225,18 @@ export const MemoryHubView: React.FC<MemoryHubViewProps> = ({
               onClick={() => setSimulationActive(true)}
               className="py-2 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold cursor-pointer transition shadow-xs"
             >
-              Test Scoring
+              Preview Matches
             </button>
           </div>
 
           {simulationActive && (
             <div className="mt-3 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
               <span className="text-slate-900 font-semibold block text-[11px] font-serif">
-                Ranked Compact Context Packet for Query: &quot;{testQuery}&quot;
+                Local text preview (not runtime retrieval) for: &quot;{testQuery}&quot;
               </span>
               <div className="space-y-1.5 divide-y divide-slate-200">
                 {memories
-                  .filter((m) => m.status === 'active')
+                  .filter((m) => m.status === 'active' && m.content.toLowerCase().includes(testQuery.toLowerCase()))
                   .slice(0, 4)
                   .map((m, idx) => (
                     <div key={m.id} className="pt-2 flex items-center justify-between">
@@ -248,7 +248,7 @@ export const MemoryHubView: React.FC<MemoryHubViewProps> = ({
                         <span className="text-slate-800 truncate max-w-xl">{m.content}</span>
                       </div>
                       <span className="text-[10px] text-amber-800 font-mono font-semibold">
-                        Score: {(0.95 - idx * 0.08).toFixed(2)}
+                        {m.reviewStatus === 'reviewed' ? 'Owner reviewed' : 'Unreviewed'}
                       </span>
                     </div>
                   ))}

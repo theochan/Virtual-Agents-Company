@@ -29,6 +29,7 @@ export interface MemoryItem {
   importance: number; // 1-10
   confidence: number; // 0.0 - 1.0
   status: MemoryStatus;
+  reviewStatus?: 'candidate' | 'reviewed';
   supersededBy?: string; // id of memory that superseded this
   sourceType?: 'conversation' | 'task_output' | 'agent_reflection' | 'user_instruction' | 'promotion';
   sourceId?: string;
@@ -450,7 +451,7 @@ export interface ChatMessage {
     disagreements?: any[];
     promotedMemories?: MemoryItem[];
     autoCreatedWorkItems?: WorkItem[];
-    executionStatus?: 'completed' | 'in_progress';
+    executionStatus?: 'completed' | 'in_progress' | 'review_required' | 'failed' | 'blocked' | 'cancelled';
     linkedProjectId?: string;
     linkedProjectName?: string;
     isDelegated?: boolean;

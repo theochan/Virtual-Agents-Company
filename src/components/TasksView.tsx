@@ -327,7 +327,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
     {
       id: 'done',
       title: 'Completed',
-      subtitle: 'Verified Deliverables & Artifacts',
+      subtitle: 'Owner-marked Done',
       badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold',
       borderAccent: 'border-t-emerald-500',
       dotColor: 'bg-emerald-500',
@@ -641,7 +641,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
                               <div className="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
                                 <Clock className="w-3 h-3 text-slate-400" />
-                                <span>{item.estimatedHours ? `${item.estimatedHours}h` : '1h 30m'}</span>
+                                <span>{item.estimatedHours != null ? `${item.estimatedHours}h estimated` : 'Estimate unknown'}</span>
                               </div>
                             </div>
 
@@ -846,9 +846,9 @@ export const TasksView: React.FC<TasksViewProps> = ({
             <div className="p-5 rounded-xl border border-slate-200 bg-white space-y-4 shadow-xs">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-serif font-bold text-slate-900">Autonomous Multi-Agent Mission Pipeline</h3>
+                  <h3 className="text-base font-serif font-bold text-slate-900">Single-Agent Draft Run</h3>
                   <p className="text-xs text-slate-500">
-                    Lead Agent orchestration blackboard and live execution tree. Dispatches high-level objectives into work items.
+                    A selected agent produces a draft. Review results and approvals in Runs and approvals.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
@@ -860,12 +860,12 @@ export const TasksView: React.FC<TasksViewProps> = ({
               {/* Form to trigger orchestration */}
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                 <span className="text-[10px] font-bold text-amber-800 uppercase tracking-widest block">
-                  Dispatch Multi-Agent Objective
+                  Request a Draft
                 </span>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="text"
-                    defaultValue="Determine whether Phoenix should migrate from Firebase to PostgreSQL. Use the team."
+                    placeholder="Describe the deliverable you want"
                     id="input-pipeline-mission"
                     className="flex-1 p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-xs"
                   />
@@ -873,7 +873,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     onClick={() => {
                       const el = document.getElementById('input-pipeline-mission') as HTMLInputElement;
                       if (el && el.value.trim()) {
-                        onTriggerMultiAgentTask(el.value.trim(), 'agent-sarah', activeProject?.id || 'proj-phoenix');
+                        if (agents[0] && activeProject) onTriggerMultiAgentTask(el.value.trim(), agents[0].id, activeProject.id);
                       }
                     }}
                     disabled={isCollaborating}
@@ -904,13 +904,13 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   {/* Delegation Tree */}
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                     <span className="text-[10px] font-bold text-amber-800 uppercase tracking-widest block">
-                      Hierarchical Delegation Hierarchy
+                      Assigned Agent
                     </span>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
                       <img src={pipelineLead?.avatarUrl} alt={pipelineLead?.displayName} className="w-8 h-8 rounded-lg object-cover border border-slate-200" />
                       <div>
                         <span className="font-bold text-xs text-slate-900">{pipelineLead?.displayName} (Lead Agent Owner)</span>
-                        <p className="text-[11px] text-slate-500">Synthesizes findings, resolves specialist disputes, generates deliverables.</p>
+                        <p className="text-[11px] text-slate-500">Produces a draft using equipped tools and approval gates.</p>
                       </div>
                     </div>
 
@@ -1100,7 +1100,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
             <div className="p-4 border-b border-amber-100 bg-amber-50/60 flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase tracking-wider font-mono">
                 <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>Autonomous Agent Sprint Planning</span>
+                <span>Draft a Work Plan</span>
               </div>
               <button
                 onClick={() => setIsAutoPlanModalOpen(false)}
@@ -1112,7 +1112,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
             <div className="p-5 space-y-4 text-xs">
               <p className="text-slate-600 leading-relaxed">
-                Instruct an executive or specialist agent to analyze the project roadmap and autonomously synthesize 3 structured work items categorized into Backlogs and Todo.
+                Instruct an executive or specialist agent to analyze the project roadmap and draft proposed work items for your review.
               </p>
 
               <div>
@@ -1289,9 +1289,9 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-amber-900 text-[10px] font-bold uppercase tracking-widest font-mono">
                     <Zap className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Agent Work Console (Autonomous Update)</span>
+                    <span>Agent Draft Console</span>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono">Real-Time Autonomous Sync</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Drafts require acceptance</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

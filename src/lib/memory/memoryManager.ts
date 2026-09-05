@@ -12,7 +12,10 @@ export class MemoryManager {
   private memories: MemoryItem[] = [];
 
   constructor(initialMemories: MemoryItem[] = []) {
-    this.memories = [...initialMemories];
+    this.memories = initialMemories.map(m => ({ ...m, provenance: m.provenance || {
+      originalSource: m.sourceId || 'Legacy import; source unverified', originalAgentId: m.agentId || 'unknown',
+      timestamp: m.createdAt, promotionHistory: [],
+    } }));
   }
 
   public getAllMemories(): MemoryItem[] {
@@ -54,6 +57,9 @@ export class MemoryManager {
     organizationMemories: MemoryItem[];
     allRanked: MemoryItem[];
   } {
+    const eligible = this.memories.filter(m => m.workspaceId === query.workspaceId && m.status === 'active'
+      && m.reviewStatus === 'reviewed' && (!m.expiresAt || Date.parse(m.expiresAt) > Date.now())
+      && (!query.scopes || query.scopes.includes(m.scope)));
     const topic = (query.topic || '').toLowerCase();
     const keywords = topic.split(/\s+/).filter((w) => w.length > 2);
 
@@ -81,7 +87,7 @@ export class MemoryManager {
     // 1. Relevant Project Memories (Strict isolation: only current project!)
     let projectMemories: MemoryItem[] = [];
     if (query.projectId) {
-      projectMemories = this.memories
+      projectMemories = eligible
         .filter((m) => m.scope === 'project' && m.projectId === query.projectId && m.status !== 'superseded')
         .map((m) => ({ item: m, score: scoreMemory(m) }))
         .filter((entry) => (keywords.length > 0 ? entry.score > 0.5 : true))
@@ -93,7 +99,7 @@ export class MemoryManager {
     // 2. Relevant Agent Memories
     let agentMemories: MemoryItem[] = [];
     if (query.agentId) {
-      agentMemories = this.memories
+      agentMemories = eligible
         .filter((m) => m.scope === 'agent' && m.agentId === query.agentId && m.status !== 'superseded')
         .map((m) => ({ item: m, score: scoreMemory(m) }))
         .filter((entry) => (keywords.length > 0 ? entry.score > 0.4 : true))
@@ -103,7 +109,7 @@ export class MemoryManager {
     }
 
     // 3. Relevant Organization Memories
-    const organizationMemories = this.memories
+    const organizationMemories = eligible
       .filter((m) => m.scope === 'organization' && m.status !== 'superseded')
       .map((m) => ({ item: m, score: scoreMemory(m) }))
       .filter((entry) => (keywords.length > 0 ? entry.score > 0.4 : true))
@@ -126,6 +132,7 @@ export class MemoryManager {
    * Never inject entire databases into prompts. Construct a precise, compact packet.
    */
   public buildContextPacket(params: {
+    workspaceId?: string;
     taskId: string;
     taskTitle: string;
     taskObjective: string;
@@ -138,7 +145,7 @@ export class MemoryManager {
     projectSummary?: string;
   }): ContextPacket {
     const retrieved = this.retrieveContext({
-      workspaceId: 'default',
+      workspaceId: params.workspaceId || 'ws-default',
       projectId: params.projectId,
       agentId: params.agentId,
       topic: `${params.topic} ${params.taskObjective}`
@@ -174,7 +181,7 @@ export class MemoryManager {
     const now = new Date().toISOString();
     const newMemory: MemoryItem = {
       id: `mem-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      workspaceId: 'default',
+      workspaceId: 'ws-default',
       scope: candidate.proposedScope,
       agentId: candidate.proposedScope === 'agent' ? candidate.agentId || authorAgentId : undefined,
       projectId: candidate.proposedScope === 'project' ? candidate.projectId : undefined,
@@ -184,6 +191,7 @@ export class MemoryManager {
       importance: candidate.importance,
       confidence: candidate.confidence,
       status: 'active',
+      reviewStatus: 'candidate',
       sourceType: 'task_output',
       sourceId: taskId,
       provenance: {
@@ -200,7 +208,7 @@ export class MemoryManager {
     };
 
     // Check conflict / superseding
-    this.detectAndApplyConflict(newMemory);
+    // Model confidence does not authorize policy replacement.
 
     this.memories.unshift(newMemory);
     return newMemory;
@@ -217,28 +225,26 @@ export class MemoryManager {
     reason: string;
     targetProjectId?: string;
   }): MemoryItem | null {
-    const mem = this.memories.find((m) => m.id === params.memoryId);
-    if (!mem) return null;
-
-    const previousScope = mem.scope;
+    const original = this.memories.find((m) => m.id === params.memoryId && m.workspaceId === 'ws-default');
+    if (!original) return null;
+    if (!params.reason?.trim()) throw new Error('A review reason is required');
+    if (params.targetScope === 'project' && !(params.targetProjectId || original.projectId)) throw new Error('Project scope requires a project');
+    if (params.targetScope === 'agent' && !original.agentId) throw new Error('Agent scope requires an agent');
+    const mem: MemoryItem = structuredClone(original);
+    mem.id = `mem-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
     mem.scope = params.targetScope;
+    mem.reviewStatus = 'reviewed';
     if (params.targetScope === 'project') {
       mem.projectId = params.targetProjectId || mem.projectId;
       mem.agentId = undefined;
     } else if (params.targetScope === 'organization') {
-      mem.projectId = undefined;
-      mem.agentId = undefined;
+      mem.projectId = undefined; mem.agentId = undefined;
     }
-
-    mem.provenance.promotionHistory.push({
-      fromScope: previousScope,
-      toScope: params.targetScope,
-      promotedAt: new Date().toISOString(),
-      promotedByAgentId: params.promotedByAgentId,
-      reason: params.reason
-    });
+    mem.provenance!.promotionHistory.push({ fromScope: original.scope, toScope: params.targetScope,
+      promotedAt: new Date().toISOString(), promotedByAgentId: 'workspace-owner', reason: params.reason });
     mem.updatedAt = new Date().toISOString();
-
+    original.status = 'superseded'; original.supersededBy = mem.id;
+    this.memories.unshift(mem);
     return mem;
   }
 
@@ -247,26 +253,8 @@ export class MemoryManager {
    * Superseeded decisions pointer without deleting history
    */
   public detectAndApplyConflict(newMemory: MemoryItem) {
-    if (newMemory.type !== 'decision' && newMemory.type !== 'policy') return;
-
-    const keywords = newMemory.tags;
-    const existing = this.memories.filter((m) => {
-      if (m.id === newMemory.id || m.status === 'superseded') return false;
-      if (newMemory.scope === 'project' && m.projectId !== newMemory.projectId) return false;
-
-      // Check if both relate to same topic (e.g., database, backend, auth)
-      const matches = m.tags.filter((t) => keywords.includes(t));
-      return matches.length >= 2;
-    });
-
-    for (const oldMem of existing) {
-      // If the new memory is a decision that overrides previous findings
-      if (newMemory.importance >= oldMem.importance) {
-        oldMem.status = 'superseded';
-        oldMem.supersededBy = newMemory.id;
-        oldMem.updatedAt = new Date().toISOString();
-      }
-    }
+    // Deliberately no automatic superseding based on tag overlap or model scores.
+    // Only an explicit owner review may replace a version.
   }
 
   private extractKeywords(text: string): string[] {

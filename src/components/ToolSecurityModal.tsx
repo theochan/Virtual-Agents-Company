@@ -161,7 +161,7 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsRegisterOpen(!isRegisterOpen)}
+              disabled={!onAddTool} title="Tool registration is server-controlled" onClick={() => setIsRegisterOpen(!isRegisterOpen)}
               className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-semibold cursor-pointer transition shadow-2xs"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -503,7 +503,7 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
         {/* Footer */}
         <div className="p-4 border-t border-slate-200 bg-slate-50/90 flex items-center justify-between">
           <button
-            onClick={() => setIsRegisterOpen(true)}
+            disabled={!onAddTool} title="Tool registration is server-controlled" onClick={() => setIsRegisterOpen(true)}
             className="flex items-center gap-1.5 text-xs text-amber-800 hover:text-amber-900 font-semibold cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />

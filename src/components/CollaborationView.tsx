@@ -68,9 +68,9 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
             <GitMerge className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl font-serif italic text-slate-900 tracking-tight">Multi-Agent Task Orchestrator</h2>
+            <h2 className="text-xl font-serif italic text-slate-900 tracking-tight">Single-Agent Task Runner</h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Lead Agent Ownership • Shared Task Blackboard • Disagreement Synthesis • Reusable Artifacts
+              Recorded execution • Tool approvals • Owner acceptance
             </p>
           </div>
         </div>
@@ -96,9 +96,9 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              Dispatch Collaborative Multi-Agent Mission
+              Request a draft deliverable
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">Max Delegation Depth: 3 (Enforced)</span>
+            <span className="text-[10px] text-slate-400 font-mono">Delegation disabled · Max 6 model steps</span>
           </div>
 
           <form onSubmit={handleStart} className="space-y-4">

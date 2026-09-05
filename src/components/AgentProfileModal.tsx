@@ -104,14 +104,14 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   const handleModelChange = (modelId: string) => {
     setSelectedModel(modelId);
     const details = getModelDetails(modelId);
-    const newTokens = details.maxTokens;
+    const newTokens = Math.min(8192, details.maxTokens);
     setMaxTokens(newTokens);
     if (onUpdateLLMConfig) {
       onUpdateLLMConfig(agent.id, {
         model: modelId,
         maxTokens: newTokens
       });
-      setIsSaved(true);
+      setIsSaved(false);
       setTimeout(() => setIsSaved(false), 2000);
     }
   };
@@ -122,7 +122,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
       onUpdateLLMConfig(agent.id, {
         temperature: val
       });
-      setIsSaved(true);
+      setIsSaved(false);
       setTimeout(() => setIsSaved(false), 2000);
     }
   };
@@ -133,7 +133,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
       onUpdateLLMConfig(agent.id, {
         maxTokens: val
       });
-      setIsSaved(true);
+      setIsSaved(false);
       setTimeout(() => setIsSaved(false), 2000);
     }
   };

@@ -28,7 +28,7 @@ import { SUPPORTED_MODELS, getModelDetails } from '../lib/models';
 interface AgentWizardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateAgent: (agent: Partial<Agent>) => void;
+  onCreateAgent: (agent: Partial<Agent>) => Promise<boolean>;
   tools?: Tool[];
   onAddGlobalTool?: (newTool: Tool) => void;
   existingAgents?: Agent[];
@@ -115,19 +115,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   const handleFinish = async () => {
     setIsCreating(true);
 
-    const stages = [
-      'Synthesizing persistent identity...',
-      'Assigning selected portrait...',
-      'Compiling behavioral system prompt from personality dimensions...',
-      'Configuring 4-layer memory scopes...',
-      'Provisioning security clearance & tools...',
-      'Agent coworker ready!'
-    ];
-
-    for (const stage of stages) {
-      setCreationStage(stage);
-      await new Promise((r) => setTimeout(r, 450));
-    }
+    setCreationStage('Saving agent profile...');
 
     const newAgent: Partial<Agent> = {
       firstName: firstName.trim(),
@@ -141,7 +129,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
       seniority,
       gender,
       primaryResponsibility,
-      secondaryResponsibilities: ['Security incident forensics', 'Access control validation'],
+      secondaryResponsibilities: [],
       expertise: skillsInput.split(',').map((s) => s.trim()).filter(Boolean),
       skills: skillsInput.split(',').map((s) => s.trim()).filter(Boolean),
       temperament,
@@ -181,9 +169,10 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
       }
     };
 
-    onCreateAgent(newAgent);
+    const saved = await onCreateAgent(newAgent);
     setIsCreating(false);
-    onClose();
+    if (saved) onClose();
+    else setCreationStage('Could not save. Check the error message and retry.');
   };
 
   return (
@@ -196,7 +185,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">Create Autonomous AI Coworker</h3>
+              <h3 className="text-sm font-semibold text-slate-900">Create AI Coworker</h3>
               <p className="text-[11px] text-slate-500">Step {step} of 5: Five-Dimensional Persistent Persona</p>
             </div>
           </div>
@@ -584,7 +573,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Autonomy Level (1: Suggest only, 2: Draft, 3: Autonomous with review, 4: Fully autonomous)
+                  Tool access (all deliverables require owner review)
                 </label>
                 <select
                   value={autonomyLevel}
@@ -593,8 +582,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 >
                   <option value={1}>Level 1: Passive Assistant (Requires confirmation for everything)</option>
                   <option value={2}>Level 2: Guided Operator (Drafts actions for approval)</option>
-                  <option value={3}>Level 3: Autonomous Contributor (Executes with review checkpoints)</option>
-                  <option value={4}>Level 4: Lead Autonomous Agent (Delegates, resolves conflicts)</option>
+                  <option value={3}>Level 3: Equipped tools with approval gates</option>
+                  <option value={4}>Level 4: Equipped tools with approval gates (same as level 3)</option>
                 </select>
               </div>
 
@@ -605,7 +594,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   </label>
                   <button
                     type="button"
-                    onClick={() => setIsAddingCustomTool(!isAddingCustomTool)}
+                    disabled={!onAddGlobalTool} title="Tool registration is server-controlled" onClick={() => setIsAddingCustomTool(!isAddingCustomTool)}
                     className="flex items-center gap-1 text-[11px] text-amber-800 hover:text-amber-900 font-semibold cursor-pointer"
                   >
                     <Plus className="w-3 h-3" />

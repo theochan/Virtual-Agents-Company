@@ -96,15 +96,15 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   const activeProjects = filteredProjects.filter((p) => p.status !== 'archived');
   const archivedProjects = filteredProjects.filter((p) => p.status === 'archived');
 
-  const handleCreateSubmit = (e: React.FormEvent) => {
+  const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim() || !onCreateProject) return;
 
     const leadAgent = getAgent(newLeadId);
-    onCreateProject({
+    const saved = await onCreateProject({
       name: newName.trim(),
-      description: newDesc.trim() || 'Custom initiative in Acme Corp workspace.',
-      objective: newObjective.trim() || 'Deliver milestone with multi-agent coordination.',
+      description: newDesc.trim() || '',
+      objective: newObjective.trim() || '',
       status: 'active',
       ownerAgentId: newLeadId,
       members: leadAgent
@@ -119,6 +119,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
         : []
     });
 
+    if (!saved) return;
     setNewName('');
     setNewDesc('');
     setNewObjective('');
@@ -143,7 +144,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             </div>
             <div>
               <h2 className="text-lg font-serif italic text-slate-900 tracking-tight">Initiatives & Projects</h2>
-              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">Workspace: Acme Corp</span>
+              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">Local workspace</span>
             </div>
           </div>
 
@@ -163,7 +164,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           </div>
           <h3 className="text-xl font-serif text-slate-900 mb-2 tracking-tight">No Active Projects</h3>
           <p className="text-xs text-slate-600 leading-relaxed mb-6">
-            All projects have been deleted or archived. Projects establish workstream boundaries, isolated memory scopes, and assigned coworker squads so autonomous agents collaborate with zero cross-tenant contamination.
+            All projects have been deleted or archived. Create a project to organize conversations, reviewed memories and draft deliverables.
           </p>
           <button
             onClick={() => setIsCreateModalOpen(true)}
@@ -299,7 +300,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               >
                 {project.status}
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">Workspace: Acme Corp</span>
+              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">Local workspace</span>
             </div>
             <p className="text-xs text-slate-500 mt-1 max-w-xl line-clamp-1">{project.description}</p>
           </div>
@@ -413,7 +414,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
 
                 {/* Footer Actions */}
                 <div className="p-2.5 border-t border-slate-100 bg-slate-50/90 flex items-center justify-between">
-                  <span className="text-[10px] text-slate-500 font-mono">Workspace Acme</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Local workspace</span>
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);
@@ -447,11 +448,11 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             </button>
           )}
 
-          {/* Delete Project Button */}
+          {/* Archive Project Button */}
           {onDeleteProject && (
             <button
               onClick={() => setIsDeleteConfirmOpen(true)}
-              title="Delete this project"
+              title="Archive this project and preserve evidence"
               className="p-2 rounded-lg border border-slate-300 bg-white hover:bg-rose-50 hover:border-rose-300 text-slate-600 hover:text-rose-600 transition cursor-pointer shadow-2xs"
             >
               <Trash2 className="w-4 h-4" />
@@ -474,26 +475,13 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
 
       {/* Main Project Dashboard */}
       <div className="p-6 space-y-6 max-w-7xl mx-auto w-full">
-        {/* Memory Isolation Alert */}
-        {project.id === 'proj-atlas' ? (
-          <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/80 text-amber-900 text-xs flex items-center gap-3 shadow-2xs">
-            <ShieldAlert className="w-5 h-5 text-amber-700 shrink-0" />
-            <div>
-              <span className="font-semibold block font-serif">Multi-Tenant Workstream Isolation Active</span>
-              <span className="text-slate-700">
-                Atlas agents have access ONLY to Project Atlas memory and global Organization memory. They cannot access Project Phoenix decisions or PostgreSQL benchmarks unless explicitly shared.
-              </span>
-            </div>
-          </div>
-        ) : null}
-
         {/* 1. OBJECTIVE SECTION (Section 41) */}
         <div className="p-5 rounded-2xl border border-slate-200 bg-white space-y-2 shadow-xs">
           <div className="flex items-center gap-2 text-amber-800 text-[10px] font-semibold uppercase tracking-widest font-mono">
             <Target className="w-3.5 h-3.5 text-amber-700" />
             <span>OBJECTIVE</span>
           </div>
-          <p className="text-sm font-semibold text-slate-900 font-serif">{project.objective}</p>
+          <p className="text-sm font-semibold text-slate-900 font-serif">{project.objective}</p>{(project as any).legacyUnverified && <p className="text-xs text-amber-800">Imported legacy record. Prior decisions and completion claims have not been verified.</p>}
           <p className="text-xs text-slate-600 leading-relaxed">{project.description}</p>
         </div>
 
@@ -557,35 +545,8 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             </div>
 
             <div className="space-y-2">
-              <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200 flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-semibold text-slate-900 block">Architecture Review: Backend Rebuild</span>
-                  <span className="text-[11px] text-slate-500">Owned by Marcus • Completed</span>
-                </div>
-                <span className="text-[9px] px-2.5 py-0.5 rounded font-mono bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
-                  Done
-                </span>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200 flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-semibold text-slate-900 block">Database Migration Assessment</span>
-                  <span className="text-[11px] text-slate-500">Owned by Sarah • Synthesized</span>
-                </div>
-                <span className="text-[9px] px-2.5 py-0.5 rounded font-mono border border-amber-300 bg-amber-50 text-amber-900 font-semibold">
-                  Approved
-                </span>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200 flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-semibold text-slate-900 block">Authentication & Session Architecture</span>
-                  <span className="text-[11px] text-slate-500">Auth.js specification review</span>
-                </div>
-                <span className="text-[9px] px-2.5 py-0.5 rounded font-mono bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
-                  Done
-                </span>
-              </div>
+              {tasks.filter(task => task.projectId === project.id).map(task => <div key={task.id} className="border rounded-xl p-3 text-xs flex justify-between gap-3"><span>{task.title}</span><span className="font-mono">{task.status}</span></div>)}
+              {!tasks.some(task => task.projectId === project.id) && <p className="text-xs text-slate-500">No recorded runs for this project.</p>}
             </div>
           </div>
         </div>
@@ -597,7 +558,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
               <span>RECENT DECISIONS</span>
             </div>
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Authoritative Project Record</span>
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Stored record; legacy entries are unverified</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -620,7 +581,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             })}
             {(!project.recentDecisions || project.recentDecisions.length === 0) && (
               <div className="col-span-2 py-4 text-center text-xs text-slate-400">
-                No authoritative architectural decisions logged yet for this project.
+                No decisions recorded for this project.
               </div>
             )}
           </div>
@@ -633,13 +594,13 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               <Brain className="w-3.5 h-3.5 text-amber-700" />
               <span>PROJECT MEMORY ({projectMemories.length} durable memories)</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">Scope: Shared to {project.name} Members Only</span>
+            <span className="text-[10px] text-slate-400 font-mono">Scope: Project {project.name}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {projectMemories.map((mem) => {
               const isSuperseded = mem.status === 'superseded';
-              const author = getAgent(mem.provenance.originalAgentId);
+              const author = getAgent(mem.provenance?.originalAgentId);
 
               return (
                 <div
@@ -680,7 +641,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             })}
             {projectMemories.length === 0 && (
               <div className="col-span-2 py-4 text-center text-xs text-slate-400">
-                No project-scoped memories yet. Important decisions from agent collaborations will be promoted here.
+                No project-scoped memories yet. Reviewed memories can be added here by the owner.
               </div>
             )}
           </div>
@@ -733,22 +694,8 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           </div>
 
           <div className="space-y-2 text-xs text-slate-600">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
-              <span><strong className="text-slate-900 font-semibold">Sarah</strong> approved phased migration plan to PostgreSQL.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
-              <span><strong className="text-slate-900 font-semibold">Daniel</strong> submitted cost analysis & recommended Q1 production cutover.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
-              <span><strong className="text-slate-900 font-semibold">Emma</strong> added 4 research benchmarks on Drizzle ORM and PostgreSQL adoption.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
-              <span><strong className="text-slate-900 font-semibold">Marcus</strong> completed architecture assessment & verified EU data residency compliance.</span>
-            </div>
+            {tasks.filter(task => task.projectId === project.id).slice(-5).reverse().map(task => <p key={task.id}>{task.createdAt}: {task.title} — {task.status}</p>)}
+            {!tasks.some(task => task.projectId === project.id) && <p>No recorded run activity.</p>}
           </div>
         </div>
       </div>
@@ -854,10 +801,10 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           <div className="bg-white border border-rose-200 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-rose-600">
               <AlertTriangle className="w-5 h-5 shrink-0" />
-              <h3 className="text-sm font-semibold text-slate-900 font-serif">Delete {project.name}?</h3>
+              <h3 className="text-sm font-semibold text-slate-900 font-serif">Archive {project.name}?</h3>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Are you sure you want to permanently delete <strong className="text-slate-900">{project.name}</strong>? Any associated work items will be safely unlinked rather than deleted.
+              Are you sure you want to archive <strong className="text-slate-900">{project.name}</strong>? Work items, run evidence and artifacts will be retained.
             </p>
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
@@ -870,7 +817,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                 onClick={handleDeleteCurrent}
                 className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition cursor-pointer shadow-xs"
               >
-                Confirm Delete
+                Confirm Archive
               </button>
             </div>
           </div>

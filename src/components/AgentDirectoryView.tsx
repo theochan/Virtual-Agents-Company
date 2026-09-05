@@ -255,7 +255,7 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
                       </div>
                       <div className="flex items-center gap-1 justify-end font-mono text-slate-600">
                         <DollarSign className="w-3 h-3 text-slate-400" />
-                        <span>${(agent.tokenUsage?.estimatedCost || 0).toFixed(3)} USD</span>
+                        <span>{agent.tokenUsage?.estimatedCost == null ? 'Cost unknown' : `$${agent.tokenUsage.estimatedCost.toFixed(3)} USD`}</span>
                       </div>
                     </div>
                   </div>

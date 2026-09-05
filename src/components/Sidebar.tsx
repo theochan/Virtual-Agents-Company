@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [isAgentsExpanded, setIsAgentsExpanded] = useState(true);
 
   return (
-    <aside className="w-64 h-screen bg-white border-r border-slate-200 flex flex-col shrink-0 select-none text-slate-800">
+    <aside className="w-64 h-full bg-white border-r border-slate-200 flex flex-col shrink-0 select-none text-slate-800">
       {/* 1. Top Branding: SYNTHESIS AI */}
       <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5">
@@ -109,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {agents.map((agent) => {
                 const isSelected = agent.id === selectedAgentId && currentTab === 'chat';
                 const isBusy = agent.runtimeState.status === 'working' || agent.runtimeState.status === 'thinking';
-                const statusLabel = isBusy ? 'Busy' : agent.runtimeState.status === 'offline' ? 'Offline' : 'Online';
+                const statusLabel = isBusy ? 'Busy' : agent.runtimeState.status === 'offline' ? 'Offline' : 'Idle';
                 const statusDotColor = isBusy
                   ? 'bg-amber-500'
                   : agent.runtimeState.status === 'offline'

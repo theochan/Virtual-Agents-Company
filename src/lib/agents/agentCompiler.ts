@@ -90,17 +90,17 @@ ${packet.projectSummary}`);
 
     if (packet.relevantProjectMemories.length > 0) {
       sections.push(`RELEVANT PROJECT MEMORIES (Durable Decisions & Scope)
-${packet.relevantProjectMemories.map((m) => `- [${m.type.toUpperCase()}] ${m.content} (Confidence: ${Math.round(m.confidence * 100)}%)`).join('\n')}`);
+${packet.relevantProjectMemories.map((m) => `- [${m.type.toUpperCase()}] ${m.content.slice(0, 2000)} (Confidence: ${Math.round(m.confidence * 100)}%)`).join('\n')}`);
     }
 
     if (packet.relevantAgentMemories.length > 0) {
       sections.push(`YOUR LEARNED AGENT MEMORY (Prior Experiences & Preferences)
-${packet.relevantAgentMemories.map((m) => `- ${m.content}`).join('\n')}`);
+${packet.relevantAgentMemories.map((m) => `- ${m.content.slice(0, 2000)}`).join('\n')}`);
     }
 
     if (packet.relevantOrganizationMemories.length > 0) {
       sections.push(`ORGANIZATION KNOWLEDGE & POLICIES
-${packet.relevantOrganizationMemories.map((m) => `- ${m.content}`).join('\n')}`);
+${packet.relevantOrganizationMemories.map((m) => `- ${m.content.slice(0, 2000)}`).join('\n')}`);
     }
 
     if (packet.relevantArtifacts.length > 0) {
