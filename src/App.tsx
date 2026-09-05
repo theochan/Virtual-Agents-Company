@@ -1017,6 +1017,8 @@ I have finalized the deliverables and logged the closed work items to the projec
             onUpdateAgentLLM={handleUpdateAgentLLMConfig}
             activeTask={activeTask}
             isCollaborating={isCollaborating}
+            artifacts={artifacts}
+            memories={memories}
             onViewProject={(pid) => {
               if (pid) setSelectedProjectId(pid);
               setCurrentTab('collaborate');

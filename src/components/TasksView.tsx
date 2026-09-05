@@ -23,7 +23,8 @@ import {
   X,
   RefreshCw,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  MoreHorizontal
 } from 'lucide-react';
 
 interface TasksViewProps {
@@ -286,7 +287,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
     }
   };
 
-  // Column metadata
+  // Column metadata (Matching Wireframe Page 2)
   const COLUMNS: Array<{
     id: WorkItemStatus;
     title: string;
@@ -298,7 +299,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
   }> = [
     {
       id: 'backlog',
-      title: 'Backlogs',
+      title: 'Backlog',
       subtitle: 'Exploration & Backlog Triage',
       badgeColor: 'bg-slate-100 text-slate-700 border-slate-300',
       borderAccent: 'border-t-slate-400',
@@ -307,108 +308,153 @@ export const TasksView: React.FC<TasksViewProps> = ({
     },
     {
       id: 'todo',
-      title: 'Todo',
-      subtitle: 'Scoped & Ready for Agent Pickup',
-      badgeColor: 'bg-sky-50 text-sky-700 border-sky-200',
-      borderAccent: 'border-t-sky-500',
-      dotColor: 'bg-sky-500',
+      title: 'In Progress',
+      subtitle: 'Active Execution & Engineering',
+      badgeColor: 'bg-amber-50 text-amber-800 border-amber-200 font-semibold',
+      borderAccent: 'border-t-amber-500',
+      dotColor: 'bg-amber-500',
       columnBg: 'bg-slate-100/70 border-slate-200'
     },
     {
       id: 'in_progress',
-      title: 'In-progress',
-      subtitle: 'Active Autonomous Agent Work',
-      badgeColor: 'bg-amber-50 text-amber-800 border-amber-200 font-semibold',
-      borderAccent: 'border-t-amber-500',
-      dotColor: 'bg-amber-500 animate-pulse',
-      columnBg: 'bg-amber-50/40 border-amber-200/80'
+      title: 'Review',
+      subtitle: 'Quality Review & Verification',
+      badgeColor: 'bg-sky-50 text-sky-700 border-sky-200 font-semibold',
+      borderAccent: 'border-t-sky-500',
+      dotColor: 'bg-sky-500 animate-pulse',
+      columnBg: 'bg-slate-100/70 border-slate-200'
     },
     {
       id: 'done',
-      title: 'Done',
+      title: 'Completed',
       subtitle: 'Verified Deliverables & Artifacts',
       badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold',
       borderAccent: 'border-t-emerald-500',
       dotColor: 'bg-emerald-500',
-      columnBg: 'bg-emerald-50/40 border-emerald-200/80'
+      columnBg: 'bg-slate-100/70 border-slate-200'
     }
   ];
 
   return (
     <div className="flex-1 flex flex-col h-screen bg-[#F8F9FA] text-slate-800 overflow-hidden">
-      {/* Top Header */}
-      <div className="p-5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-xs">
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl border border-amber-300 bg-amber-50 flex items-center justify-center text-amber-700 shadow-xs">
-            <Layers className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">Executive Work Items & Tasks</h2>
-              <span className="text-[10px] px-2 py-0.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 font-mono font-semibold">
-                {workItems.length} Total
-              </span>
+      {/* Top Header - Matching Wireframe Page 2 */}
+      <div className="px-6 py-4 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-2xs">
+        <div className="flex items-center gap-6 flex-wrap">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight font-sans">
+            {activeProject?.name || 'Project Phoenix'}
+          </h2>
+
+          {/* Project Health Circular Gauge (70% in Wireframe) */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+              Project Health <span className="text-slate-400 font-mono text-[11px]" title="Calculated from milestone completion">ⓘ</span>
+            </span>
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                <path
+                  className="text-slate-100"
+                  strokeWidth="3.5"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path
+                  className="text-amber-500"
+                  strokeDasharray="70, 100"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              <span className="absolute text-[11px] font-bold text-slate-800 font-mono">70%</span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5 font-medium">
-              Backlogs • Todo • In-progress • Done • Real-time Agent Dispatch & Updates
-            </p>
+          </div>
+
+          {/* Sprint Velocity Sparkline Trend */}
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-semibold text-slate-600">Sprint Velocity</span>
+            <svg className="w-24 h-7 overflow-visible" viewBox="0 0 80 28" fill="none">
+              <path
+                d="M 2 22 Q 18 26, 30 14 T 55 10 T 78 5"
+                stroke="#D97706"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <circle cx="78" cy="5" r="3.5" fill="#B45309" stroke="#FFF" strokeWidth="1.5" />
+            </svg>
           </div>
         </div>
 
-        {/* Right Header Actions */}
-        <div className="flex items-center gap-2.5">
-          {/* Mode Switcher */}
-          <div className="flex items-center p-1 rounded-lg bg-slate-100 border border-slate-200 text-xs">
+        {/* Right Header Actions: Search, View Switcher, AI Plan, Add Work Item */}
+        <div className="flex items-center gap-3">
+          {/* Search Input */}
+          <div className="relative w-44 sm:w-60">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search"
+              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-amber-500 transition shadow-2xs"
+            />
+          </div>
+
+          {/* View Mode Switcher */}
+          <div className="flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs">
             <button
               onClick={() => setViewMode('board')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition cursor-pointer font-medium ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition cursor-pointer font-medium ${
                 viewMode === 'board'
-                  ? 'bg-white text-slate-900 border border-slate-300/80 shadow-xs font-semibold'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Kanban className="w-3.5 h-3.5 text-amber-600" />
-              <span>Board</span>
+              <span className="hidden md:inline">Board</span>
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition cursor-pointer font-medium ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition cursor-pointer font-medium ${
                 viewMode === 'list'
-                  ? 'bg-white text-slate-900 border border-slate-300/80 shadow-xs font-semibold'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <ListFilter className="w-3.5 h-3.5" />
-              <span>List</span>
+              <span className="hidden md:inline">List</span>
             </button>
             <button
               onClick={() => setViewMode('pipeline')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition cursor-pointer font-medium ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition cursor-pointer font-medium ${
                 viewMode === 'pipeline'
-                  ? 'bg-white text-slate-900 border border-slate-300/80 shadow-xs font-semibold'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <GitMerge className="w-3.5 h-3.5" />
-              <span>Pipeline</span>
+              <span className="hidden md:inline">Pipeline</span>
             </button>
           </div>
 
-          {/* AI Auto-Plan Tasks */}
+          {/* Agent Planning */}
           <button
             id="btn-agent-auto-plan-tasks"
             onClick={() => setIsAutoPlanModalOpen(true)}
-            className="py-1.5 px-3 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold flex items-center gap-2 transition cursor-pointer shadow-xs"
+            className="py-2 px-3 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+            title="Auto-plan work items with AI agents"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span className="hidden sm:inline">Agent Planning</span>
+            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+            <span className="hidden lg:inline">Agent Planning</span>
           </button>
 
-          {/* Add Work Item */}
+          {/* Add Work Item (Dark Obsidian Button) */}
           <button
             id="btn-add-work-item"
             onClick={() => setIsAddModalOpen(true)}
-            className="py-1.5 px-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            className="py-2 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
           >
             <Plus className="w-4 h-4 text-white" />
             <span>Add Work Item</span>
@@ -416,26 +462,15 @@ export const TasksView: React.FC<TasksViewProps> = ({
         </div>
       </div>
 
-      {/* Control Bar: Filters, Search, Metric Summary */}
-      <div className="px-5 py-3 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+      {/* Control Bar: Project & Agent Filters */}
+      <div className="px-6 py-2.5 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
         <div className="flex flex-wrap items-center gap-2.5 flex-1 max-w-3xl">
-          {/* Search Input */}
-          <div className="relative min-w-[200px] flex-1">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, tag, or agent..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 shadow-xs"
-            />
-          </div>
-
+          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Filters:</span>
           {/* Project Filter */}
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="py-1.5 px-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-amber-500 shadow-xs"
+            className="py-1 px-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-amber-500 shadow-2xs"
           >
             <option value="all">All Projects</option>
             {projects.map((p) => (
@@ -507,48 +542,50 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   onDrop={(e) => handleDrop(e, col.id)}
                   className={`flex flex-col h-full min-h-[550px] rounded-xl border border-slate-200/90 ${col.columnBg} border-t-4 ${col.borderAccent} overflow-hidden shadow-xs`}
                 >
-                  {/* Column Header */}
-                  <div className="p-3.5 border-b border-slate-200/90 bg-white flex items-center justify-between">
+                  {/* Column Header - Matching Wireframe Page 2 */}
+                  <div className="p-4 bg-white/80 border-b border-slate-200/80 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${col.dotColor}`} />
-                      <h3 className="text-xs font-bold text-slate-800 tracking-wide uppercase font-mono">
+                      <h3 className="text-sm font-bold text-slate-900 font-sans tracking-tight">
                         {col.title}
                       </h3>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded border font-mono font-semibold ${col.badgeColor}`}>
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                         {items.length}
                       </span>
                     </div>
 
-                    <button
-                      onClick={() => {
-                        setNewItemStatus(col.id);
-                        setIsAddModalOpen(true);
-                      }}
-                      title={`Add item to ${col.title}`}
-                      className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-amber-800 transition cursor-pointer"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  {/* Subtitle / Description */}
-                  <div className="px-3.5 py-1.5 bg-slate-50/90 border-b border-slate-200/70 text-[10px] text-slate-500 italic font-medium">
-                    {col.subtitle}
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => {
+                          setNewItemStatus(col.id);
+                          setIsAddModalOpen(true);
+                        }}
+                        title={`Add item to ${col.title}`}
+                        className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                        title="Column options"
+                      >
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Column Item List */}
-                  <div className="flex-1 p-2.5 space-y-2.5 overflow-y-auto max-h-[calc(100vh-230px)]">
+                  <div className="flex-1 p-3 space-y-3 overflow-y-auto max-h-[calc(100vh-210px)]">
                     {items.length === 0 ? (
-                      <div className="h-36 border border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-center p-4 text-slate-500 text-xs bg-white/60">
+                      <div className="h-36 border border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center text-center p-4 text-slate-400 text-xs bg-white/40 font-serif italic">
                         <span>No work items in {col.title}</span>
                         <button
                           onClick={() => {
                             setNewItemStatus(col.id);
                             setIsAddModalOpen(true);
                           }}
-                          className="mt-2 text-[11px] text-amber-800 font-semibold hover:underline cursor-pointer"
+                          className="mt-2 text-[11px] text-amber-800 font-sans font-semibold hover:underline cursor-pointer"
                         >
-                          + Add item here
+                          + Add work item
                         </button>
                       </div>
                     ) : (
@@ -564,96 +601,66 @@ export const TasksView: React.FC<TasksViewProps> = ({
                             draggable
                             onDragStart={(e) => handleDragStart(e, item.id)}
                             onClick={() => setSelectedItemDetail(item)}
-                            className="p-3.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer space-y-2.5 group relative shadow-xs"
+                            className="p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-amber-300 hover:shadow-md transition cursor-pointer space-y-3 group relative shadow-2xs"
                           >
-                            {/* Card Top: Priority, Project, and ID */}
-                            <div className="flex items-center justify-between text-[10px]">
-                              <div className="flex items-center gap-1.5">
-                                <span className={`px-1.5 py-0.5 rounded border font-mono font-semibold capitalize ${getPriorityBadge(item.priority)}`}>
-                                  {item.priority}
-                                </span>
-                                {project && (
-                                  <span className="text-slate-500 font-mono truncate max-w-[110px]">
-                                    {project.name}
-                                  </span>
-                                )}
-                              </div>
+                            {/* Card Title */}
+                            <h4 className="text-xs font-semibold text-slate-900 group-hover:text-amber-800 transition line-clamp-2 leading-snug">
+                              {item.title}
+                            </h4>
 
-                              <span className="text-slate-400 font-mono text-[9px]">{item.id}</span>
-                            </div>
-
-                            {/* Card Title & Description */}
+                            {/* Priority Pill Badge */}
                             <div>
-                              <h4 className="text-xs font-bold text-slate-900 group-hover:text-amber-800 transition line-clamp-2 leading-snug">
-                                {item.title}
-                              </h4>
-                              {item.description && (
-                                <p className="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-relaxed">
-                                  {item.description}
-                                </p>
-                              )}
+                              <span
+                                className={`px-2.5 py-0.5 rounded-md text-[10px] font-medium capitalize inline-block ${
+                                  item.priority === 'urgent' || item.priority === 'high'
+                                    ? 'bg-rose-50 text-rose-700 border border-rose-200/80'
+                                    : item.priority === 'medium'
+                                    ? 'bg-amber-50 text-amber-800 border border-amber-200/80'
+                                    : 'bg-sky-50 text-sky-700 border border-sky-200/80'
+                                }`}
+                              >
+                                {item.priority === 'urgent' ? 'High' : item.priority.charAt(0).toUpperCase() + item.priority.slice(1)}
+                              </span>
                             </div>
 
-                            {/* Tags */}
-                            {item.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {item.tags.slice(0, 3).map((tag, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-medium"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                                {item.tags.length > 3 && (
-                                  <span className="text-[9px] text-slate-400 font-mono">+{item.tags.length - 3}</span>
-                                )}
-                              </div>
-                            )}
-
-                            {/* Backlog Busy Agent Warning */}
-                            {item.status === 'backlog' &&
-                              workItems.some(
-                                (w) =>
-                                  w.assignedAgentId === item.assignedAgentId &&
-                                  w.projectId !== item.projectId &&
-                                  w.status === 'in_progress'
-                              ) && (
-                                <div className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 font-mono">
-                                  <AlertCircle className="w-2.5 h-2.5 text-amber-600 shrink-0" />
-                                  <span>Agent busy on another project</span>
-                                </div>
-                              )}
-
-                            {/* Progress Bar (For in-progress or done) */}
-                            {(item.status === 'in_progress' || item.status === 'done') && (
-                              <div className="space-y-1">
-                                <div className="flex items-center justify-between text-[9px] text-slate-500 font-mono">
-                                  <span>Progress</span>
-                                  <span className={item.status === 'done' ? 'text-emerald-600 font-semibold' : 'text-amber-700 font-semibold'}>
-                                    {item.progressPercent ?? (item.status === 'done' ? 100 : 25)}%
-                                  </span>
-                                </div>
-                                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-all ${
-                                      item.status === 'done' ? 'bg-emerald-500' : 'bg-amber-500'
-                                    }`}
-                                    style={{ width: `${item.progressPercent ?? (item.status === 'done' ? 100 : 25)}%` }}
+                            {/* Assigned Coworker & Time Estimate */}
+                            <div className="flex items-center justify-between text-xs pt-0.5">
+                              <div className="flex items-center gap-2">
+                                <div className="relative">
+                                  <img
+                                    src={assignedAgent?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                                    alt={assignedAgent?.displayName || 'Agent'}
+                                    className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-2xs"
                                   />
+                                  <span className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-500 ring-1 ring-white" />
                                 </div>
-                              </div>
-                            )}
-
-                            {/* Linked Artifacts */}
-                            {item.artifacts && item.artifacts.length > 0 && (
-                              <div className="pt-1 flex items-center gap-1.5 text-[10px] text-amber-800">
-                                <FileText className="w-3 h-3 text-amber-700" />
-                                <span className="font-mono underline truncate max-w-[180px]">
-                                  {item.artifacts[0].filename}
+                                <span className="text-[11px] font-medium text-slate-700">
+                                  {assignedAgent ? assignedAgent.displayName.split(' ')[0] : 'AI-1'}
                                 </span>
                               </div>
-                            )}
+
+                              <div className="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
+                                <Clock className="w-3 h-3 text-slate-400" />
+                                <span>{item.estimatedHours ? `${item.estimatedHours}h` : '1h 30m'}</span>
+                              </div>
+                            </div>
+
+                            {/* Mini Checklist Progress Bar (Direct Wireframe Replica) */}
+                            <div className="pt-0.5 flex items-center justify-between gap-2 text-[10px] text-slate-500 font-mono">
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
+                                <span>Mini checklist</span>
+                              </div>
+                              <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden shrink-0">
+                                <div
+                                  className="h-full bg-slate-700 rounded-full transition-all"
+                                  style={{ width: `${item.progressPercent || 40}%` }}
+                                />
+                              </div>
+                              <span className="text-[10px] text-slate-600 font-mono shrink-0">
+                                {item.progressPercent ? `${Math.max(1, Math.round(item.progressPercent / 20))}/5` : '2/5'}
+                              </span>
+                            </div>
 
                             {/* Card Footer: Assigned Agent & Provenance */}
                             <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">

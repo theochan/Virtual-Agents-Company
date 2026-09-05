@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Agent, ChatMessage, Task, Project, Artifact, LLMConfig } from '../types';
+import { Agent, ChatMessage, Task, Project, Artifact, LLMConfig, MemoryItem } from '../types';
 import {
   Send,
   Sparkles,
@@ -17,12 +17,20 @@ import {
   GitBranch,
   Layers,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   FolderKanban,
   Zap,
   Check,
   Globe,
   Search,
-  AlertCircle
+  AlertCircle,
+  MoreHorizontal,
+  Smile,
+  FileSpreadsheet,
+  PanelRightClose,
+  PanelRightOpen,
+  Type
 } from 'lucide-react';
 import { ModelSelector } from './ModelSelector';
 import { handleAvatarError } from '../lib/avatarCatalog';
@@ -42,6 +50,8 @@ interface ChatPanelProps {
   onUpdateAgentLLM?: (agentId: string, newConfig: Partial<LLMConfig>) => void;
   activeTask?: Task;
   isCollaborating: boolean;
+  artifacts?: Artifact[];
+  memories?: MemoryItem[];
   onViewProject?: (projectId: string) => void;
   onSelectProject?: (projectId: string) => void;
 }
@@ -65,6 +75,8 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
   onSelectProject
 }) => {
   const [inputText, setInputText] = useState('');
+  const [isThoughtProcessCollapsed, setIsThoughtProcessCollapsed] = useState(false);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -87,177 +99,314 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
   const isLeadAgent = agent.jobTitle.toLowerCase().includes('chief') || agent.jobTitle.toLowerCase().includes('lead');
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#F8F9FA] text-slate-800 overflow-hidden">
-      {/* Chat Header */}
-      <div className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-xs">
-        <div className="flex items-center gap-3.5">
-          <div className="relative">
-            <img
-              src={agent.avatarUrl}
-              alt={agent.displayName}
-              referrerPolicy="no-referrer"
-              onError={(e) => handleAvatarError(e)}
-              className="w-10 h-10 rounded-lg object-cover border border-slate-200 shadow-xs"
-            />
-            <span
-              className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white ${
-                agent.runtimeState.status === 'working' || agent.runtimeState.status === 'thinking'
-                  ? 'bg-amber-500 animate-pulse'
-                  : 'bg-emerald-500'
-              }`}
-            />
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-slate-900 font-serif">{agent.displayName}</h2>
-              <span className="text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-slate-100 text-slate-600 font-medium">
-                {agent.jobTitle}
-              </span>
-              {/* Linked Project Selector */}
-              {projects.length > 0 && onSelectProject ? (
-                <div className="relative inline-flex items-center">
-                  <select
-                    value={activeProject?.id || projects[0].id}
-                    onChange={(e) => onSelectProject(e.target.value)}
-                    className="appearance-none text-[10px] pl-2 pr-5 py-0.5 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 font-mono cursor-pointer hover:bg-amber-100/80 focus:outline-none"
-                    title="Select project board for task execution"
-                  >
-                    {projects.map((p) => (
-                      <option key={p.id} value={p.id} className="bg-white text-slate-800">
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronRight className="w-2.5 h-2.5 text-amber-700 absolute right-1.5 pointer-events-none rotate-90" />
-                </div>
-              ) : activeProject ? (
-                <span className="text-[10px] px-2 py-0.5 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 font-mono">
-                  {activeProject.name}
-                </span>
-              ) : null}
+    <div className="flex-1 flex h-screen bg-[#F8F9FA] text-slate-800 overflow-hidden">
+      {/* Center Conversational Panel */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden border-r border-slate-200">
+        {/* Chat Header */}
+        <div className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-2xs">
+          <div className="flex items-center gap-3.5">
+            <div className="relative">
+              <img
+                src={agent.avatarUrl}
+                alt={agent.displayName}
+                referrerPolicy="no-referrer"
+                onError={(e) => handleAvatarError(e)}
+                className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
+              />
+              <span
+                className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white ${
+                  agent.runtimeState.status === 'working' || agent.runtimeState.status === 'thinking'
+                    ? 'bg-amber-500 animate-pulse'
+                    : 'bg-emerald-500'
+                }`}
+              />
             </div>
-            <p className="text-[11px] text-slate-500 flex items-center gap-1.5">
-              <span className="capitalize text-amber-700 font-medium">{agent.runtimeState.status}</span>
-              <span>•</span>
-              <span className="text-slate-600 font-mono">{agent.llmConfig?.model || 'gemini-3.8-flash'}</span>
-              <span className="text-slate-400">({(agent.llmConfig?.temperature ?? 0.2).toFixed(2)} temp)</span>
-            </p>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-serif italic font-semibold text-slate-900 tracking-tight">
+                  {agent.displayName} — Enterprise Strategy Optimization
+                </h2>
+                <span className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 bg-slate-100 text-slate-600 font-medium">
+                  {agent.jobTitle}
+                </span>
+                {/* Linked Project Selector */}
+                {projects.length > 0 && onSelectProject ? (
+                  <div className="relative inline-flex items-center">
+                    <select
+                      value={activeProject?.id || projects[0].id}
+                      onChange={(e) => onSelectProject(e.target.value)}
+                      className="appearance-none text-[10px] pl-2 pr-5 py-0.5 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 font-mono cursor-pointer hover:bg-amber-100/80 focus:outline-none"
+                      title="Select project board for task execution"
+                    >
+                      {projects.map((p) => (
+                        <option key={p.id} value={p.id} className="bg-white text-slate-800">
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronRight className="w-2.5 h-2.5 text-amber-700 absolute right-1.5 pointer-events-none rotate-90" />
+                  </div>
+                ) : activeProject ? (
+                  <span className="text-[10px] px-2 py-0.5 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 font-mono">
+                    {activeProject.name}
+                  </span>
+                ) : null}
+              </div>
+              <p className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                <span className="capitalize text-emerald-700 font-medium">● Online</span>
+                <span>•</span>
+                <span className="text-slate-600 font-mono">{agent.llmConfig?.model || 'gemini-3.8-flash'}</span>
+                <span className="text-slate-400">({(agent.llmConfig?.temperature ?? 0.2).toFixed(2)} temp)</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Action Controls */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {}}
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+              title="Typography font scale"
+            >
+              <Type className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => {}}
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+              title="More options"
+            >
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
+
+            {onViewProject && activeProject && (
+              <button
+                onClick={() => onViewProject(activeProject.id)}
+                className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold transition cursor-pointer shadow-xs"
+                title="Open Project Kanban Board"
+              >
+                <FolderKanban className="w-3.5 h-3.5 text-amber-700" />
+                <span className="hidden sm:inline">Kanban</span>
+              </button>
+            )}
+
+            {onUpdateAgentLLM && (
+              <ModelSelector
+                agent={agent}
+                onUpdateLLMConfig={onUpdateAgentLLM}
+              />
+            )}
+
+            <button
+              onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}
+              className={`flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border text-xs font-medium transition cursor-pointer shadow-xs ${
+                isRightPanelOpen
+                  ? 'border-amber-400 bg-amber-50 text-amber-900'
+                  : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+              }`}
+              title="Toggle Live Context Packet Inspector"
+            >
+              {isRightPanelOpen ? <PanelRightClose className="w-3.5 h-3.5 text-amber-700" /> : <PanelRightOpen className="w-3.5 h-3.5 text-slate-500" />}
+              <span className="hidden sm:inline">Context Inspector</span>
+            </button>
+
+            <button
+              id="btn-open-agent-profile"
+              onClick={() => onOpenProfile(agent)}
+              className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-slate-200 bg-white hover:border-amber-400 hover:bg-slate-50 text-slate-700 text-xs font-medium transition cursor-pointer shadow-xs"
+            >
+              <Sliders className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden sm:inline">Profile</span>
+            </button>
           </div>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2">
-          {onViewProject && activeProject && (
-            <button
-              onClick={() => onViewProject(activeProject.id)}
-              className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold transition cursor-pointer shadow-xs"
-              title="Open Project Kanban Board"
-            >
-              <FolderKanban className="w-3.5 h-3.5 text-amber-700" />
-              <span className="hidden sm:inline">Kanban Board</span>
-            </button>
-          )}
-
-          {onUpdateAgentLLM && (
-            <ModelSelector
-              agent={agent}
-              onUpdateLLMConfig={onUpdateAgentLLM}
-            />
-          )}
-
-          <button
-            id="btn-open-context-inspector"
-            onClick={onOpenContextInspector}
-            className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-slate-200 bg-white hover:border-amber-400 hover:bg-slate-50 text-slate-700 text-xs font-medium transition cursor-pointer shadow-xs"
-            title="Inspect 4-layer memory retrieval and LLM context"
-          >
-            <Layers className="w-3.5 h-3.5 text-amber-600" />
-            <span className="hidden sm:inline">Context</span>
-          </button>
-
-          <button
-            id="btn-open-agent-profile"
-            onClick={() => onOpenProfile(agent)}
-            className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-slate-200 bg-white hover:border-amber-400 hover:bg-slate-50 text-slate-700 text-xs font-medium transition cursor-pointer shadow-xs"
-          >
-            <Sliders className="w-3.5 h-3.5 text-slate-500" />
-            <span className="hidden sm:inline">Profile</span>
-          </button>
-        </div>
-      </div>
-
-
-      {/* Messages Feed */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto py-12">
-            <img
-              src={agent.avatarUrl}
-              alt={agent.displayName}
-              referrerPolicy="no-referrer"
-              onError={(e) => handleAvatarError(e)}
-              className="w-16 h-16 rounded-xl object-cover border-2 border-amber-300 shadow-md mb-4"
-            />
-            <h3 className="text-xl font-serif font-bold text-slate-900">{agent.displayName}</h3>
-            <p className="text-xs text-slate-500 mt-1 font-medium">{agent.jobTitle} • {agent.department}</p>
-            <p className="text-xs text-slate-600 mt-3 leading-relaxed italic bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-              &quot;{agent.personalityDescription}&quot;
-            </p>
-
-            <div className="mt-6 w-full p-4 rounded-xl border border-slate-200 bg-white text-left space-y-2.5 shadow-xs">
-              <span className="text-[10px] uppercase tracking-widest text-amber-800 font-bold block">
-                Equipped 4-Layer Context
-              </span>
-              <div className="grid grid-cols-2 gap-2 text-xs text-slate-700">
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                  <span className="text-slate-500 block text-[10px] uppercase tracking-wider">Project Scope</span>
-                  <span className="text-slate-900 font-semibold">{activeProject?.name || 'Assigned Workstream'}</span>
+        {/* Messages Feed with Thought Process Disclosure & Delegation Cards */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Wireframe Interactive Thought Process Disclosure Card */}
+          <div className="p-4 rounded-2xl border border-amber-200/90 bg-[#FFFDF7] shadow-xs space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-amber-100/80 border border-amber-300/60 flex items-center justify-center text-amber-700">
+                  <Sparkles className="w-3.5 h-3.5" />
                 </div>
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                  <span className="text-slate-500 block text-[10px] uppercase tracking-wider">Autonomy</span>
-                  <span className="text-amber-800 font-mono font-semibold">Level {agent.autonomyLevel} / 4</span>
+                <span className="text-xs font-bold text-slate-900 font-serif">Thought Process Disclosure</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsThoughtProcessCollapsed(!isThoughtProcessCollapsed)}
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-md transition cursor-pointer"
+                title={isThoughtProcessCollapsed ? 'Expand Thought Process' : 'Collapse Thought Process'}
+              >
+                {isThoughtProcessCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+              </button>
+            </div>
+
+            {!isThoughtProcessCollapsed && (
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center gap-1.5 flex-wrap text-[11px] font-mono">
+                  <span className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                    Analyze Request
+                  </span>
+                  <ArrowRight className="w-3 h-3 text-amber-600 shrink-0" />
+                  <span className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                    Context Retrieval
+                  </span>
+                  <ArrowRight className="w-3 h-3 text-amber-600 shrink-0" />
+                  <span className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                    Strategic Options
+                  </span>
+                  <ArrowRight className="w-3 h-3 text-amber-600 shrink-0" />
+                  <span className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                    Simulation
+                  </span>
+                  <ArrowRight className="w-3 h-3 text-amber-600 shrink-0" />
+                  <span className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                    Recommendation
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsThoughtProcessCollapsed(true)}
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#E8C57C] hover:bg-[#DFC075] active:bg-[#D5B569] text-amber-950 text-xs font-semibold shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  Collapse Thought Process
+                </button>
+              </div>
+            )}
+          </div>
+
+          {messages.length === 0 ? (
+            /* Wireframe Default Command Center Conversation Preview */
+            <div className="space-y-6">
+              {/* Agent Bubble */}
+              <div className="flex gap-3.5 justify-start">
+                <img
+                  src={agent.avatarUrl}
+                  alt={agent.displayName}
+                  referrerPolicy="no-referrer"
+                  onError={(e) => handleAvatarError(e)}
+                  className="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                />
+                <div className="max-w-2xl space-y-1.5 items-start">
+                  <div className="flex items-center gap-2 text-xs text-slate-400 justify-start">
+                    <span className="font-semibold text-slate-800">{agent.displayName}</span>
+                    <span className="font-mono text-[10px] text-slate-400">Just now</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-xs text-xs leading-relaxed">
+                    <p>
+                      {agent.displayName}&apos;s recommendation for corporate strategy. Continuing with comprehensive market benchmark analysis, security posture verification, and risk assessment. In alignment with corporate operations guidelines, focusing on high-ROI phased implementation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* User Bubble */}
+              <div className="flex gap-3.5 justify-end">
+                <div className="max-w-xl space-y-1.5 items-end">
+                  <div className="flex items-center gap-2 text-xs text-slate-400 justify-end">
+                    <span className="font-semibold text-slate-700">Executive You</span>
+                    <span className="font-mono text-[10px] text-slate-400">Just now</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-white rounded-tr-none shadow-xs text-xs leading-relaxed">
+                    <p>Have you reviewed the preliminary market data, risk factors, and team feedback?</p>
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-amber-400 shadow-2xs">
+                  <User className="w-4 h-4" />
+                </div>
+              </div>
+
+              {/* Delegated Subtasks to Coworkers Card (Direct Wireframe Replica) */}
+              <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-xs space-y-4 max-w-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-900 font-serif">
+                    Delegated Subtasks to coworkers
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">2 Active</span>
+                </div>
+
+                <div className="space-y-3.5 text-xs">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150"
+                        alt="Sarah J."
+                        className="w-8 h-8 rounded-lg object-cover border border-slate-200 shadow-2xs"
+                      />
+                      <div>
+                        <span className="font-semibold text-slate-900 block">Sarah J. - Market Analysis</span>
+                        <span className="text-[10px] text-slate-500">VP Operations</span>
+                      </div>
+                    </div>
+                    <div className="text-right space-y-1.5">
+                      <span className="text-[10px] text-slate-500 font-mono font-medium">Due 3pm</span>
+                      <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-slate-800 rounded-full w-3/4" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+                        alt="Mark L."
+                        className="w-8 h-8 rounded-lg object-cover border border-slate-200 shadow-2xs"
+                      />
+                      <div>
+                        <span className="font-semibold text-slate-900 block">Mark L. - Risk Assessment</span>
+                        <span className="text-[10px] text-slate-500">Security Lead</span>
+                      </div>
+                    </div>
+                    <div className="text-right space-y-1.5">
+                      <span className="text-[10px] text-slate-500 font-mono font-medium">Due 5pm</span>
+                      <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-slate-800 rounded-full w-2/5" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          messages.map((msg) => {
-            const isUser = msg.senderType === 'user';
-            const senderAgent = msg.agentId ? getAgentById(msg.agentId) : agent;
+          ) : (
+            messages.map((msg) => {
+              const isUser = msg.senderType === 'user';
+              const senderAgent = msg.agentId ? getAgentById(msg.agentId) : agent;
 
-            return (
-              <div key={msg.id} className={`flex gap-3.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
-                {!isUser && (
-                  <img
-                    src={senderAgent?.avatarUrl || agent.avatarUrl}
-                    alt={senderAgent?.displayName || agent.displayName}
-                    referrerPolicy="no-referrer"
-                    onError={(e) => handleAvatarError(e)}
-                    className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0 mt-0.5 shadow-xs"
-                  />
-                )}
+              return (
+                <div key={msg.id} className={`flex gap-3.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                  {!isUser && (
+                    <img
+                      src={senderAgent?.avatarUrl || agent.avatarUrl}
+                      alt={senderAgent?.displayName || agent.displayName}
+                      referrerPolicy="no-referrer"
+                      onError={(e) => handleAvatarError(e)}
+                      className="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0 mt-0.5 shadow-2xs"
+                    />
+                  )}
 
-                <div className={`max-w-2xl space-y-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
-                  {/* Sender Name & Timestamp */}
-                  <div className={`flex items-center gap-2 text-xs text-slate-400 ${isUser ? 'justify-end' : 'justify-start'}`}>
-                    <span className="font-semibold text-slate-700">
-                      {isUser ? 'Executive You' : senderAgent?.displayName || agent.displayName}
-                    </span>
-                    <span className="font-mono text-[10px] text-slate-400">
-                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
+                  <div className={`max-w-2xl space-y-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
+                    {/* Sender Name & Timestamp */}
+                    <div className={`flex items-center gap-2 text-xs text-slate-400 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                      <span className="font-semibold text-slate-700">
+                        {isUser ? 'Executive You' : senderAgent?.displayName || agent.displayName}
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-400">
+                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
 
-                  {/* Bubble */}
-                  <div
-                    className={`p-4 rounded-xl text-xs leading-relaxed ${
-                      isUser
-                        ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none shadow-xs'
-                        : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-xs'
-                    }`}
-                  >
-                    <div className="whitespace-pre-wrap">{msg.content}</div>
+                    {/* Bubble */}
+                    <div
+                      className={`p-4 rounded-2xl text-xs leading-relaxed ${
+                        isUser
+                          ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none shadow-xs'
+                          : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-xs'
+                      }`}
+                    >
+                      <div className="whitespace-pre-wrap">{msg.content}</div>
 
                     {/* Internal Activities Card (Sarah -> Marcus, etc.) */}
                     {msg.metadata?.internalActivities && msg.metadata.internalActivities.length > 0 && (
@@ -775,20 +924,19 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
       {/* Input Bar & Action Chips */}
       <div className="p-4 border-t border-slate-200 bg-white">
-        {/* Quick Action Prompt Chips */}
-        <div className="flex items-center gap-1.5 mb-2.5 overflow-x-auto pb-1 scrollbar-none">
+        {/* Quick Action Prompt Chips (Matching Wireframe Page 1) */}
+        <div className="flex items-center gap-2 mb-3 overflow-x-auto pb-1 scrollbar-none">
           {[
-            { label: 'Draft Brief', icon: '✉', prompt: 'Draft an executive briefing on the current project status and next milestones.' },
-            { label: 'Create Kanban Task', icon: '☑', prompt: 'Create a new high-priority deliverable for the team on the current project board.' },
-            { label: 'Run Simulation', icon: '⚡', prompt: 'Simulate scenario analysis and forecast potential risks for our upcoming release.' },
-            { label: 'Market Research', icon: '🌐', prompt: 'Perform comprehensive web research on market trends and competitor benchmarks.' },
-            { label: 'Status Report', icon: '📊', prompt: 'Generate an exhaustive synthesis report summarizing recent deliverables and metrics.' }
+            { label: 'Draft email', icon: '✉', prompt: 'Draft email summarizing market benchmarks and strategic risk factors.' },
+            { label: 'Create task', icon: '☑', prompt: 'Create task on Project Phoenix Kanban board for technical migration.' },
+            { label: 'Run simulation', icon: '⚡', prompt: 'Run simulation and scenario forecasting for Q4 rollout.' },
+            { label: 'Generate report', icon: '📊', prompt: 'Generate report summarizing key decisions and architecture deliverables.' }
           ].map((chip, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => setInputText(chip.prompt)}
-              className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition cursor-pointer flex items-center gap-1 shrink-0 hover:border-amber-300"
+              className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition cursor-pointer flex items-center gap-1.5 shrink-0 hover:border-amber-400"
             >
               <span>{chip.icon}</span>
               <span>{chip.label}</span>
@@ -797,21 +945,30 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <input
-            id="chat-message-input"
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            disabled={isSending || isCollaborating}
-            placeholder={`Message ${agent.displayName} (delegates tasks, references 4-layer memory)...`}
-            className="flex-1 py-2.5 px-4 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 disabled:opacity-50"
-          />
+          <div className="flex-1 relative flex items-center">
+            <input
+              id="chat-message-input"
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              disabled={isSending || isCollaborating}
+              placeholder={`Message ${agent.displayName} (delegates tasks, references 4-layer memory)...`}
+              className="w-full py-2.5 pl-4 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 disabled:opacity-50"
+            />
+            <button
+              type="button"
+              className="absolute right-3 text-slate-400 hover:text-slate-600 transition"
+              title="Insert reaction"
+            >
+              <Smile className="w-4 h-4" />
+            </button>
+          </div>
 
           <button
             id="btn-send-message"
             type="submit"
             disabled={!inputText.trim() || isSending || isCollaborating}
-            className="py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer shadow-xs"
+            className="py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer shadow-xs"
           >
             {isSending ? (
               <RotateCw className="w-4 h-4 animate-spin text-white" />
@@ -824,10 +981,167 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
           </button>
         </form>
         <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-          <span>Priority Retrieval: Conversation → Project ({activeProject?.name || 'Phoenix'}) → Agent → Organization</span>
+          <span>Priority Retrieval: Ephemeral → Working ({activeProject?.name || 'Phoenix'}) → Long-Term → Global</span>
           <span>Lead Agent Synthesizer Active</span>
         </div>
       </div>
     </div>
-  );
+
+    {/* Right Column: Live Context Packet Inspector & Active Artifacts (Matching Wireframe Page 1) */}
+    {isRightPanelOpen && (
+      <div className="w-80 shrink-0 border-l border-slate-200 bg-white flex flex-col h-full overflow-y-auto p-5 space-y-5 hidden xl:flex">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+            Live Context Packet Inspector
+          </span>
+          <button
+            onClick={() => setIsRightPanelOpen(false)}
+            className="text-slate-400 hover:text-slate-600 p-1"
+            title="Close panel"
+          >
+            <PanelRightClose className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Active Context Card */}
+        <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 shadow-xs space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-900 font-mono uppercase tracking-wide">
+              {agent.displayName} ACTIVE CONTEXT
+            </span>
+            <button onClick={onOpenContextInspector} className="text-slate-400 hover:text-slate-600" title="Inspect Full Context">
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
+          </div>
+          <span className="text-[11px] text-slate-500 block">4-layer memory scopes</span>
+
+          {/* 4 Scope Items */}
+          <div className="space-y-2 text-xs">
+            <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-semibold text-slate-900">Ephemeral</span>
+                <span className="text-[10px] text-slate-400 font-mono">2m ago</span>
+              </div>
+              <span className="text-[11px] text-slate-600">Query: Strategy Plan</span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-semibold text-slate-900">Working</span>
+                <span className="text-[10px] text-slate-400 font-mono">5 Files</span>
+              </div>
+              <span className="text-[11px] text-slate-600">Project: {activeProject?.name || 'Q4 Growth'}</span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-semibold text-slate-900">Long-Term</span>
+                <span className="text-[10px] text-slate-400 font-mono">110 Assets</span>
+              </div>
+              <span className="text-[11px] text-slate-600">Market Data, User Profile</span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-semibold text-slate-900">Global</span>
+                <span className="text-[10px] text-slate-400 font-mono">45 Sources</span>
+              </div>
+              <span className="text-[11px] text-slate-600">Industry Trends, Guidelines</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Active Artifacts Card */}
+        <div className="p-4 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-900 font-serif">Active Artifacts</span>
+            <span className="text-[10px] text-slate-400 font-mono">
+              {artifacts && artifacts.length > 0 ? artifacts.length : 3} Ready
+            </span>
+          </div>
+
+          <div className="space-y-2.5">
+            {/* If real artifacts exist, display them; otherwise display the wireframe documents */}
+            {artifacts && artifacts.length > 0 ? (
+              artifacts.slice(0, 4).map((art) => (
+                <div
+                  key={art.id}
+                  onClick={() => onOpenArtifact(art)}
+                  className="p-3 rounded-xl bg-slate-50/70 border border-slate-200 hover:border-amber-300 hover:bg-white flex items-center justify-between transition cursor-pointer group shadow-2xs"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <FileText className="w-4 h-4 text-amber-600 shrink-0" />
+                    <div className="truncate">
+                      <span className="text-xs font-semibold text-slate-900 block truncate group-hover:text-amber-800 transition">
+                        {art.title}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">{art.filename}</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0" />
+                </div>
+              ))
+            ) : (
+              <>
+                <div
+                  onClick={() => {}}
+                  className="p-3 rounded-xl bg-slate-50/70 border border-slate-200 hover:border-amber-300 hover:bg-white flex items-center justify-between transition cursor-pointer group shadow-2xs"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <div className="w-7 h-7 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0">
+                      <FileText className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="truncate">
+                      <span className="text-xs font-semibold text-slate-900 block truncate group-hover:text-amber-800 transition">
+                        Competitive Analysis.pdf
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">10m ago</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0" />
+                </div>
+
+                <div
+                  onClick={() => {}}
+                  className="p-3 rounded-xl bg-slate-50/70 border border-slate-200 hover:border-amber-300 hover:bg-white flex items-center justify-between transition cursor-pointer group shadow-2xs"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0">
+                      <FileSpreadsheet className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="truncate">
+                      <span className="text-xs font-semibold text-slate-900 block truncate group-hover:text-amber-800 transition">
+                        Q4 Sales Data.xlsx
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">1h ago</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0" />
+                </div>
+
+                <div
+                  onClick={() => {}}
+                  className="p-3 rounded-xl bg-slate-50/70 border border-slate-200 hover:border-amber-300 hover:bg-white flex items-center justify-between transition cursor-pointer group shadow-2xs"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0">
+                      <FileText className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="truncate">
+                      <span className="text-xs font-semibold text-slate-900 block truncate group-hover:text-amber-800 transition">
+                        Strategy Draft.docx
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">2h ago</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0" />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+);
 };
