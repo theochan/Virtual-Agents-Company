@@ -87,9 +87,9 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
   const isLeadAgent = agent.jobTitle.toLowerCase().includes('chief') || agent.jobTitle.toLowerCase().includes('lead');
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
+    <div className="flex-1 flex flex-col h-screen bg-[#F8F9FA] text-slate-800 overflow-hidden">
       {/* Chat Header */}
-      <div className="h-16 px-6 border-b border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
+      <div className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-xs">
         <div className="flex items-center gap-3.5">
           <div className="relative">
             <img
@@ -97,21 +97,21 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
               alt={agent.displayName}
               referrerPolicy="no-referrer"
               onError={(e) => handleAvatarError(e)}
-              className="w-10 h-10 rounded object-cover border border-[#222]"
+              className="w-10 h-10 rounded-lg object-cover border border-slate-200 shadow-xs"
             />
             <span
-              className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-[#070707] ${
+              className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white ${
                 agent.runtimeState.status === 'working' || agent.runtimeState.status === 'thinking'
-                  ? 'bg-[#C5A358] animate-pulse'
-                  : 'bg-emerald-400'
+                  ? 'bg-amber-500 animate-pulse'
+                  : 'bg-emerald-500'
               }`}
             />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-[#F0F0F0] font-serif">{agent.displayName}</h2>
-              <span className="text-[10px] px-1.5 py-0.2 rounded border border-[#1A1A1A] bg-[#0A0A0A] text-[#888]">
+              <h2 className="text-sm font-semibold text-slate-900 font-serif">{agent.displayName}</h2>
+              <span className="text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-slate-100 text-slate-600 font-medium">
                 {agent.jobTitle}
               </span>
               {/* Linked Project Selector */}
@@ -120,28 +120,28 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                   <select
                     value={activeProject?.id || projects[0].id}
                     onChange={(e) => onSelectProject(e.target.value)}
-                    className="appearance-none text-[10px] pl-2 pr-5 py-0.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono cursor-pointer hover:bg-[#C5A358]/20 focus:outline-none"
+                    className="appearance-none text-[10px] pl-2 pr-5 py-0.5 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 font-mono cursor-pointer hover:bg-amber-100/80 focus:outline-none"
                     title="Select project board for task execution"
                   >
                     {projects.map((p) => (
-                      <option key={p.id} value={p.id} className="bg-[#111] text-[#E0E0E0]">
+                      <option key={p.id} value={p.id} className="bg-white text-slate-800">
                         {p.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronRight className="w-2.5 h-2.5 text-[#C5A358] absolute right-1.5 pointer-events-none rotate-90" />
+                  <ChevronRight className="w-2.5 h-2.5 text-amber-700 absolute right-1.5 pointer-events-none rotate-90" />
                 </div>
               ) : activeProject ? (
-                <span className="text-[10px] px-2 py-0.5 rounded border border-[#C5A358]/20 bg-[#C5A358]/5 text-[#C5A358] font-mono">
+                <span className="text-[10px] px-2 py-0.5 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 font-mono">
                   {activeProject.name}
                 </span>
               ) : null}
             </div>
-            <p className="text-[11px] text-[#777] flex items-center gap-1.5">
-              <span className="capitalize text-[#C5A358]">{agent.runtimeState.status}</span>
+            <p className="text-[11px] text-slate-500 flex items-center gap-1.5">
+              <span className="capitalize text-amber-700 font-medium">{agent.runtimeState.status}</span>
               <span>•</span>
-              <span className="text-[#888] font-mono">{agent.llmConfig?.model || 'gemini-3.8-flash'}</span>
-              <span className="text-[#555]">({(agent.llmConfig?.temperature ?? 0.2).toFixed(2)} temp)</span>
+              <span className="text-slate-600 font-mono">{agent.llmConfig?.model || 'gemini-3.8-flash'}</span>
+              <span className="text-slate-400">({(agent.llmConfig?.temperature ?? 0.2).toFixed(2)} temp)</span>
             </p>
           </div>
         </div>
@@ -151,10 +151,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
           {onViewProject && activeProject && (
             <button
               onClick={() => onViewProject(activeProject.id)}
-              className="flex items-center gap-1.5 py-1.5 px-2.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 hover:bg-[#C5A358]/20 text-[#C5A358] text-xs font-medium transition cursor-pointer"
+              className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold transition cursor-pointer shadow-xs"
               title="Open Project Kanban Board"
             >
-              <FolderKanban className="w-3.5 h-3.5" />
+              <FolderKanban className="w-3.5 h-3.5 text-amber-700" />
               <span className="hidden sm:inline">Kanban Board</span>
             </button>
           )}
@@ -169,19 +169,19 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
           <button
             id="btn-open-context-inspector"
             onClick={onOpenContextInspector}
-            className="flex items-center gap-1.5 py-1.5 px-2.5 rounded border border-[#1A1A1A] bg-[#0A0A0A] hover:border-[#C5A358]/40 hover:text-[#C5A358] text-[#BBB] text-xs font-medium transition cursor-pointer"
+            className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-slate-200 bg-white hover:border-amber-400 hover:bg-slate-50 text-slate-700 text-xs font-medium transition cursor-pointer shadow-xs"
             title="Inspect 4-layer memory retrieval and LLM context"
           >
-            <Layers className="w-3.5 h-3.5 text-[#C5A358]" />
+            <Layers className="w-3.5 h-3.5 text-amber-600" />
             <span className="hidden sm:inline">Context</span>
           </button>
 
           <button
             id="btn-open-agent-profile"
             onClick={() => onOpenProfile(agent)}
-            className="flex items-center gap-1.5 py-1.5 px-2.5 rounded border border-[#1A1A1A] bg-[#0A0A0A] hover:border-[#C5A358]/40 hover:text-[#C5A358] text-[#BBB] text-xs font-medium transition cursor-pointer"
+            className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-slate-200 bg-white hover:border-amber-400 hover:bg-slate-50 text-slate-700 text-xs font-medium transition cursor-pointer shadow-xs"
           >
-            <Sliders className="w-3.5 h-3.5" />
+            <Sliders className="w-3.5 h-3.5 text-slate-500" />
             <span className="hidden sm:inline">Profile</span>
           </button>
         </div>
@@ -197,26 +197,26 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
               alt={agent.displayName}
               referrerPolicy="no-referrer"
               onError={(e) => handleAvatarError(e)}
-              className="w-16 h-16 rounded object-cover border border-[#C5A358]/40 shadow-lg mb-4"
+              className="w-16 h-16 rounded-xl object-cover border-2 border-amber-300 shadow-md mb-4"
             />
-            <h3 className="text-lg font-serif italic text-[#C5A358]">{agent.displayName}</h3>
-            <p className="text-xs text-[#888] mt-1">{agent.jobTitle} • {agent.department}</p>
-            <p className="text-xs text-[#BBB] mt-3 leading-relaxed italic">
+            <h3 className="text-xl font-serif font-bold text-slate-900">{agent.displayName}</h3>
+            <p className="text-xs text-slate-500 mt-1 font-medium">{agent.jobTitle} • {agent.department}</p>
+            <p className="text-xs text-slate-600 mt-3 leading-relaxed italic bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
               &quot;{agent.personalityDescription}&quot;
             </p>
 
-            <div className="mt-6 w-full p-4 rounded border border-[#1A1A1A] bg-[#0A0A0A] text-left space-y-2">
-              <span className="text-[10px] uppercase tracking-widest text-[#C5A358] font-semibold block">
+            <div className="mt-6 w-full p-4 rounded-xl border border-slate-200 bg-white text-left space-y-2.5 shadow-xs">
+              <span className="text-[10px] uppercase tracking-widest text-amber-800 font-bold block">
                 Equipped 4-Layer Context
               </span>
-              <div className="grid grid-cols-2 gap-2 text-xs text-[#BBB]">
-                <div className="p-2.5 rounded bg-[#070707] border border-[#1A1A1A]">
-                  <span className="text-[#555] block text-[10px] uppercase tracking-wider">Project Scope</span>
-                  <span className="text-[#F0F0F0] font-medium">{activeProject?.name || 'Assigned Workstream'}</span>
+              <div className="grid grid-cols-2 gap-2 text-xs text-slate-700">
+                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                  <span className="text-slate-500 block text-[10px] uppercase tracking-wider">Project Scope</span>
+                  <span className="text-slate-900 font-semibold">{activeProject?.name || 'Assigned Workstream'}</span>
                 </div>
-                <div className="p-2.5 rounded bg-[#070707] border border-[#1A1A1A]">
-                  <span className="text-[#555] block text-[10px] uppercase tracking-wider">Autonomy</span>
-                  <span className="text-[#C5A358] font-mono">Level {agent.autonomyLevel} / 4</span>
+                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                  <span className="text-slate-500 block text-[10px] uppercase tracking-wider">Autonomy</span>
+                  <span className="text-amber-800 font-mono font-semibold">Level {agent.autonomyLevel} / 4</span>
                 </div>
               </div>
             </div>
@@ -234,17 +234,17 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                     alt={senderAgent?.displayName || agent.displayName}
                     referrerPolicy="no-referrer"
                     onError={(e) => handleAvatarError(e)}
-                    className="w-8 h-8 rounded object-cover border border-[#222] shrink-0 mt-0.5"
+                    className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0 mt-0.5 shadow-xs"
                   />
                 )}
 
-                <div className={`max-w-2xl space-y-2 ${isUser ? 'items-end' : 'items-start'}`}>
+                <div className={`max-w-2xl space-y-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
                   {/* Sender Name & Timestamp */}
-                  <div className={`flex items-center gap-2 text-xs text-[#666] ${isUser ? 'justify-end' : 'justify-start'}`}>
-                    <span className="font-medium text-[#BBB]">
+                  <div className={`flex items-center gap-2 text-xs text-slate-400 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    <span className="font-semibold text-slate-700">
                       {isUser ? 'Executive You' : senderAgent?.displayName || agent.displayName}
                     </span>
-                    <span className="font-mono text-[10px] text-[#555]">
+                    <span className="font-mono text-[10px] text-slate-400">
                       {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -253,21 +253,21 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                   <div
                     className={`p-4 rounded-xl text-xs leading-relaxed ${
                       isUser
-                        ? 'bg-[#141414] border border-[#282828] text-[#F0F0F0] rounded-tr-none'
-                        : 'bg-[#0A0A0A] border border-[#1A1A1A] text-[#D4D4D4] rounded-tl-none shadow-sm'
+                        ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none shadow-xs'
+                        : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-xs'
                     }`}
                   >
                     <div className="whitespace-pre-wrap">{msg.content}</div>
 
                     {/* Internal Activities Card (Sarah -> Marcus, etc.) */}
                     {msg.metadata?.internalActivities && msg.metadata.internalActivities.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-[#1A1A1A] space-y-1.5">
-                        <span className="text-[9px] font-semibold text-[#666] uppercase tracking-widest block">
+                      <div className="mt-3 pt-3 border-t border-slate-100 space-y-1.5 bg-slate-50/80 -mx-2 -mb-2 p-2.5 rounded-lg">
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
                           Internal Multi-Agent Execution
                         </span>
                         {msg.metadata.internalActivities.map((act, i) => (
-                          <div key={i} className="flex items-center gap-2 text-[11px] text-[#888]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A358]" />
+                          <div key={i} className="flex items-center gap-2 text-[11px] text-slate-600">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
                             <span>{act.text}</span>
                           </div>
                         ))}
@@ -276,13 +276,13 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                     {/* Promoted Memories Banner */}
                     {msg.metadata?.promotedMemories && msg.metadata.promotedMemories.length > 0 && (
-                      <div className="mt-3 p-2.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] text-[11px] space-y-1">
-                        <div className="flex items-center gap-1.5 font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A358]" />
+                      <div className="mt-3 p-3 rounded-lg border border-amber-200 bg-amber-50/80 text-amber-900 text-[11px] space-y-1 shadow-xs">
+                        <div className="flex items-center gap-1.5 font-semibold text-amber-800">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
                           <span>Durable Memory Promoted to Project Phoenix</span>
                         </div>
                         {msg.metadata.promotedMemories.map((m) => (
-                          <p key={m.id} className="text-[10px] text-[#E0E0E0] pl-5 font-mono">
+                          <p key={m.id} className="text-[10px] text-slate-700 pl-5 font-mono">
                             • [{m.type.toUpperCase()}] {m.content}
                           </p>
                         ))}
@@ -291,17 +291,17 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                     {/* Autonomous Delegation Pipeline Visualizer (Agent 1 -> Subordinate Agent 2 with Web Search) */}
                     {(msg.metadata?.delegationChain || msg.metadata?.isDelegated) && (
-                      <div className="mt-3 p-3 rounded-lg border border-[#C5A358]/30 bg-[#0B0B0B] space-y-3">
+                      <div className="mt-3 p-3.5 rounded-xl border border-amber-200 bg-amber-50/50 space-y-3 shadow-xs">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="p-1 rounded bg-[#C5A358]/10 text-[#C5A358] border border-[#C5A358]/30">
+                            <span className="p-1.5 rounded-md bg-amber-100 text-amber-800 border border-amber-300">
                               <Globe className="w-3.5 h-3.5" />
                             </span>
                             <div>
-                              <span className="text-[11px] font-semibold text-[#F0F0F0] block font-serif">
+                              <span className="text-[11px] font-bold text-slate-900 block font-serif">
                                 Autonomous Multi-Agent Web Research Delegation
                               </span>
-                              <span className="text-[9px] text-[#888]">
+                              <span className="text-[9px] text-slate-500">
                                 {msg.metadata.delegationChain?.delegatorName || agent.displayName} (No Web Search) → {msg.metadata.delegationChain?.subordinateName || 'Emma Vance'} (Web Search Equipped)
                               </span>
                             </div>
@@ -309,8 +309,8 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                           <span
                             className={`text-[9px] px-2 py-0.5 rounded font-mono font-semibold uppercase ${
                               msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed'
-                                ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/60'
-                                : 'bg-amber-950/60 text-amber-300 border border-amber-800/60 animate-pulse'
+                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                : 'bg-amber-100 text-amber-800 border border-amber-300 animate-pulse'
                             }`}
                           >
                             {msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed'
@@ -321,74 +321,74 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                         {/* Pipeline Stepper */}
                         <div className="grid grid-cols-4 gap-1.5 pt-1">
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 1</span>
-                            <span className="text-emerald-400 font-semibold block flex items-center gap-1">
-                              <Check className="w-2.5 h-2.5" /> Todo Created
+                          <div className="p-2 rounded-lg bg-white border border-slate-200 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 1</span>
+                            <span className="text-emerald-700 font-semibold block flex items-center gap-1">
+                              <Check className="w-2.5 h-2.5 stroke-[3]" /> Todo Created
                             </span>
-                            <span className="text-[9px] text-[#777]">Assigned to Emma</span>
+                            <span className="text-[9px] text-slate-500">Assigned to Emma</span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 2</span>
+                          <div className="p-2 rounded-lg bg-white border border-slate-200 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 2</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
-                                  : 'text-amber-400'
+                                  ? 'text-emerald-700'
+                                  : 'text-amber-600'
                               }`}
                             >
                               {msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : (
                                 <RotateCw className="w-2.5 h-2.5 animate-spin" />
                               )}
                               In Progress
                             </span>
-                            <span className="text-[9px] text-[#777]">Picked up by Emma</span>
+                            <span className="text-[9px] text-slate-500">Picked up by Emma</span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 3</span>
+                          <div className="p-2 rounded-lg bg-white border border-slate-200 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 3</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
-                                  : 'text-[#666]'
+                                  ? 'text-emerald-700'
+                                  : 'text-slate-400'
                               }`}
                             >
                               {msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : (
                                 <Clock className="w-2.5 h-2.5" />
                               )}
                               Done (100%)
                             </span>
-                            <span className="text-[9px] text-[#777]">Web search closed</span>
+                            <span className="text-[9px] text-slate-500">Web search closed</span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 4</span>
+                          <div className="p-2 rounded-lg bg-white border border-slate-200 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 4</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
-                                  : 'text-[#666]'
+                                  ? 'text-emerald-700'
+                                  : 'text-slate-400'
                               }`}
                             >
                               {msg.metadata.delegationChain?.status === 'completed' || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : (
                                 <Clock className="w-2.5 h-2.5" />
                               )}
                               Chat Reply
                             </span>
-                            <span className="text-[9px] text-[#777]">Synthesized by Sarah</span>
+                            <span className="text-[9px] text-slate-500">Synthesized by Sarah</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 text-[10px] text-[#888] font-mono">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           <span>Async background process: safe to close browser & return anytime to view response</span>
                         </div>
                       </div>
@@ -396,17 +396,17 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                     {/* Autonomous Multi-Agent Backlog Queue & Concurrency Pipeline Visualizer */}
                     {msg.metadata?.isBacklogPipeline && msg.metadata?.backlogPipeline && (
-                      <div className="p-3.5 rounded-lg border border-[#2A2035] bg-[#0C0A10] space-y-3">
+                      <div className="p-3.5 rounded-xl border border-purple-200 bg-purple-50/40 space-y-3 shadow-xs">
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <div className="flex items-center gap-2">
-                            <span className="p-1.5 rounded bg-purple-950/60 border border-purple-800/60 text-purple-400">
+                            <span className="p-1.5 rounded-md bg-purple-100 border border-purple-300 text-purple-700">
                               <Layers className="w-4 h-4" />
                             </span>
                             <div>
-                              <span className="text-[11px] font-semibold text-purple-300 block">
+                              <span className="text-[11px] font-bold text-purple-900 block">
                                 Autonomous Multi-Agent Backlog Queue & Concurrency Engine
                               </span>
-                              <span className="text-[9px] text-[#888]">
+                              <span className="text-[9px] text-slate-500">
                                 {msg.metadata.backlogPipeline.leadAgentName || agent.displayName} decomposed task → Backlog status → Sequential execution
                               </span>
                             </div>
@@ -414,10 +414,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                           <span
                             className={`text-[9px] px-2 py-0.5 rounded font-mono font-semibold uppercase ${
                               msg.metadata.backlogPipeline.status === 'completed' || msg.metadata.executionStatus === 'completed'
-                                ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/60'
+                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                                 : msg.metadata.backlogPipeline.status === 'holding_busy'
-                                ? 'bg-amber-950/60 text-amber-300 border border-amber-800/60 animate-pulse'
-                                : 'bg-sky-950/60 text-sky-300 border border-sky-800/60 animate-pulse'
+                                ? 'bg-amber-100 text-amber-800 border border-amber-300 animate-pulse'
+                                : 'bg-sky-100 text-sky-800 border border-sky-300 animate-pulse'
                             }`}
                           >
                             {msg.metadata.backlogPipeline.status === 'completed' || msg.metadata.executionStatus === 'completed'
@@ -432,15 +432,15 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                         {/* Active Concurrency Warning Banner when Marcus is busy */}
                         {msg.metadata.backlogPipeline.busyAgentsNotice && msg.metadata.backlogPipeline.busyAgentsNotice.length > 0 && (
-                          <div className="p-2.5 rounded bg-amber-950/30 border border-amber-800/40 text-[10px] text-amber-200 flex items-start gap-2">
-                            <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                          <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-300 text-[10px] text-amber-900 flex items-start gap-2">
+                            <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
                             <div>
                               <span className="font-semibold block">Cross-Project Concurrency Constraint:</span>
                               <span>
                                 {msg.metadata.backlogPipeline.busyAgentsNotice[0].agentName} is currently active on{' '}
-                                <strong className="text-amber-300">{msg.metadata.backlogPipeline.busyAgentsNotice[0].otherProjectName}</strong> (
+                                <strong className="text-amber-800">{msg.metadata.backlogPipeline.busyAgentsNotice[0].otherProjectName}</strong> (
                                 <em>{msg.metadata.backlogPipeline.busyAgentsNotice[0].activeWorkItemTitle}</em>). His new work items will remain in{' '}
-                                <strong className="text-purple-300">Backlog</strong> until that task finishes.
+                                <strong className="text-purple-800">Backlog</strong> until that task finishes.
                               </span>
                             </div>
                           </div>
@@ -448,27 +448,27 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                         {/* 5-Step Progress Stepper */}
                         <div className="grid grid-cols-5 gap-1.5 pt-1">
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 1</span>
-                            <span className="text-emerald-400 font-semibold block flex items-center gap-1">
-                              <Check className="w-2.5 h-2.5" /> Backlog
+                          <div className="p-2 rounded-lg bg-white border border-purple-100 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 1</span>
+                            <span className="text-emerald-700 font-semibold block flex items-center gap-1">
+                              <Check className="w-2.5 h-2.5 stroke-[3]" /> Backlog
                             </span>
-                            <span className="text-[9px] text-[#777]">Decomposed (4 items)</span>
+                            <span className="text-[9px] text-slate-500">Decomposed (4 items)</span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 2</span>
+                          <div className="p-2 rounded-lg bg-white border border-purple-100 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 2</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.backlogPipeline.step >= 3 || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
+                                  ? 'text-emerald-700'
                                   : msg.metadata.backlogPipeline.step === 2
-                                  ? 'text-amber-400'
-                                  : 'text-[#666]'
+                                  ? 'text-amber-600'
+                                  : 'text-slate-400'
                               }`}
                             >
                               {msg.metadata.backlogPipeline.step >= 3 || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : msg.metadata.backlogPipeline.step === 2 ? (
                                 <RotateCw className="w-2.5 h-2.5 animate-spin" />
                               ) : (
@@ -476,24 +476,24 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                               )}
                               Atlas Check
                             </span>
-                            <span className="text-[9px] text-[#777]">
+                            <span className="text-[9px] text-slate-500">
                               {msg.metadata.backlogPipeline.step >= 3 || msg.metadata.executionStatus === 'completed' ? 'Atlas Done' : 'Marcus Busy'}
                             </span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 3</span>
+                          <div className="p-2 rounded-lg bg-white border border-purple-100 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 3</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.backlogPipeline.step >= 4 || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
+                                  ? 'text-emerald-700'
                                   : msg.metadata.backlogPipeline.step === 3
-                                  ? 'text-sky-400'
-                                  : 'text-[#666]'
+                                  ? 'text-sky-600'
+                                  : 'text-slate-400'
                               }`}
                             >
                               {msg.metadata.backlogPipeline.step >= 4 || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : msg.metadata.backlogPipeline.step === 3 ? (
                                 <RotateCw className="w-2.5 h-2.5 animate-spin" />
                               ) : (
@@ -501,22 +501,22 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                               )}
                               Todo Queue
                             </span>
-                            <span className="text-[9px] text-[#777]">Staged (2+ items)</span>
+                            <span className="text-[9px] text-slate-500">Staged (2+ items)</span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 4</span>
+                          <div className="p-2 rounded-lg bg-white border border-purple-100 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 4</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.backlogPipeline.step >= 5 || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
+                                  ? 'text-emerald-700'
                                   : msg.metadata.backlogPipeline.step === 4
-                                  ? 'text-amber-400'
-                                  : 'text-[#666]'
+                                  ? 'text-amber-600'
+                                  : 'text-slate-400'
                               }`}
                             >
                               {msg.metadata.backlogPipeline.step >= 5 || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : msg.metadata.backlogPipeline.step === 4 ? (
                                 <RotateCw className="w-2.5 h-2.5 animate-spin" />
                               ) : (
@@ -524,31 +524,31 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                               )}
                               Sequential
                             </span>
-                            <span className="text-[9px] text-[#777]">One by one execution</span>
+                            <span className="text-[9px] text-slate-500">One by one execution</span>
                           </div>
 
-                          <div className="p-2 rounded bg-[#101010] border border-[#1F1F1F] text-[10px] space-y-0.5">
-                            <span className="text-[#C5A358] font-mono text-[9px] block">STEP 5</span>
+                          <div className="p-2 rounded-lg bg-white border border-purple-100 text-[10px] space-y-0.5 shadow-xs">
+                            <span className="text-amber-700 font-mono text-[9px] font-bold block">STEP 5</span>
                             <span
                               className={`font-semibold block flex items-center gap-1 ${
                                 msg.metadata.backlogPipeline.step >= 5 || msg.metadata.executionStatus === 'completed'
-                                  ? 'text-emerald-400'
-                                  : 'text-[#666]'
+                                  ? 'text-emerald-700'
+                                  : 'text-slate-400'
                               }`}
                             >
                               {msg.metadata.backlogPipeline.step >= 5 || msg.metadata.executionStatus === 'completed' ? (
-                                <Check className="w-2.5 h-2.5" />
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
                               ) : (
                                 <Clock className="w-2.5 h-2.5" />
                               )}
                               Chat Reply
                             </span>
-                            <span className="text-[9px] text-[#777]">Sarah synthesis</span>
+                            <span className="text-[9px] text-slate-500">Sarah synthesis</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 text-[10px] text-[#888] font-mono">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           <span>Asynchronous background queue: safe to close browser & return anytime to view response</span>
                         </div>
                       </div>
@@ -556,18 +556,18 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                     {/* Autonomous Work Execution & Work Items Card */}
                     {msg.metadata?.autoCreatedWorkItems && msg.metadata.autoCreatedWorkItems.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-[#1E1E1E] space-y-2.5">
+                      <div className="mt-3 pt-3 border-t border-slate-100 space-y-2.5 bg-slate-50/80 -mx-2 -mb-2 p-3 rounded-xl">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="p-1 rounded bg-emerald-950/60 border border-emerald-800/50 text-emerald-400">
+                            <span className="p-1 rounded bg-emerald-100 border border-emerald-300 text-emerald-700">
                               <CheckCircle2 className="w-3.5 h-3.5" />
                             </span>
                             <div>
-                              <span className="text-[11px] font-semibold text-emerald-300 block">
+                              <span className="text-[11px] font-bold text-emerald-900 block">
                                 Autonomous Work Execution • {msg.metadata.autoCreatedWorkItems.length}{' '}
                                 {msg.metadata.autoCreatedWorkItems.length === 1 ? 'Item' : 'Items'} Managed
                               </span>
-                              <span className="text-[9px] text-[#777]">
+                              <span className="text-[9px] text-slate-500">
                                 Delivered to {msg.metadata.linkedProjectName || activeProject?.name || 'Project'} Kanban
                               </span>
                             </div>
@@ -575,10 +575,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                           {onViewProject && (
                             <button
                               onClick={() => onViewProject(msg.metadata?.linkedProjectId || activeProject?.id || '')}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded border border-[#C5A358]/40 bg-[#C5A358]/10 hover:bg-[#C5A358]/20 text-[#C5A358] text-[10px] font-medium transition cursor-pointer"
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-md border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-[10px] font-semibold transition cursor-pointer shadow-xs"
                             >
                               <span>View in Kanban</span>
-                              <ChevronRight className="w-3 h-3" />
+                              <ChevronRight className="w-3 h-3 text-amber-700" />
                             </button>
                           )}
                         </div>
@@ -596,59 +596,59 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                             return (
                               <div
                                 key={item.id}
-                                className="p-3 rounded-lg border border-[#202020] bg-[#070707] hover:border-[#333] transition space-y-2"
+                                className="p-3 rounded-lg border border-slate-200 bg-white hover:border-amber-300 transition space-y-2 shadow-xs"
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="space-y-0.5 min-w-0">
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       {isDone ? (
-                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 flex items-center gap-1">
+                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center gap-1">
                                           <Check className="w-2.5 h-2.5 stroke-[3]" />
                                           DONE (100%)
                                         </span>
                                       ) : isInProgress ? (
-                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-950/60 border border-amber-800/50 text-amber-300 flex items-center gap-1 animate-pulse">
+                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-100 border border-amber-300 text-amber-800 flex items-center gap-1 animate-pulse">
                                           <RotateCw className="w-2.5 h-2.5 animate-spin" />
                                           IN PROGRESS ({item.progressPercent || 40}%)
                                         </span>
                                       ) : isBacklog ? (
-                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-purple-950/60 border border-purple-800/50 text-purple-300 flex items-center gap-1">
+                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-purple-100 border border-purple-300 text-purple-800 flex items-center gap-1">
                                           <Layers className="w-2.5 h-2.5" />
                                           BACKLOG (0%)
                                         </span>
                                       ) : (
-                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-blue-950/60 border border-blue-800/50 text-blue-300 flex items-center gap-1">
+                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-blue-100 border border-blue-300 text-blue-800 flex items-center gap-1">
                                           <Clock className="w-2.5 h-2.5" />
                                           TODO (0%)
                                         </span>
                                       )}
 
                                       {isBacklog && item.assignedAgentId === 'agent-marcus' && (
-                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-amber-950/40 border border-amber-800/40 text-amber-300">
+                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-amber-100 border border-amber-300 text-amber-800">
                                           ⚠️ Waiting on Project Atlas task
                                         </span>
                                       )}
 
                                       <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium uppercase ${
                                         item.priority === 'urgent'
-                                          ? 'bg-rose-950/40 text-rose-300 border border-rose-900/40'
+                                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
                                           : item.priority === 'high'
-                                          ? 'bg-amber-950/40 text-amber-300 border border-amber-900/40'
-                                          : 'bg-[#181818] text-[#999] border border-[#2A2A2A]'
+                                          ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                          : 'bg-slate-100 text-slate-600 border border-slate-200'
                                       }`}>
                                         {item.priority}
                                       </span>
                                       {item.tags?.map((t, idx) => (
-                                        <span key={idx} className="text-[9px] text-[#666] font-mono">
+                                        <span key={idx} className="text-[9px] text-slate-500 font-mono">
                                           #{t}
                                         </span>
                                       ))}
                                     </div>
-                                    <h4 className="text-xs font-semibold text-[#F0F0F0] pt-0.5">{item.title}</h4>
+                                    <h4 className="text-xs font-semibold text-slate-900 pt-0.5">{item.title}</h4>
                                   </div>
 
                                   {assigned && (
-                                    <div className="flex items-center gap-1.5 shrink-0 px-2 py-1 rounded bg-[#101010] border border-[#222]">
+                                    <div className="flex items-center gap-1.5 shrink-0 px-2 py-1 rounded bg-slate-100 border border-slate-200">
                                       <img
                                         src={assigned.avatarUrl}
                                         alt={assigned.displayName}
@@ -656,20 +656,20 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                                         onError={(e) => handleAvatarError(e)}
                                         className="w-4 h-4 rounded object-cover"
                                       />
-                                      <span className="text-[10px] text-[#AAA]">{assigned.displayName.split(' ')[0]}</span>
+                                      <span className="text-[10px] text-slate-700 font-medium">{assigned.displayName.split(' ')[0]}</span>
                                     </div>
                                   )}
                                 </div>
 
                                 {item.description && (
-                                  <p className="text-[11px] text-[#888] leading-relaxed">{item.description}</p>
+                                  <p className="text-[11px] text-slate-600 leading-relaxed">{item.description}</p>
                                 )}
 
                                 {lastLog?.comment && (
-                                  <div className="p-2 rounded bg-[#0D0D0D] border border-[#1A1A1A] text-[10px] text-[#CCC] flex items-start gap-2">
-                                    <Sparkles className="w-3 h-3 text-[#C5A358] shrink-0 mt-0.5" />
+                                  <div className="p-2 rounded bg-slate-50 border border-slate-200 text-[10px] text-slate-700 flex items-start gap-2">
+                                    <Sparkles className="w-3 h-3 text-amber-600 shrink-0 mt-0.5" />
                                     <div className="space-y-0.5">
-                                      <span className="text-[9px] font-medium text-[#C5A358] uppercase tracking-wider block">
+                                      <span className="text-[9px] font-bold text-amber-800 uppercase tracking-wider block">
                                         {isDone ? 'Closed Deliverable Log' : 'Execution Log'}
                                       </span>
                                       <span>{lastLog.comment}</span>
@@ -685,8 +685,8 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
                     {/* Reusable Artifacts Attachment */}
                     {msg.attachments && msg.attachments.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-[#1A1A1A] space-y-1.5">
-                        <span className="text-[9px] font-semibold text-[#666] uppercase tracking-widest block">
+                      <div className="mt-3 pt-3 border-t border-slate-100 space-y-1.5">
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
                           Generated Reusable Artifacts
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -694,16 +694,16 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                             <div
                               key={art.id}
                               onClick={() => onOpenArtifact(art)}
-                              className="p-2.5 rounded bg-[#070707] border border-[#1A1A1A] hover:border-[#C5A358]/40 flex items-center justify-between transition cursor-pointer group"
+                              className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-amber-300 hover:bg-white flex items-center justify-between transition cursor-pointer group shadow-xs"
                             >
                               <div className="flex items-center gap-2 truncate">
-                                <FileText className="w-3.5 h-3.5 text-[#C5A358] shrink-0" />
+                                <FileText className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                                 <div className="truncate">
-                                  <span className="text-[11px] font-medium text-[#F0F0F0] block truncate">{art.title}</span>
-                                  <span className="text-[9px] text-[#666] font-mono">{art.filename}</span>
+                                  <span className="text-[11px] font-semibold text-slate-900 block truncate">{art.title}</span>
+                                  <span className="text-[9px] text-slate-500 font-mono">{art.filename}</span>
                                 </div>
                               </div>
-                              <ExternalLink className="w-3 h-3 text-[#555] group-hover:text-[#C5A358] shrink-0" />
+                              <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-amber-600 shrink-0" />
                             </div>
                           ))}
                         </div>
@@ -713,7 +713,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                 </div>
 
                 {isUser && (
-                  <div className="w-8 h-8 rounded bg-[#141414] border border-[#282828] flex items-center justify-center shrink-0 mt-0.5 text-[#C5A358]">
+                  <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 mt-0.5 text-amber-400 shadow-xs">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -724,18 +724,18 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
         {/* Live Active Task Progress Card (if collaborating) */}
         {isCollaborating && activeTask && (
-          <div className="p-4 rounded border border-[#C5A358]/40 bg-[#0A0A0A] shadow-[0_0_15px_rgba(197,163,88,0.08)] space-y-3">
+          <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/70 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#C5A358] animate-ping" />
-                <span className="text-xs font-semibold text-[#F0F0F0] font-serif">Multi-Agent Task In Progress</span>
+                <div className="w-2 h-2 rounded-full bg-amber-600 animate-ping" />
+                <span className="text-xs font-bold text-slate-900 font-serif">Multi-Agent Task In Progress</span>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono">
+              <span className="text-[10px] px-2 py-0.5 rounded-md border border-amber-300 bg-white text-amber-900 font-mono font-medium shadow-xs">
                 Lead: {agent.displayName}
               </span>
             </div>
 
-            <p className="text-xs text-[#CCC] font-medium">{activeTask.description}</p>
+            <p className="text-xs text-slate-700 font-medium">{activeTask.description}</p>
 
             <div className="space-y-1.5">
               {activeTask.subtasks.map((st) => {
@@ -743,22 +743,22 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                 return (
                   <div
                     key={st.id}
-                    className="p-2 rounded bg-[#070707] border border-[#1A1A1A] flex items-center justify-between text-xs"
+                    className="p-2.5 rounded-lg bg-white border border-amber-200/80 flex items-center justify-between text-xs shadow-xs"
                   >
                     <div className="flex items-center gap-2">
                       <img
                         src={subAgent?.avatarUrl}
                         alt={subAgent?.displayName}
-                        className="w-5 h-5 rounded object-cover"
+                        className="w-5 h-5 rounded-md object-cover"
                       />
-                      <span className="font-medium text-[#F0F0F0]">{subAgent?.displayName}:</span>
-                      <span className="text-[#888] truncate max-w-xs">{st.description}</span>
+                      <span className="font-semibold text-slate-900">{subAgent?.displayName}:</span>
+                      <span className="text-slate-600 truncate max-w-xs">{st.description}</span>
                     </div>
                     <span
-                      className={`text-[9px] px-2 py-0.5 rounded capitalize font-mono ${
+                      className={`text-[9px] px-2 py-0.5 rounded-md capitalize font-mono ${
                         st.status === 'completed'
-                          ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/40'
-                          : 'bg-[#C5A358]/10 text-[#C5A358] border border-[#C5A358]/30'
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-medium'
+                          : 'bg-amber-100 text-amber-800 border border-amber-300 font-medium'
                       }`}
                     >
                       {st.status}
@@ -773,8 +773,29 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar */}
-      <div className="p-4 border-t border-[#1A1A1A] bg-[#070707]">
+      {/* Input Bar & Action Chips */}
+      <div className="p-4 border-t border-slate-200 bg-white">
+        {/* Quick Action Prompt Chips */}
+        <div className="flex items-center gap-1.5 mb-2.5 overflow-x-auto pb-1 scrollbar-none">
+          {[
+            { label: 'Draft Brief', icon: '✉', prompt: 'Draft an executive briefing on the current project status and next milestones.' },
+            { label: 'Create Kanban Task', icon: '☑', prompt: 'Create a new high-priority deliverable for the team on the current project board.' },
+            { label: 'Run Simulation', icon: '⚡', prompt: 'Simulate scenario analysis and forecast potential risks for our upcoming release.' },
+            { label: 'Market Research', icon: '🌐', prompt: 'Perform comprehensive web research on market trends and competitor benchmarks.' },
+            { label: 'Status Report', icon: '📊', prompt: 'Generate an exhaustive synthesis report summarizing recent deliverables and metrics.' }
+          ].map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setInputText(chip.prompt)}
+              className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition cursor-pointer flex items-center gap-1 shrink-0 hover:border-amber-300"
+            >
+              <span>{chip.icon}</span>
+              <span>{chip.label}</span>
+            </button>
+          ))}
+        </div>
+
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
           <input
             id="chat-message-input"
@@ -783,17 +804,17 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
             onChange={(e) => setInputText(e.target.value)}
             disabled={isSending || isCollaborating}
             placeholder={`Message ${agent.displayName} (delegates tasks, references 4-layer memory)...`}
-            className="flex-1 py-2.5 px-4 rounded bg-[#0A0A0A] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358] disabled:opacity-50"
+            className="flex-1 py-2.5 px-4 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 disabled:opacity-50"
           />
 
           <button
             id="btn-send-message"
             type="submit"
             disabled={!inputText.trim() || isSending || isCollaborating}
-            className="py-2.5 px-4 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer shadow-sm"
+            className="py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer shadow-xs"
           >
             {isSending ? (
-              <RotateCw className="w-4 h-4 animate-spin text-black" />
+              <RotateCw className="w-4 h-4 animate-spin text-white" />
             ) : (
               <>
                 <Send className="w-3.5 h-3.5" />
@@ -802,7 +823,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
             )}
           </button>
         </form>
-        <div className="mt-2 flex items-center justify-between text-[10px] text-[#555] font-mono">
+        <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400 font-mono">
           <span>Priority Retrieval: Conversation → Project ({activeProject?.name || 'Phoenix'}) → Agent → Organization</span>
           <span>Lead Agent Synthesizer Active</span>
         </div>

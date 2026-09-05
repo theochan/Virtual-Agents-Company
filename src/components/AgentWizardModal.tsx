@@ -281,27 +281,27 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl rounded bg-[#0A0A0A] border border-[#1A1A1A] shadow-2xl flex flex-col max-h-[90vh] text-[#E0E0E0] overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl rounded-2xl bg-white border border-slate-200 shadow-2xl flex flex-col max-h-[90vh] text-slate-800 overflow-hidden">
         {/* Header */}
-        <div className="p-5 border-b border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 flex items-center justify-center text-[#C5A358]">
+        <div className="p-5 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl border border-amber-300/80 bg-amber-50 flex items-center justify-center text-amber-700 shadow-2xs">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-[#F0F0F0]">Create Autonomous AI Coworker</h3>
-              <p className="text-[11px] text-[#777]">Step {step} of 5: Five-Dimensional Persistent Persona</p>
+              <h3 className="text-sm font-semibold text-slate-900">Create Autonomous AI Coworker</h3>
+              <p className="text-[11px] text-slate-500">Step {step} of 5: Five-Dimensional Persistent Persona</p>
             </div>
           </div>
 
-          <button onClick={onClose} className="text-[#666] hover:text-[#FFF] text-sm cursor-pointer p-1">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1.5 cursor-pointer transition">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Steps Progress Bar */}
-        <div className="px-6 py-2.5 bg-[#070707] border-b border-[#1A1A1A] flex items-center justify-between text-xs shrink-0">
+        <div className="px-6 py-3 bg-slate-50/80 border-b border-slate-200 flex items-center justify-between text-xs shrink-0">
           {[
             { num: 1, label: 'Identity', icon: User },
             { num: 2, label: 'Professional Role', icon: Briefcase },
@@ -313,19 +313,19 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               key={s.num}
               className={`flex items-center gap-1.5 font-medium ${
                 step === s.num
-                  ? 'text-[#C5A358] font-semibold'
+                  ? 'text-amber-900 font-semibold'
                   : step > s.num
-                  ? 'text-emerald-400'
-                  : 'text-[#555]'
+                  ? 'text-emerald-700'
+                  : 'text-slate-400'
               }`}
             >
               <span
                 className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
                   step === s.num
-                    ? 'bg-[#C5A358] text-black font-bold'
+                    ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
                     : step > s.num
-                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
-                    : 'bg-[#151515] text-[#555]'
+                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold'
+                    : 'bg-slate-200 text-slate-500'
                 }`}
               >
                 {step > s.num ? '✓' : s.num}
@@ -341,26 +341,26 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-medium text-[#AAA] mb-1">Agent Name</label>
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">Agent Name</label>
                 <input
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="e.g. Elena, Alex, Jordan..."
-                  className="w-full p-2.5 rounded border border-[#1A1A1A] bg-[#070707] text-xs text-[#F0F0F0] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 shadow-2xs"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[11px] text-[#777] mb-1">Gender</label>
+                  <label className="block text-[11px] text-slate-600 mb-1 font-medium">Gender</label>
                   <select
                     value={gender}
                     onChange={(e) => {
                       const val = e.target.value as any;
                       setGender(val);
                     }}
-                    className="w-full p-2 rounded border border-[#1A1A1A] bg-[#070707] text-xs text-[#EEE] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs"
                   >
                     <option value="female">Female</option>
                     <option value="male">Male</option>
@@ -369,41 +369,41 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-[#777] mb-1">Age</label>
+                  <label className="block text-[11px] text-slate-600 mb-1 font-medium">Age</label>
                   <input
                     type="number"
                     value={age}
                     onChange={(e) => setAge(Number(e.target.value))}
-                    className="w-full p-2 rounded border border-[#1A1A1A] bg-[#070707] text-xs text-[#EEE] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-[#777] mb-1">Nationality / Heritage</label>
+                  <label className="block text-[11px] text-slate-600 mb-1 font-medium">Nationality / Heritage</label>
                   <input
                     type="text"
                     value={nationality}
                     onChange={(e) => setNationality(e.target.value)}
-                    className="w-full p-2 rounded border border-[#1A1A1A] bg-[#070707] text-xs text-[#EEE] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs"
                   />
                 </div>
               </div>
 
               {/* AI PORTRAIT GENERATION STUDIO */}
-              <div className="p-4 rounded border border-[#1A1A1A] bg-[#070707] space-y-3.5">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3.5 shadow-2xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 flex items-center justify-center text-[#C5A358]">
+                    <div className="w-7 h-7 rounded-lg border border-amber-300/80 bg-amber-50 flex items-center justify-center text-amber-700 shadow-2xs">
                       <Wand2 className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-[#F0F0F0]">AI Portrait Synthesis Studio</h4>
-                      <p className="text-[10px] text-[#777]">
+                      <h4 className="text-xs font-semibold text-slate-900">AI Portrait Synthesis Studio</h4>
+                      <p className="text-[10px] text-slate-500">
                         Generate high-fidelity photorealistic headshots prior to agent deployment
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono">
+                  <span className="text-[9px] px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 font-mono font-medium shadow-2xs">
                     {avatarSource === 'gemini_ai_generated' ? 'GEMINI 3.1 SYNTHESIZED' : 'NEURAL ARCHETYPE ENGINE'}
                   </span>
                 </div>
@@ -411,7 +411,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-start">
                   {/* Portrait Preview Box */}
                   <div className="sm:col-span-4 flex flex-col items-center gap-2">
-                    <div className="relative w-full aspect-square rounded border border-[#222] overflow-hidden bg-[#030303] group shadow-lg">
+                    <div className="relative w-full aspect-square rounded-xl border border-slate-200 overflow-hidden bg-slate-100 group shadow-md">
                       <img
                         src={avatarUrl}
                         alt="AI Avatar Preview"
@@ -423,16 +423,16 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                       />
 
                       {isGeneratingAvatar && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 p-2 text-center">
-                          <Loader2 className="w-6 h-6 text-[#C5A358] animate-spin mb-1.5" />
-                          <span className="text-[11px] font-medium text-[#F0F0F0]">Synthesizing Portrait...</span>
-                          <span className="text-[9px] text-[#888] font-mono">Computing facial geometry</span>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 p-2 text-center">
+                          <Loader2 className="w-6 h-6 text-amber-400 animate-spin mb-1.5" />
+                          <span className="text-[11px] font-medium text-white">Synthesizing Portrait...</span>
+                          <span className="text-[9px] text-slate-300 font-mono">Computing facial geometry</span>
                         </div>
                       )}
 
-                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-2 pt-4 flex items-center justify-between text-[9px] font-mono">
-                        <span className="text-[#CCC] truncate">{firstName} {lastName}</span>
-                        <span className="text-[#C5A358] capitalize">{avatarStyle}</span>
+                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent p-2 pt-4 flex items-center justify-between text-[9px] font-mono text-white">
+                        <span className="truncate">{firstName} {lastName}</span>
+                        <span className="text-amber-300 capitalize">{avatarStyle}</span>
                       </div>
                     </div>
 
@@ -440,7 +440,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                       type="button"
                       onClick={() => handleGenerateAvatar()}
                       disabled={isGeneratingAvatar}
-                      className="w-full py-2 px-3 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center justify-center gap-1.5 shadow transition cursor-pointer disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer disabled:opacity-50"
                     >
                       {isGeneratingAvatar ? (
                         <>
@@ -449,7 +449,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         </>
                       ) : (
                         <>
-                          <Wand2 className="w-3.5 h-3.5" />
+                          <Wand2 className="w-3.5 h-3.5 text-amber-400" />
                           <span>Generate AI Portrait</span>
                         </>
                       )}
@@ -458,20 +458,20 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowCustomUrl(!showCustomUrl)}
-                      className="text-[10px] text-[#666] hover:text-[#AAA] flex items-center gap-1 cursor-pointer transition"
+                      className="text-[10px] text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer transition"
                     >
                       <LinkIcon className="w-3 h-3" />
                       <span>{showCustomUrl ? 'Hide Custom Image URL' : 'Or enter custom image URL'}</span>
                     </button>
 
                     {showCustomUrl && (
-                      <div className="w-full space-y-1 mt-1">
+                      <div className="w-full space-y-1.5 p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs mt-1">
                         <input
                           type="text"
                           placeholder="https://..."
                           value={customUrlInput}
                           onChange={(e) => setCustomUrlInput(e.target.value)}
-                          className="w-full p-1.5 rounded border border-[#222] bg-[#0A0A0A] text-[10px] text-[#EEE]"
+                          className="w-full p-2 rounded-lg border border-slate-200 bg-slate-50 text-[10px] text-slate-900"
                         />
                         <button
                           type="button"
@@ -481,7 +481,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                               setAvatarSource('ai_curated_neural');
                             }
                           }}
-                          className="w-full py-1 rounded bg-[#1A1A1A] hover:bg-[#252525] text-[#CCC] text-[10px] cursor-pointer"
+                          className="w-full py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-medium cursor-pointer shadow-xs"
                         >
                           Apply URL
                         </button>
@@ -492,7 +492,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   {/* Archetype & Prompt Configuration */}
                   <div className="sm:col-span-8 space-y-3">
                     <div>
-                      <label className="block text-[11px] font-medium text-[#BBB] mb-1.5">
+                      <label className="block text-[11px] font-semibold text-slate-800 mb-1.5">
                         Select Executive Archetype & Style
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -506,25 +506,25 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                                 setAvatarStyle(st.id);
                                 handleGenerateAvatar(st.id);
                               }}
-                              className={`p-2 rounded border text-left transition cursor-pointer ${
+                              className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
                                 isSelected
-                                  ? 'border-[#C5A358] bg-[#C5A358]/10'
-                                  : 'border-[#1A1A1A] bg-[#0A0A0A] hover:border-[#333]'
+                                  ? 'border-amber-400 bg-amber-50/80 shadow-xs'
+                                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
                               }`}
                             >
                               <div className="flex items-center justify-between mb-0.5">
                                 <span
-                                  className={`text-xs font-medium ${
-                                    isSelected ? 'text-[#C5A358]' : 'text-[#EEE]'
+                                  className={`text-xs font-semibold ${
+                                    isSelected ? 'text-amber-900' : 'text-slate-900'
                                   }`}
                                 >
                                   {st.label}
                                 </span>
-                                <span className="text-[9px] px-1.5 py-0.2 rounded border border-[#222] text-[#888] font-mono">
+                                <span className="text-[9px] px-1.5 py-0.2 rounded border border-slate-200 text-slate-500 font-mono bg-slate-50">
                                   {st.badge}
                                 </span>
                               </div>
-                              <p className="text-[10px] text-[#666] leading-tight line-clamp-1">{st.description}</p>
+                              <p className="text-[10px] text-slate-500 leading-tight line-clamp-1">{st.description}</p>
                             </button>
                           );
                         })}
@@ -532,16 +532,16 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     </div>
 
                     {/* Prompt Inspector / Customizer */}
-                    <div className="p-2.5 rounded border border-[#1A1A1A] bg-[#050505] space-y-1.5">
+                    <div className="p-3 rounded-xl border border-slate-200 bg-white space-y-1.5 shadow-2xs">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-medium text-[#AAA] flex items-center gap-1 font-mono">
-                          <Cpu className="w-3 h-3 text-[#C5A358]" />
+                        <span className="text-[10px] font-semibold text-slate-700 flex items-center gap-1 font-mono">
+                          <Cpu className="w-3 h-3 text-amber-600" />
                           Synthesis Prompt Configuration
                         </span>
                         <button
                           type="button"
                           onClick={() => setIsEditingPrompt(!isEditingPrompt)}
-                          className="text-[10px] text-[#C5A358] hover:underline cursor-pointer"
+                          className="text-[10px] text-amber-800 hover:text-amber-900 font-medium hover:underline cursor-pointer"
                         >
                           {isEditingPrompt ? 'Collapse Prompt' : 'Fine-Tune Prompt'}
                         </button>
@@ -553,18 +553,18 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                             value={avatarPrompt}
                             onChange={(e) => setAvatarPrompt(e.target.value)}
                             rows={3}
-                            className="w-full p-2 rounded border border-[#222] bg-[#0A0A0A] text-[10px] text-[#DDD] font-mono focus:outline-none focus:border-[#C5A358]"
+                            className="w-full p-2 rounded-lg border border-slate-200 bg-slate-50 text-[10px] text-slate-800 font-mono focus:outline-none focus:border-amber-500"
                           />
                           <button
                             type="button"
                             onClick={() => handleGenerateAvatar()}
-                            className="px-2.5 py-1 rounded bg-[#1A1A1A] hover:bg-[#252525] text-[#EEE] text-[10px] font-medium cursor-pointer"
+                            className="px-3 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-medium cursor-pointer shadow-xs"
                           >
                             Re-synthesize with Custom Prompt
                           </button>
                         </div>
                       ) : (
-                        <p className="text-[10px] text-[#666] font-mono line-clamp-2 leading-relaxed">
+                        <p className="text-[10px] text-slate-500 font-mono line-clamp-2 leading-relaxed">
                           {avatarPrompt}
                         </p>
                       )}
@@ -573,10 +573,10 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                     {/* Alternate Candidate Variations */}
                     <div>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-medium text-[#AAA] uppercase tracking-wider">
+                        <span className="text-[10px] font-semibold text-slate-700 uppercase tracking-wider">
                           Alternative AI Candidate Portraits
                         </span>
-                        <span className="text-[9px] text-[#666]">Click to swap active portrait</span>
+                        <span className="text-[9px] text-slate-400">Click to swap active portrait</span>
                       </div>
 
                       <div className="grid grid-cols-4 gap-2">
@@ -587,12 +587,12 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                               key={idx}
                               onClick={() => {
                                 setAvatarUrl(variant.url);
-                                setAvatarSource('ai_generated');
+                                setAvatarSource('ai_curated_neural');
                               }}
-                              className={`group relative rounded border aspect-square overflow-hidden cursor-pointer transition ${
+                              className={`group relative rounded-xl border aspect-square overflow-hidden cursor-pointer transition ${
                                 isCurrent
-                                  ? 'border-[#C5A358] ring-1 ring-[#C5A358]'
-                                  : 'border-[#1A1A1A] opacity-70 hover:opacity-100 hover:border-[#444]'
+                                  ? 'border-amber-500 ring-2 ring-amber-400/50 shadow-xs'
+                                  : 'border-slate-200 opacity-80 hover:opacity-100 hover:border-slate-400 shadow-2xs'
                               }`}
                             >
                               <img
@@ -603,12 +603,12 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                                 className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                               />
                               {isCurrent && (
-                                <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-[#C5A358] text-black flex items-center justify-center text-[9px] font-bold">
+                                <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[9px] font-bold shadow-xs">
                                   ✓
                                 </div>
                               )}
-                              <div className="absolute bottom-0 inset-x-0 bg-black/70 p-0.5 text-center">
-                                <span className="text-[8px] text-[#CCC] block truncate">
+                              <div className="absolute bottom-0 inset-x-0 bg-slate-900/80 p-0.5 text-center">
+                                <span className="text-[8px] text-white block truncate">
                                   {variant.badge || `Candidate ${idx + 1}`}
                                 </span>
                               </div>
@@ -628,31 +628,31 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Job Title</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Job Title</label>
                   <input
                     type="text"
                     value={jobTitle}
                     onChange={(e) => setJobTitle(e.target.value)}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Department</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Department</label>
                   <input
                     type="text"
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Seniority Level</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Seniority Level</label>
                 <select
                   value={seniority}
                   onChange={(e) => setSeniority(e.target.value as any)}
-                  className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white capitalize"
+                  className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500 capitalize"
                 >
                   {['junior', 'mid', 'senior', 'staff', 'principal', 'lead', 'executive'].map((lvl) => (
                     <option key={lvl} value={lvl}>
@@ -665,11 +665,11 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               {/* Hierarchy & Reporting Line */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Reports To (Manager)</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Reports To (Manager)</label>
                   <select
                     value={reportsTo || 'none'}
                     onChange={(e) => setReportsTo(e.target.value === 'none' ? undefined : e.target.value)}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                   >
                     <option value="none">None (Top Executive)</option>
                     {existingAgents.map((a) => (
@@ -680,11 +680,11 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Department Role</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Department Role</label>
                   <select
                     value={departmentRole}
                     onChange={(e) => setDepartmentRole(e.target.value as 'lead' | 'member')}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                   >
                     <option value="member">Team Member / Contributor</option>
                     <option value="lead">Department Lead / Principal</option>
@@ -693,22 +693,22 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Primary Responsibility</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Primary Responsibility</label>
                 <textarea
                   value={primaryResponsibility}
                   onChange={(e) => setPrimaryResponsibility(e.target.value)}
                   rows={2}
-                  className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                  className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">Core Skills (Comma separated)</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Core Skills (Comma separated)</label>
                 <input
                   type="text"
                   value={skillsInput}
                   onChange={(e) => setSkillsInput(e.target.value)}
-                  className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                  className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -719,11 +719,11 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Temperament</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Temperament</label>
                   <select
                     value={temperament}
                     onChange={(e) => setTemperament(e.target.value as any)}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white capitalize"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500 capitalize"
                   >
                     {['calm', 'energetic', 'serious', 'warm', 'direct', 'methodical', 'analytical'].map((t) => (
                       <option key={t} value={t}>
@@ -734,20 +734,20 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     Freeform Personality Essence
                   </label>
                   <input
                     type="text"
                     value={personalityDesc}
                     onChange={(e) => setPersonalityDesc(e.target.value)}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
               <div className="space-y-3 pt-2">
-                <span className="text-xs font-semibold text-neutral-300 block">
+                <span className="text-xs font-semibold text-slate-800 block">
                   Ten Personality Sliders (0 - 100)
                 </span>
 
@@ -762,9 +762,9 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   const val = (dimensions as any)[item.key];
                   return (
                     <div key={item.key} className="space-y-1">
-                      <div className="flex justify-between text-[11px] text-neutral-400">
+                      <div className="flex justify-between text-[11px] text-slate-500">
                         <span>{item.left}</span>
-                        <span className="font-mono text-indigo-400">{val} / 100</span>
+                        <span className="font-mono text-amber-800 font-semibold">{val} / 100</span>
                         <span>{item.right}</span>
                       </div>
                       <input
@@ -775,7 +775,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         onChange={(e) =>
                           setDimensions({ ...dimensions, [item.key]: Number(e.target.value) })
                         }
-                        className="w-full accent-indigo-500 cursor-pointer"
+                        className="w-full accent-amber-600 cursor-pointer"
                       />
                     </div>
                   );
@@ -789,13 +789,13 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Response Mode</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Response Mode</label>
                   <select
                     value={communicationStyle.mode}
                     onChange={(e) =>
                       setCommunicationStyle({ ...communicationStyle, mode: e.target.value as any })
                     }
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white capitalize"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500 capitalize"
                   >
                     <option value="conclusion_first">Conclusion First (Executive)</option>
                     <option value="step_by_step">Step-by-Step (Systematic)</option>
@@ -806,13 +806,13 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Verbosity</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Verbosity</label>
                   <select
                     value={communicationStyle.verbosity}
                     onChange={(e) =>
                       setCommunicationStyle({ ...communicationStyle, verbosity: e.target.value as any })
                     }
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white capitalize"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500 capitalize"
                   >
                     <option value="concise">Concise</option>
                     <option value="balanced">Balanced</option>
@@ -821,8 +821,8 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-2 pt-2">
-                <label className="flex items-center gap-2 text-xs text-neutral-300 cursor-pointer">
+              <div className="space-y-2.5 pt-2">
+                <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={communicationStyle.challengesUserDecisions}
@@ -832,12 +832,12 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         challengesUserDecisions: e.target.checked
                       })
                     }
-                    className="accent-indigo-500 rounded"
+                    className="accent-amber-600 rounded"
                   />
                   <span>Challenges user assumptions when technically flawed</span>
                 </label>
 
-                <label className="flex items-center gap-2 text-xs text-neutral-300 cursor-pointer">
+                <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={communicationStyle.proactivelySuggestsImprovements}
@@ -847,7 +847,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         proactivelySuggestsImprovements: e.target.checked
                       })
                     }
-                    className="accent-indigo-500 rounded"
+                    className="accent-amber-600 rounded"
                   />
                   <span>Proactively offers improvements and flags edge-case risks</span>
                 </label>
@@ -860,11 +860,11 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Model Provider</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Model Provider</label>
                   <select
                     value={provider}
                     onChange={(e) => setProvider(e.target.value as any)}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white capitalize"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500 capitalize"
                   >
                     <option value="google">Google DeepMind (Gemini)</option>
                     <option value="openai">OpenAI</option>
@@ -873,7 +873,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">Foundation Model</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Foundation Model</label>
                   <select
                     value={model}
                     onChange={(e) => {
@@ -881,7 +881,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                       const def = getModelDetails(e.target.value);
                       setMaxTokens(def.maxTokens);
                     }}
-                    className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                    className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                   >
                     {SUPPORTED_MODELS.map((m) => (
                       <option key={m.id} value={m.id}>
@@ -893,22 +893,22 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               </div>
 
               {/* Selected Model Details Preview */}
-              <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-neutral-400 space-y-1">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1 shadow-2xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-neutral-200">{selectedModelDetails.name}</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded border ${selectedModelDetails.badgeColor}`}>
+                  <span className="font-semibold text-slate-900">{selectedModelDetails.name}</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-md border ${selectedModelDetails.badgeColor}`}>
                     {selectedModelDetails.badge} • {selectedModelDetails.speed}
                   </span>
                 </div>
-                <p className="text-[11px] text-neutral-400">{selectedModelDetails.description}</p>
-                <p className="text-[10px] text-neutral-500 font-mono">Recommended: {selectedModelDetails.recommendedFor}</p>
+                <p className="text-[11px] text-slate-600">{selectedModelDetails.description}</p>
+                <p className="text-[10px] text-slate-400 font-mono">Recommended: {selectedModelDetails.recommendedFor}</p>
               </div>
 
               {/* Temperature Tuning */}
-              <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800 space-y-2">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 shadow-2xs">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-300 font-medium">Inference Temperature</span>
-                  <span className="font-mono text-white font-bold">{temperature.toFixed(2)}</span>
+                  <span className="text-slate-700 font-medium">Inference Temperature</span>
+                  <span className="font-mono text-amber-800 font-bold">{temperature.toFixed(2)}</span>
                 </div>
                 <input
                   type="range"
@@ -917,22 +917,22 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   step="0.05"
                   value={temperature}
                   onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                  className="w-full h-1.5 bg-neutral-800 rounded appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-1.5 bg-slate-200 rounded appearance-none cursor-pointer accent-amber-600"
                 />
-                <div className="flex justify-between text-[10px] text-neutral-500 font-mono">
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
                   <span>0.0 (Strict / Focused)</span>
                   <span>1.0 (Creative)</span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-medium text-slate-700 mb-1">
                   Autonomy Level (1: Suggest only, 2: Draft, 3: Autonomous with review, 4: Fully autonomous)
                 </label>
                 <select
                   value={autonomyLevel}
                   onChange={(e) => setAutonomyLevel(Number(e.target.value) as any)}
-                  className="w-full p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-white"
+                  className="w-full p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                 >
                   <option value={1}>Level 1: Passive Assistant (Requires confirmation for everything)</option>
                   <option value={2}>Level 2: Guided Operator (Drafts actions for approval)</option>
@@ -943,13 +943,13 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-medium text-neutral-300">
+                  <label className="block text-xs font-semibold text-slate-800">
                     Connected Enterprise Tools ({selectedTools.length} selected)
                   </label>
                   <button
                     type="button"
                     onClick={() => setIsAddingCustomTool(!isAddingCustomTool)}
-                    className="flex items-center gap-1 text-[11px] text-[#C5A358] hover:underline cursor-pointer"
+                    className="flex items-center gap-1 text-[11px] text-amber-800 hover:text-amber-900 font-semibold cursor-pointer"
                   >
                     <Plus className="w-3 h-3" />
                     <span>Create Custom Tool</span>
@@ -958,13 +958,13 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
                 {/* Custom Tool Creator Drawer */}
                 {isAddingCustomTool && (
-                  <div className="p-3 rounded-lg bg-neutral-900 border border-[#C5A358]/40 space-y-2.5">
+                  <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-300 space-y-2.5 shadow-2xs">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-neutral-200">Define New Tool</span>
+                      <span className="font-semibold text-slate-900">Define New Tool</span>
                       <button
                         type="button"
                         onClick={() => setIsAddingCustomTool(false)}
-                        className="text-neutral-500 hover:text-neutral-300"
+                        className="text-slate-500 hover:text-slate-800 cursor-pointer"
                       >
                         Cancel
                       </button>
@@ -976,12 +976,12 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         placeholder="Tool Name (e.g. Jira Sync, Vector Indexer)"
                         value={customToolName}
                         onChange={(e) => setCustomToolName(e.target.value)}
-                        className="p-1.5 rounded bg-neutral-950 border border-neutral-800 text-xs text-white"
+                        className="p-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                       />
                       <select
                         value={customToolCategory}
                         onChange={(e) => setCustomToolCategory(e.target.value as any)}
-                        className="p-1.5 rounded bg-neutral-950 border border-neutral-800 text-xs text-white"
+                        className="p-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                       >
                         <option value="Research">Research</option>
                         <option value="Engineering">Engineering</option>
@@ -996,18 +996,18 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                       placeholder="Tool description..."
                       value={customToolDesc}
                       onChange={(e) => setCustomToolDesc(e.target.value)}
-                      className="w-full p-1.5 rounded bg-neutral-950 border border-neutral-800 text-xs text-white"
+                      className="w-full p-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 shadow-2xs focus:outline-none focus:border-amber-500"
                     />
 
                     <div className="flex items-center justify-between pt-1">
-                      <label className="flex items-center gap-1.5 text-xs text-neutral-400 cursor-pointer">
+                      <label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={customToolApproval}
                           onChange={(e) => setCustomToolApproval(e.target.checked)}
-                          className="rounded accent-[#C5A358]"
+                          className="rounded accent-amber-600"
                         />
-                        <span>Requires Human Approval</span>
+                        <span className="font-medium">Requires Human Approval</span>
                       </label>
 
                       <button
@@ -1038,7 +1038,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                           setCustomToolDesc('');
                           setIsAddingCustomTool(false);
                         }}
-                        className="px-2.5 py-1 rounded bg-[#C5A358] text-black text-xs font-semibold cursor-pointer"
+                        className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold cursor-pointer shadow-xs"
                       >
                         Add & Equip
                       </button>
@@ -1048,13 +1048,13 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
                 {/* Selected Tools Quick Strip */}
                 {selectedTools.length > 0 && (
-                  <div className="p-2 rounded-lg bg-neutral-950 border border-neutral-800 space-y-1">
-                    <div className="flex items-center justify-between text-[11px] text-neutral-400">
-                      <span className="font-medium text-neutral-300">Selected Tools ({selectedTools.length})</span>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1 shadow-2xs">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500">
+                      <span className="font-semibold text-slate-700">Selected Tools ({selectedTools.length})</span>
                       <button
                         type="button"
                         onClick={() => setSelectedTools([])}
-                        className="text-[10px] text-red-400/80 hover:text-red-400 cursor-pointer"
+                        className="text-[10px] text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
                       >
                         Clear All
                       </button>
@@ -1065,13 +1065,13 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         return (
                           <span
                             key={toolId}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#C5A358]/15 border border-[#C5A358]/30 text-[10px] text-[#E5C778]"
+                            className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100/70 border border-amber-300 text-[10px] text-amber-900 font-medium shadow-2xs"
                           >
                             <span className="truncate max-w-[140px]">{toolObj?.name || toolId}</span>
                             <button
                               type="button"
                               onClick={() => setSelectedTools(selectedTools.filter((id) => id !== toolId))}
-                              className="hover:text-red-400 text-neutral-400 cursor-pointer"
+                              className="hover:text-rose-600 text-amber-700 cursor-pointer ml-0.5"
                             >
                               ×
                             </button>
@@ -1085,19 +1085,19 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                 {/* Filter / Search Tools */}
                 <div className="space-y-2">
                   <div className="relative">
-                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-neutral-500" />
+                    <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
                     <input
                       type="text"
                       placeholder="Search 390+ skills by title, description, or Python script..."
                       value={toolSearch}
                       onChange={(e) => setToolSearch(e.target.value)}
-                      className="w-full pl-8 pr-8 py-2 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-neutral-300 placeholder-neutral-600 focus:outline-none focus:border-[#C5A358]"
+                      className="w-full pl-8 pr-8 py-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 shadow-2xs"
                     />
                     {toolSearch && (
                       <button
                         type="button"
                         onClick={() => setToolSearch('')}
-                        className="absolute right-2.5 top-2 text-xs text-neutral-500 hover:text-neutral-300 cursor-pointer"
+                        className="absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-700 cursor-pointer"
                       >
                         ×
                       </button>
@@ -1131,16 +1131,16 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                           key={cat}
                           type="button"
                           onClick={() => setToolCategoryFilter(cat)}
-                          className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-medium border transition cursor-pointer flex items-center gap-1 ${
+                          className={`whitespace-nowrap px-3 py-1 rounded-lg text-[10px] font-medium border transition cursor-pointer flex items-center gap-1.5 ${
                             isSelected
-                              ? 'bg-[#C5A358] border-[#C5A358] text-black font-semibold'
-                              : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-neutral-200 hover:border-neutral-700'
+                              ? 'bg-slate-900 border-slate-900 text-white font-semibold shadow-xs'
+                              : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
                           }`}
                         >
                           <span>{cat}</span>
                           <span
-                            className={`text-[9px] px-1 py-0.2 rounded-full ${
-                              isSelected ? 'bg-black/20 text-black' : 'bg-neutral-900 text-neutral-500'
+                            className={`text-[9px] px-1.5 py-0.2 rounded-full ${
+                              isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
                             }`}
                           >
                             {count}
@@ -1208,9 +1208,9 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
 
                   return (
                     <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-[10px] text-neutral-500">
+                      <div className="flex items-center justify-between text-[10px] text-slate-500">
                         <span>Showing {filtered.length} skills</span>
-                        <span>Click card to toggle selection</span>
+                        <span className="text-slate-400">Click card to toggle selection</span>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-1">
@@ -1221,10 +1221,10 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                           return (
                             <label
                               key={t.id}
-                              className={`p-2.5 rounded-lg border flex flex-col justify-between gap-1.5 cursor-pointer transition ${
+                              className={`p-3 rounded-xl border flex flex-col justify-between gap-1.5 cursor-pointer transition ${
                                 isSelected
-                                  ? 'bg-neutral-900 border-[#C5A358]/60 text-white shadow-sm'
-                                  : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:border-neutral-700'
+                                  ? 'bg-amber-50/70 border-amber-300 text-slate-900 shadow-2xs'
+                                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 shadow-2xs'
                               }`}
                             >
                               <div className="flex items-start gap-2">
@@ -1238,31 +1238,31 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                                       setSelectedTools(selectedTools.filter((x) => x !== t.id));
                                     }
                                   }}
-                                  className="accent-[#C5A358] rounded mt-0.5 shrink-0"
+                                  className="accent-amber-600 rounded mt-0.5 shrink-0"
                                 />
                                 <div className="space-y-1 min-w-0">
                                   <div className="flex items-center gap-1.5 flex-wrap">
                                     <span
-                                      className={`text-xs font-medium ${
-                                        isSelected ? 'text-[#E5C778]' : 'text-neutral-200'
+                                      className={`text-xs font-semibold ${
+                                        isSelected ? 'text-amber-900' : 'text-slate-900'
                                       }`}
                                     >
                                       {t.name}
                                     </span>
-                                    <span className="text-[9px] px-1 py-0.2 rounded bg-neutral-900 text-neutral-400 border border-neutral-800">
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-50 text-slate-500 border border-slate-200">
                                       {t.category}
                                     </span>
                                     {hasScript && (
-                                      <span className="inline-flex items-center gap-1 text-[8px] font-mono px-1 py-0.2 rounded bg-emerald-950/70 text-emerald-400 border border-emerald-800/40">
-                                        <Terminal className="w-2.5 h-2.5" />
+                                      <span className="inline-flex items-center gap-1 text-[8px] font-mono px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
+                                        <Terminal className="w-2.5 h-2.5 text-emerald-600" />
                                         CLI
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-[10px] text-neutral-500 line-clamp-2">{t.description}</p>
+                                  <p className="text-[10px] text-slate-500 line-clamp-2">{t.description}</p>
                                 </div>
                               </div>
-                              <div className="pt-1 border-t border-neutral-900 flex items-center justify-between text-[9px] font-mono text-neutral-600">
+                              <div className="pt-1 border-t border-slate-100 flex items-center justify-between text-[9px] font-mono text-slate-400">
                                 <span>{hasScript && t.scripts?.[0] ? t.scripts[0] : 'Methodology'}</span>
                                 <span className="uppercase">{t.permission}</span>
                               </div>
@@ -1276,9 +1276,9 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               </div>
 
               {isCreating && (
-                <div className="p-4 rounded-xl bg-indigo-950/50 border border-indigo-700/60 text-indigo-200 text-xs flex items-center gap-3 animate-pulse">
-                  <RefreshCw className="w-4 h-4 animate-spin text-indigo-400" />
-                  <span>{creationStage}</span>
+                <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-3 animate-pulse shadow-2xs">
+                  <RefreshCw className="w-4 h-4 animate-spin text-amber-600" />
+                  <span className="font-medium">{creationStage}</span>
                 </div>
               )}
             </div>
@@ -1286,12 +1286,12 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
         </div>
 
         {/* Footer Navigation */}
-        <div className="p-4 border-t border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
+        <div className="p-4 border-t border-slate-200 bg-white flex items-center justify-between shrink-0">
           <button
             type="button"
             onClick={() => setStep((s) => Math.max(1, s - 1))}
             disabled={step === 1 || isCreating}
-            className="px-3.5 py-2 rounded border border-[#1A1A1A] bg-[#0A0A0A] hover:bg-[#111] text-[#AAA] hover:text-[#FFF] text-xs font-medium flex items-center gap-1 disabled:opacity-30 cursor-pointer"
+            className="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1 disabled:opacity-30 cursor-pointer shadow-2xs"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             <span>Previous</span>
@@ -1301,7 +1301,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
             <button
               type="button"
               onClick={() => setStep((s) => Math.min(5, s + 1))}
-              className="px-4 py-2 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center gap-1 shadow cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1 shadow-xs cursor-pointer"
             >
               <span>Next</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -1311,7 +1311,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
               type="button"
               onClick={handleFinish}
               disabled={isCreating}
-              className="px-5 py-2 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Check className="w-4 h-4" />
               <span>Deploy Coworker</span>

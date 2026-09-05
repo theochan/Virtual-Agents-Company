@@ -55,13 +55,13 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
   const getPermissionBadge = (perm: Tool['permission']) => {
     switch (perm) {
       case 'READ':
-        return 'bg-blue-950 text-blue-300 border-blue-800/40';
+        return 'bg-blue-50 text-blue-800 border-blue-200 font-medium';
       case 'WRITE':
-        return 'bg-amber-950 text-amber-300 border-amber-800/40';
+        return 'bg-amber-50 text-amber-800 border-amber-200 font-medium';
       case 'EXECUTE':
-        return 'bg-indigo-950 text-indigo-300 border-indigo-800/40';
+        return 'bg-indigo-50 text-indigo-800 border-indigo-200 font-medium';
       case 'DESTRUCTIVE':
-        return 'bg-rose-950 text-rose-300 border-rose-800/40 font-bold';
+        return 'bg-rose-50 text-rose-800 border-rose-200 font-bold';
     }
   };
 
@@ -138,22 +138,22 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
   const categories = ['all', 'Research', 'Engineering', 'Finance', 'Communication', 'Productivity'];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl rounded bg-[#0A0A0A] border border-[#1A1A1A] shadow-2xl flex flex-col max-h-[90vh] text-[#E0E0E0] overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl rounded-2xl bg-white border border-slate-200 shadow-2xl flex flex-col max-h-[90vh] text-slate-800 overflow-hidden">
         {/* Header */}
-        <div className="p-5 border-b border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
+        <div className="p-5 border-b border-slate-200 bg-slate-50/90 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 flex items-center justify-center text-[#C5A358]">
+            <div className="w-9 h-9 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-center text-amber-700 shadow-2xs">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-semibold text-[#F0F0F0]">Tool Clearance & Security Approvals</h3>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-[#111] border border-[#222] font-mono text-[#AAA]">
+                <h3 className="text-sm font-semibold text-slate-900 font-serif">Tool Clearance & Security Approvals</h3>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 font-mono text-slate-600 font-medium">
                   {tools.length} Tools Available
                 </span>
               </div>
-              <p className="text-[11px] text-[#777]">
+              <p className="text-[11px] text-slate-500">
                 Permission Tiers: READ • WRITE • EXECUTE • DESTRUCTIVE with Human-in-the-Loop Safeguards
               </p>
             </div>
@@ -162,36 +162,36 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsRegisterOpen(!isRegisterOpen)}
-              className="flex items-center gap-1.5 py-1.5 px-3 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold cursor-pointer transition shadow"
+              className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-semibold cursor-pointer transition shadow-2xs"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Register New Tool</span>
             </button>
-            <button onClick={onClose} className="text-[#666] hover:text-[#FFF] text-sm cursor-pointer p-1.5 rounded hover:bg-[#111]">
+            <button onClick={onClose} className="text-slate-400 hover:text-slate-700 text-sm cursor-pointer p-1.5 rounded-lg hover:bg-slate-100 transition">
               ✕
             </button>
           </div>
         </div>
 
-        <div className="p-6 flex-1 overflow-y-auto space-y-6">
+        <div className="p-6 flex-1 overflow-y-auto space-y-6 bg-[#F8F9FA]">
           {/* REGISTER NEW TOOL FORM */}
           {isRegisterOpen && (
-            <div className="p-4 rounded border border-[#C5A358]/40 bg-[#0C0C0C] space-y-4 shadow-lg animate-in fade-in">
-              <div className="flex items-center justify-between border-b border-[#1A1A1A] pb-2">
+            <div className="p-5 rounded-xl border border-amber-200 bg-white space-y-4 shadow-xs animate-in fade-in">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
                 <div className="flex items-center gap-2">
-                  <Wrench className="w-4 h-4 text-[#C5A358]" />
-                  <h4 className="text-xs font-semibold text-[#F0F0F0]">Register New Tool Capability</h4>
+                  <Wrench className="w-4 h-4 text-amber-700" />
+                  <h4 className="text-xs font-semibold text-slate-900 font-serif">Register New Tool Capability</h4>
                 </div>
                 <button
                   onClick={() => setIsRegisterOpen(false)}
-                  className="text-xs text-[#777] hover:text-[#CCC] cursor-pointer"
+                  className="text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
                 >
                   Cancel
                 </button>
               </div>
 
               {formError && (
-                <div className="text-xs text-rose-400 bg-rose-950/40 p-2 rounded border border-rose-800/40">
+                <div className="text-xs text-rose-700 bg-rose-50 p-2.5 rounded-lg border border-rose-200 font-medium">
                   {formError}
                 </div>
               )}
@@ -199,22 +199,22 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
               <form onSubmit={handleCreateTool} className="space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-[#AAA] mb-1">Tool Name *</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tool Name *</label>
                     <input
                       type="text"
                       placeholder="e.g. Postgres Query Runner, Slack Dispatcher"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      className="w-full p-2 rounded border border-[#222] bg-[#070707] text-xs text-[#F0F0F0] focus:outline-none focus:border-[#C5A358]"
+                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-[#AAA] mb-1">Category</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Category</label>
                     <select
                       value={newCategory}
                       onChange={(e) => setNewCategory(e.target.value as any)}
-                      className="w-full p-2 rounded border border-[#222] bg-[#070707] text-xs text-[#F0F0F0] focus:outline-none focus:border-[#C5A358]"
+                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 cursor-pointer"
                     >
                       <option value="Research">Research</option>
                       <option value="Engineering">Engineering</option>
@@ -226,23 +226,23 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-medium text-[#AAA] mb-1">Description</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Description</label>
                   <input
                     type="text"
                     placeholder="Describe what this tool executes or provides to the agent..."
                     value={newDescription}
                     onChange={(e) => setNewDescription(e.target.value)}
-                    className="w-full p-2 rounded border border-[#222] bg-[#070707] text-xs text-[#F0F0F0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-[#AAA] mb-1">Permission Security Tier</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Permission Security Tier</label>
                     <select
                       value={newPermission}
                       onChange={(e) => setNewPermission(e.target.value as any)}
-                      className="w-full p-2 rounded border border-[#222] bg-[#070707] text-xs text-[#F0F0F0] focus:outline-none focus:border-[#C5A358]"
+                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 cursor-pointer"
                     >
                       <option value="READ">READ (Safe - query data, search logs)</option>
                       <option value="WRITE">WRITE (Produces artifacts, saves state)</option>
@@ -252,24 +252,24 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-[#AAA] mb-1">Parameters (name: type)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Parameters (name: type)</label>
                     <input
                       type="text"
                       placeholder="e.g. query: string, format: json"
                       value={newParameters}
                       onChange={(e) => setNewParameters(e.target.value)}
-                      className="w-full p-2 rounded border border-[#222] bg-[#070707] text-xs text-[#F0F0F0] focus:outline-none focus:border-[#C5A358]"
+                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 font-mono"
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">
-                  <label className="flex items-center gap-2 text-xs text-[#CCC] cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer font-medium">
                     <input
                       type="checkbox"
                       checked={newRequiresApproval}
                       onChange={(e) => setNewRequiresApproval(e.target.checked)}
-                      className="rounded accent-[#C5A358]"
+                      className="rounded accent-amber-600 w-4 h-4"
                     />
                     <span>Require Human-in-the-Loop approval before execution</span>
                   </label>
@@ -277,7 +277,7 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
 
                 {/* Equip to initial agents */}
                 <div>
-                  <label className="block text-[11px] font-medium text-[#AAA] mb-1.5">
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1.5">
                     Equip to Agents Immediately (Optional)
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -292,10 +292,10 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                               isChecked ? prev.filter((id) => id !== ag.id) : [...prev, ag.id]
                             );
                           }}
-                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition cursor-pointer border ${
+                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs transition cursor-pointer border ${
                             isChecked
-                              ? 'bg-[#C5A358]/20 text-[#C5A358] border-[#C5A358]'
-                              : 'bg-[#070707] text-[#888] border-[#1A1A1A] hover:text-[#CCC]'
+                              ? 'bg-amber-50 text-amber-900 border-amber-300 font-semibold shadow-2xs'
+                              : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                           }`}
                         >
                           <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -306,17 +306,17 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-[#1A1A1A]">
+                <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                   <button
                     type="button"
                     onClick={() => setIsRegisterOpen(false)}
-                    className="px-3 py-1.5 rounded border border-[#222] bg-[#070707] text-xs text-[#888] hover:text-[#CCC] cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-600 hover:bg-slate-50 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold cursor-pointer shadow"
+                    className="px-4 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold cursor-pointer shadow-xs transition"
                   >
                     Save & Register Tool
                   </button>
@@ -328,16 +328,16 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
           {/* Pending Approval Requests */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-rose-400 uppercase tracking-widest flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4" />
+              <span className="text-[10px] font-semibold text-rose-800 uppercase tracking-widest flex items-center gap-2 font-mono">
+                <AlertTriangle className="w-4 h-4 text-rose-600" />
                 Pending Human Approval Requests ({approvals.filter((a) => a.status === 'pending').length})
               </span>
-              <span className="text-[11px] text-[#555] font-mono">Enforced Security Gate</span>
+              <span className="text-[11px] text-slate-400 font-mono">Enforced Security Gate</span>
             </div>
 
             {approvals.filter((a) => a.status === 'pending').length === 0 ? (
-              <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#888] flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs text-slate-600 flex items-center gap-2.5 shadow-2xs">
+                <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>No high-risk or destructive actions awaiting approval. System is nominal.</span>
               </div>
             ) : (
@@ -349,28 +349,28 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                     return (
                       <div
                         key={appr.id}
-                        className="p-4 rounded bg-rose-950/20 border border-rose-800/40 flex items-center justify-between gap-4"
+                        className="p-4 rounded-xl bg-rose-50/70 border border-rose-200 flex items-center justify-between gap-4 shadow-2xs"
                       >
                         <div className="space-y-1 text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-[#F0F0F0]">{agent?.displayName || 'Agent'}</span>
-                            <span className="text-[9px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 font-mono border border-rose-800/40">
+                            <span className="font-semibold text-slate-900">{agent?.displayName || 'Agent'}</span>
+                            <span className="text-[9px] px-2 py-0.5 rounded font-mono bg-rose-100 text-rose-800 border border-rose-300 font-semibold">
                               REQUIRES APPROVAL
                             </span>
                           </div>
-                          <p className="text-[#CCC]">{appr.actionSummary}</p>
+                          <p className="text-slate-700">{appr.actionSummary}</p>
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
                           <button
                             onClick={() => onDecideApproval(appr.id, 'rejected')}
-                            className="py-1.5 px-3 rounded border border-[#1A1A1A] bg-[#070707] hover:bg-[#111] text-[#AAA] text-xs font-medium cursor-pointer"
+                            className="py-1.5 px-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium cursor-pointer shadow-2xs"
                           >
                             Deny
                           </button>
                           <button
                             onClick={() => onDecideApproval(appr.id, 'approved')}
-                            className="py-1.5 px-3 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow cursor-pointer"
+                            className="py-1.5 px-3.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-xs cursor-pointer transition"
                           >
                             Approve Action
                           </button>
@@ -385,20 +385,20 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
           {/* Tools Catalog with Search and Assignment */}
           <div className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest block">
+              <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest block font-mono">
                 Registered Enterprise Tools ({filteredTools.length})
               </span>
 
               {/* Filter and Search */}
               <div className="flex items-center gap-2">
                 <div className="relative">
-                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#666]" />
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
                   <input
                     type="text"
                     placeholder="Search tools..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-8 pr-3 py-1.5 rounded border border-[#1A1A1A] bg-[#070707] text-xs text-[#CCC] placeholder-[#555] focus:outline-none focus:border-[#C5A358]"
+                    className="pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600"
                   />
                 </div>
 
@@ -407,10 +407,10 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
-                      className={`px-2 py-1 rounded text-[10px] capitalize transition cursor-pointer border ${
+                      className={`px-2.5 py-1 rounded-lg text-[10px] capitalize transition cursor-pointer border ${
                         selectedCategory === cat
-                          ? 'bg-[#C5A358]/20 text-[#C5A358] border-[#C5A358]/40'
-                          : 'bg-[#070707] text-[#777] border-[#1A1A1A] hover:text-[#AAA]'
+                          ? 'bg-amber-50 text-amber-900 border-amber-300 font-semibold shadow-2xs'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                       }`}
                     >
                       {cat}
@@ -429,12 +429,12 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                 });
 
                 return (
-                  <div key={tool.id} className="p-3.5 rounded bg-[#070707] border border-[#1A1A1A] space-y-3 flex flex-col justify-between">
+                  <div key={tool.id} className="p-4 rounded-xl bg-white border border-slate-200/90 shadow-2xs space-y-3 flex flex-col justify-between hover:border-amber-300/80 transition">
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-semibold text-[#F0F0F0]">{tool.name}</span>
-                          <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#111] text-[#777] border border-[#1F1F1F]">
+                          <span className="text-xs font-semibold text-slate-900">{tool.name}</span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
                             {tool.category}
                           </span>
                         </div>
@@ -442,14 +442,14 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                           {tool.permission}
                         </span>
                       </div>
-                      <p className="text-xs text-[#888] leading-relaxed">{tool.description}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed">{tool.description}</p>
                     </div>
 
-                    <div className="space-y-2 pt-2 border-t border-[#161616]">
+                    <div className="space-y-2 pt-2.5 border-t border-slate-100">
                       {/* Equipped by agents */}
                       <div className="space-y-1">
-                        <span className="text-[10px] text-[#666] flex items-center gap-1">
-                          <Users className="w-3 h-3 text-[#555]" />
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1 font-medium">
+                          <Users className="w-3 h-3 text-slate-400" />
                           <span>Equipped Agents:</span>
                         </span>
                         <div className="flex flex-wrap gap-1 items-center">
@@ -464,13 +464,13 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                                   }
                                 }}
                                 title={isAssigned ? `Click to unequip from ${ag.displayName}` : `Click to equip to ${ag.displayName}`}
-                                className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] cursor-pointer transition border ${
+                                className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] cursor-pointer transition border ${
                                   isAssigned
-                                    ? 'bg-[#C5A358]/15 text-[#C5A358] border-[#C5A358]/30 font-medium'
-                                    : 'bg-[#0A0A0A] text-[#555] border-[#181818] hover:text-[#888]'
+                                    ? 'bg-amber-50 text-amber-900 border-amber-300 font-semibold shadow-2xs'
+                                    : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'
                                 }`}
                               >
-                                {isAssigned && <Check className="w-2.5 h-2.5 text-[#C5A358]" />}
+                                {isAssigned && <Check className="w-2.5 h-2.5 text-amber-700" />}
                                 <span>{ag.displayName}</span>
                               </button>
                             );
@@ -479,7 +479,7 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                       </div>
 
                       {/* Tool metadata */}
-                      <div className="flex items-center justify-between text-[10px] text-[#666] font-mono pt-1">
+                      <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1">
                         <span>
                           {Array.isArray(tool.parameters)
                             ? tool.parameters.length
@@ -490,7 +490,7 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
                             : 0}{' '}
                           Parameters
                         </span>
-                        {tool.requiresApproval && <span className="text-[#C5A358]">● Requires Human Approval</span>}
+                        {tool.requiresApproval && <span className="text-amber-800 font-semibold">● Requires Human Approval</span>}
                       </div>
                     </div>
                   </div>
@@ -501,17 +501,17 @@ export const ToolSecurityModal: React.FC<ToolSecurityModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-[#1A1A1A] bg-[#070707] flex items-center justify-between">
+        <div className="p-4 border-t border-slate-200 bg-slate-50/90 flex items-center justify-between">
           <button
             onClick={() => setIsRegisterOpen(true)}
-            className="flex items-center gap-1.5 text-xs text-[#C5A358] hover:underline cursor-pointer"
+            className="flex items-center gap-1.5 text-xs text-amber-800 hover:text-amber-900 font-semibold cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add another tool capability</span>
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold cursor-pointer"
+            className="px-5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs cursor-pointer transition"
           >
             Done
           </button>

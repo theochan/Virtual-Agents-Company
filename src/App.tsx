@@ -978,7 +978,7 @@ I have finalized the deliverables and logged the closed work items to the projec
   };
 
   return (
-    <div className="flex h-screen w-screen bg-neutral-950 text-neutral-100 overflow-hidden font-sans antialiased">
+    <div className="flex h-screen w-screen bg-[#F8F9FA] text-slate-900 overflow-hidden font-sans antialiased">
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}

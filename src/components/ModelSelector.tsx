@@ -84,85 +84,85 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
       <button
         id="btn-model-selector"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-[#222] bg-[#0A0A0A] hover:border-[#C5A358]/50 hover:bg-[#111] text-[#CCC] text-xs font-mono transition cursor-pointer group ${
-          currentDetails.isLocal ? 'border-orange-500/30' : ''
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-amber-400 hover:bg-slate-50 text-slate-700 text-xs font-mono transition cursor-pointer shadow-xs group ${
+          currentDetails.isLocal ? 'border-orange-300' : ''
         }`}
         title="Change LLM Foundation Model & Parameters (Cloud & Local Models)"
         aria-expanded={isOpen}
       >
         {currentDetails.isLocal ? (
-          <HardDrive className="w-3.5 h-3.5 text-orange-400 group-hover:scale-110 transition-transform" />
+          <HardDrive className="w-3.5 h-3.5 text-orange-500 group-hover:scale-110 transition-transform" />
         ) : (
-          <Cpu className="w-3.5 h-3.5 text-[#C5A358] group-hover:scale-110 transition-transform" />
+          <Cpu className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
         )}
-        <span className="font-medium text-[#E5E5E5]">{currentDetails.name}</span>
-        <span className={`text-[9px] px-1.5 py-0.2 rounded border font-sans ${currentDetails.badgeColor}`}>
+        <span className="font-semibold text-slate-800">{currentDetails.name}</span>
+        <span className={`text-[9px] px-1.5 py-0.5 rounded border font-sans ${currentDetails.badgeColor}`}>
           {currentDetails.badge}
         </span>
-        <ChevronDown className={`w-3 h-3 text-[#777] transition-transform duration-200 ${isOpen ? 'rotate-180 text-[#C5A358]' : ''}`} />
+        <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-amber-600' : ''}`} />
       </button>
 
       {isOpen && (
         <div
           id="model-dropdown-menu"
-          className="absolute right-0 mt-2 w-88 sm:w-[420px] rounded-xl bg-[#0C0C0C] border border-[#262626] shadow-2xl p-3 z-50 text-xs space-y-3 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute right-0 mt-2 w-88 sm:w-[420px] rounded-xl bg-white border border-slate-200 shadow-2xl p-3.5 z-50 text-xs space-y-3 animate-in fade-in zoom-in-95 duration-150"
         >
           {/* Header */}
-          <div className="flex items-center justify-between pb-2 border-b border-[#1A1A1A]">
-            <div className="flex items-center gap-1.5 text-[#EEE] font-medium font-sans">
-              <Zap className="w-3.5 h-3.5 text-[#C5A358]" />
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div className="flex items-center gap-1.5 text-slate-900 font-semibold font-sans">
+              <Zap className="w-3.5 h-3.5 text-amber-600" />
               <span>Model & Local Engine Config</span>
             </div>
-            <div className="flex items-center gap-1 text-[10px] text-[#888] font-mono">
+            <div className="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
               {currentDetails.isLocal ? (
-                <span className="text-orange-400 font-semibold flex items-center gap-1">
+                <span className="text-orange-600 font-semibold flex items-center gap-1">
                   <HardDrive className="w-3 h-3" />
                   Local Engine Active
                 </span>
               ) : (
-                <span>Cloud API</span>
+                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">Cloud API</span>
               )}
             </div>
           </div>
 
           {/* Category Tabs: All / Cloud / Ollama / Hugging Face */}
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-[#080808] border border-[#181818] text-[11px]">
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-slate-100 border border-slate-200/80 text-[11px]">
             <button
               onClick={() => setActiveCategory('all')}
-              className={`flex-1 py-1 rounded text-center transition cursor-pointer font-sans ${
+              className={`flex-1 py-1 rounded-md text-center transition cursor-pointer font-sans ${
                 activeCategory === 'all'
-                  ? 'bg-[#1E1E1E] text-white font-medium shadow-sm'
-                  : 'text-[#888] hover:text-white'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               All
             </button>
             <button
               onClick={() => setActiveCategory('cloud')}
-              className={`flex-1 py-1 rounded text-center transition cursor-pointer font-sans ${
+              className={`flex-1 py-1 rounded-md text-center transition cursor-pointer font-sans ${
                 activeCategory === 'cloud'
-                  ? 'bg-[#1E1E1E] text-white font-medium shadow-sm'
-                  : 'text-[#888] hover:text-white'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Cloud
             </button>
             <button
               onClick={() => setActiveCategory('ollama')}
-              className={`flex-1 py-1 rounded text-center transition cursor-pointer font-sans flex items-center justify-center gap-1 ${
+              className={`flex-1 py-1 rounded-md text-center transition cursor-pointer font-sans flex items-center justify-center gap-1 ${
                 activeCategory === 'ollama'
-                  ? 'bg-orange-950/40 text-orange-400 border border-orange-800/40 font-medium'
-                  : 'text-[#888] hover:text-orange-300'
+                  ? 'bg-orange-50 text-orange-700 border border-orange-200 font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-orange-600'
               }`}
             >
               <span>🦙 Ollama</span>
             </button>
             <button
               onClick={() => setActiveCategory('hf')}
-              className={`flex-1 py-1 rounded text-center transition cursor-pointer font-sans flex items-center justify-center gap-1 ${
+              className={`flex-1 py-1 rounded-md text-center transition cursor-pointer font-sans flex items-center justify-center gap-1 ${
                 activeCategory === 'hf'
-                  ? 'bg-yellow-950/40 text-yellow-400 border border-yellow-800/40 font-medium'
-                  : 'text-[#888] hover:text-yellow-300'
+                  ? 'bg-amber-50 text-amber-800 border border-amber-200 font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-amber-700'
               }`}
             >
               <span>🤗 HF Local</span>
@@ -180,38 +180,38 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
                   onClick={() => handleSelectModel(item.id)}
                   className={`w-full text-left p-2.5 rounded-lg border transition flex flex-col gap-1 cursor-pointer ${
                     isSelected
-                      ? 'bg-[#151515] border-[#C5A358]/60 shadow-sm'
-                      : 'bg-[#080808] border-[#181818] hover:border-[#333] hover:bg-[#101010]'
+                      ? 'bg-amber-50/70 border-amber-300 shadow-xs'
+                      : 'bg-slate-50/60 border-slate-200/80 hover:border-slate-300 hover:bg-white'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-neutral-100 font-sans">{item.name}</span>
+                      <span className="font-semibold text-slate-900 font-sans">{item.name}</span>
                       <span className={`text-[9px] px-1.5 py-0.2 rounded border ${item.badgeColor}`}>
                         {item.badge}
                       </span>
                       {item.parameters && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-neutral-900 text-neutral-400 border border-neutral-800 font-mono">
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-200/70 text-slate-700 border border-slate-300/80 font-mono">
                           {item.parameters}
                         </span>
                       )}
                     </div>
-                    {isSelected && <Check className="w-3.5 h-3.5 text-[#C5A358]" />}
+                    {isSelected && <Check className="w-3.5 h-3.5 text-amber-600 stroke-[2.5]" />}
                   </div>
 
-                  <p className="text-[11px] text-[#888] leading-relaxed line-clamp-2">
+                  <p className="text-[11px] text-slate-600 leading-relaxed line-clamp-2">
                     {item.description}
                   </p>
 
-                  <div className="flex items-center justify-between text-[10px] text-[#666] pt-1 font-mono">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 font-mono">
                     <span>
                       {item.isLocal ? (
-                        <span className="text-orange-400/90 flex items-center gap-1">
+                        <span className="text-orange-600 flex items-center gap-1 font-semibold">
                           <Terminal className="w-3 h-3 inline" />
                           {item.endpoint}
                         </span>
                       ) : (
-                        <>Speed: <strong className="text-[#AAA] font-normal">{item.speed}</strong></>
+                        <>Speed: <strong className="text-slate-600 font-medium">{item.speed}</strong></>
                       )}
                     </span>
                     <span>Max: {item.maxTokens.toLocaleString()} tokens</span>
@@ -227,18 +227,18 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
               <button
                 type="button"
                 onClick={() => setShowCustomInput(true)}
-                className="w-full py-1 text-[11px] text-[#C5A358] hover:text-[#DFC17C] flex items-center justify-center gap-1.5 border border-dashed border-[#2A2A2A] hover:border-[#C5A358]/40 rounded-lg bg-[#080808] transition cursor-pointer"
+                className="w-full py-1.5 text-[11px] text-amber-800 hover:text-amber-900 flex items-center justify-center gap-1.5 border border-dashed border-amber-300/80 hover:border-amber-400 rounded-lg bg-amber-50/40 hover:bg-amber-50 transition cursor-pointer font-medium"
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-3 h-3 text-amber-700" />
                 <span>Specify Custom Local Model Tag (Ollama / Hugging Face)</span>
               </button>
             ) : (
-              <div className="p-2.5 rounded-lg bg-[#111] border border-[#333] space-y-2">
-                <div className="flex items-center justify-between text-[11px] text-[#AAA]">
-                  <span className="font-semibold text-white">Enter Local Model Tag / Repo ID</span>
+              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center justify-between text-[11px] text-slate-700 font-medium">
+                  <span>Enter Local Model Tag / Repo ID</span>
                   <button
                     onClick={() => setShowCustomInput(false)}
-                    className="text-[#666] hover:text-white text-xs cursor-pointer"
+                    className="text-slate-400 hover:text-slate-700 text-xs cursor-pointer"
                   >
                     ✕
                   </button>
@@ -248,18 +248,18 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
                   placeholder="e.g. llama3.2:1b, codellama:7b, or meta-llama/Llama-3.2-1B"
                   value={customTagInput}
                   onChange={(e) => setCustomTagInput(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded bg-[#050505] border border-[#2A2A2A] text-xs text-white outline-none font-mono placeholder-[#555]"
+                  className="w-full px-2.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 outline-none font-mono placeholder-slate-400 focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                 />
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleApplyCustomTag('ollama')}
-                    className="flex-1 py-1 rounded bg-orange-950/50 hover:bg-orange-900/60 border border-orange-800/50 text-orange-300 text-[11px] font-medium transition cursor-pointer"
+                    className="flex-1 py-1 rounded-md bg-orange-600 hover:bg-orange-700 text-white text-[11px] font-semibold transition cursor-pointer shadow-xs"
                   >
                     Apply to Ollama
                   </button>
                   <button
                     onClick={() => handleApplyCustomTag('hf')}
-                    className="flex-1 py-1 rounded bg-yellow-950/50 hover:bg-yellow-900/60 border border-yellow-800/50 text-yellow-300 text-[11px] font-medium transition cursor-pointer"
+                    className="flex-1 py-1 rounded-md bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-semibold transition cursor-pointer shadow-xs"
                   >
                     Apply to Hugging Face
                   </button>
@@ -269,14 +269,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
           </div>
 
           {/* Temperature Tuning Slider */}
-          <div className="pt-2 border-t border-[#1A1A1A] space-y-1.5">
+          <div className="pt-2 border-t border-slate-100 space-y-1.5">
             <div className="flex items-center justify-between text-[11px]">
-              <div className="flex items-center gap-1 text-[#AAA]">
-                <Sliders className="w-3 h-3 text-[#C5A358]" />
+              <div className="flex items-center gap-1 text-slate-700 font-medium">
+                <Sliders className="w-3 h-3 text-amber-600" />
                 <span>Temperature:</span>
-                <strong className="text-white font-mono">{currentTemp.toFixed(2)}</strong>
+                <strong className="text-slate-900 font-mono">{currentTemp.toFixed(2)}</strong>
               </div>
-              <span className="text-[10px] text-[#777] italic">
+              <span className="text-[10px] text-slate-500 italic">
                 {getTempDescription(currentTemp)}
               </span>
             </div>
@@ -289,23 +289,23 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
               step="0.05"
               value={currentTemp}
               onChange={(e) => handleTemperatureChange(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-[#222] rounded-lg appearance-none cursor-pointer accent-[#C5A358]"
+              className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-600"
             />
 
-            <div className="flex justify-between text-[9px] text-[#555] font-mono">
+            <div className="flex justify-between text-[9px] text-slate-400 font-mono">
               <span>0.0 (Strict / Deterministic)</span>
               <span>1.0 (Creative)</span>
             </div>
           </div>
 
           {/* Footer note */}
-          <div className="pt-1 text-[10px] text-[#555] flex items-center justify-between">
+          <div className="pt-1 text-[10px] text-slate-500 flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Info className="w-3 h-3 text-[#666] shrink-0" />
+              <Info className="w-3 h-3 text-slate-400 shrink-0" />
               <span>Applied to {agent.displayName}&apos;s live executor.</span>
             </div>
             {currentDetails.isLocal && (
-              <span className="text-orange-400/90 font-mono text-[9px]">Local Daemon: 11434 / 8000</span>
+              <span className="text-orange-600 font-mono text-[9px] font-semibold">Local Daemon: 11434 / 8000</span>
             )}
           </div>
         </div>

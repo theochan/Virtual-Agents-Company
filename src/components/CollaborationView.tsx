@@ -60,16 +60,16 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
   const leadAgent = displayTask ? getAgent(displayTask.leadAgentId) : undefined;
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#050505] text-[#E0E0E0] overflow-y-auto">
+    <div className="flex-1 flex flex-col h-screen bg-[#F8F9FA] text-slate-800 overflow-y-auto">
       {/* Header */}
-      <div className="p-6 border-b border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
+      <div className="p-6 border-b border-slate-200/90 bg-white/95 backdrop-blur-xs flex items-center justify-between shrink-0 shadow-2xs">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 flex items-center justify-center text-[#C5A358]">
+          <div className="w-11 h-11 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-center text-amber-700 shadow-2xs">
             <GitMerge className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl font-serif italic text-[#F0F0F0] tracking-tight">Multi-Agent Task Orchestrator</h2>
-            <p className="text-xs text-[#888]">
+            <h2 className="text-xl font-serif italic text-slate-900 tracking-tight">Multi-Agent Task Orchestrator</h2>
+            <p className="text-xs text-slate-500 mt-0.5">
               Lead Agent Ownership • Shared Task Blackboard • Disagreement Synthesis • Reusable Artifacts
             </p>
           </div>
@@ -77,13 +77,13 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
 
         {/* Status indicator */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-[#0A0A0A] border border-[#1A1A1A] text-xs">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs shadow-2xs">
             <span
               className={`w-2 h-2 rounded-full ${
-                isExecuting ? 'bg-[#C5A358] animate-ping' : 'bg-emerald-400'
+                isExecuting ? 'bg-amber-500 animate-ping' : 'bg-emerald-500'
               }`}
             />
-            <span className="text-[#BBB] font-mono text-[11px]">
+            <span className="text-slate-700 font-mono text-[11px] font-medium">
               {isExecuting ? 'Orchestration Active' : 'Engine Idle'}
             </span>
           </div>
@@ -92,18 +92,18 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
 
       <div className="p-6 space-y-6 max-w-7xl mx-auto w-full">
         {/* Launch Multi-Agent Task Form */}
-        <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-4 shadow-sm">
+        <div className="p-6 rounded-2xl border border-slate-200/90 bg-white space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#C5A358]" />
+            <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               Dispatch Collaborative Multi-Agent Mission
             </span>
-            <span className="text-[10px] text-[#555] font-mono">Max Delegation Depth: 3 (Enforced)</span>
+            <span className="text-[10px] text-slate-400 font-mono">Max Delegation Depth: 3 (Enforced)</span>
           </div>
 
-          <form onSubmit={handleStart} className="space-y-3">
+          <form onSubmit={handleStart} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-[#CCC] mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Mission Objective / Instruction for Lead Agent
               </label>
               <textarea
@@ -111,22 +111,22 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                 onChange={(e) => setInstruction(e.target.value)}
                 disabled={isExecuting}
                 rows={2}
-                className="w-full p-3 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358] disabled:opacity-50"
+                className="w-full p-3.5 rounded-xl bg-slate-50/70 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-1 focus:ring-amber-500/30 transition disabled:opacity-50"
                 placeholder="e.g. Evaluate migration strategy, conduct market and security benchmarks, and formulate a phased rollout recommendation..."
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[10px] uppercase tracking-wider text-[#777] mb-1">Single Lead Agent</label>
+                <label className="block text-[10px] uppercase font-semibold tracking-wider text-slate-500 mb-1.5">Single Lead Agent</label>
                 <select
                   value={selectedLeadId}
                   onChange={(e) => setSelectedLeadId(e.target.value)}
                   disabled={isExecuting}
-                  className="w-full py-2 px-3 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50/70 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition"
                 >
                   {agents.map((a) => (
-                    <option key={a.id} value={a.id} className="bg-[#0A0A0A] text-[#E0E0E0]">
+                    <option key={a.id} value={a.id} className="bg-white text-slate-900">
                       {a.displayName} ({a.jobTitle})
                     </option>
                   ))}
@@ -134,15 +134,15 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-wider text-[#777] mb-1">Target Project Scope</label>
+                <label className="block text-[10px] uppercase font-semibold tracking-wider text-slate-500 mb-1.5">Target Project Scope</label>
                 <select
                   value={selectedProjectId}
                   onChange={(e) => setSelectedProjectId(e.target.value)}
                   disabled={isExecuting}
-                  className="w-full py-2 px-3 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50/70 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition"
                 >
                   {projects.map((p) => (
-                    <option key={p.id} value={p.id} className="bg-[#0A0A0A] text-[#E0E0E0]">
+                    <option key={p.id} value={p.id} className="bg-white text-slate-900">
                       {p.name}
                     </option>
                   ))}
@@ -153,9 +153,9 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                 <button
                   type="submit"
                   disabled={isExecuting || !instruction.trim()}
-                  className="w-full py-2.5 px-4 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center justify-center gap-2 shadow transition disabled:opacity-50 cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-xs transition disabled:opacity-50 cursor-pointer"
                 >
-                  <Play className="w-3.5 h-3.5 text-black" />
+                  <Play className="w-3.5 h-3.5 text-amber-400" />
                   <span>{isExecuting ? 'Coordinating...' : 'Execute Multi-Agent Task'}</span>
                 </button>
               </div>
@@ -167,44 +167,44 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
         {displayTask ? (
           <div className="space-y-6">
             {/* Mission Overview & Delegation Hierarchy */}
-            <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-4">
+            <div className="p-6 rounded-2xl border border-slate-200/90 bg-white space-y-5 shadow-xs">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-[#C5A358]" />
-                  <h3 className="text-base font-serif italic text-[#F0F0F0]">{displayTask.title}</h3>
-                  <span className="text-[9px] px-2 py-0.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono capitalize">
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                  <h3 className="text-base font-serif italic font-semibold text-slate-900">{displayTask.title}</h3>
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 font-mono font-semibold capitalize">
                     {displayTask.status}
                   </span>
                 </div>
-                <span className="text-[10px] text-[#666] font-mono">
+                <span className="text-[10px] text-slate-400 font-mono">
                   Started: {new Date(displayTask.createdAt).toLocaleTimeString()}
                 </span>
               </div>
 
-              {/* Delegation Tree Visualizer (Section 57) */}
-              <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] space-y-3">
-                <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest flex items-center gap-1.5">
-                  <GitBranch className="w-3.5 h-3.5 text-[#C5A358]" />
+              {/* Delegation Tree Visualizer */}
+              <div className="p-4 rounded-xl bg-slate-50/80 border border-slate-200 space-y-3">
+                <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest flex items-center gap-1.5">
+                  <GitBranch className="w-3.5 h-3.5 text-amber-600" />
                   Hierarchical Delegation Tree
                 </span>
 
                 <div className="space-y-2 text-xs">
                   {/* Lead Agent Root */}
                   {leadAgent && (
-                    <div className="flex items-center gap-3 p-2.5 rounded bg-[#0A0A0A] border border-[#1A1A1A]">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
                       <img
                         src={leadAgent.avatarUrl}
                         alt={leadAgent.displayName}
-                        className="w-8 h-8 rounded object-cover border border-[#222]"
+                        className="w-9 h-9 rounded-lg object-cover border border-slate-200 shadow-2xs"
                       />
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-[#F0F0F0]">{leadAgent.displayName}</span>
-                          <span className="text-[9px] px-1.5 py-0.2 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono font-bold">
+                          <span className="font-semibold text-slate-900">{leadAgent.displayName}</span>
+                          <span className="text-[9px] px-2 py-0.5 rounded border border-amber-300 bg-amber-50 text-amber-900 font-mono font-bold">
                             LEAD AGENT OWNER
                           </span>
                         </div>
-                        <p className="text-[11px] text-[#777]">
+                        <p className="text-[11px] text-slate-500 mt-0.5">
                           Responsible for planning, specialist dispatch, disagreement synthesis, and final deliverable.
                         </p>
                       </div>
@@ -212,35 +212,35 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                   )}
 
                   {/* Subtask Children */}
-                  <div className="pl-6 border-l-2 border-[#1A1A1A] ml-4 space-y-2">
+                  <div className="pl-6 border-l-2 border-slate-200 ml-4 space-y-2">
                     {displayTask.subtasks.map((st) => {
                       const spec = getAgent(st.assignedAgentId);
                       return (
                         <div
                           key={st.id}
-                          className="p-2.5 rounded bg-[#0A0A0A] border border-[#1A1A1A] flex items-center justify-between"
+                          className="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-between"
                         >
                           <div className="flex items-center gap-2.5">
                             <img
                               src={spec?.avatarUrl}
                               alt={spec?.displayName}
-                              className="w-7 h-7 rounded object-cover border border-[#222]"
+                              className="w-8 h-8 rounded-lg object-cover border border-slate-200"
                             />
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium text-[#F0F0F0]">{spec?.displayName}</span>
-                                <span className="text-[10px] text-[#777]">({spec?.jobTitle})</span>
+                                <span className="font-medium text-slate-900">{spec?.displayName}</span>
+                                <span className="text-[10px] text-slate-500">({spec?.jobTitle})</span>
                               </div>
-                              <p className="text-[11px] text-[#AAA] line-clamp-1">{st.description}</p>
+                              <p className="text-[11px] text-slate-600 line-clamp-1">{st.description}</p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
                             <span
-                              className={`text-[9px] px-2 py-0.5 rounded capitalize font-mono ${
+                              className={`text-[9px] px-2.5 py-0.5 rounded-full capitalize font-mono font-semibold ${
                                 st.status === 'completed'
-                                  ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/40'
-                                  : 'bg-[#C5A358]/10 text-[#C5A358] border border-[#C5A358]/30'
+                                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
+                                  : 'bg-amber-50 text-amber-900 border border-amber-300'
                               }`}
                             >
                               {st.status}
@@ -254,34 +254,34 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
               </div>
             </div>
 
-            {/* SHARED TASK BLACKBOARD (Section 44) */}
-            <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-4">
+            {/* SHARED TASK BLACKBOARD */}
+            <div className="p-6 rounded-2xl border border-slate-200/90 bg-white space-y-5 shadow-xs">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#C5A358] text-[10px] font-semibold uppercase tracking-widest">
-                  <Layers className="w-3.5 h-3.5 text-[#C5A358]" />
+                <div className="flex items-center gap-2 text-amber-800 text-[10px] font-semibold uppercase tracking-widest">
+                  <Layers className="w-3.5 h-3.5 text-amber-600" />
                   <span>SHARED TASK BLACKBOARD (State Object)</span>
                 </div>
-                <span className="text-[10px] text-[#555] font-mono">
+                <span className="text-[10px] text-slate-400 font-mono">
                   {displayTask.workspace.contributors.length} Contributing Agents
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Findings on Blackboard */}
-                <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] space-y-2.5">
-                  <span className="text-xs font-semibold text-[#CCC] block">Agent Specialist Findings</span>
+                <div className="p-4 rounded-xl bg-slate-50/80 border border-slate-200 space-y-3">
+                  <span className="text-xs font-semibold text-slate-800 block">Agent Specialist Findings</span>
                   <div className="space-y-2">
                     {displayTask.workspace.findings.map((f, i) => {
                       const agent = getAgent(f.agentId);
                       return (
-                        <div key={i} className="p-2.5 rounded bg-[#0A0A0A] border border-[#1A1A1A] text-xs space-y-1">
+                        <div key={i} className="p-3 rounded-xl bg-white border border-slate-200/90 text-xs space-y-1 shadow-2xs">
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-[#F0F0F0]">{agent?.displayName || f.agentId}:</span>
-                            <span className="text-[10px] text-[#666] font-mono">
+                            <span className="font-semibold text-slate-900">{agent?.displayName || f.agentId}:</span>
+                            <span className="text-[10px] text-slate-400 font-mono">
                               Confidence: {Math.round(f.confidence * 100)}%
                             </span>
                           </div>
-                          <p className="text-[#AAA] leading-relaxed">{f.finding}</p>
+                          <p className="text-slate-600 leading-relaxed">{f.finding}</p>
                         </div>
                       );
                     })}
@@ -289,13 +289,13 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                 </div>
 
                 {/* Assumptions & Decisions on Blackboard */}
-                <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] space-y-4">
+                <div className="p-4 rounded-xl bg-slate-50/80 border border-slate-200 space-y-4">
                   <div>
-                    <span className="text-xs font-semibold text-[#CCC] block mb-2">Team Assumptions</span>
-                    <ul className="space-y-1 text-xs text-[#888]">
+                    <span className="text-xs font-semibold text-slate-800 block mb-2">Team Assumptions</span>
+                    <ul className="space-y-1.5 text-xs text-slate-600">
                       {displayTask.workspace.assumptions.map((ass, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <span className="text-[#C5A358] mt-0.5">•</span>
+                          <span className="text-amber-600 mt-0.5">•</span>
                           <span>{ass}</span>
                         </li>
                       ))}
@@ -303,11 +303,11 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                   </div>
 
                   <div>
-                    <span className="text-xs font-semibold text-[#CCC] block mb-2">Blackboard Decisions</span>
+                    <span className="text-xs font-semibold text-slate-800 block mb-2">Blackboard Decisions</span>
                     {displayTask.workspace.decisions.map((dec) => (
-                      <div key={dec.id} className="p-2.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-xs space-y-1">
-                        <span className="font-semibold text-[#C5A358] block">{dec.decision}</span>
-                        <p className="text-[11px] text-[#E0E0E0]">{dec.rationale}</p>
+                      <div key={dec.id} className="p-3 rounded-xl border border-amber-200 bg-amber-50/70 text-xs space-y-1 shadow-2xs">
+                        <span className="font-semibold text-amber-900 block">{dec.decision}</span>
+                        <p className="text-[11px] text-slate-700 leading-relaxed">{dec.rationale}</p>
                       </div>
                     ))}
                   </div>
@@ -315,49 +315,49 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
               </div>
             </div>
 
-            {/* EXPOSED AGENT DISAGREEMENT & SYNTHESIS (Section 46) */}
+            {/* EXPOSED AGENT DISAGREEMENT & SYNTHESIS */}
             {displayTask.disagreements && displayTask.disagreements.length > 0 && (
-              <div className="p-5 rounded border border-[#C5A358]/30 bg-[#0A0A0A] space-y-4">
-                <div className="flex items-center gap-2 text-[#C5A358] text-[10px] font-semibold uppercase tracking-widest">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#C5A358]" />
+              <div className="p-6 rounded-2xl border border-amber-200 bg-amber-50/30 space-y-4 shadow-xs">
+                <div className="flex items-center gap-2 text-amber-900 text-[10px] font-semibold uppercase tracking-widest">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
                   <span>Agent Disagreement & Lead Synthesis</span>
                 </div>
 
                 {displayTask.disagreements.map((dis, i) => (
                   <div key={i} className="space-y-3 text-xs">
-                    <h4 className="font-semibold text-[#F0F0F0] font-serif">Topic: {dis.topic}</h4>
+                    <h4 className="font-semibold text-slate-900 font-serif italic text-sm">Topic: {dis.topic}</h4>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="p-3 rounded bg-[#070707] border border-[#1A1A1A]">
-                        <span className="text-[#777] font-medium block mb-1">Perspective A (Marcus):</span>
-                        <p className="text-[#CCC]">{dis.agentA.position}</p>
+                      <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+                        <span className="text-slate-500 font-semibold block mb-1 text-[11px]">Perspective A (Marcus):</span>
+                        <p className="text-slate-700 leading-relaxed">{dis.agentA.position}</p>
                       </div>
-                      <div className="p-3 rounded bg-[#070707] border border-[#1A1A1A]">
-                        <span className="text-[#777] font-medium block mb-1">Perspective B (Daniel):</span>
-                        <p className="text-[#CCC]">{dis.agentB.position}</p>
+                      <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+                        <span className="text-slate-500 font-semibold block mb-1 text-[11px]">Perspective B (Daniel):</span>
+                        <p className="text-slate-700 leading-relaxed">{dis.agentB.position}</p>
                       </div>
                     </div>
 
-                    <div className="p-3.5 rounded bg-[#070707] border border-[#C5A358]/40 space-y-1">
-                      <span className="text-[#C5A358] font-semibold block font-mono text-[11px]">
+                    <div className="p-4 rounded-xl bg-white border border-amber-300 shadow-2xs space-y-1.5">
+                      <span className="text-amber-800 font-semibold block font-mono text-[11px]">
                         Sarah (Lead Agent Synthesis):
                       </span>
-                      <p className="text-[#F0F0F0] leading-relaxed italic">{dis.synthesis}</p>
+                      <p className="text-slate-900 leading-relaxed italic font-serif text-xs">{dis.synthesis}</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* REUSABLE ARTIFACTS PRODUCED (Section 45) */}
+            {/* REUSABLE ARTIFACTS PRODUCED */}
             {displayTask.workspace.artifacts.length > 0 && (
-              <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-4">
+              <div className="p-6 rounded-2xl border border-slate-200/90 bg-white space-y-4 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-[#C5A358]" />
+                  <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-amber-600" />
                     Generated Artifacts ({displayTask.workspace.artifacts.length})
                   </span>
-                  <span className="text-[10px] text-[#555] uppercase tracking-wider">Attached to Task & Project</span>
+                  <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Attached to Task & Project</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
@@ -365,41 +365,41 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
                     <div
                       key={art.id}
                       onClick={() => onOpenArtifact(art)}
-                      className="p-3 rounded bg-[#070707] border border-[#1A1A1A] hover:border-[#C5A358]/40 transition cursor-pointer group"
+                      className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-amber-400 hover:bg-white transition cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
-                        <FileText className="w-4 h-4 text-[#C5A358]" />
-                        <span className="text-[9px] font-mono uppercase text-[#666]">{art.type}</span>
+                        <FileText className="w-4 h-4 text-amber-600" />
+                        <span className="text-[9px] font-mono uppercase text-slate-400 font-semibold">{art.type}</span>
                       </div>
-                      <h4 className="text-xs font-semibold text-[#F0F0F0] mt-2 group-hover:text-[#C5A358] transition line-clamp-2">
+                      <h4 className="text-xs font-semibold text-slate-900 mt-2 group-hover:text-amber-800 transition line-clamp-2">
                         {art.title}
                       </h4>
-                      <p className="text-[10px] font-mono text-[#666] mt-1">{art.filename}</p>
+                      <p className="text-[10px] font-mono text-slate-400 mt-1">{art.filename}</p>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* EVENT STREAM (Section 53) */}
-            <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-3">
-              <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-[#C5A358]" />
+            {/* EVENT STREAM */}
+            <div className="p-6 rounded-2xl border border-slate-200/90 bg-white space-y-3 shadow-xs">
+              <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-widest flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-amber-600" />
                 Live Event Stream
               </span>
 
-              <div className="max-h-60 overflow-y-auto divide-y divide-[#1A1A1A] font-mono text-[11px]">
+              <div className="max-h-60 overflow-y-auto divide-y divide-slate-100 font-mono text-[11px]">
                 {taskEvents.map((evt) => (
-                  <div key={evt.id} className="py-2 flex items-center justify-between">
+                  <div key={evt.id} className="py-2.5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[#555]">{new Date(evt.createdAt).toLocaleTimeString()}</span>
-                      <span className="text-[#C5A358] font-semibold">[{evt.eventType}]</span>
-                      <span className="text-[#BBB]">
+                      <span className="text-slate-400">{new Date(evt.createdAt).toLocaleTimeString()}</span>
+                      <span className="text-amber-800 font-semibold">[{evt.eventType}]</span>
+                      <span className="text-slate-700">
                         {evt.payload.action || evt.payload.strategy || evt.payload.title || evt.payload.summary || JSON.stringify(evt.payload)}
                       </span>
                     </div>
                     {evt.agentId && (
-                      <span className="text-[#666] text-[10px]">By: {getAgent(evt.agentId)?.firstName || evt.agentId}</span>
+                      <span className="text-slate-400 text-[10px]">By: {getAgent(evt.agentId)?.firstName || evt.agentId}</span>
                     )}
                   </div>
                 ))}
@@ -407,7 +407,7 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
             </div>
           </div>
         ) : (
-          <div className="p-12 text-center text-[#666] text-xs">
+          <div className="p-16 text-center text-slate-400 text-xs font-serif italic bg-white rounded-2xl border border-slate-200 shadow-xs">
             No active collaborative task. Dispatch one above to observe multi-agent orchestration.
           </div>
         )}

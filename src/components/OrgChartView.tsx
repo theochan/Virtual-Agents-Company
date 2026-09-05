@@ -146,26 +146,26 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
         {/* Node Card */}
         <div
           id={`org-node-${agent.id}`}
-          className={`w-72 rounded border p-4 transition-all duration-200 shadow-md backdrop-blur-sm relative ${
+          className={`w-72 rounded-xl border p-4 transition-all duration-200 shadow-xs relative ${
             isSelectedInChain
-              ? 'border-[#C5A358] bg-[#121008] ring-1 ring-[#C5A358]/60'
-              : 'border-[#222] bg-[#0A0A0A] hover:border-[#333]'
+              ? 'border-amber-400 bg-amber-50/70 ring-2 ring-amber-400/50 shadow-md'
+              : 'border-slate-200 bg-white hover:border-amber-400 hover:shadow-md'
           }`}
         >
           {/* Top meta strip */}
           <div className="flex items-center justify-between gap-2 mb-2.5">
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] uppercase">
+            <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 uppercase">
               {agent.seniority}
             </span>
             <div className="flex items-center gap-1.5">
               <span
-                className={`w-1.5 h-1.5 rounded-full ${
+                className={`w-2 h-2 rounded-full ${
                   agent.runtimeState.status === 'working'
-                    ? 'bg-amber-400 animate-pulse'
-                    : 'bg-emerald-400'
+                    ? 'bg-amber-500 animate-pulse'
+                    : 'bg-emerald-500'
                 }`}
               />
-              <span className="text-[10px] text-[#777] capitalize">{agent.runtimeState.status}</span>
+              <span className="text-[10px] text-slate-500 capitalize font-medium">{agent.runtimeState.status}</span>
             </div>
           </div>
 
@@ -176,24 +176,24 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
               alt={agent.displayName}
               referrerPolicy="no-referrer"
               onError={(e) => handleAvatarError(e)}
-              className="w-12 h-12 rounded object-cover border border-[#222] shrink-0"
+              className="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0 shadow-xs"
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-serif italic text-[#F0F0F0] truncate font-medium">
+                <h4 className="text-sm font-serif font-bold text-slate-900 truncate">
                   {agent.displayName}
                 </h4>
-                <span className="text-[9px] text-[#888] font-mono">
+                <span className="text-[9px] text-slate-500 font-mono font-semibold bg-slate-100 px-1.5 py-0.5 rounded">
                   L{agent.autonomyLevel}
                 </span>
               </div>
-              <p className="text-[11px] text-[#AAA] truncate font-sans">{agent.jobTitle}</p>
-              <div className="flex items-center gap-1.5 mt-1">
-                <span className="text-[10px] text-[#777] bg-[#141414] px-1.5 py-0.5 rounded border border-[#222]">
+              <p className="text-[11px] text-slate-600 truncate font-sans">{agent.jobTitle}</p>
+              <div className="flex items-center gap-1.5 mt-1.5">
+                <span className="text-[10px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 font-medium">
                   {agent.department}
                 </span>
                 {agent.departmentRole === 'lead' && (
-                  <span className="text-[9px] text-amber-300 font-semibold px-1 rounded bg-amber-950/40 border border-amber-800/40">
+                  <span className="text-[9px] text-amber-800 font-bold px-1.5 py-0.5 rounded bg-amber-100 border border-amber-300">
                     Lead
                   </span>
                 )}
@@ -202,9 +202,9 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
           </div>
 
           {/* Direct Reports Count & Quick Actions */}
-          <div className="mt-3.5 pt-2.5 border-t border-[#1C1C1C] flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5 text-[#888] text-[11px]">
-              <Users className="w-3.5 h-3.5 text-[#666]" />
+          <div className="mt-3.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium">
+              <Users className="w-3.5 h-3.5 text-slate-400" />
               <span>
                 {directReports.length} {directReports.length === 1 ? 'report' : 'reports'}
               </span>
@@ -214,35 +214,35 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
               <button
                 onClick={() => setSelectedAgentForChain(selectedAgentForChain === agent.id ? null : agent.id)}
                 title="View Escalation & Approval Chain"
-                className={`p-1 rounded transition cursor-pointer text-[10px] flex items-center gap-1 ${
+                className={`p-1.5 rounded-md transition cursor-pointer text-[10px] flex items-center gap-1 ${
                   selectedAgentForChain === agent.id
-                    ? 'bg-[#C5A358]/20 text-[#C5A358]'
-                    : 'text-[#777] hover:text-[#E0E0E0] hover:bg-[#141414]'
+                    ? 'bg-amber-100 text-amber-900 font-bold'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
-                <GitBranch className="w-3 h-3" />
+                <GitBranch className="w-3.5 h-3.5" />
               </button>
 
               <button
                 onClick={() => onOpenProfile(agent)}
                 title="Open Dossier"
-                className="p-1 rounded text-[#777] hover:text-[#E0E0E0] hover:bg-[#141414] transition cursor-pointer"
+                className="p-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
               >
-                <Sliders className="w-3 h-3" />
+                <Sliders className="w-3.5 h-3.5" />
               </button>
 
               <button
                 onClick={() => onSelectAgent(agent.id)}
                 title="Start Direct Chat"
-                className="p-1 rounded text-[#777] hover:text-[#C5A358] hover:bg-[#141414] transition cursor-pointer"
+                className="p-1.5 rounded-md text-slate-500 hover:text-amber-800 hover:bg-amber-50 transition cursor-pointer"
               >
-                <MessageSquare className="w-3 h-3" />
+                <MessageSquare className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
 
           {/* Quick Manager Reassignment Dropdown */}
-          <div className="mt-2 text-[10px] text-[#666] flex items-center justify-between">
+          <div className="mt-2.5 pt-2 border-t border-slate-100 text-[10px] text-slate-500 flex items-center justify-between">
             <span>Reports to:</span>
             {isReassigning ? (
               <select
@@ -250,7 +250,7 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
                 defaultValue={agent.reportsTo || 'none'}
                 onChange={(e) => handleManagerSelect(agent.id, e.target.value)}
                 onBlur={() => setReassigningAgentId(null)}
-                className="bg-[#111] text-[#E0E0E0] border border-[#C5A358]/50 rounded px-1.5 py-0.5 text-[10px] focus:outline-none"
+                className="bg-white text-slate-800 border border-amber-400 rounded-md px-1.5 py-0.5 text-[10px] focus:outline-none shadow-xs"
               >
                 <option value="none">None (Top Executive)</option>
                 {agents
@@ -264,10 +264,10 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
             ) : (
               <button
                 onClick={() => setReassigningAgentId(agent.id)}
-                className="text-[#C5A358] hover:underline cursor-pointer flex items-center gap-1 font-mono truncate max-w-[140px]"
+                className="text-amber-800 hover:text-amber-900 font-semibold cursor-pointer flex items-center gap-1 font-mono truncate max-w-[140px]"
               >
                 <span>{agent.reportsTo && agentMap.has(agent.reportsTo) ? agentMap.get(agent.reportsTo)!.displayName : 'Executive'}</span>
-                <span className="text-[9px] text-[#555]">✎</span>
+                <span className="text-[9px] text-slate-400">✎</span>
               </button>
             )}
           </div>
@@ -276,7 +276,7 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
           {hasReports && (
             <button
               onClick={() => toggleCollapse(agent.id)}
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#111] border border-[#333] hover:border-[#C5A358] text-[#AAA] hover:text-[#FFF] flex items-center justify-center transition shadow-lg cursor-pointer z-10"
+              className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border border-slate-300 hover:border-amber-500 text-slate-600 hover:text-amber-800 flex items-center justify-center transition shadow-md cursor-pointer z-10"
               title={isCollapsed ? 'Expand Reports' : 'Collapse Reports'}
             >
               {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -288,13 +288,13 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
         {hasReports && !isCollapsed && (
           <div className="relative pt-8 flex flex-col items-center">
             {/* Vertical connector coming down from parent */}
-            <div className="absolute top-0 left-1/2 w-px h-8 bg-[#2A2A2A]" />
+            <div className="absolute top-0 left-1/2 w-0.5 h-8 bg-amber-400/80" />
 
             {/* Subordinates container */}
             <div className="flex items-start justify-center gap-6 relative">
               {directReports.length > 1 && (
                 <div
-                  className="absolute top-0 h-px bg-[#2A2A2A]"
+                  className="absolute top-0 h-0.5 bg-amber-400/80 rounded-full"
                   style={{
                     left: `calc(18rem / 2)`,
                     right: `calc(18rem / 2)`
@@ -305,7 +305,7 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
               {directReports.map((subordinate) => (
                 <div key={subordinate.id} className="relative flex flex-col items-center">
                   {/* Vertical connector connecting down to child node */}
-                  <div className="w-px h-6 bg-[#2A2A2A] mb-0" />
+                  <div className="w-0.5 h-6 bg-amber-400/80 mb-0" />
                   {renderAgentNode(subordinate, depth + 1)}
                 </div>
               ))}
@@ -317,18 +317,18 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#050505] text-[#E0E0E0] overflow-y-auto">
+    <div className="flex-1 flex flex-col h-screen bg-[#F8F9FA] text-slate-800 overflow-y-auto">
       {/* Header */}
-      <div className="p-6 border-b border-[#1A1A1A] bg-[#070707] flex items-center justify-between shrink-0">
+      <div className="p-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-2xs">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 flex items-center justify-center text-[#C5A358]">
+          <div className="w-11 h-11 rounded-xl border border-amber-300/80 bg-amber-50 flex items-center justify-center text-amber-700 shadow-2xs">
             <Network className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl font-serif italic text-[#F0F0F0] tracking-tight">
+            <h2 className="text-xl font-serif text-slate-900 tracking-tight">
               Organizational Hierarchy & Chain of Command
             </h2>
-            <p className="text-xs text-[#888]">
+            <p className="text-xs text-slate-500">
               Governance topology • Delegation authority • Escalation paths • Reporting relationships
             </p>
           </div>
@@ -336,65 +336,65 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
 
         {/* Feedback alert */}
         {feedbackMessage && (
-          <div className="px-3 py-1.5 rounded border border-emerald-800/40 bg-emerald-950/30 text-emerald-300 text-xs flex items-center gap-1.5 animate-fadeIn">
-            <Check className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{feedbackMessage}</span>
+          <div className="px-3.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 text-xs flex items-center gap-1.5 shadow-2xs animate-fadeIn">
+            <Check className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="font-medium">{feedbackMessage}</span>
           </div>
         )}
       </div>
 
       {/* Governance Summary Dashboard Bar */}
-      <div className="p-4 border-b border-[#141414] bg-[#080808] grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-        <div className="p-3 rounded border border-[#1A1A1A] bg-[#0A0A0A] flex items-center justify-between">
+      <div className="p-4 border-b border-slate-200 bg-white grid grid-cols-1 md:grid-cols-4 gap-3 text-xs shadow-2xs">
+        <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between shadow-2xs">
           <div>
-            <span className="text-[10px] text-[#777] uppercase tracking-wider block">Total AI Coworkers</span>
-            <span className="text-lg font-mono text-[#F0F0F0] font-semibold">{agents.length}</span>
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-medium">Total AI Coworkers</span>
+            <span className="text-lg font-mono text-slate-900 font-semibold">{agents.length}</span>
           </div>
-          <Users className="w-4 h-4 text-[#C5A358]" />
+          <Users className="w-4 h-4 text-amber-600" />
         </div>
 
-        <div className="p-3 rounded border border-[#1A1A1A] bg-[#0A0A0A] flex items-center justify-between">
+        <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between shadow-2xs">
           <div>
-            <span className="text-[10px] text-[#777] uppercase tracking-wider block">Active Departments</span>
-            <span className="text-lg font-mono text-[#F0F0F0] font-semibold">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-medium">Active Departments</span>
+            <span className="text-lg font-mono text-slate-900 font-semibold">
               {Object.keys(departmentStats).length}
             </span>
           </div>
-          <Building2 className="w-4 h-4 text-emerald-400" />
+          <Building2 className="w-4 h-4 text-emerald-600" />
         </div>
 
-        <div className="p-3 rounded border border-[#1A1A1A] bg-[#0A0A0A] flex items-center justify-between">
+        <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between shadow-2xs">
           <div>
-            <span className="text-[10px] text-[#777] uppercase tracking-wider block">Executive Leads</span>
-            <span className="text-lg font-mono text-[#F0F0F0] font-semibold">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-medium">Executive Leads</span>
+            <span className="text-lg font-mono text-slate-900 font-semibold">
               {agents.filter((a) => a.seniority.includes('Lead') || a.seniority.includes('Executive')).length}
             </span>
           </div>
-          <Shield className="w-4 h-4 text-blue-400" />
+          <Shield className="w-4 h-4 text-sky-600" />
         </div>
 
-        <div className="p-3 rounded border border-[#1A1A1A] bg-[#0A0A0A] flex items-center justify-between">
+        <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between shadow-2xs">
           <div>
-            <span className="text-[10px] text-[#777] uppercase tracking-wider block">Escalation Resolver</span>
-            <span className="text-xs text-[#C5A358] font-medium block truncate max-w-[130px]">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-medium">Escalation Resolver</span>
+            <span className="text-xs text-amber-800 font-medium block truncate max-w-[130px]">
               {rootAgents[0]?.displayName || 'Sarah'} (Chief of Staff)
             </span>
           </div>
-          <GitBranch className="w-4 h-4 text-[#C5A358]" />
+          <GitBranch className="w-4 h-4 text-amber-600" />
         </div>
       </div>
 
       {/* Escalation Path Inspector (shows when an agent is selected) */}
       {selectedAgentForChain && escalationChain.length > 0 && (
-        <div className="mx-6 mt-4 p-4 rounded border border-[#C5A358]/40 bg-[#0E0C06] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="mx-6 mt-4 p-4 rounded-xl border border-amber-300 bg-amber-50/70 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#C5A358]" />
-              <h4 className="text-xs font-semibold text-[#F0F0F0] uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
                 Escalation & Approval Route for {escalationChain[0].displayName}
               </h4>
             </div>
-            <p className="text-[11px] text-[#888]">
+            <p className="text-[11px] text-slate-600">
               Decisions exceeding Autonomy Level {escalationChain[0].autonomyLevel} or tool disputes automatically bubble up along this chain.
             </p>
           </div>
@@ -403,20 +403,20 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
           <div className="flex items-center gap-2 overflow-x-auto py-1">
             {escalationChain.map((member, idx) => (
               <React.Fragment key={member.id}>
-                <div className="flex items-center gap-2 p-2 rounded bg-[#16140E] border border-[#C5A358]/30 shrink-0">
-                  <img src={member.avatarUrl} alt="" className="w-6 h-6 rounded object-cover border border-[#222]" />
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-amber-200 shadow-2xs shrink-0">
+                  <img src={member.avatarUrl} alt="" className="w-6 h-6 rounded-md object-cover border border-slate-200" />
                   <div>
-                    <span className="text-xs font-medium text-[#E0E0E0] block leading-tight">{member.displayName}</span>
-                    <span className="text-[9px] text-[#888] block">{member.seniority}</span>
+                    <span className="text-xs font-medium text-slate-900 block leading-tight">{member.displayName}</span>
+                    <span className="text-[9px] text-slate-500 block">{member.seniority}</span>
                   </div>
                 </div>
                 {idx < escalationChain.length - 1 && (
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#C5A358] shrink-0" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 )}
               </React.Fragment>
             ))}
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-emerald-800/40 bg-emerald-950/20 text-emerald-300 text-[10px] shrink-0">
-              <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-100/70 text-emerald-800 text-[10px] font-medium shrink-0 shadow-2xs">
+              <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
               <span>Human User</span>
             </div>
           </div>
@@ -431,25 +431,25 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({
       </div>
 
       {/* Department Breakdown Matrix */}
-      <div className="p-6 border-t border-[#1A1A1A] bg-[#070707] shrink-0">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-[#C5A358] mb-3 flex items-center gap-2">
-          <Layers className="w-3.5 h-3.5" />
+      <div className="p-6 border-t border-slate-200 bg-white shrink-0 shadow-2xs">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-800 mb-3 flex items-center gap-2">
+          <Layers className="w-3.5 h-3.5 text-amber-600" />
           <span>Departmental Governance & Autonomy Matrix</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
           {(Object.entries(departmentStats) as [string, DepartmentStat][]).map(([deptName, stat]) => (
-            <div key={deptName} className="p-3 rounded border border-[#1C1C1C] bg-[#0A0A0A] space-y-1.5">
+            <div key={deptName} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-[#E0E0E0]">{deptName}</span>
-                <span className="text-[10px] text-[#777] font-mono">{stat.count} members</span>
+                <span className="font-semibold text-slate-900">{deptName}</span>
+                <span className="text-[10px] text-slate-500 font-mono">{stat.count} members</span>
               </div>
-              <p className="text-[11px] text-[#888]">
-                Lead: <span className="text-[#C5A358]">{stat.lead?.displayName || 'Shared'}</span>
+              <p className="text-[11px] text-slate-600">
+                Lead: <span className="text-amber-800 font-medium">{stat.lead?.displayName || 'Shared'}</span>
               </p>
-              <div className="flex items-center justify-between text-[10px] text-[#666] pt-1 border-t border-[#141414]">
+              <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200">
                 <span>Avg Autonomy:</span>
-                <span className="font-mono text-[#AAA]">Level {stat.avgAutonomy}</span>
+                <span className="font-mono text-slate-800 font-medium">Level {stat.avgAutonomy}</span>
               </div>
             </div>
           ))}

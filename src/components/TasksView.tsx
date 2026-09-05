@@ -167,14 +167,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
   const getPriorityBadge = (priority: WorkItem['priority']) => {
     switch (priority) {
       case 'urgent':
-        return 'bg-rose-950/50 text-rose-300 border-rose-800/40';
+        return 'bg-rose-50 text-rose-700 border-rose-200';
       case 'high':
-        return 'bg-amber-950/50 text-amber-300 border-amber-800/40';
+        return 'bg-amber-50 text-amber-800 border-amber-200';
       case 'medium':
-        return 'bg-sky-950/50 text-sky-300 border-sky-800/40';
+        return 'bg-sky-50 text-sky-700 border-sky-200';
       case 'low':
       default:
-        return 'bg-neutral-800/60 text-neutral-300 border-neutral-700/40';
+        return 'bg-slate-100 text-slate-600 border-slate-200';
     }
   };
 
@@ -294,57 +294,62 @@ export const TasksView: React.FC<TasksViewProps> = ({
     badgeColor: string;
     borderAccent: string;
     dotColor: string;
+    columnBg: string;
   }> = [
     {
       id: 'backlog',
       title: 'Backlogs',
       subtitle: 'Exploration & Backlog Triage',
-      badgeColor: 'bg-neutral-800 text-neutral-300 border-neutral-700',
-      borderAccent: 'border-t-neutral-600',
-      dotColor: 'bg-neutral-400'
+      badgeColor: 'bg-slate-100 text-slate-700 border-slate-300',
+      borderAccent: 'border-t-slate-400',
+      dotColor: 'bg-slate-400',
+      columnBg: 'bg-slate-100/70 border-slate-200'
     },
     {
       id: 'todo',
       title: 'Todo',
       subtitle: 'Scoped & Ready for Agent Pickup',
-      badgeColor: 'bg-sky-950/80 text-sky-300 border-sky-800/50',
+      badgeColor: 'bg-sky-50 text-sky-700 border-sky-200',
       borderAccent: 'border-t-sky-500',
-      dotColor: 'bg-sky-400'
+      dotColor: 'bg-sky-500',
+      columnBg: 'bg-slate-100/70 border-slate-200'
     },
     {
       id: 'in_progress',
       title: 'In-progress',
       subtitle: 'Active Autonomous Agent Work',
-      badgeColor: 'bg-[#C5A358]/20 text-[#C5A358] border-[#C5A358]/40',
-      borderAccent: 'border-t-[#C5A358]',
-      dotColor: 'bg-[#C5A358] animate-pulse'
+      badgeColor: 'bg-amber-50 text-amber-800 border-amber-200 font-semibold',
+      borderAccent: 'border-t-amber-500',
+      dotColor: 'bg-amber-500 animate-pulse',
+      columnBg: 'bg-amber-50/40 border-amber-200/80'
     },
     {
       id: 'done',
       title: 'Done',
       subtitle: 'Verified Deliverables & Artifacts',
-      badgeColor: 'bg-emerald-950/80 text-emerald-300 border-emerald-800/50',
+      badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold',
       borderAccent: 'border-t-emerald-500',
-      dotColor: 'bg-emerald-400'
+      dotColor: 'bg-emerald-500',
+      columnBg: 'bg-emerald-50/40 border-emerald-200/80'
     }
   ];
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#050505] text-[#E0E0E0] overflow-hidden">
+    <div className="flex-1 flex flex-col h-screen bg-[#F8F9FA] text-slate-800 overflow-hidden">
       {/* Top Header */}
-      <div className="p-5 border-b border-[#1A1A1A] bg-[#070707] flex flex-wrap items-center justify-between gap-4 shrink-0">
+      <div className="p-5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-xs">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 flex items-center justify-center text-[#C5A358] shadow-sm">
+          <div className="w-11 h-11 rounded-xl border border-amber-300 bg-amber-50 flex items-center justify-center text-amber-700 shadow-xs">
             <Layers className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2.5">
-              <h2 className="text-xl font-serif italic text-[#F0F0F0] tracking-tight">Executive Work Items & Tasks</h2>
-              <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono">
+              <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">Executive Work Items & Tasks</h2>
+              <span className="text-[10px] px-2 py-0.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 font-mono font-semibold">
                 {workItems.length} Total
               </span>
             </div>
-            <p className="text-xs text-[#888] mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5 font-medium">
               Backlogs • Todo • In-progress • Done • Real-time Agent Dispatch & Updates
             </p>
           </div>
@@ -353,24 +358,24 @@ export const TasksView: React.FC<TasksViewProps> = ({
         {/* Right Header Actions */}
         <div className="flex items-center gap-2.5">
           {/* Mode Switcher */}
-          <div className="flex items-center p-1 rounded bg-[#0A0A0A] border border-[#1A1A1A] text-xs">
+          <div className="flex items-center p-1 rounded-lg bg-slate-100 border border-slate-200 text-xs">
             <button
               onClick={() => setViewMode('board')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded transition cursor-pointer font-medium ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition cursor-pointer font-medium ${
                 viewMode === 'board'
-                  ? 'bg-[#161616] text-[#C5A358] border border-[#C5A358]/30 shadow-xs'
-                  : 'text-[#888] hover:text-[#CCC]'
+                  ? 'bg-white text-slate-900 border border-slate-300/80 shadow-xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Kanban className="w-3.5 h-3.5" />
+              <Kanban className="w-3.5 h-3.5 text-amber-600" />
               <span>Board</span>
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded transition cursor-pointer font-medium ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition cursor-pointer font-medium ${
                 viewMode === 'list'
-                  ? 'bg-[#161616] text-[#C5A358] border border-[#C5A358]/30 shadow-xs'
-                  : 'text-[#888] hover:text-[#CCC]'
+                  ? 'bg-white text-slate-900 border border-slate-300/80 shadow-xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <ListFilter className="w-3.5 h-3.5" />
@@ -378,10 +383,10 @@ export const TasksView: React.FC<TasksViewProps> = ({
             </button>
             <button
               onClick={() => setViewMode('pipeline')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded transition cursor-pointer font-medium ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition cursor-pointer font-medium ${
                 viewMode === 'pipeline'
-                  ? 'bg-[#161616] text-[#C5A358] border border-[#C5A358]/30 shadow-xs'
-                  : 'text-[#888] hover:text-[#CCC]'
+                  ? 'bg-white text-slate-900 border border-slate-300/80 shadow-xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <GitMerge className="w-3.5 h-3.5" />
@@ -393,9 +398,9 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <button
             id="btn-agent-auto-plan-tasks"
             onClick={() => setIsAutoPlanModalOpen(true)}
-            className="py-1.5 px-3 rounded border border-[#C5A358]/40 bg-[#C5A358]/10 hover:bg-[#C5A358]/20 text-[#C5A358] text-xs font-medium flex items-center gap-2 transition cursor-pointer shadow-xs"
+            className="py-1.5 px-3 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold flex items-center gap-2 transition cursor-pointer shadow-xs"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#C5A358]" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
             <span className="hidden sm:inline">Agent Planning</span>
           </button>
 
@@ -403,26 +408,26 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <button
             id="btn-add-work-item"
             onClick={() => setIsAddModalOpen(true)}
-            className="py-1.5 px-3.5 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            className="py-1.5 px-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
           >
-            <Plus className="w-4 h-4 text-black" />
+            <Plus className="w-4 h-4 text-white" />
             <span>Add Work Item</span>
           </button>
         </div>
       </div>
 
       {/* Control Bar: Filters, Search, Metric Summary */}
-      <div className="px-5 py-3 border-b border-[#1A1A1A] bg-[#0A0A0A] flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+      <div className="px-5 py-3 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
         <div className="flex flex-wrap items-center gap-2.5 flex-1 max-w-3xl">
           {/* Search Input */}
           <div className="relative min-w-[200px] flex-1">
-            <Search className="w-3.5 h-3.5 text-[#666] absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title, tag, or agent..."
-              className="w-full pl-8 pr-3 py-1.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358]"
+              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 shadow-xs"
             />
           </div>
 
@@ -430,7 +435,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="py-1.5 px-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#BBB] focus:outline-none focus:border-[#C5A358]"
+            className="py-1.5 px-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-amber-500 shadow-xs"
           >
             <option value="all">All Projects</option>
             {projects.map((p) => (
@@ -444,7 +449,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <select
             value={selectedAgentFilter}
             onChange={(e) => setSelectedAgentFilter(e.target.value)}
-            className="py-1.5 px-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#BBB] focus:outline-none focus:border-[#C5A358]"
+            className="py-1.5 px-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-amber-500 shadow-xs"
           >
             <option value="all">All Agents</option>
             {agents.map((a) => (
@@ -458,7 +463,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <select
             value={selectedPriorityFilter}
             onChange={(e) => setSelectedPriorityFilter(e.target.value)}
-            className="py-1.5 px-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#BBB] focus:outline-none focus:border-[#C5A358]"
+            className="py-1.5 px-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-amber-500 shadow-xs"
           >
             <option value="all">All Priorities</option>
             <option value="urgent">Urgent</option>
@@ -469,22 +474,22 @@ export const TasksView: React.FC<TasksViewProps> = ({
         </div>
 
         {/* Live Counters */}
-        <div className="flex items-center gap-3 text-[11px] font-mono text-[#888]">
+        <div className="flex items-center gap-3 text-[11px] font-mono text-slate-600">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-neutral-400" />
-            Backlogs: <strong className="text-[#E0E0E0] font-bold">{columnData.backlog.length}</strong>
+            <span className="w-2 h-2 rounded-full bg-slate-400" />
+            Backlogs: <strong className="text-slate-900 font-bold">{columnData.backlog.length}</strong>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-sky-400" />
-            Todo: <strong className="text-[#E0E0E0] font-bold">{columnData.todo.length}</strong>
+            <span className="w-2 h-2 rounded-full bg-sky-500" />
+            Todo: <strong className="text-slate-900 font-bold">{columnData.todo.length}</strong>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#C5A358] animate-pulse" />
-            In-Progress: <strong className="text-[#C5A358] font-bold">{columnData.in_progress.length}</strong>
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            In-Progress: <strong className="text-amber-800 font-bold">{columnData.in_progress.length}</strong>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            Done: <strong className="text-emerald-400 font-bold">{columnData.done.length}</strong>
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            Done: <strong className="text-emerald-700 font-bold">{columnData.done.length}</strong>
           </span>
         </div>
       </div>
@@ -500,16 +505,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   key={col.id}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, col.id)}
-                  className={`flex flex-col h-full min-h-[550px] rounded-lg border border-[#1A1A1A] bg-[#090909] border-t-2 ${col.borderAccent} overflow-hidden shadow-xs`}
+                  className={`flex flex-col h-full min-h-[550px] rounded-xl border border-slate-200/90 ${col.columnBg} border-t-4 ${col.borderAccent} overflow-hidden shadow-xs`}
                 >
                   {/* Column Header */}
-                  <div className="p-3.5 border-b border-[#1A1A1A] bg-[#0B0B0B] flex items-center justify-between">
+                  <div className="p-3.5 border-b border-slate-200/90 bg-white flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${col.dotColor}`} />
-                      <h3 className="text-xs font-semibold text-[#F0F0F0] tracking-wide uppercase font-mono">
+                      <h3 className="text-xs font-bold text-slate-800 tracking-wide uppercase font-mono">
                         {col.title}
                       </h3>
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded border font-mono ${col.badgeColor}`}>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded border font-mono font-semibold ${col.badgeColor}`}>
                         {items.length}
                       </span>
                     </div>
@@ -520,28 +525,28 @@ export const TasksView: React.FC<TasksViewProps> = ({
                         setIsAddModalOpen(true);
                       }}
                       title={`Add item to ${col.title}`}
-                      className="p-1 rounded hover:bg-[#1A1A1A] text-[#888] hover:text-[#C5A358] transition cursor-pointer"
+                      className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-amber-800 transition cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   {/* Subtitle / Description */}
-                  <div className="px-3.5 py-1.5 bg-[#080808] border-b border-[#141414] text-[10px] text-[#666] italic">
+                  <div className="px-3.5 py-1.5 bg-slate-50/90 border-b border-slate-200/70 text-[10px] text-slate-500 italic font-medium">
                     {col.subtitle}
                   </div>
 
                   {/* Column Item List */}
                   <div className="flex-1 p-2.5 space-y-2.5 overflow-y-auto max-h-[calc(100vh-230px)]">
                     {items.length === 0 ? (
-                      <div className="h-36 border border-dashed border-[#1A1A1A] rounded flex flex-col items-center justify-center text-center p-4 text-[#555] text-xs">
+                      <div className="h-36 border border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-center p-4 text-slate-500 text-xs bg-white/60">
                         <span>No work items in {col.title}</span>
                         <button
                           onClick={() => {
                             setNewItemStatus(col.id);
                             setIsAddModalOpen(true);
                           }}
-                          className="mt-2 text-[11px] text-[#C5A358] hover:underline cursor-pointer"
+                          className="mt-2 text-[11px] text-amber-800 font-semibold hover:underline cursor-pointer"
                         >
                           + Add item here
                         </button>
@@ -559,31 +564,31 @@ export const TasksView: React.FC<TasksViewProps> = ({
                             draggable
                             onDragStart={(e) => handleDragStart(e, item.id)}
                             onClick={() => setSelectedItemDetail(item)}
-                            className="p-3 rounded-md bg-[#0D0D0D] border border-[#1A1A1A] hover:border-[#C5A358]/50 transition cursor-pointer space-y-2.5 group relative shadow-xs"
+                            className="p-3.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer space-y-2.5 group relative shadow-xs"
                           >
                             {/* Card Top: Priority, Project, and ID */}
                             <div className="flex items-center justify-between text-[10px]">
                               <div className="flex items-center gap-1.5">
-                                <span className={`px-1.5 py-0.2 rounded border font-mono capitalize ${getPriorityBadge(item.priority)}`}>
+                                <span className={`px-1.5 py-0.5 rounded border font-mono font-semibold capitalize ${getPriorityBadge(item.priority)}`}>
                                   {item.priority}
                                 </span>
                                 {project && (
-                                  <span className="text-[#666] font-mono truncate max-w-[110px]">
+                                  <span className="text-slate-500 font-mono truncate max-w-[110px]">
                                     {project.name}
                                   </span>
                                 )}
                               </div>
 
-                              <span className="text-[#555] font-mono text-[9px]">{item.id}</span>
+                              <span className="text-slate-400 font-mono text-[9px]">{item.id}</span>
                             </div>
 
                             {/* Card Title & Description */}
                             <div>
-                              <h4 className="text-xs font-medium text-[#F0F0F0] group-hover:text-[#C5A358] transition line-clamp-2 leading-snug">
+                              <h4 className="text-xs font-bold text-slate-900 group-hover:text-amber-800 transition line-clamp-2 leading-snug">
                                 {item.title}
                               </h4>
                               {item.description && (
-                                <p className="text-[11px] text-[#777] mt-1 line-clamp-2 leading-relaxed">
+                                <p className="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-relaxed">
                                   {item.description}
                                 </p>
                               )}
@@ -595,13 +600,13 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 {item.tags.slice(0, 3).map((tag, idx) => (
                                   <span
                                     key={idx}
-                                    className="text-[9px] px-1.5 py-0.2 rounded bg-[#141414] text-[#888] border border-[#202020]"
+                                    className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-medium"
                                   >
                                     {tag}
                                   </span>
                                 ))}
                                 {item.tags.length > 3 && (
-                                  <span className="text-[9px] text-[#555] font-mono">+{item.tags.length - 3}</span>
+                                  <span className="text-[9px] text-slate-400 font-mono">+{item.tags.length - 3}</span>
                                 )}
                               </div>
                             )}
@@ -614,8 +619,8 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                   w.projectId !== item.projectId &&
                                   w.status === 'in_progress'
                               ) && (
-                                <div className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded bg-amber-950/40 text-amber-300 border border-amber-800/40 font-mono">
-                                  <AlertCircle className="w-2.5 h-2.5 shrink-0" />
+                                <div className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 font-mono">
+                                  <AlertCircle className="w-2.5 h-2.5 text-amber-600 shrink-0" />
                                   <span>Agent busy on another project</span>
                                 </div>
                               )}
@@ -623,16 +628,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
                             {/* Progress Bar (For in-progress or done) */}
                             {(item.status === 'in_progress' || item.status === 'done') && (
                               <div className="space-y-1">
-                                <div className="flex items-center justify-between text-[9px] text-[#666] font-mono">
+                                <div className="flex items-center justify-between text-[9px] text-slate-500 font-mono">
                                   <span>Progress</span>
-                                  <span className={item.status === 'done' ? 'text-emerald-400' : 'text-[#C5A358]'}>
+                                  <span className={item.status === 'done' ? 'text-emerald-600 font-semibold' : 'text-amber-700 font-semibold'}>
                                     {item.progressPercent ?? (item.status === 'done' ? 100 : 25)}%
                                   </span>
                                 </div>
-                                <div className="w-full h-1 bg-[#1A1A1A] rounded-full overflow-hidden">
+                                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                   <div
                                     className={`h-full rounded-full transition-all ${
-                                      item.status === 'done' ? 'bg-emerald-500' : 'bg-[#C5A358]'
+                                      item.status === 'done' ? 'bg-emerald-500' : 'bg-amber-500'
                                     }`}
                                     style={{ width: `${item.progressPercent ?? (item.status === 'done' ? 100 : 25)}%` }}
                                   />
@@ -642,8 +647,8 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
                             {/* Linked Artifacts */}
                             {item.artifacts && item.artifacts.length > 0 && (
-                              <div className="pt-1 flex items-center gap-1.5 text-[10px] text-[#C5A358]">
-                                <FileText className="w-3 h-3 text-[#C5A358]" />
+                              <div className="pt-1 flex items-center gap-1.5 text-[10px] text-amber-800">
+                                <FileText className="w-3 h-3 text-amber-700" />
                                 <span className="font-mono underline truncate max-w-[180px]">
                                   {item.artifacts[0].filename}
                                 </span>
@@ -651,7 +656,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                             )}
 
                             {/* Card Footer: Assigned Agent & Provenance */}
-                            <div className="pt-2 border-t border-[#181818] flex items-center justify-between text-[11px]">
+                            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
                               {/* Assigned Agent */}
                               <div className="flex items-center gap-1.5 min-w-0">
                                 {assignedAgent ? (
@@ -659,14 +664,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                     <img
                                       src={assignedAgent.avatarUrl}
                                       alt={assignedAgent.displayName}
-                                      className="w-5 h-5 rounded-full object-cover border border-[#222] shrink-0"
+                                      className="w-5 h-5 rounded-full object-cover border border-slate-200 shrink-0"
                                     />
-                                    <span className="text-[#AAA] text-[10px] truncate max-w-[95px]">
+                                    <span className="text-slate-700 font-medium text-[10px] truncate max-w-[95px]">
                                       {assignedAgent.firstName} {assignedAgent.lastName[0]}.
                                     </span>
                                   </>
                                 ) : (
-                                  <span className="text-[#555] text-[10px] flex items-center gap-1">
+                                  <span className="text-slate-400 text-[10px] flex items-center gap-1">
                                     <Bot className="w-3 h-3" /> Unassigned
                                   </span>
                                 )}
@@ -678,7 +683,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 <button
                                   onClick={(e) => handleTriggerAgentWork(item, e)}
                                   title="Trigger Agent to Work / Advance Item"
-                                  className="p-1 rounded bg-[#161616] hover:bg-[#C5A358]/20 text-[#888] hover:text-[#C5A358] border border-[#222] transition cursor-pointer"
+                                  className="p-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition cursor-pointer shadow-xs"
                                 >
                                   <Zap className="w-3 h-3" />
                                 </button>
@@ -696,7 +701,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                       handleQuickMove(item, prevMap[col.id], e);
                                     }}
                                     title="Move Left"
-                                    className="p-1 rounded bg-[#161616] hover:bg-[#222] text-[#888] hover:text-[#E0E0E0] border border-[#222] transition cursor-pointer"
+                                    className="p-1 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition cursor-pointer shadow-xs"
                                   >
                                     <ArrowLeft className="w-3 h-3" />
                                   </button>
@@ -715,7 +720,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                       handleQuickMove(item, nextMap[col.id], e);
                                     }}
                                     title="Move Right"
-                                    className="p-1 rounded bg-[#161616] hover:bg-[#222] text-[#888] hover:text-[#E0E0E0] border border-[#222] transition cursor-pointer"
+                                    className="p-1 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition cursor-pointer shadow-xs"
                                   >
                                     <ArrowRight className="w-3 h-3" />
                                   </button>
@@ -725,8 +730,8 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
                             {/* Latest Agent Log Snippet */}
                             {latestHistory?.comment && (
-                              <div className="text-[10px] text-[#666] italic bg-[#080808] p-1.5 rounded border border-[#141414] line-clamp-1">
-                                "{latestHistory.comment}"
+                              <div className="text-[10px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100 line-clamp-1">
+                                &quot;{latestHistory.comment}&quot;
                               </div>
                             )}
                           </div>
@@ -742,10 +747,10 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
         {/* List / Table Mode */}
         {viewMode === 'list' && (
-          <div className="rounded border border-[#1A1A1A] bg-[#0A0A0A] overflow-hidden shadow-xs">
+          <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#1A1A1A] bg-[#0E0E0E] text-[10px] uppercase font-mono text-[#777]">
+                <tr className="border-b border-slate-200 bg-slate-50 text-[10px] uppercase font-mono text-slate-500 font-semibold">
                   <th className="py-3 px-4">Work Item</th>
                   <th className="py-3 px-4">Stage</th>
                   <th className="py-3 px-4">Priority</th>
@@ -755,7 +760,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#161616]">
+              <tbody className="divide-y divide-slate-100">
                 {filteredItems.map((item) => {
                   const agent = getAgent(item.assignedAgentId);
                   const project = getProject(item.projectId);
@@ -763,31 +768,31 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     <tr
                       key={item.id}
                       onClick={() => setSelectedItemDetail(item)}
-                      className="hover:bg-[#0F0F0F] transition cursor-pointer"
+                      className="hover:bg-slate-50/80 transition cursor-pointer"
                     >
                       <td className="py-3 px-4 max-w-sm">
-                        <div className="font-medium text-[#F0F0F0] line-clamp-1 hover:text-[#C5A358] transition">
+                        <div className="font-semibold text-slate-900 line-clamp-1 hover:text-amber-800 transition">
                           {item.title}
                         </div>
-                        <div className="text-[11px] text-[#666] line-clamp-1">{item.description}</div>
+                        <div className="text-[11px] text-slate-500 line-clamp-1">{item.description}</div>
                       </td>
                       <td className="py-3 px-4 font-mono text-[11px]">
                         <span
-                          className={`px-2 py-0.5 rounded border uppercase text-[9px] ${
+                          className={`px-2 py-0.5 rounded border uppercase text-[9px] font-semibold ${
                             item.status === 'backlog'
-                              ? 'bg-neutral-800 text-neutral-300 border-neutral-700'
+                              ? 'bg-slate-100 text-slate-700 border-slate-300'
                               : item.status === 'todo'
-                              ? 'bg-sky-950/80 text-sky-300 border-sky-800/50'
+                              ? 'bg-sky-50 text-sky-700 border-sky-200'
                               : item.status === 'in_progress'
-                              ? 'bg-[#C5A358]/20 text-[#C5A358] border-[#C5A358]/40'
-                              : 'bg-emerald-950/80 text-emerald-300 border-emerald-800/50'
+                              ? 'bg-amber-50 text-amber-800 border-amber-200'
+                              : 'bg-emerald-50 text-emerald-800 border-emerald-200'
                           }`}
                         >
                           {item.status.replace('_', ' ')}
                         </span>
                       </td>
                       <td className="py-3 px-4 font-mono">
-                        <span className={`px-1.5 py-0.5 rounded border text-[9px] uppercase ${getPriorityBadge(item.priority)}`}>
+                        <span className={`px-1.5 py-0.5 rounded border text-[9px] uppercase font-semibold ${getPriorityBadge(item.priority)}`}>
                           {item.priority}
                         </span>
                       </td>
@@ -797,16 +802,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
                             <img
                               src={agent.avatarUrl}
                               alt={agent.displayName}
-                              className="w-5 h-5 rounded-full object-cover border border-[#222]"
+                              className="w-5 h-5 rounded-full object-cover border border-slate-200"
                             />
-                            <span className="text-[#CCC]">{agent.displayName}</span>
+                            <span className="text-slate-800 font-medium">{agent.displayName}</span>
                           </div>
                         ) : (
-                          <span className="text-[#555]">Unassigned</span>
+                          <span className="text-slate-400">Unassigned</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-[#888] font-mono text-[11px]">{project?.name || item.projectId}</td>
-                      <td className="py-3 px-4 font-mono text-[11px]">
+                      <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">{project?.name || item.projectId}</td>
+                      <td className="py-3 px-4 font-mono text-[11px] font-semibold text-slate-800">
                         {item.progressPercent ?? (item.status === 'done' ? 100 : 0)}%
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -814,7 +819,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                           <button
                             onClick={() => handleTriggerAgentWork(item)}
                             title="Agent Work"
-                            className="p-1 rounded bg-[#161616] hover:bg-[#C5A358]/20 text-[#C5A358] border border-[#222]"
+                            className="p-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 shadow-xs cursor-pointer"
                           >
                             <Zap className="w-3.5 h-3.5" />
                           </button>
@@ -831,23 +836,23 @@ export const TasksView: React.FC<TasksViewProps> = ({
         {/* Multi-Agent Orchestration Pipeline View */}
         {viewMode === 'pipeline' && (
           <div className="space-y-6 max-w-6xl mx-auto">
-            <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-4">
+            <div className="p-5 rounded-xl border border-slate-200 bg-white space-y-4 shadow-xs">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-serif italic text-[#F0F0F0]">Autonomous Multi-Agent Mission Pipeline</h3>
-                  <p className="text-xs text-[#888]">
+                  <h3 className="text-base font-serif font-bold text-slate-900">Autonomous Multi-Agent Mission Pipeline</h3>
+                  <p className="text-xs text-slate-500">
                     Lead Agent orchestration blackboard and live execution tree. Dispatches high-level objectives into work items.
                   </p>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs">
-                  <span className={`w-2 h-2 rounded-full ${isCollaborating ? 'bg-[#C5A358] animate-ping' : 'bg-emerald-400'}`} />
-                  <span className="font-mono text-[11px] text-[#AAA]">{isCollaborating ? 'Orchestration Active' : 'Ready'}</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+                  <span className={`w-2 h-2 rounded-full ${isCollaborating ? 'bg-amber-500 animate-ping' : 'bg-emerald-500'}`} />
+                  <span className="font-mono text-[11px] text-slate-700 font-medium">{isCollaborating ? 'Orchestration Active' : 'Ready'}</span>
                 </div>
               </div>
 
               {/* Form to trigger orchestration */}
-              <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] space-y-3">
-                <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest block">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                <span className="text-[10px] font-bold text-amber-800 uppercase tracking-widest block">
                   Dispatch Multi-Agent Objective
                 </span>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -855,7 +860,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     type="text"
                     defaultValue="Determine whether Phoenix should migrate from Firebase to PostgreSQL. Use the team."
                     id="input-pipeline-mission"
-                    className="flex-1 p-2.5 rounded bg-[#0A0A0A] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="flex-1 p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-xs"
                   />
                   <button
                     onClick={() => {
@@ -865,9 +870,9 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       }
                     }}
                     disabled={isCollaborating}
-                    className="py-2.5 px-4 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center justify-center gap-2 transition disabled:opacity-50 cursor-pointer"
+                    className="py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition disabled:opacity-50 cursor-pointer shadow-xs"
                   >
-                    <Play className="w-3.5 h-3.5 text-black" />
+                    <Play className="w-3.5 h-3.5 text-white" />
                     <span>{isCollaborating ? 'Coordinating...' : 'Execute Mission'}</span>
                   </button>
                 </div>
@@ -877,44 +882,44 @@ export const TasksView: React.FC<TasksViewProps> = ({
             {/* Active Orchestration Task or latest task */}
             {curPipelineTask ? (
               <div className="space-y-5">
-                <div className="p-5 rounded border border-[#1A1A1A] bg-[#0A0A0A] space-y-4">
+                <div className="p-5 rounded-xl border border-slate-200 bg-white space-y-4 shadow-xs">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#C5A358]" />
-                      <h4 className="text-sm font-semibold text-[#F0F0F0]">{curPipelineTask.title}</h4>
-                      <span className="text-[9px] px-2 py-0.5 rounded border border-[#C5A358]/30 bg-[#C5A358]/10 text-[#C5A358] font-mono capitalize">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                      <h4 className="text-sm font-bold text-slate-900">{curPipelineTask.title}</h4>
+                      <span className="text-[9px] px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-900 font-mono font-semibold capitalize">
                         {curPipelineTask.status}
                       </span>
                     </div>
-                    <span className="text-[10px] text-[#666] font-mono">{new Date(curPipelineTask.createdAt).toLocaleTimeString()}</span>
+                    <span className="text-[10px] text-slate-500 font-mono">{new Date(curPipelineTask.createdAt).toLocaleTimeString()}</span>
                   </div>
 
                   {/* Delegation Tree */}
-                  <div className="p-4 rounded bg-[#070707] border border-[#1A1A1A] space-y-3">
-                    <span className="text-[10px] font-semibold text-[#C5A358] uppercase tracking-widest block">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <span className="text-[10px] font-bold text-amber-800 uppercase tracking-widest block">
                       Hierarchical Delegation Hierarchy
                     </span>
-                    <div className="flex items-center gap-3 p-3 rounded bg-[#0A0A0A] border border-[#1A1A1A]">
-                      <img src={pipelineLead?.avatarUrl} alt={pipelineLead?.displayName} className="w-8 h-8 rounded object-cover" />
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+                      <img src={pipelineLead?.avatarUrl} alt={pipelineLead?.displayName} className="w-8 h-8 rounded-lg object-cover border border-slate-200" />
                       <div>
-                        <span className="font-semibold text-xs text-[#F0F0F0]">{pipelineLead?.displayName} (Lead Agent Owner)</span>
-                        <p className="text-[11px] text-[#777]">Synthesizes findings, resolves specialist disputes, generates deliverables.</p>
+                        <span className="font-bold text-xs text-slate-900">{pipelineLead?.displayName} (Lead Agent Owner)</span>
+                        <p className="text-[11px] text-slate-500">Synthesizes findings, resolves specialist disputes, generates deliverables.</p>
                       </div>
                     </div>
 
-                    <div className="pl-6 border-l-2 border-[#1A1A1A] ml-4 space-y-2">
+                    <div className="pl-6 border-l-2 border-slate-200 ml-4 space-y-2">
                       {curPipelineTask.subtasks.map((st) => {
                         const spec = getAgent(st.assignedAgentId);
                         return (
-                          <div key={st.id} className="p-2.5 rounded bg-[#0A0A0A] border border-[#1A1A1A] flex items-center justify-between text-xs">
+                          <div key={st.id} className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between text-xs shadow-xs">
                             <div className="flex items-center gap-2.5">
-                              <img src={spec?.avatarUrl} alt={spec?.displayName} className="w-6 h-6 rounded object-cover" />
+                              <img src={spec?.avatarUrl} alt={spec?.displayName} className="w-6 h-6 rounded-md object-cover border border-slate-200" />
                               <div>
-                                <span className="font-medium text-[#F0F0F0]">{spec?.displayName}:</span>
-                                <span className="text-[#AAA] ml-1.5">{st.title}</span>
+                                <span className="font-semibold text-slate-900">{spec?.displayName}:</span>
+                                <span className="text-slate-600 ml-1.5">{st.title}</span>
                               </div>
                             </div>
-                            <span className="text-[9px] px-2 py-0.5 rounded capitalize font-mono bg-emerald-950/40 text-emerald-400 border border-emerald-800/40">
+                            <span className="text-[9px] px-2 py-0.5 rounded-md capitalize font-mono bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
                               {st.status}
                             </span>
                           </div>
@@ -933,16 +938,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
           MODAL 1: ADD WORK ITEM
           ========================================================= */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-lg rounded-lg border border-[#1A1A1A] bg-[#0A0A0A] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-150">
-            <div className="p-4 border-b border-[#1A1A1A] bg-[#0D0D0D] flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#F0F0F0] uppercase tracking-wider font-mono">
-                <Plus className="w-4 h-4 text-[#C5A358]" />
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-150">
+            <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
+                <Plus className="w-4 h-4 text-amber-600" />
                 <span>Add Work Item to Stage</span>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-[#666] hover:text-[#E0E0E0] transition cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -950,35 +955,35 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
             <form onSubmit={handleCreateSubmit} className="p-5 space-y-4 text-xs">
               <div>
-                <label className="block text-[11px] font-medium text-[#CCC] mb-1">Work Item Title *</label>
+                <label className="block text-[11px] font-semibold text-slate-700 mb-1">Work Item Title *</label>
                 <input
                   type="text"
                   required
                   value={newItemTitle}
                   onChange={(e) => setNewItemTitle(e.target.value)}
                   placeholder="e.g., Audit OAuth 2.0 PKCE Flow for Mobile Clients"
-                  className="w-full p-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#CCC] mb-1">Description & Deliverable Criteria</label>
+                <label className="block text-[11px] font-semibold text-slate-700 mb-1">Description & Deliverable Criteria</label>
                 <textarea
                   rows={3}
                   value={newItemDescription}
                   onChange={(e) => setNewItemDescription(e.target.value)}
                   placeholder="Provide technical scope, requirements, and validation criteria..."
-                  className="w-full p-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Target Stage</label>
+                  <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Target Stage</label>
                   <select
                     value={newItemStatus}
                     onChange={(e) => setNewItemStatus(e.target.value as WorkItemStatus)}
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500"
                   >
                     <option value="backlog">Backlogs</option>
                     <option value="todo">Todo</option>
@@ -988,11 +993,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Priority</label>
+                  <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Priority</label>
                   <select
                     value={newItemPriority}
                     onChange={(e) => setNewItemPriority(e.target.value as any)}
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500"
                   >
                     <option value="urgent">Urgent</option>
                     <option value="high">High</option>
@@ -1004,11 +1009,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Assigned Agent</label>
+                  <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Assigned Agent</label>
                   <select
                     value={newItemAgent}
                     onChange={(e) => setNewItemAgent(e.target.value)}
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500"
                   >
                     {agents.map((a) => (
                       <option key={a.id} value={a.id}>
@@ -1019,11 +1024,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Project Scope</label>
+                  <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Project Scope</label>
                   <select
                     value={newItemProject}
                     onChange={(e) => setNewItemProject(e.target.value)}
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500"
                   >
                     {projects.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -1036,40 +1041,40 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Tags (Comma-Separated)</label>
+                  <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Tags (Comma-Separated)</label>
                   <input
                     type="text"
                     value={newItemTags}
                     onChange={(e) => setNewItemTags(e.target.value)}
                     placeholder="Database, Security, DDL"
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Est. Hours</label>
+                  <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Est. Hours</label>
                   <input
                     type="number"
                     value={newItemHours}
                     onChange={(e) => setNewItemHours(e.target.value)}
                     min="1"
                     max="200"
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-amber-500"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#1A1A1A] flex items-center justify-end gap-2.5">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="py-2 px-3.5 rounded bg-[#161616] hover:bg-[#202020] text-[#AAA] text-xs font-medium transition cursor-pointer"
+                  className="py-2 px-3.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="py-2 px-4 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold shadow transition cursor-pointer"
+                  className="py-2 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition cursor-pointer"
                 >
                   Register Work Item
                 </button>
@@ -1083,32 +1088,32 @@ export const TasksView: React.FC<TasksViewProps> = ({
           MODAL 2: AGENT PLANNING / AUTO-GENERATE WORK ITEMS
           ========================================================= */}
       {isAutoPlanModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-lg rounded-lg border border-[#1A1A1A] bg-[#0A0A0A] shadow-2xl overflow-hidden">
-            <div className="p-4 border-b border-[#1A1A1A] bg-[#0D0D0D] flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#C5A358] uppercase tracking-wider font-mono">
-                <Sparkles className="w-4 h-4 text-[#C5A358]" />
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden">
+            <div className="p-4 border-b border-amber-100 bg-amber-50/60 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase tracking-wider font-mono">
+                <Sparkles className="w-4 h-4 text-amber-600" />
                 <span>Autonomous Agent Sprint Planning</span>
               </div>
               <button
                 onClick={() => setIsAutoPlanModalOpen(false)}
-                className="text-[#666] hover:text-[#E0E0E0] transition cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="p-5 space-y-4 text-xs">
-              <p className="text-[#AAA] leading-relaxed">
+              <p className="text-slate-600 leading-relaxed">
                 Instruct an executive or specialist agent to analyze the project roadmap and autonomously synthesize 3 structured work items categorized into Backlogs and Todo.
               </p>
 
               <div>
-                <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Planning Agent Owner</label>
+                <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Planning Agent Owner</label>
                 <select
                   value={planAgentId}
                   onChange={(e) => setPlanAgentId(e.target.value)}
-                  className="w-full p-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500"
                 >
                   {agents.map((a) => (
                     <option key={a.id} value={a.id}>
@@ -1119,11 +1124,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Target Project</label>
+                <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Target Project</label>
                 <select
                   value={planProjectId}
                   onChange={(e) => setPlanProjectId(e.target.value)}
-                  className="w-full p-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500"
                 >
                   {projects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -1134,30 +1139,30 @@ export const TasksView: React.FC<TasksViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Sprint Objective / Direction</label>
+                <label className="block text-[10px] uppercase font-mono text-slate-500 font-semibold mb-1">Sprint Objective / Direction</label>
                 <textarea
                   rows={3}
                   value={planGoal}
                   onChange={(e) => setPlanGoal(e.target.value)}
-                  className="w-full p-2.5 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                  className="w-full p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-amber-500"
                   placeholder="Describe focus areas (e.g. data residency, pgvector tuning, budget caps)..."
                 />
               </div>
 
-              <div className="pt-3 border-t border-[#1A1A1A] flex items-center justify-end gap-2.5">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
                 <button
                   onClick={() => setIsAutoPlanModalOpen(false)}
                   disabled={isPlanningLoading}
-                  className="py-2 px-3.5 rounded bg-[#161616] hover:bg-[#202020] text-[#AAA] text-xs font-medium transition cursor-pointer"
+                  className="py-2 px-3.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleRunAutoPlan}
                   disabled={isPlanningLoading || !planGoal.trim()}
-                  className="py-2 px-4 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center gap-2 shadow transition disabled:opacity-50 cursor-pointer"
+                  className="py-2 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition disabled:opacity-50 cursor-pointer"
                 >
-                  <Sparkles className={`w-3.5 h-3.5 text-black ${isPlanningLoading ? 'animate-spin' : ''}`} />
+                  <Sparkles className={`w-3.5 h-3.5 text-white ${isPlanningLoading ? 'animate-spin' : ''}`} />
                   <span>{isPlanningLoading ? 'Synthesizing Tasks...' : 'Generate 3 Work Items'}</span>
                 </button>
               </div>
@@ -1170,29 +1175,29 @@ export const TasksView: React.FC<TasksViewProps> = ({
           MODAL 3: WORK ITEM DETAIL & AGENT UPDATE CONSOLE
           ========================================================= */}
       {selectedItemDetail && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl max-h-[90vh] rounded-lg border border-[#1A1A1A] bg-[#0A0A0A] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl max-h-[90vh] rounded-xl border border-slate-200 bg-white shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150">
             {/* Modal Header */}
-            <div className="p-4 border-b border-[#1A1A1A] bg-[#0D0D0D] flex items-center justify-between shrink-0">
+            <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
                 <span
-                  className={`text-[9px] px-2 py-0.5 rounded border uppercase font-mono ${
+                  className={`text-[9px] px-2 py-0.5 rounded border uppercase font-mono font-semibold ${
                     selectedItemDetail.status === 'backlog'
-                      ? 'bg-neutral-800 text-neutral-300 border-neutral-700'
+                      ? 'bg-slate-100 text-slate-700 border-slate-300'
                       : selectedItemDetail.status === 'todo'
-                      ? 'bg-sky-950/80 text-sky-300 border-sky-800/50'
+                      ? 'bg-sky-50 text-sky-700 border-sky-200'
                       : selectedItemDetail.status === 'in_progress'
-                      ? 'bg-[#C5A358]/20 text-[#C5A358] border-[#C5A358]/40'
-                      : 'bg-emerald-950/80 text-emerald-300 border-emerald-800/50'
+                      ? 'bg-amber-50 text-amber-800 border-amber-200'
+                      : 'bg-emerald-50 text-emerald-800 border-emerald-200'
                   }`}
                 >
                   {selectedItemDetail.status.replace('_', ' ')}
                 </span>
-                <span className="text-[10px] text-[#555] font-mono">{selectedItemDetail.id}</span>
+                <span className="text-[10px] text-slate-400 font-mono">{selectedItemDetail.id}</span>
               </div>
               <button
                 onClick={() => setSelectedItemDetail(null)}
-                className="text-[#666] hover:text-[#E0E0E0] transition cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1202,37 +1207,37 @@ export const TasksView: React.FC<TasksViewProps> = ({
             <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs">
               {/* Title & Description */}
               <div>
-                <h3 className="text-base font-serif italic text-[#F0F0F0] leading-snug">
+                <h3 className="text-base font-serif font-bold text-slate-900 leading-snug">
                   {selectedItemDetail.title}
                 </h3>
-                <p className="text-xs text-[#AAA] mt-2 leading-relaxed">
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
                   {selectedItemDetail.description}
                 </p>
               </div>
 
               {/* Meta Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded bg-[#070707] border border-[#1A1A1A]">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                 <div>
-                  <span className="text-[9px] uppercase font-mono text-[#666] block">Project</span>
-                  <span className="font-medium text-[#CCC] mt-0.5 block truncate">
+                  <span className="text-[9px] uppercase font-mono text-slate-500 font-semibold block">Project</span>
+                  <span className="font-semibold text-slate-900 mt-0.5 block truncate">
                     {getProject(selectedItemDetail.projectId)?.name || selectedItemDetail.projectId}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-mono text-[#666] block">Priority</span>
-                  <span className={`inline-block mt-0.5 px-1.5 py-0.2 rounded border text-[9px] font-mono uppercase ${getPriorityBadge(selectedItemDetail.priority)}`}>
+                  <span className="text-[9px] uppercase font-mono text-slate-500 font-semibold block">Priority</span>
+                  <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded border text-[9px] font-mono uppercase font-semibold ${getPriorityBadge(selectedItemDetail.priority)}`}>
                     {selectedItemDetail.priority}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-mono text-[#666] block">Assigned Agent</span>
-                  <span className="font-medium text-[#CCC] mt-0.5 block truncate">
+                  <span className="text-[9px] uppercase font-mono text-slate-500 font-semibold block">Assigned Agent</span>
+                  <span className="font-semibold text-slate-900 mt-0.5 block truncate">
                     {getAgent(selectedItemDetail.assignedAgentId)?.displayName || 'Unassigned'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-mono text-[#666] block">Progress</span>
-                  <span className="font-mono text-[#C5A358] mt-0.5 block font-bold">
+                  <span className="text-[9px] uppercase font-mono text-slate-500 font-semibold block">Progress</span>
+                  <span className="font-mono text-amber-800 mt-0.5 block font-bold">
                     {selectedItemDetail.progressPercent ?? 0}%
                   </span>
                 </div>
@@ -1244,7 +1249,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   {selectedItemDetail.tags.map((tag, i) => (
                     <span
                       key={i}
-                      className="text-[10px] px-2 py-0.5 rounded bg-[#111] text-[#999] border border-[#222]"
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-medium"
                     >
                       #{tag}
                     </span>
@@ -1253,17 +1258,17 @@ export const TasksView: React.FC<TasksViewProps> = ({
               )}
 
               {/* Quick Stage Transition Buttons */}
-              <div className="p-3 rounded bg-[#070707] border border-[#1A1A1A] space-y-2">
-                <span className="text-[10px] uppercase font-mono text-[#777] block">Transition Work Item Stage</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <span className="text-[10px] uppercase font-mono text-slate-500 font-semibold block">Transition Work Item Stage</span>
                 <div className="grid grid-cols-4 gap-2">
                   {(['backlog', 'todo', 'in_progress', 'done'] as WorkItemStatus[]).map((st) => (
                     <button
                       key={st}
                       onClick={() => handleQuickMove(selectedItemDetail, st)}
-                      className={`py-1.5 px-2 rounded text-[11px] font-mono uppercase font-semibold transition cursor-pointer border ${
+                      className={`py-1.5 px-2 rounded-lg text-[11px] font-mono uppercase font-bold transition cursor-pointer border shadow-xs ${
                         selectedItemDetail.status === st
-                          ? 'bg-[#C5A358] text-black border-[#C5A358]'
-                          : 'bg-[#0E0E0E] text-[#888] border-[#1A1A1A] hover:text-[#CCC] hover:border-[#333]'
+                          ? 'bg-amber-600 text-white border-amber-600'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
                       {st.replace('_', ' ')}
@@ -1273,22 +1278,22 @@ export const TasksView: React.FC<TasksViewProps> = ({
               </div>
 
               {/* AGENT UPDATE CONSOLE (Section for agents to add & update work items) */}
-              <div className="p-4 rounded border border-[#C5A358]/30 bg-[#0C0B08] space-y-3.5">
+              <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/50 space-y-3.5 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#C5A358] text-[10px] font-semibold uppercase tracking-widest font-mono">
-                    <Zap className="w-3.5 h-3.5 text-[#C5A358]" />
+                  <div className="flex items-center gap-2 text-amber-900 text-[10px] font-bold uppercase tracking-widest font-mono">
+                    <Zap className="w-3.5 h-3.5 text-amber-600" />
                     <span>Agent Work Console (Autonomous Update)</span>
                   </div>
-                  <span className="text-[10px] text-[#666] font-mono">Real-Time Autonomous Sync</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Real-Time Autonomous Sync</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Executing Agent</label>
+                    <label className="block text-[10px] uppercase font-mono text-slate-600 font-semibold mb-1">Executing Agent</label>
                     <select
                       value={activeAgentActionId}
                       onChange={(e) => setActiveAgentActionId(e.target.value)}
-                      className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                      className="w-full p-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-amber-500 shadow-xs"
                     >
                       {agents.map((a) => (
                         <option key={a.id} value={a.id}>
@@ -1299,11 +1304,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">Action Type</label>
+                    <label className="block text-[10px] uppercase font-mono text-slate-600 font-semibold mb-1">Action Type</label>
                     <select
                       value={agentActionType}
                       onChange={(e) => setAgentActionType(e.target.value as any)}
-                      className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] focus:outline-none focus:border-[#C5A358]"
+                      className="w-full p-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-amber-500 shadow-xs"
                     >
                       <option value="advance_stage">Advance Stage (Next Column)</option>
                       <option value="update_progress">Progress Work & Log Deliverable</option>
@@ -1313,7 +1318,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase font-mono text-[#777] mb-1">
+                  <label className="block text-[10px] uppercase font-mono text-slate-600 font-semibold mb-1">
                     Agent Directive / Focus (Optional)
                   </label>
                   <input
@@ -1321,20 +1326,20 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     value={agentActionPrompt}
                     onChange={(e) => setAgentActionPrompt(e.target.value)}
                     placeholder="e.g., Audit SQL query performance or verify Frankfurt data residency..."
-                    className="w-full p-2 rounded bg-[#070707] border border-[#1A1A1A] text-xs text-[#E0E0E0] placeholder-[#555] focus:outline-none focus:border-[#C5A358]"
+                    className="w-full p-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 shadow-xs"
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-[10px] text-[#888]">
+                  <span className="text-[10px] text-slate-500">
                     Agent will analyze context, update progress, and log audit history.
                   </span>
                   <button
                     onClick={handleExecuteAgentUpdate}
                     disabled={isAgentExecuting}
-                    className="py-2 px-4 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center gap-2 shadow transition disabled:opacity-50 cursor-pointer"
+                    className="py-2 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition disabled:opacity-50 cursor-pointer"
                   >
-                    <Zap className={`w-3.5 h-3.5 text-black ${isAgentExecuting ? 'animate-spin' : ''}`} />
+                    <Zap className={`w-3.5 h-3.5 text-white ${isAgentExecuting ? 'animate-spin' : ''}`} />
                     <span>{isAgentExecuting ? 'Agent Executing...' : 'Execute Agent Update'}</span>
                   </button>
                 </div>
@@ -1342,7 +1347,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
               {/* Provenance & Update Timeline */}
               <div className="space-y-3">
-                <span className="text-[10px] font-semibold text-[#777] uppercase tracking-widest block font-mono">
+                <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest block font-mono">
                   Agent Audit History & Provenance ({selectedItemDetail.history.length})
                 </span>
 
@@ -1350,7 +1355,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   {selectedItemDetail.history.map((log) => {
                     const authorAgent = getAgent(log.agentId);
                     return (
-                      <div key={log.id} className="p-2.5 rounded bg-[#070707] border border-[#1A1A1A] space-y-1">
+                      <div key={log.id} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
                         <div className="flex items-center justify-between text-[10px]">
                           <div className="flex items-center gap-1.5">
                             {authorAgent && (
@@ -1360,14 +1365,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 className="w-4 h-4 rounded-full object-cover"
                               />
                             )}
-                            <span className="font-semibold text-[#CCC]">{log.authorName}</span>
+                            <span className="font-semibold text-slate-800">{log.authorName}</span>
                           </div>
-                          <span className="text-[#555]">{new Date(log.timestamp).toLocaleTimeString()}</span>
+                          <span className="text-slate-400">{new Date(log.timestamp).toLocaleTimeString()}</span>
                         </div>
-                        <p className="text-[#999] leading-relaxed font-sans">{log.comment}</p>
+                        <p className="text-slate-600 leading-relaxed font-sans">{log.comment}</p>
                         {log.newStatus && (
-                          <div className="text-[9px] text-[#666]">
-                            Stage: <span className="text-[#C5A358] uppercase">{log.newStatus}</span>
+                          <div className="text-[9px] text-slate-500">
+                            Stage: <span className="text-amber-800 font-bold uppercase">{log.newStatus}</span>
                             {log.progressPercent !== undefined && ` (${log.progressPercent}%)`}
                           </div>
                         )}
@@ -1379,7 +1384,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#1A1A1A] bg-[#0D0D0D] flex items-center justify-between shrink-0">
+            <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
               <button
                 onClick={async () => {
                   if (confirm('Delete this work item?')) {
@@ -1387,7 +1392,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     setSelectedItemDetail(null);
                   }
                 }}
-                className="py-1.5 px-2.5 rounded border border-rose-900/40 text-rose-400 hover:bg-rose-950/30 text-xs flex items-center gap-1.5 transition cursor-pointer"
+                className="py-1.5 px-3 rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50 bg-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete</span>
@@ -1395,7 +1400,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
               <button
                 onClick={() => setSelectedItemDetail(null)}
-                className="py-1.5 px-4 rounded bg-[#161616] hover:bg-[#222] text-[#CCC] text-xs font-medium transition cursor-pointer"
+                className="py-1.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition cursor-pointer shadow-xs"
               >
                 Close
               </button>
