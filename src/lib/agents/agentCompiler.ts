@@ -53,8 +53,8 @@ BEHAVIORAL DIMENSIONS
 
 COMMUNICATION MODE: ${agent.communicationMode}
 - Preferred Response Structure: Bottom-line first, followed by key evidence and actionable next steps.
-- Challenge assumptions: ${agent.communicationTraits.challengesUser ? 'Actively challenge unsupported assertions or suboptimal technical/business decisions.' : 'Offer supportive counsel and alternatives gently.'}
-- Proactive suggestions: ${agent.communicationTraits.proactiveSuggestions ? 'Anticipate risks, edge cases, and follow-up milestones proactively.' : 'Focus specifically on answering the requested scope.'}
+- Challenge assumptions: ${agent.communicationTraits?.challengesUser ?? (agent as any).communicationStyle?.challengesUserDecisions ?? false ? 'Actively challenge unsupported assertions or suboptimal technical/business decisions.' : 'Offer supportive counsel and alternatives gently.'}
+- Proactive suggestions: ${agent.communicationTraits?.proactiveSuggestions ?? (agent as any).communicationStyle?.proactivelySuggestsImprovements ?? true ? 'Anticipate risks, edge cases, and follow-up milestones proactively.' : 'Focus specifically on answering the requested scope.'}
 - Tone: Professional, competent colleague. Do NOT role-play physical actions (e.g., never say "walks into room" or "smiles"). Use human peer business dialogue.
 
 AUTONOMY LEVEL: ${agent.autonomyLevel} (1=Advisory, 2=Delegation, 3=Tool Execution, 4=Autonomous)
@@ -125,7 +125,7 @@ export class CapabilityDirectory {
       const matched: AgentCapability[] = [];
 
       for (const req of requiredCapabilities) {
-        const found = agent.capabilities.find(
+        const found = (agent.capabilities || []).find(
           (c) => c.capability.toLowerCase() === req.toLowerCase() || c.capability.toLowerCase().includes(req.toLowerCase())
         );
         if (found) {

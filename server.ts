@@ -505,6 +505,8 @@ app.delete('/api/projects/:id', (req, res) => {
 });
 
 // 3. Four-Layer Memories API
+// Also expose /api/memory (singular) as documented in README API reference
+app.get('/api/memory', (req, res) => res.redirect('/api/memories?' + new URLSearchParams(req.query as any).toString()));
 app.get('/api/memories', (req, res) => {
   const { scope, projectId, agentId, topic } = req.query;
 
@@ -585,6 +587,25 @@ app.post('/api/memories/promote', (req, res) => {
   });
   if (!promoted) return res.status(404).json({ error: 'Memory not found or promotion failed' });
   res.json(promoted);
+});
+
+// 3b. Artifacts API (Listed in README API Reference)
+app.get('/api/artifacts', (req, res) => {
+  const { projectId, agentId } = req.query;
+  let result = [...artifacts];
+  if (projectId && projectId !== 'all') {
+    result = result.filter((a) => a.projectId === projectId);
+  }
+  if (agentId) {
+    result = result.filter((a) => a.createdByAgentId === agentId);
+  }
+  res.json(result);
+});
+
+app.get('/api/artifacts/:id', (req, res) => {
+  const artifact = artifacts.find((a) => a.id === req.params.id);
+  if (!artifact) return res.status(404).json({ error: 'Artifact not found' });
+  res.json(artifact);
 });
 
 // 4. Tasks & Blackboard
@@ -841,6 +862,7 @@ Write a professional, concise executive work log entry (2-4 sentences) explainin
     progressPercent: newProgress
   });
 
+  saveStateToDisk();
   res.json({ item, comment: generatedComment });
 });
 

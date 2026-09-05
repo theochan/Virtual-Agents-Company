@@ -250,14 +250,26 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
       seniority,
       gender,
       age,
+      approxAge: age,
       nationality,
       primaryResponsibility,
       secondaryResponsibilities: ['Security incident forensics', 'Access control validation'],
+      expertise: skillsInput.split(',').map((s) => s.trim()).filter(Boolean),
       skills: skillsInput.split(',').map((s) => s.trim()).filter(Boolean),
       temperament,
       personalityDescription: personalityDesc,
       personalityDimensions: dimensions,
+      communicationMode: communicationStyle.mode as any,
       communicationStyle,
+      communicationTraits: {
+        verbosity: communicationStyle.verbosity === 'concise' ? 25 : communicationStyle.verbosity === 'thorough' ? 75 : 50,
+        jargon: communicationStyle.jargonLevel === 'expert' ? 90 : communicationStyle.jargonLevel === 'moderate' ? 55 : 20,
+        humor: communicationStyle.humorLevel === 'none' ? 0 : communicationStyle.humorLevel === 'subtle' ? 20 : 50,
+        emotionalExpressiveness: 30,
+        challengesUser: communicationStyle.challengesUserDecisions,
+        proactiveSuggestions: communicationStyle.proactivelySuggestsImprovements
+      },
+      capabilities: [],
       autonomyLevel,
       llmConfig: {
         provider,
@@ -266,12 +278,18 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
         maxTokens
       },
       tools: selectedTools,
+      toolIds: selectedTools,
       memoryAccess: {
         allowedScopes: ['conversation', 'agent', 'project', 'organization'],
         projectIds: ['proj-phoenix']
       },
       runtimeState: {
         status: 'idle'
+      },
+      tokenUsage: {
+        inputTokens: 0,
+        outputTokens: 0,
+        estimatedCost: 0
       }
     };
 
