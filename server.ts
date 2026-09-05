@@ -3016,15 +3016,14 @@ app.post('/api/tools/execute', async (req, res) => {
       workspaceId: 'ws-default',
       projectId: targetProject.id,
       title,
-      type: type as any,
+      taskId: 'task-manual',
+      type: (type as any) || 'markdown',
       content,
       version: 1,
-      format: 'markdown',
-      authorAgentId: authorAgent ? authorAgent.id : 'agent-sarah',
+      createdByAgentId: authorAgent ? authorAgent.id : 'agent-sarah',
       filename: `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`,
       createdAt: now,
-      updatedAt: now,
-      changeHistory: []
+      updatedAt: now
     };
     artifacts.unshift(newArt);
     saveStateToDisk();
@@ -3061,6 +3060,8 @@ app.post('/api/tools/execute', async (req, res) => {
       estimatedHours: 4,
       actualHours: 0,
       progressPercent: 0,
+      createdAt: now,
+      updatedAt: now,
       history: [
         {
           id: `hist-1-${Date.now()}`,

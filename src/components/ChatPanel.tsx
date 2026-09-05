@@ -71,6 +71,8 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
   onUpdateAgentLLM,
   activeTask,
   isCollaborating,
+  artifacts = [],
+  memories = [],
   onViewProject,
   onSelectProject
 }) => {

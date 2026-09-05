@@ -48,10 +48,12 @@ export const AVATAR_STYLES: AvatarStyleOption[] = [
 
 export interface CuratedAvatar {
   url: string;
+  fallbackUrl?: string;
   label: string;
   gender: 'female' | 'male' | 'non-binary';
   style: AvatarStyle;
   nationalityHint?: string;
+  badge?: string;
 }
 
 export const CURATED_PORTRAITS: CuratedAvatar[] = [
