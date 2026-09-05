@@ -126,7 +126,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-serif italic font-semibold text-slate-900 tracking-tight">
-                  {agent.displayName} — Enterprise Strategy Optimization
+                  {agent.displayName} — {agent.jobTitle}
                 </h2>
                 {/* Linked Project Selector */}
                 {projects.length > 0 && onSelectProject ? (
@@ -283,7 +283,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
               <div className="flex gap-3.5 justify-end">
                 <div className="max-w-xl space-y-1.5 items-end">
                   <div className="flex items-center gap-2 text-xs text-slate-400 justify-end">
-                    <span className="font-semibold text-slate-700">Executive You</span>
+                    <span className="font-semibold text-slate-700">You</span>
                     <span className="font-mono text-[10px] text-slate-400">Just now</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-white rounded-tr-none shadow-xs text-xs leading-relaxed">
@@ -368,7 +368,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
                     {/* Sender Name & Timestamp */}
                     <div className={`flex items-center gap-2 text-xs text-slate-400 ${isUser ? 'justify-end' : 'justify-start'}`}>
                       <span className="font-semibold text-slate-700">
-                        {isUser ? 'Executive You' : senderAgent?.displayName || agent.displayName}
+                        {isUser ? 'You' : senderAgent?.displayName || agent.displayName}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400">
                         {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

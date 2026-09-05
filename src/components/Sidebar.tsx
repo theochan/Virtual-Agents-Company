@@ -46,7 +46,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenWizard
 }) => {
   const [isAgentsExpanded, setIsAgentsExpanded] = useState(true);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   return (
     <aside className="w-64 h-screen bg-white border-r border-slate-200 flex flex-col shrink-0 select-none text-slate-800">
@@ -63,59 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* 2. User Profile Card: David Chen / Online */}
-      <div className="px-5 py-3 border-b border-slate-100 shrink-0">
-        <div
-          onClick={() => setUserMenuOpen(!userMenuOpen)}
-          className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition cursor-pointer group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces&auto=format"
-                alt="David Chen"
-                className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-2xs"
-              />
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-900 group-hover:text-amber-800 transition leading-tight">
-                David Chen
-              </p>
-              <p className="text-[11px] text-slate-400 font-medium">Online</p>
-            </div>
-          </div>
-          <ChevronDown
-            className={`w-4 h-4 text-slate-400 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`}
-          />
-        </div>
-
-        {/* User quick options if opened */}
-        {userMenuOpen && (
-          <div className="mt-2 p-2 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1 animate-fadeIn">
-            <button
-              onClick={() => {
-                onSelectTab('settings');
-                setUserMenuOpen(false);
-              }}
-              className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white text-slate-700 transition"
-            >
-              Executive Settings
-            </button>
-            <button
-              onClick={() => {
-                onSelectTab('security');
-                setUserMenuOpen(false);
-              }}
-              className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white text-slate-700 transition"
-            >
-              Tools &amp; Permissions
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* 3. Navigation List (Matching Wireframe Page 1) */}
+      {/* 2. Navigation List */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
         {/* Dashboard */}
         <button
