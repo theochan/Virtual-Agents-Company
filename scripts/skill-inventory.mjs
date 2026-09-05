@@ -1,9 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 const root = 'claude-skills';
-const walk = directory => fs.readdirSync(directory, { withFileTypes: true }).sort((a,b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0).flatMap(entry => entry.isSymbolicLink() ? [] : entry.isDirectory() ? walk(path.join(directory, entry.name)) : [path.join(directory, entry.name)]);
-const files = walk(root);
+// Inventory the distributed repository, excluding ignored local documents and caches.
+const files = execFileSync('git', ['ls-files', '-z', '--', root], { encoding: 'utf8' })
+  .split('\0').filter(file => file && fs.lstatSync(file).isFile()).sort();
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const licenses = files.filter(file => /^licen[sc]e(?:\.[^/]+)?$/i.test(path.basename(file)));
 const inventory = files.filter(file => path.basename(file) === 'SKILL.md').map(file => {

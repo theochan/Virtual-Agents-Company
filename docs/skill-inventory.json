@@ -1,11 +1,19 @@
 {
   "schemaVersion": 1,
-  "skillCount": 388,
+  "skillCount": 387,
   "executableSkillsEnabled": 0,
   "licenseNotices": [
     {
       "path": "claude-skills/LICENSE",
       "sha256": "a20126646f93d32a8989c3cf4772d59194f405034f7babe7daebeac22b8ab151"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/LICENSE",
+      "sha256": "247183541b058cad1081b56ab5b8240c42eb45ae6fc0401d7167f908825c6408"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/LICENSE",
+      "sha256": "247183541b058cad1081b56ab5b8240c42eb45ae6fc0401d7167f908825c6408"
     },
     {
       "path": "claude-skills/engineering/book-to-skill/LICENSE",
@@ -30,14 +38,6 @@
     {
       "path": "claude-skills/engineering/spinning-up-deep-rl/LICENSE",
       "sha256": "70683608a2b70a4732bc855d723629191534ae26ad94cfb5be5bb7d1e166bdb5"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/LICENSE",
-      "sha256": "247183541b058cad1081b56ab5b8240c42eb45ae6fc0401d7167f908825c6408"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/LICENSE",
-      "sha256": "247183541b058cad1081b56ab5b8240c42eb45ae6fc0401d7167f908825c6408"
     },
     {
       "path": "claude-skills/loop-library/LICENSE",
@@ -2149,6 +2149,1192 @@
         "claude-skills/LICENSE"
       ],
       "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/SKILL.md",
+      "sha256": "e1cbabce8168ea0cb18d44b49c754c7de2e2dc29f8560cb9c4631a89e8652e4e",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/scripts/a11y_scanner.py",
+          "sha256": "a641c73d02c58b38c51c00bd6c8f89eac0f20cb6f98c1d97cb2c8f9b829f2217"
+        },
+        {
+          "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/scripts/contrast_checker.py",
+          "sha256": "7297629494559a6e07c7e6067b30f639df4290d9595faf5e261ecbf37d1a9030"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/SKILL.md",
+      "sha256": "c44cc6e4492dc42358482045c22516910cd30637818d582f9bdb68575c113fe1",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/auth_setup_guide.py",
+          "sha256": "44fe19f37d2d797e280928f19f43cca3ecf81697962672809a53dc9a9d47b5d8"
+        },
+        {
+          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/gws_doctor.py",
+          "sha256": "06a1c8f8b09111040c1bdb183504b4d192cffed444e058505ed53ccba49d9412"
+        },
+        {
+          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/gws_recipe_runner.py",
+          "sha256": "6f0eb43fbd14929898be6b6c11d673f38878e5392165721b74f77f1d6730e59d"
+        },
+        {
+          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/output_analyzer.py",
+          "sha256": "cc96c9b1346f7e9fbcc28e00bbc055681425a85a6c56b1dd8e8e637f0cdb8e66"
+        },
+        {
+          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/workspace_audit.py",
+          "sha256": "e7340e896835cf9592d01e83e8d883c84d6662b3f0177ea92c60cd09c94feb14"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/browserstack/SKILL.md",
+      "sha256": "f3240872b87c93e8757707c6c1ebaf9d8117ba17b05c70c7c3664e89e575deff",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/fix/SKILL.md",
+      "sha256": "1374297e8c327505bc7df63dd2e7390c6e205d1e1a613a0b7f4f07035bf373ff",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/generate/SKILL.md",
+      "sha256": "995f6cf365634ab96d9124203e8f9d9a05997dbbd89786f217cd7cade884d367",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/migrate/SKILL.md",
+      "sha256": "fe9cd99c045f095a4c1e9da88c835afdf00a4b4961c3c13cd7096c4687f2c059",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/pw-init/SKILL.md",
+      "sha256": "91975ef9bd3c00c9fe4f16e69b64b15183cc7f7d0576b5eda88821a381bc7d39",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/pw-review/SKILL.md",
+      "sha256": "442833f0bcde3221a7afaef58c19f87e345a8dbb247bc4357537aa458bbdb69a",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/pw/SKILL.md",
+      "sha256": "7267483b06508dff86259a42054ca658e03dd62e628b8158f1564dd35536bef2",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/report/SKILL.md",
+      "sha256": "d1ba6caafa62ec1f117cce2ad9abd132c7f54a702acba6fee581d9318a83bc3c",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/playwright-pro/skills/testrail/SKILL.md",
+      "sha256": "61be7f48b674e7058f490c7f59d8ab9dc98a375f74fdcb6934a6435a58ad1842",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/playwright-pro/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/skills/extract/SKILL.md",
+      "sha256": "eabdb4c6ffd2624a51108649623b29ccdc02d2b390305e65e2b7a981dc4d72dd",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/self-improving-agent/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/skills/memory-review/SKILL.md",
+      "sha256": "51caa5e982dff97a33b0c20ee63061425aca01e70e21bbfd41fa9915c183c6fd",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/self-improving-agent/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/skills/memory-status/SKILL.md",
+      "sha256": "76a903945568faba3146a5523654d1a606f297bb704dc3d283e00a2780e87bc0",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/self-improving-agent/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/skills/promote/SKILL.md",
+      "sha256": "ac90d59f83c7fcb4a3e63376d6546aa17f5d134f204bc08881a0f7fff4777ade",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/self-improving-agent/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/skills/remember/SKILL.md",
+      "sha256": "7d596b07a8791019c54bd9c32e4ac8116604971aecef3e3084ff4b78b54e9a3f",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/self-improving-agent/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/self-improving-agent/skills/self-improving-agent/SKILL.md",
+      "sha256": "c259260503478672ee829b7dcc1ef5d1937875db3e286e9bfda7013d235e7d60",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/engineering-team/self-improving-agent/LICENSE",
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/adversarial-reviewer/SKILL.md",
+      "sha256": "d69e917a7c84405a18b40bd6e41d5fae9aba966db903171028f86bb5c25f6f94",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/ai-security/SKILL.md",
+      "sha256": "dac7c1312e5433e02fb287ca476979468d9a21901ed0d0fd67a64a8239ac6287",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/ai-security/scripts/ai_threat_scanner.py",
+          "sha256": "8daccd1d8ffc35d8b6d18acffee5c7b3f80bdb3e7145c07ea9fed76312d43473"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/aws-solution-architect/SKILL.md",
+      "sha256": "4d5f067b82f3ea77d3ed6356eb18e6cda86126a2b36f9e53b7614bbc149e973c",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/aws-solution-architect/scripts/architecture_designer.py",
+          "sha256": "cdb9730d20093114d5ef0a541a9194bb861062d4af65557794a8e0fc608eadf9"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/aws-solution-architect/scripts/cost_optimizer.py",
+          "sha256": "a129693e7877817e8e8d1167a19637d9c7cfffc19c538a7cbe4e85ccba2a3aba"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/aws-solution-architect/scripts/serverless_stack.py",
+          "sha256": "4dc6f81f7fca1cbf62c0146e8f19efc3739e71b32f2092d36b8fea3dee9bc45e"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/azure-cloud-architect/SKILL.md",
+      "sha256": "d92c2d096b11cc10d2525f79bcaff3f75727968b84c24a629ef589082ad2a825",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/azure-cloud-architect/scripts/architecture_designer.py",
+          "sha256": "d6b386675fa6962c2c302bc6025f4359c5f9dfc7935038ad34313fb6ac4e912e"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/azure-cloud-architect/scripts/bicep_generator.py",
+          "sha256": "71209ebd1d5360729ae3a334190803004b394220d2c20cd47a57c4c00ea5a74b"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/azure-cloud-architect/scripts/cost_optimizer.py",
+          "sha256": "234328193e4e09e097df8ffe4e765675b270ef45cb5c8fb287e0a08f93711fe0"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/cloud-security/SKILL.md",
+      "sha256": "b21c8b13654e421a65784430df2c6bba90bddfdae87fe5000d4bae0c3cd1a7c5",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/cloud-security/scripts/cloud_posture_check.py",
+          "sha256": "81b1c5adc7083c0ffc1574e966441d8a0fe4434a3859a8bf667c9b6746376096"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/code-reviewer/SKILL.md",
+      "sha256": "28d80f6710369919e751679e588ba67db3fe5d11461a8f59c53fead2e119978a",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/code-reviewer/scripts/code_quality_checker.py",
+          "sha256": "df2f1be10fb9a0d8f7ab888e548897d6fd280b755136d38a0c9efc96eb07beb8"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/code-reviewer/scripts/pr_analyzer.py",
+          "sha256": "415b52a325901df8da716600dd7cb73f0b391641a07cbdc84f5b94caf9257fcd"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/code-reviewer/scripts/review_report_generator.py",
+          "sha256": "9507bf76ab19c18feac70746554e104a96f03cf51bf82c6c18cf7a53bedc7719"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/email-template-builder/SKILL.md",
+      "sha256": "e01efa4b96637071fede0bfbf3c3d178e5da7a1ee6ee35ab33cf1cfcb4589e69",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/embedded-iot-mentor/SKILL.md",
+      "sha256": "5f9a3c5d1b4ec322b36f0f2e9f01a5978935c669e416753309fec1dc2811c55e",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/engineering-skills/SKILL.md",
+      "sha256": "99c775af2aa507257a7dce7e3cb2b13c7976a20b04c8655f12d70cad40eaa132",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/epic-design/SKILL.md",
+      "sha256": "f5f7c9f9edd5d6b469dbfff28cece10202588c69def3fe5be3c797ebfda37142",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/epic-design/scripts/inspect-assets.py",
+          "sha256": "4594b4279ca984c7ed710c90818988feeb7bc38799e06fcd26aa821b9efaf7f7"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/SKILL.md",
+      "sha256": "5ea03c02ce083de1a846a843213bf18da03e2bd335af71e50a7807fb05e84c7d",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/scripts/architecture_designer.py",
+          "sha256": "a91303b152cd69cdd6a97f8c2ae87b8911b99cdc2ff0c4e70d5604b0c6dd4f8a"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/scripts/cost_optimizer.py",
+          "sha256": "12eb9422f4d1758827da9f27173c37eb9b5c7818948bca4cebe4b7ad7f532ce0"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/scripts/deployment_manager.py",
+          "sha256": "5aa7a20e09f38edf0e2411a2c1daa8b06f4d0515d0983475c021165377717fec"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/incident-commander/SKILL.md",
+      "sha256": "b7f8d0442f1c7379f67dc3089b105a3f7b668eed76beff623bc59f795d2642a4",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/incident-commander/scripts/incident_classifier.py",
+          "sha256": "d94bf849a3c68f7f59b872e4436221743f4be31c9dac3c1a0ebe0d9447edbbbd"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/incident-commander/scripts/pir_generator.py",
+          "sha256": "3b42b0051bf88f3b5e2a54cae37b796bec7db23c875ffdde2f6393aa4ffcb949"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/incident-commander/scripts/timeline_reconstructor.py",
+          "sha256": "85537391a3fce47e5db96fb45fe4e50e2e97cf26cdcd8b1b12b6b7de7f9b4d24"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/incident-response/SKILL.md",
+      "sha256": "6ae60c0ff441d76e1621c41fc1bee320728cc9e852df37c12d7468abc840abb7",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/incident-response/scripts/incident_triage.py",
+          "sha256": "6439647478bf6bcc302b10aaf05026bc3e0b18e77e213333709fffe2b221e9f0"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/SKILL.md",
+      "sha256": "4a2ac8effcaa94b5d610232c1b57e9c2d2f89a6e339a21f5885bcbc14da9948f",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/scripts/powershell_generator.py",
+          "sha256": "1ef0da1ab87b62ead84ff3c3b3a3f8f162076d03566ed0c92a12a6a1a420bd67"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/scripts/tenant_setup.py",
+          "sha256": "36d66139f7a7eb50c0a10df7da6438b8316a7e4d753095d28f52ac0cc0f8c590"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/scripts/user_management.py",
+          "sha256": "ba5004e71b91db7937f5ccfc493d44795ccfc356783ad4967ec5b437a4dc1c02"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/named-persona-adversarial-review/SKILL.md",
+      "sha256": "192af7fe0359f52fc2a02b7f3b829e425a4ae16bf4e0c256fda3b792de5843a6",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/red-team/SKILL.md",
+      "sha256": "86c488d786387de64bb99036ba6091a1179c73258997093e2fede45abd5bb292",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/red-team/scripts/engagement_planner.py",
+          "sha256": "63b03fe8168f621c28d7dccf8ad049aeabd9498ed52b7141c5419dfe1f757dd8"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/security-pen-testing/SKILL.md",
+      "sha256": "7fa4287746fd751ad144750817181efe55062963d778947d4b27bac1666efff7",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/security-pen-testing/scripts/dependency_auditor.py",
+          "sha256": "9f7f48173fc20a464e314eae62ebb9c2fceed17715e980582def25d972d38cf0"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/security-pen-testing/scripts/pentest_report_generator.py",
+          "sha256": "14d8cabbfadf30305c46baa1cc0e974b137270a58451a395739b013fde74a3a9"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/security-pen-testing/scripts/vulnerability_scanner.py",
+          "sha256": "cbea336b58ee9453cf227d8dbf75d95cabd9ead2d2bc602bc928a5424fab7b14"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-architect/SKILL.md",
+      "sha256": "559d402c361591423b22de37485ad3900b3aba8c437bed1ebf70aa4e828e0e22",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-architect/scripts/architecture_diagram_generator.py",
+          "sha256": "53b8b0c24065f34b4f21ce15eaf551679670bf5d9e4f4d201c3253e0fabd7b2b"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-architect/scripts/dependency_analyzer.py",
+          "sha256": "bce84d2dd0a2b6d6034356f01c30ee5fec51a1fa13e7c617bde53eb1d61c2145"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-architect/scripts/project_architect.py",
+          "sha256": "f421cd71f7ee790e292c44a29656b9b3f38bc93126a894e2faf2fed6f8aa1aab"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-backend/SKILL.md",
+      "sha256": "4f1ae6929b9cb723bdf63c27aa2147ca36c7b028a8ab1d6d622f09c0a061f672",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/api_load_tester.py",
+          "sha256": "429219d20569865d75d2d460f031181c6f82fbe43f44fb71be30f33f9eb08e12"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/api_scaffolder.py",
+          "sha256": "fa51e3fdd9982497a2371bb3dae215b27715434ff2d21fddddca50b9f19db40a"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/backend_decision_engine.py",
+          "sha256": "79e9607c455ef2eea44cff4c5c38d4fd24b1510fb7c43e7a7d7d4587eed42c43"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/database_migration_tool.py",
+          "sha256": "b483e4dfdc8694b31aa8672e8129bfa300297afb8be7a97444f40fc79382c3fc"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-computer-vision/SKILL.md",
+      "sha256": "af273171f5e786e0d80a306fdb039e60d264f47633fb61a6cce2ca14ac5bf531",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-computer-vision/scripts/dataset_pipeline_builder.py",
+          "sha256": "95240f9e033a43a7b3c8779820c0e13d379c617ede527890c5ba8fc19fcabd65"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-computer-vision/scripts/inference_optimizer.py",
+          "sha256": "90c545e049f11684d77764f21e2525b8bfd61482872a5858e42762cbc7ca9415"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-computer-vision/scripts/vision_model_trainer.py",
+          "sha256": "a48d6b7e117610da98a2a0c6e43a05e6636b9f50e4ce4246dfbed2360cce6b8b"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-data-engineer/SKILL.md",
+      "sha256": "20495d2ee96a7b5a6d7026713f254f274682438997dd44933b7bca1882a1dae2",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-data-engineer/scripts/data_quality_validator.py",
+          "sha256": "2a1d1bc2c5f13692eeed3b35961338cc8e5ef38a2c4b1e3c062233931175ee4d"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-data-engineer/scripts/etl_performance_optimizer.py",
+          "sha256": "6359b714f17bc1538518f8764daa921f86d09fac297c733f6448771714b5e194"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-data-engineer/scripts/pipeline_orchestrator.py",
+          "sha256": "e3398fb1698ee68a345e4a8e8f03c134d2c4ab6f07c43e0658bb1b1c2e9c5db9"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-data-scientist/SKILL.md",
+      "sha256": "6d0418ae7e9f28d14b31b7850375e831355ab6275eff556afeccf06633a3299c",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-data-scientist/scripts/experiment_designer.py",
+          "sha256": "e086c9d66a67910d114c0831e16d6a658c712f11d5356b82f28687ba43de30fb"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-data-scientist/scripts/feature_engineering_pipeline.py",
+          "sha256": "706602f103fa3403196ceb0d110e91b56b039c0f21fc0302ebfc7856c1874168"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-data-scientist/scripts/model_evaluation_suite.py",
+          "sha256": "e7ce48ead1011fcf20f1cbed140061914ddc76b9ecf022101630bbec816fcc39"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-devops/SKILL.md",
+      "sha256": "6eaeee798f2ffc82496c5d8dffb9a111a98e911284daa6886be3107a41917979",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-devops/scripts/deployment_manager.py",
+          "sha256": "52cdb3351662c2f825c25f390c8c0789bb376fe9a52521c74861fc70517bf04e"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-devops/scripts/pipeline_generator.py",
+          "sha256": "2ec7d46a05de6390aaf73554f0cf5301b63d013760904c541c4629bf75ed5fe7"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-devops/scripts/terraform_scaffolder.py",
+          "sha256": "01cb6c2b26664ee6292d1f00b65cc82f8655e31daf37033c534d2f2aeaeae153"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-frontend/SKILL.md",
+      "sha256": "886e83d1713b473f01091954683d7f008cefd1100d32114ccaf85368fb67a9a5",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/bundle_analyzer.py",
+          "sha256": "5e0e48a17b216094c219df1abd29ef3b4a1ef0f727179dfb7d003f2777ed9f95"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/component_generator.py",
+          "sha256": "b4f579b7086f4c327cd944b3a4b6ae25390a1de2059ed62948424b602ce5296f"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/frontend_decision_engine.py",
+          "sha256": "0b8bfecd5f3b3cc9f00df508466ec38386d31d629173fea15ee6ae8a0d77882e"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/frontend_scaffolder.py",
+          "sha256": "8caba4f9cf007e4cf9ec0e48c1f968e56454f3a5853e2c8b8a0575517b1e97fe"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-fullstack/SKILL.md",
+      "sha256": "fa3567f3bd96e76803a0125d8e949937a0a477f292c675920d43abcb7c2a84c5",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-fullstack/scripts/code_quality_analyzer.py",
+          "sha256": "639f06b86f78192c3a03923762332ea868766d0309291ae73211faddd301be1d"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-fullstack/scripts/fullstack_decision_engine.py",
+          "sha256": "674817fcfb9746c10e8832c35b9e25e4dad515da4068b04867faffb1010da712"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-fullstack/scripts/project_scaffolder.py",
+          "sha256": "fd58c86d4d10898840017651110c146a215f82442c48d25508bb7dc29bbeca22"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-ml-engineer/SKILL.md",
+      "sha256": "78756b7e74b3e024d56c8d631ca40d6cbfd655ec5d98a9cbe19afff2617fc856",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-ml-engineer/scripts/ml_monitoring_suite.py",
+          "sha256": "149446725afa9280d42531f9306528aacb235271b8aaabc59c6201d328ba6c56"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-ml-engineer/scripts/model_deployment_pipeline.py",
+          "sha256": "07a2d39de49d0c695f951510996205af95161d8def0ce26d70b660164539a734"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-ml-engineer/scripts/rag_system_builder.py",
+          "sha256": "cdd6c6a1acdfa564fbff4bc7391fd4e8669f8c30657582918e5e8dfe50fcf6e2"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/SKILL.md",
+      "sha256": "bbf9324400a094eef1a92b076d3e2bd2303bc2962db4dd59157adcc827f7e7ef",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/scripts/agent_orchestrator.py",
+          "sha256": "5db98fffb31dfa384a20981e6ad1a7938607194cfd3b49169e47808805c9cffe"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/scripts/prompt_optimizer.py",
+          "sha256": "cbf0beead6af85424ce3f750a12110f56b06b2996713fc7f0d2aaa12b72c6eab"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/scripts/rag_evaluator.py",
+          "sha256": "bf4593989f2b805221d421d5f4f3dfe843a90d5bbad997a05e28777469e87089"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-qa/SKILL.md",
+      "sha256": "a67b326aa3dccd186b2d076f7e01a2ce5775537c643bba819f759743d2b6678c",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-qa/scripts/coverage_analyzer.py",
+          "sha256": "b7aa779998de2af639214b042a5874b22ce08cd639cdde414923eba2f5c5c169"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-qa/scripts/e2e_test_scaffolder.py",
+          "sha256": "d20b6de521ae73803b062a80d98c582ec6d0f735b69ba52c28d1f22d7910b6b1"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-qa/scripts/test_suite_generator.py",
+          "sha256": "18c00839fb053623817962bcf64244deab72c8dcce720f01e378a918755b7754"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-secops/SKILL.md",
+      "sha256": "49e933139a7ce3fe02e7ae1e6d59f2fdf947afeabcee125a8e2c4cda7b575bd9",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-secops/scripts/compliance_checker.py",
+          "sha256": "1992ca50b0b94677b085c8e453392d3066243f458d03819b8009282a54866abb"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-secops/scripts/security_scanner.py",
+          "sha256": "522fd8cc74e8473e5556257e29566387f3973a7b1e2b2331e91dc50a39e8d11a"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-secops/scripts/vulnerability_assessor.py",
+          "sha256": "93e17821b26dec7852dedafeb00c6b2448ee342c4593ed92b76b9b20078e9eda"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/senior-security/SKILL.md",
+      "sha256": "454188e4f0188d3e0219f58c70dc666e0a9e98383d53a7437a027b13db68643a",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/senior-security/scripts/secret_scanner.py",
+          "sha256": "cf8550a30b109ea624ac0b95282d915df386d53c69ac552d507a923e7a0232fd"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/senior-security/scripts/threat_modeler.py",
+          "sha256": "4f135ff662f63f12953657c306413134ce764d1ad73029b211ffc4704ae0d0c8"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/stripe-integration-expert/SKILL.md",
+      "sha256": "a2466d6e1d3d08a1da1ab558e93747758ec5d1ecba1730fb0c41aa65adaafacb",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/tdd-guide/SKILL.md",
+      "sha256": "b12e75f376db6a72d0f5a9971c720c04546d02f0ecf68f40fd0efde22e46aa6d",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/coverage_analyzer.py",
+          "sha256": "1da0290c739634b4da7f6e1515e5e11bc70cb9060cc67dde4c2c50b6777fd5e4"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/fixture_generator.py",
+          "sha256": "8ee81d35b6a72fc768038e30c0ef7b997c57165b5c428ef45b9aef1cd9fc5f0a"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/format_detector.py",
+          "sha256": "a12f1d016967fc0a8a3b3f68b28a172494c33c9252d72d662c7a37f765a6692d"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/framework_adapter.py",
+          "sha256": "03a189d01310f04cb025bb9498ecd6bdc7d16eef119e992ff513774939299c58"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/metrics_calculator.py",
+          "sha256": "8080b0daa70cb38114cf7937e3e8f942cef99b81db3fdd786e1ca44350bd57a8"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/output_formatter.py",
+          "sha256": "e92a7559ae39c9b144a55b2dfaf6f14d9137a7e37aa9ee07adaf7c4c346b21fd"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/tdd_workflow.py",
+          "sha256": "5048dda42125f9c95cd49dbf67816f5bc635fee0cc5938a74a4d1b59361f9095"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/test_generator.py",
+          "sha256": "6ec26f0f29339ab23f0ff65fd140eaec143751759c7ddf360ada988059959346"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/SKILL.md",
+      "sha256": "4bc1f2b465bc3bd4a41137a366f597b467c139c553c15965da84232c62ab9790",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/ecosystem_analyzer.py",
+          "sha256": "4b6ff3c0f6e29d1c1edc1886abff98fbad8a70716a721af835356336bb1bf4e2"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/format_detector.py",
+          "sha256": "0df7dc8fd5dfe4ce8c4eb964d0c63f00590c20ebb1296419e9bc9997e149bced"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/migration_analyzer.py",
+          "sha256": "acdacce2d54ade06ae6230e19638d74c706d9c5e8620bbd42dce7c76dbbe7790"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/report_generator.py",
+          "sha256": "07e94126bd655bfe30a7fac7b46b4b6aca356aad75bf7d7f4e670feb362ccdd1"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/security_assessor.py",
+          "sha256": "0b498feeb302332978a2498c7a83de1a4b362eaba39ff598e07595e610359590"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/stack_comparator.py",
+          "sha256": "bd56d8776c5bbd6b7c7827b83facfbf26893ad28097febc5725fed45feae4cf4"
+        },
+        {
+          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/tco_calculator.py",
+          "sha256": "55221bb79cb06c7890074beb08b4d59a38e2c3d4835495de230446272e065677"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/skills/threat-detection/SKILL.md",
+      "sha256": "55d4170de0e6732f8c2a9cd62ab66753ad3f466550a3952830d9782fed081ab3",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/skills/threat-detection/scripts/threat_signal_analyzer.py",
+          "sha256": "2c97b6d871fa8e8a9b7332a5381f989131c6f023f79527b9844c6d6c09ffecf0"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/engineering-team/snowflake-development/skills/snowflake-development/SKILL.md",
+      "sha256": "5269d44cdc1e4589cde886eb592dc6c37873a6e41acff494ed8bf8e695a31a0d",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/engineering-team/snowflake-development/skills/snowflake-development/scripts/snowflake_query_helper.py",
+          "sha256": "a18a21939a282f0f44e8ac436de1e1030ee0ec45bc833ff2422de52aa7355982"
+        }
+      ],
       "execution": "disabled",
       "inputSchema": null,
       "outputSchema": null,
@@ -4389,1208 +5575,6 @@
       "validation": "inventory only; not certified safe or license-cleared"
     },
     {
-      "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/SKILL.md",
-      "sha256": "e1cbabce8168ea0cb18d44b49c754c7de2e2dc29f8560cb9c4631a89e8652e4e",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/scripts/a11y_scanner.py",
-          "sha256": "a641c73d02c58b38c51c00bd6c8f89eac0f20cb6f98c1d97cb2c8f9b829f2217"
-        },
-        {
-          "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/scripts/contrast_checker.py",
-          "sha256": "7297629494559a6e07c7e6067b30f639df4290d9595faf5e261ecbf37d1a9030"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/SKILL.md",
-      "sha256": "c44cc6e4492dc42358482045c22516910cd30637818d582f9bdb68575c113fe1",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/auth_setup_guide.py",
-          "sha256": "44fe19f37d2d797e280928f19f43cca3ecf81697962672809a53dc9a9d47b5d8"
-        },
-        {
-          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/gws_doctor.py",
-          "sha256": "06a1c8f8b09111040c1bdb183504b4d192cffed444e058505ed53ccba49d9412"
-        },
-        {
-          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/gws_recipe_runner.py",
-          "sha256": "6f0eb43fbd14929898be6b6c11d673f38878e5392165721b74f77f1d6730e59d"
-        },
-        {
-          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/output_analyzer.py",
-          "sha256": "cc96c9b1346f7e9fbcc28e00bbc055681425a85a6c56b1dd8e8e637f0cdb8e66"
-        },
-        {
-          "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/scripts/workspace_audit.py",
-          "sha256": "e7340e896835cf9592d01e83e8d883c84d6662b3f0177ea92c60cd09c94feb14"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/browserstack/SKILL.md",
-      "sha256": "f3240872b87c93e8757707c6c1ebaf9d8117ba17b05c70c7c3664e89e575deff",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/coverage/SKILL.md",
-      "sha256": "a3a5c9728f6df53f0eb13038f73a0ae0ee507d96a088eb396c443ed9251a4221",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/fix/SKILL.md",
-      "sha256": "1374297e8c327505bc7df63dd2e7390c6e205d1e1a613a0b7f4f07035bf373ff",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/generate/SKILL.md",
-      "sha256": "995f6cf365634ab96d9124203e8f9d9a05997dbbd89786f217cd7cade884d367",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/migrate/SKILL.md",
-      "sha256": "fe9cd99c045f095a4c1e9da88c835afdf00a4b4961c3c13cd7096c4687f2c059",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/pw/SKILL.md",
-      "sha256": "7267483b06508dff86259a42054ca658e03dd62e628b8158f1564dd35536bef2",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/pw-init/SKILL.md",
-      "sha256": "91975ef9bd3c00c9fe4f16e69b64b15183cc7f7d0576b5eda88821a381bc7d39",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/pw-review/SKILL.md",
-      "sha256": "442833f0bcde3221a7afaef58c19f87e345a8dbb247bc4357537aa458bbdb69a",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/report/SKILL.md",
-      "sha256": "d1ba6caafa62ec1f117cce2ad9abd132c7f54a702acba6fee581d9318a83bc3c",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/playwright-pro/skills/testrail/SKILL.md",
-      "sha256": "61be7f48b674e7058f490c7f59d8ab9dc98a375f74fdcb6934a6435a58ad1842",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/playwright-pro/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/skills/extract/SKILL.md",
-      "sha256": "eabdb4c6ffd2624a51108649623b29ccdc02d2b390305e65e2b7a981dc4d72dd",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/self-improving-agent/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/skills/memory-review/SKILL.md",
-      "sha256": "51caa5e982dff97a33b0c20ee63061425aca01e70e21bbfd41fa9915c183c6fd",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/self-improving-agent/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/skills/memory-status/SKILL.md",
-      "sha256": "76a903945568faba3146a5523654d1a606f297bb704dc3d283e00a2780e87bc0",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/self-improving-agent/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/skills/promote/SKILL.md",
-      "sha256": "ac90d59f83c7fcb4a3e63376d6546aa17f5d134f204bc08881a0f7fff4777ade",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/self-improving-agent/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/skills/remember/SKILL.md",
-      "sha256": "7d596b07a8791019c54bd9c32e4ac8116604971aecef3e3084ff4b78b54e9a3f",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/self-improving-agent/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/self-improving-agent/skills/self-improving-agent/SKILL.md",
-      "sha256": "c259260503478672ee829b7dcc1ef5d1937875db3e286e9bfda7013d235e7d60",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/engineering-team/self-improving-agent/LICENSE",
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/adversarial-reviewer/SKILL.md",
-      "sha256": "d69e917a7c84405a18b40bd6e41d5fae9aba966db903171028f86bb5c25f6f94",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/ai-security/SKILL.md",
-      "sha256": "dac7c1312e5433e02fb287ca476979468d9a21901ed0d0fd67a64a8239ac6287",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/ai-security/scripts/ai_threat_scanner.py",
-          "sha256": "8daccd1d8ffc35d8b6d18acffee5c7b3f80bdb3e7145c07ea9fed76312d43473"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/aws-solution-architect/SKILL.md",
-      "sha256": "4d5f067b82f3ea77d3ed6356eb18e6cda86126a2b36f9e53b7614bbc149e973c",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/aws-solution-architect/scripts/architecture_designer.py",
-          "sha256": "cdb9730d20093114d5ef0a541a9194bb861062d4af65557794a8e0fc608eadf9"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/aws-solution-architect/scripts/cost_optimizer.py",
-          "sha256": "a129693e7877817e8e8d1167a19637d9c7cfffc19c538a7cbe4e85ccba2a3aba"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/aws-solution-architect/scripts/serverless_stack.py",
-          "sha256": "4dc6f81f7fca1cbf62c0146e8f19efc3739e71b32f2092d36b8fea3dee9bc45e"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/azure-cloud-architect/SKILL.md",
-      "sha256": "d92c2d096b11cc10d2525f79bcaff3f75727968b84c24a629ef589082ad2a825",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/azure-cloud-architect/scripts/architecture_designer.py",
-          "sha256": "d6b386675fa6962c2c302bc6025f4359c5f9dfc7935038ad34313fb6ac4e912e"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/azure-cloud-architect/scripts/bicep_generator.py",
-          "sha256": "71209ebd1d5360729ae3a334190803004b394220d2c20cd47a57c4c00ea5a74b"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/azure-cloud-architect/scripts/cost_optimizer.py",
-          "sha256": "234328193e4e09e097df8ffe4e765675b270ef45cb5c8fb287e0a08f93711fe0"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/cloud-security/SKILL.md",
-      "sha256": "b21c8b13654e421a65784430df2c6bba90bddfdae87fe5000d4bae0c3cd1a7c5",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/cloud-security/scripts/cloud_posture_check.py",
-          "sha256": "81b1c5adc7083c0ffc1574e966441d8a0fe4434a3859a8bf667c9b6746376096"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/code-reviewer/SKILL.md",
-      "sha256": "28d80f6710369919e751679e588ba67db3fe5d11461a8f59c53fead2e119978a",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/code-reviewer/scripts/code_quality_checker.py",
-          "sha256": "df2f1be10fb9a0d8f7ab888e548897d6fd280b755136d38a0c9efc96eb07beb8"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/code-reviewer/scripts/pr_analyzer.py",
-          "sha256": "415b52a325901df8da716600dd7cb73f0b391641a07cbdc84f5b94caf9257fcd"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/code-reviewer/scripts/review_report_generator.py",
-          "sha256": "9507bf76ab19c18feac70746554e104a96f03cf51bf82c6c18cf7a53bedc7719"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/email-template-builder/SKILL.md",
-      "sha256": "e01efa4b96637071fede0bfbf3c3d178e5da7a1ee6ee35ab33cf1cfcb4589e69",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/embedded-iot-mentor/SKILL.md",
-      "sha256": "5f9a3c5d1b4ec322b36f0f2e9f01a5978935c669e416753309fec1dc2811c55e",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/engineering-skills/SKILL.md",
-      "sha256": "99c775af2aa507257a7dce7e3cb2b13c7976a20b04c8655f12d70cad40eaa132",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/epic-design/SKILL.md",
-      "sha256": "f5f7c9f9edd5d6b469dbfff28cece10202588c69def3fe5be3c797ebfda37142",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/epic-design/scripts/inspect-assets.py",
-          "sha256": "4594b4279ca984c7ed710c90818988feeb7bc38799e06fcd26aa821b9efaf7f7"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/SKILL.md",
-      "sha256": "5ea03c02ce083de1a846a843213bf18da03e2bd335af71e50a7807fb05e84c7d",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/scripts/architecture_designer.py",
-          "sha256": "a91303b152cd69cdd6a97f8c2ae87b8911b99cdc2ff0c4e70d5604b0c6dd4f8a"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/scripts/cost_optimizer.py",
-          "sha256": "12eb9422f4d1758827da9f27173c37eb9b5c7818948bca4cebe4b7ad7f532ce0"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/scripts/deployment_manager.py",
-          "sha256": "5aa7a20e09f38edf0e2411a2c1daa8b06f4d0515d0983475c021165377717fec"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/incident-commander/SKILL.md",
-      "sha256": "b7f8d0442f1c7379f67dc3089b105a3f7b668eed76beff623bc59f795d2642a4",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/incident-commander/scripts/incident_classifier.py",
-          "sha256": "d94bf849a3c68f7f59b872e4436221743f4be31c9dac3c1a0ebe0d9447edbbbd"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/incident-commander/scripts/pir_generator.py",
-          "sha256": "3b42b0051bf88f3b5e2a54cae37b796bec7db23c875ffdde2f6393aa4ffcb949"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/incident-commander/scripts/timeline_reconstructor.py",
-          "sha256": "85537391a3fce47e5db96fb45fe4e50e2e97cf26cdcd8b1b12b6b7de7f9b4d24"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/incident-response/SKILL.md",
-      "sha256": "6ae60c0ff441d76e1621c41fc1bee320728cc9e852df37c12d7468abc840abb7",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/incident-response/scripts/incident_triage.py",
-          "sha256": "6439647478bf6bcc302b10aaf05026bc3e0b18e77e213333709fffe2b221e9f0"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/SKILL.md",
-      "sha256": "4a2ac8effcaa94b5d610232c1b57e9c2d2f89a6e339a21f5885bcbc14da9948f",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/scripts/powershell_generator.py",
-          "sha256": "1ef0da1ab87b62ead84ff3c3b3a3f8f162076d03566ed0c92a12a6a1a420bd67"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/scripts/tenant_setup.py",
-          "sha256": "36d66139f7a7eb50c0a10df7da6438b8316a7e4d753095d28f52ac0cc0f8c590"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/scripts/user_management.py",
-          "sha256": "ba5004e71b91db7937f5ccfc493d44795ccfc356783ad4967ec5b437a4dc1c02"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/named-persona-adversarial-review/SKILL.md",
-      "sha256": "192af7fe0359f52fc2a02b7f3b829e425a4ae16bf4e0c256fda3b792de5843a6",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/red-team/SKILL.md",
-      "sha256": "86c488d786387de64bb99036ba6091a1179c73258997093e2fede45abd5bb292",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/red-team/scripts/engagement_planner.py",
-          "sha256": "63b03fe8168f621c28d7dccf8ad049aeabd9498ed52b7141c5419dfe1f757dd8"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/security-pen-testing/SKILL.md",
-      "sha256": "7fa4287746fd751ad144750817181efe55062963d778947d4b27bac1666efff7",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/security-pen-testing/scripts/dependency_auditor.py",
-          "sha256": "9f7f48173fc20a464e314eae62ebb9c2fceed17715e980582def25d972d38cf0"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/security-pen-testing/scripts/pentest_report_generator.py",
-          "sha256": "14d8cabbfadf30305c46baa1cc0e974b137270a58451a395739b013fde74a3a9"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/security-pen-testing/scripts/vulnerability_scanner.py",
-          "sha256": "cbea336b58ee9453cf227d8dbf75d95cabd9ead2d2bc602bc928a5424fab7b14"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-architect/SKILL.md",
-      "sha256": "559d402c361591423b22de37485ad3900b3aba8c437bed1ebf70aa4e828e0e22",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-architect/scripts/architecture_diagram_generator.py",
-          "sha256": "53b8b0c24065f34b4f21ce15eaf551679670bf5d9e4f4d201c3253e0fabd7b2b"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-architect/scripts/dependency_analyzer.py",
-          "sha256": "bce84d2dd0a2b6d6034356f01c30ee5fec51a1fa13e7c617bde53eb1d61c2145"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-architect/scripts/project_architect.py",
-          "sha256": "f421cd71f7ee790e292c44a29656b9b3f38bc93126a894e2faf2fed6f8aa1aab"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-backend/SKILL.md",
-      "sha256": "4f1ae6929b9cb723bdf63c27aa2147ca36c7b028a8ab1d6d622f09c0a061f672",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/api_load_tester.py",
-          "sha256": "429219d20569865d75d2d460f031181c6f82fbe43f44fb71be30f33f9eb08e12"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/api_scaffolder.py",
-          "sha256": "fa51e3fdd9982497a2371bb3dae215b27715434ff2d21fddddca50b9f19db40a"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/backend_decision_engine.py",
-          "sha256": "79e9607c455ef2eea44cff4c5c38d4fd24b1510fb7c43e7a7d7d4587eed42c43"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-backend/scripts/database_migration_tool.py",
-          "sha256": "b483e4dfdc8694b31aa8672e8129bfa300297afb8be7a97444f40fc79382c3fc"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-computer-vision/SKILL.md",
-      "sha256": "af273171f5e786e0d80a306fdb039e60d264f47633fb61a6cce2ca14ac5bf531",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-computer-vision/scripts/dataset_pipeline_builder.py",
-          "sha256": "95240f9e033a43a7b3c8779820c0e13d379c617ede527890c5ba8fc19fcabd65"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-computer-vision/scripts/inference_optimizer.py",
-          "sha256": "90c545e049f11684d77764f21e2525b8bfd61482872a5858e42762cbc7ca9415"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-computer-vision/scripts/vision_model_trainer.py",
-          "sha256": "a48d6b7e117610da98a2a0c6e43a05e6636b9f50e4ce4246dfbed2360cce6b8b"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-data-engineer/SKILL.md",
-      "sha256": "20495d2ee96a7b5a6d7026713f254f274682438997dd44933b7bca1882a1dae2",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-data-engineer/scripts/data_quality_validator.py",
-          "sha256": "2a1d1bc2c5f13692eeed3b35961338cc8e5ef38a2c4b1e3c062233931175ee4d"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-data-engineer/scripts/etl_performance_optimizer.py",
-          "sha256": "6359b714f17bc1538518f8764daa921f86d09fac297c733f6448771714b5e194"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-data-engineer/scripts/pipeline_orchestrator.py",
-          "sha256": "e3398fb1698ee68a345e4a8e8f03c134d2c4ab6f07c43e0658bb1b1c2e9c5db9"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-data-scientist/SKILL.md",
-      "sha256": "6d0418ae7e9f28d14b31b7850375e831355ab6275eff556afeccf06633a3299c",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-data-scientist/scripts/experiment_designer.py",
-          "sha256": "e086c9d66a67910d114c0831e16d6a658c712f11d5356b82f28687ba43de30fb"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-data-scientist/scripts/feature_engineering_pipeline.py",
-          "sha256": "706602f103fa3403196ceb0d110e91b56b039c0f21fc0302ebfc7856c1874168"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-data-scientist/scripts/model_evaluation_suite.py",
-          "sha256": "e7ce48ead1011fcf20f1cbed140061914ddc76b9ecf022101630bbec816fcc39"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-devops/SKILL.md",
-      "sha256": "6eaeee798f2ffc82496c5d8dffb9a111a98e911284daa6886be3107a41917979",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-devops/scripts/deployment_manager.py",
-          "sha256": "52cdb3351662c2f825c25f390c8c0789bb376fe9a52521c74861fc70517bf04e"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-devops/scripts/pipeline_generator.py",
-          "sha256": "2ec7d46a05de6390aaf73554f0cf5301b63d013760904c541c4629bf75ed5fe7"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-devops/scripts/terraform_scaffolder.py",
-          "sha256": "01cb6c2b26664ee6292d1f00b65cc82f8655e31daf37033c534d2f2aeaeae153"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-frontend/SKILL.md",
-      "sha256": "886e83d1713b473f01091954683d7f008cefd1100d32114ccaf85368fb67a9a5",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/bundle_analyzer.py",
-          "sha256": "5e0e48a17b216094c219df1abd29ef3b4a1ef0f727179dfb7d003f2777ed9f95"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/component_generator.py",
-          "sha256": "b4f579b7086f4c327cd944b3a4b6ae25390a1de2059ed62948424b602ce5296f"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/frontend_decision_engine.py",
-          "sha256": "0b8bfecd5f3b3cc9f00df508466ec38386d31d629173fea15ee6ae8a0d77882e"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-frontend/scripts/frontend_scaffolder.py",
-          "sha256": "8caba4f9cf007e4cf9ec0e48c1f968e56454f3a5853e2c8b8a0575517b1e97fe"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-fullstack/SKILL.md",
-      "sha256": "fa3567f3bd96e76803a0125d8e949937a0a477f292c675920d43abcb7c2a84c5",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-fullstack/scripts/code_quality_analyzer.py",
-          "sha256": "639f06b86f78192c3a03923762332ea868766d0309291ae73211faddd301be1d"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-fullstack/scripts/fullstack_decision_engine.py",
-          "sha256": "674817fcfb9746c10e8832c35b9e25e4dad515da4068b04867faffb1010da712"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-fullstack/scripts/project_scaffolder.py",
-          "sha256": "fd58c86d4d10898840017651110c146a215f82442c48d25508bb7dc29bbeca22"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-ml-engineer/SKILL.md",
-      "sha256": "78756b7e74b3e024d56c8d631ca40d6cbfd655ec5d98a9cbe19afff2617fc856",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-ml-engineer/scripts/ml_monitoring_suite.py",
-          "sha256": "149446725afa9280d42531f9306528aacb235271b8aaabc59c6201d328ba6c56"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-ml-engineer/scripts/model_deployment_pipeline.py",
-          "sha256": "07a2d39de49d0c695f951510996205af95161d8def0ce26d70b660164539a734"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-ml-engineer/scripts/rag_system_builder.py",
-          "sha256": "cdd6c6a1acdfa564fbff4bc7391fd4e8669f8c30657582918e5e8dfe50fcf6e2"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/SKILL.md",
-      "sha256": "bbf9324400a094eef1a92b076d3e2bd2303bc2962db4dd59157adcc827f7e7ef",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/scripts/agent_orchestrator.py",
-          "sha256": "5db98fffb31dfa384a20981e6ad1a7938607194cfd3b49169e47808805c9cffe"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/scripts/prompt_optimizer.py",
-          "sha256": "cbf0beead6af85424ce3f750a12110f56b06b2996713fc7f0d2aaa12b72c6eab"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/scripts/rag_evaluator.py",
-          "sha256": "bf4593989f2b805221d421d5f4f3dfe843a90d5bbad997a05e28777469e87089"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-qa/SKILL.md",
-      "sha256": "a67b326aa3dccd186b2d076f7e01a2ce5775537c643bba819f759743d2b6678c",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-qa/scripts/coverage_analyzer.py",
-          "sha256": "b7aa779998de2af639214b042a5874b22ce08cd639cdde414923eba2f5c5c169"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-qa/scripts/e2e_test_scaffolder.py",
-          "sha256": "d20b6de521ae73803b062a80d98c582ec6d0f735b69ba52c28d1f22d7910b6b1"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-qa/scripts/test_suite_generator.py",
-          "sha256": "18c00839fb053623817962bcf64244deab72c8dcce720f01e378a918755b7754"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-secops/SKILL.md",
-      "sha256": "49e933139a7ce3fe02e7ae1e6d59f2fdf947afeabcee125a8e2c4cda7b575bd9",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-secops/scripts/compliance_checker.py",
-          "sha256": "1992ca50b0b94677b085c8e453392d3066243f458d03819b8009282a54866abb"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-secops/scripts/security_scanner.py",
-          "sha256": "522fd8cc74e8473e5556257e29566387f3973a7b1e2b2331e91dc50a39e8d11a"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-secops/scripts/vulnerability_assessor.py",
-          "sha256": "93e17821b26dec7852dedafeb00c6b2448ee342c4593ed92b76b9b20078e9eda"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/senior-security/SKILL.md",
-      "sha256": "454188e4f0188d3e0219f58c70dc666e0a9e98383d53a7437a027b13db68643a",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/senior-security/scripts/secret_scanner.py",
-          "sha256": "cf8550a30b109ea624ac0b95282d915df386d53c69ac552d507a923e7a0232fd"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/senior-security/scripts/threat_modeler.py",
-          "sha256": "4f135ff662f63f12953657c306413134ce764d1ad73029b211ffc4704ae0d0c8"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/stripe-integration-expert/SKILL.md",
-      "sha256": "a2466d6e1d3d08a1da1ab558e93747758ec5d1ecba1730fb0c41aa65adaafacb",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/tdd-guide/SKILL.md",
-      "sha256": "b12e75f376db6a72d0f5a9971c720c04546d02f0ecf68f40fd0efde22e46aa6d",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/coverage_analyzer.py",
-          "sha256": "1da0290c739634b4da7f6e1515e5e11bc70cb9060cc67dde4c2c50b6777fd5e4"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/fixture_generator.py",
-          "sha256": "8ee81d35b6a72fc768038e30c0ef7b997c57165b5c428ef45b9aef1cd9fc5f0a"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/format_detector.py",
-          "sha256": "a12f1d016967fc0a8a3b3f68b28a172494c33c9252d72d662c7a37f765a6692d"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/framework_adapter.py",
-          "sha256": "03a189d01310f04cb025bb9498ecd6bdc7d16eef119e992ff513774939299c58"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/metrics_calculator.py",
-          "sha256": "8080b0daa70cb38114cf7937e3e8f942cef99b81db3fdd786e1ca44350bd57a8"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/output_formatter.py",
-          "sha256": "e92a7559ae39c9b144a55b2dfaf6f14d9137a7e37aa9ee07adaf7c4c346b21fd"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/tdd_workflow.py",
-          "sha256": "5048dda42125f9c95cd49dbf67816f5bc635fee0cc5938a74a4d1b59361f9095"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tdd-guide/scripts/test_generator.py",
-          "sha256": "6ec26f0f29339ab23f0ff65fd140eaec143751759c7ddf360ada988059959346"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/SKILL.md",
-      "sha256": "4bc1f2b465bc3bd4a41137a366f597b467c139c553c15965da84232c62ab9790",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/ecosystem_analyzer.py",
-          "sha256": "4b6ff3c0f6e29d1c1edc1886abff98fbad8a70716a721af835356336bb1bf4e2"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/format_detector.py",
-          "sha256": "0df7dc8fd5dfe4ce8c4eb964d0c63f00590c20ebb1296419e9bc9997e149bced"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/migration_analyzer.py",
-          "sha256": "acdacce2d54ade06ae6230e19638d74c706d9c5e8620bbd42dce7c76dbbe7790"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/report_generator.py",
-          "sha256": "07e94126bd655bfe30a7fac7b46b4b6aca356aad75bf7d7f4e670feb362ccdd1"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/security_assessor.py",
-          "sha256": "0b498feeb302332978a2498c7a83de1a4b362eaba39ff598e07595e610359590"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/stack_comparator.py",
-          "sha256": "bd56d8776c5bbd6b7c7827b83facfbf26893ad28097febc5725fed45feae4cf4"
-        },
-        {
-          "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/scripts/tco_calculator.py",
-          "sha256": "55221bb79cb06c7890074beb08b4d59a38e2c3d4835495de230446272e065677"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/skills/threat-detection/SKILL.md",
-      "sha256": "55d4170de0e6732f8c2a9cd62ab66753ad3f466550a3952830d9782fed081ab3",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/skills/threat-detection/scripts/threat_signal_analyzer.py",
-          "sha256": "2c97b6d871fa8e8a9b7332a5381f989131c6f023f79527b9844c6d6c09ffecf0"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/engineering-team/snowflake-development/skills/snowflake-development/SKILL.md",
-      "sha256": "5269d44cdc1e4589cde886eb592dc6c37873a6e41acff494ed8bf8e695a31a0d",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/engineering-team/snowflake-development/skills/snowflake-development/scripts/snowflake_query_helper.py",
-          "sha256": "a18a21939a282f0f44e8ac436de1e1030ee0ec45bc833ff2422de52aa7355982"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
       "path": "claude-skills/finance/business-investment-advisor/skills/business-investment-advisor/SKILL.md",
       "sha256": "8d3c386f999900cdce3c9f28f8639c6365b659b01ebdeca9ee06c58cdb1b0745",
       "origin": "vendored claude-skills; consult original file and notices",
@@ -5864,198 +5848,6 @@
         {
           "path": "claude-skills/markdown-html/skills/md-slides/scripts/slide_splitter.py",
           "sha256": "089f26a5d87ab9b988288b5994847992dad433afb2177490b7e1406debda05d0"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/landing/skills/landing/SKILL.md",
-      "sha256": "74e1d9266012254c6481c8702e9cc43662d037d05161772f06e39b4883436b47",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/landing/skills/landing/scripts/brand_palette_validator.py",
-          "sha256": "b3ae7e208ef68739786478521289b2263d1365cc993d33dd508a1e76b5eb3756"
-        },
-        {
-          "path": "claude-skills/marketing/landing/skills/landing/scripts/html_validator.py",
-          "sha256": "72d67466d41b49a8aaffeeda4e5cfb2454a6085de4f05229dc87e6a5e03572c2"
-        },
-        {
-          "path": "claude-skills/marketing/landing/skills/landing/scripts/kebab_slug_generator.py",
-          "sha256": "b112dc5658be4d363d5d3fe6acc709108aad5222ddbea2acfb07180a2c733267"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/SKILL.md",
-      "sha256": "fd5c6cbb99c1215a4c5b87555208477494732fb4c0f46b62156162399596caa3",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/scripts/experiment_planner.py",
-          "sha256": "e9d2f8f8c444bda54adf5525c8790072ac512463923ff3242b51760f078be63d"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/scripts/pattern_miner.py",
-          "sha256": "1097fc359bdd611c107a2f3dbf03e92bf383f932aeb8cd87d98ead5367b83397"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/scripts/post_performance_analyzer.py",
-          "sha256": "05cdd13660bcf7bd33a033f88477a799af98ded983ad371987c92adb9e401ce2"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/linkedin/skills/linkedin-content/SKILL.md",
-      "sha256": "7e78b602667dcf4f75499dedb440d380f93765589981073da6291fb432b0f20e",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-content/scripts/format_picker.py",
-          "sha256": "114bfad33c7ddd87cb1f308adb0ed89ac9695798b198dfae0e39b74d5f23f3df"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-content/scripts/post_linter.py",
-          "sha256": "e873e9521b7563b521451e1d03fdfe76f3707dec8e33f4702a558f4f901bd4f6"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-content/scripts/repurpose_splitter.py",
-          "sha256": "a2d70e80fef4233f06f8de006d5f991dd3452ad81459610f1335fca183d66a81"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/SKILL.md",
-      "sha256": "6203dedcb7d1f594e5f3d836aa38062caf48c09d31487c814d2cb7c0ad0622d3",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/scripts/comment_target_planner.py",
-          "sha256": "c4b8c8778d07147c6579ac704407ce603ff257d30535c5b3ff3bc46465e54949"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/scripts/outreach_message_builder.py",
-          "sha256": "60ed48e3c07d2835be6567e561da219c1d9661d2877b1e89d8cd53ef9e39ad1c"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/scripts/outreach_volume_guard.py",
-          "sha256": "3f96d30e837c07dc79d2b363738d34dbe1f69c48242015fb92d9f1d071a5177b"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/SKILL.md",
-      "sha256": "c390751661ca290893bac1994926c4739322f192167015cbd0e20fa26c74da96",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/scripts/about_section_builder.py",
-          "sha256": "4fbe14dae816acb2a36a004e16a2aef9545ab5a0bfb6429250de3a308e296bb6"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/scripts/headline_scorer.py",
-          "sha256": "c58cd9d69d249edc541a41efded57fee97ededb43121de666158dcd779337139"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/scripts/profile_completeness_auditor.py",
-          "sha256": "5f8f33bcdd2196718fa3655f08c6fb633643bd7d5db201368f893858e268f0cd"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/SKILL.md",
-      "sha256": "9b162dfd610689c9e046a1734ca0f905a86cd777f1856f8b2cb753480097c86b",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/scripts/linkedin_goal_router.py",
-          "sha256": "fa58669fe13b4e05a6e3dd31e353d974cb4acf5079116dc568556342d98fbb40"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/scripts/linkedin_policy_gate.py",
-          "sha256": "7a0c3956d8b52257cc8f343227009341b01fe034d130357e3917dc90a1c66c8a"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/SKILL.md",
-      "sha256": "9e1c5c934a85142ed6b791f5bfb55ee0d2ad9852fe31f7fd83a36215ab15e72e",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/scripts/cadence_planner.py",
-          "sha256": "a2e5f94d361a46498d8a9da7894dbc6e25af8f80921ca8e191969b6f2b4528d2"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/scripts/newsletter_planner.py",
-          "sha256": "c0ae9ddfb07aa0f9c5218cc8fe4374253cbe38fb3e25abb7af1b8f37df8dbbe3"
-        },
-        {
-          "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/scripts/positioning_brief.py",
-          "sha256": "ec2d6ccaa8defa8e55b51c6e2174a22a6c43e647e2a1945b25151f28d2c0a7d2"
         }
       ],
       "execution": "disabled",
@@ -7078,6 +6870,198 @@
         "claude-skills/LICENSE"
       ],
       "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/landing/skills/landing/SKILL.md",
+      "sha256": "74e1d9266012254c6481c8702e9cc43662d037d05161772f06e39b4883436b47",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/landing/skills/landing/scripts/brand_palette_validator.py",
+          "sha256": "b3ae7e208ef68739786478521289b2263d1365cc993d33dd508a1e76b5eb3756"
+        },
+        {
+          "path": "claude-skills/marketing/landing/skills/landing/scripts/html_validator.py",
+          "sha256": "72d67466d41b49a8aaffeeda4e5cfb2454a6085de4f05229dc87e6a5e03572c2"
+        },
+        {
+          "path": "claude-skills/marketing/landing/skills/landing/scripts/kebab_slug_generator.py",
+          "sha256": "b112dc5658be4d363d5d3fe6acc709108aad5222ddbea2acfb07180a2c733267"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/SKILL.md",
+      "sha256": "fd5c6cbb99c1215a4c5b87555208477494732fb4c0f46b62156162399596caa3",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/scripts/experiment_planner.py",
+          "sha256": "e9d2f8f8c444bda54adf5525c8790072ac512463923ff3242b51760f078be63d"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/scripts/pattern_miner.py",
+          "sha256": "1097fc359bdd611c107a2f3dbf03e92bf383f932aeb8cd87d98ead5367b83397"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/scripts/post_performance_analyzer.py",
+          "sha256": "05cdd13660bcf7bd33a033f88477a799af98ded983ad371987c92adb9e401ce2"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/linkedin/skills/linkedin-content/SKILL.md",
+      "sha256": "7e78b602667dcf4f75499dedb440d380f93765589981073da6291fb432b0f20e",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-content/scripts/format_picker.py",
+          "sha256": "114bfad33c7ddd87cb1f308adb0ed89ac9695798b198dfae0e39b74d5f23f3df"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-content/scripts/post_linter.py",
+          "sha256": "e873e9521b7563b521451e1d03fdfe76f3707dec8e33f4702a558f4f901bd4f6"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-content/scripts/repurpose_splitter.py",
+          "sha256": "a2d70e80fef4233f06f8de006d5f991dd3452ad81459610f1335fca183d66a81"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/SKILL.md",
+      "sha256": "6203dedcb7d1f594e5f3d836aa38062caf48c09d31487c814d2cb7c0ad0622d3",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/scripts/comment_target_planner.py",
+          "sha256": "c4b8c8778d07147c6579ac704407ce603ff257d30535c5b3ff3bc46465e54949"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/scripts/outreach_message_builder.py",
+          "sha256": "60ed48e3c07d2835be6567e561da219c1d9661d2877b1e89d8cd53ef9e39ad1c"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/scripts/outreach_volume_guard.py",
+          "sha256": "3f96d30e837c07dc79d2b363738d34dbe1f69c48242015fb92d9f1d071a5177b"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/SKILL.md",
+      "sha256": "c390751661ca290893bac1994926c4739322f192167015cbd0e20fa26c74da96",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/scripts/about_section_builder.py",
+          "sha256": "4fbe14dae816acb2a36a004e16a2aef9545ab5a0bfb6429250de3a308e296bb6"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/scripts/headline_scorer.py",
+          "sha256": "c58cd9d69d249edc541a41efded57fee97ededb43121de666158dcd779337139"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/scripts/profile_completeness_auditor.py",
+          "sha256": "5f8f33bcdd2196718fa3655f08c6fb633643bd7d5db201368f893858e268f0cd"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/SKILL.md",
+      "sha256": "9b162dfd610689c9e046a1734ca0f905a86cd777f1856f8b2cb753480097c86b",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/scripts/linkedin_goal_router.py",
+          "sha256": "fa58669fe13b4e05a6e3dd31e353d974cb4acf5079116dc568556342d98fbb40"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/scripts/linkedin_policy_gate.py",
+          "sha256": "7a0c3956d8b52257cc8f343227009341b01fe034d130357e3917dc90a1c66c8a"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/SKILL.md",
+      "sha256": "9e1c5c934a85142ed6b791f5bfb55ee0d2ad9852fe31f7fd83a36215ab15e72e",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/scripts/cadence_planner.py",
+          "sha256": "a2e5f94d361a46498d8a9da7894dbc6e25af8f80921ca8e191969b6f2b4528d2"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/scripts/newsletter_planner.py",
+          "sha256": "c0ae9ddfb07aa0f9c5218cc8fe4374253cbe38fb3e25abb7af1b8f37df8dbbe3"
+        },
+        {
+          "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/scripts/positioning_brief.py",
+          "sha256": "ec2d6ccaa8defa8e55b51c6e2174a22a6c43e647e2a1945b25151f28d2c0a7d2"
+        }
+      ],
       "execution": "disabled",
       "inputSchema": null,
       "outputSchema": null,
@@ -8433,6 +8417,181 @@
       "validation": "inventory only; not certified safe or license-cleared"
     },
     {
+      "path": "claude-skills/research-ops/skills/clinical-research/SKILL.md",
+      "sha256": "2ee6764353ca5dd7b2366557be898e4aea17c7223e0f9ac6799c9b21a0ef8041",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/research-ops/skills/clinical-research/scripts/ar_evaluator.py",
+          "sha256": "4b2c5a047f4db6cecc633c72f2e3d203adccf7a9d139448e432e6374af65a7f5"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/clinical-research/scripts/config_loader.py",
+          "sha256": "a11052365a00da34b26051ce07ed1119600210917b19197cd9ea1c60078c5ba1"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/clinical-research/scripts/endpoint_selector.py",
+          "sha256": "f203e064e5e37cb964828ba893e5396dc46cdd44d79b7646a9bc4c3ba9edd73d"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/clinical-research/scripts/onboard.py",
+          "sha256": "7032774a75be13046bd2f3e810b882e09b1d1f24f4535eacffb3889e6bf59a48"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/clinical-research/scripts/phase_gate_scorer.py",
+          "sha256": "3f030a4aeefec1a38a153542c73168ac3c5a2d859376a3aefc8feb7e80bc85a3"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/clinical-research/scripts/sample_size_estimator.py",
+          "sha256": "c755b9d65630cef753d02d0c9a6ceffcb5531951f910937aa9498750ddc7bff5"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/research-ops/skills/market-research/SKILL.md",
+      "sha256": "0e4037294f8e6bea1cb53de035eaa97bd2d74349d06f9b61d85f4420d7c084c9",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/research-ops/skills/market-research/scripts/ar_evaluator.py",
+          "sha256": "d6093aab293a3aba3e092969f96935499a47041f8801df99f191d48c979556c7"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/market-research/scripts/config_loader.py",
+          "sha256": "12479462255f27eef0cb45eb2a903d205849b35af58bd229e2876d11fa8cc9ae"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/market-research/scripts/market_sizer.py",
+          "sha256": "baad9dc0d2c144f47a24126c0781878b6a41a9e093d99420f605806a936cac6c"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/market-research/scripts/onboard.py",
+          "sha256": "1bdae366637fe6c76bc31942382a4b3222fd2ab2311d0d544a3e0b7f9c758330"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/market-research/scripts/sample_size_planner.py",
+          "sha256": "633bb10418b65a3b9923fab465bd3802d232ffbce0ae0f543c510c414efad574"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/market-research/scripts/segmentation_scorer.py",
+          "sha256": "11387bc2d135b90d2de8b55cbd36fd02d983950750160a0dbc8077bc5acd1d56"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/research-ops/skills/product-research/SKILL.md",
+      "sha256": "a483e2e81808dc8cb55996a1ec8a120ef60c37c4585435a2fdba9c438fc37f84",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/research-ops/skills/product-research/scripts/ar_evaluator.py",
+          "sha256": "6782c5219a05e42ce81caba0874750bf072b82122b274cb11ce8825dc63232be"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/product-research/scripts/config_loader.py",
+          "sha256": "f66b80942f64ddcad09c85f884f4c775ba48e7c5625ff62f835aa57a75d19880"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/product-research/scripts/insight_synthesizer.py",
+          "sha256": "1af06a3cfa685a70426e51027a7967f3b371f87bedaa0ff9007bdbb4a6698e86"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/product-research/scripts/onboard.py",
+          "sha256": "11c365148e55741ac32424f2912c0c41d99aa679fefdb32555a596be759b89f9"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/product-research/scripts/saturation_planner.py",
+          "sha256": "e2d096cfa15aff2ebfdccf69cf6c54f254cdb3d5c7ae2b383504ef69aae5225b"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/product-research/scripts/study_designer.py",
+          "sha256": "d79a05e0caaae22bd3cdc26569f7460e7844164cce9b41b355b84687f754c36a"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/research-ops/skills/research-finance/SKILL.md",
+      "sha256": "a40e86d877bcab0a8c9018dca2b63e69fe1b2d9cf3d41c0f852abda699794ff4",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [
+        {
+          "path": "claude-skills/research-ops/skills/research-finance/scripts/ar_evaluator.py",
+          "sha256": "ff4aa9b9023cc6365007a4606c36cae1d2d7787a3a870d0b26a009f6e0af6641"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/research-finance/scripts/burn_runway_tracker.py",
+          "sha256": "eea0b80169000f2b4507355330c34d06806736f5df572719e3b1c33077197ffd"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/research-finance/scripts/capex_vs_opex_router.py",
+          "sha256": "ef39a805bd6f559c753400a2d0b60fa4c5be7edd55d1115f32592ca2b6c3141f"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/research-finance/scripts/config_loader.py",
+          "sha256": "810c5026bc57ea3af6239b409d5dd6e81bd47fff155138fa97b98dbb1825ecff"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/research-finance/scripts/onboard.py",
+          "sha256": "07612151ee0539baae500bdea9b20735615b6e286b790d2cf4900472470da6de"
+        },
+        {
+          "path": "claude-skills/research-ops/skills/research-finance/scripts/program_budget_planner.py",
+          "sha256": "5127aae1fa31cc9ecae9511d2fb9f1f6d9dd095785b164912c00502409a49fed"
+        }
+      ],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
+      "path": "claude-skills/research-ops/skills/research-ops-skills/SKILL.md",
+      "sha256": "58b58e51a1fc39d58efe284fd2e95bfdf7d0cc341ff2c3da982238c5bc803e75",
+      "origin": "vendored claude-skills; consult original file and notices",
+      "upstreamRevision": null,
+      "licenseNotices": [
+        "claude-skills/LICENSE"
+      ],
+      "scripts": [],
+      "execution": "disabled",
+      "inputSchema": null,
+      "outputSchema": null,
+      "requiredCapabilities": "not reviewed",
+      "validation": "inventory only; not certified safe or license-cleared"
+    },
+    {
       "path": "claude-skills/research/deep-research/skills/deep-research/SKILL.md",
       "sha256": "0c3f02d1ba581a2368c5e8a3b99a2428f42e78081136621359cfecef2fabca25",
       "origin": "vendored claude-skills; consult original file and notices",
@@ -8684,181 +8843,6 @@
           "sha256": "f2665e12626520d9619b4c1dfbe370148e9f93478e4e85550ac91dfa5d8926fa"
         }
       ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/research-ops/skills/clinical-research/SKILL.md",
-      "sha256": "2ee6764353ca5dd7b2366557be898e4aea17c7223e0f9ac6799c9b21a0ef8041",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/research-ops/skills/clinical-research/scripts/ar_evaluator.py",
-          "sha256": "4b2c5a047f4db6cecc633c72f2e3d203adccf7a9d139448e432e6374af65a7f5"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/clinical-research/scripts/config_loader.py",
-          "sha256": "a11052365a00da34b26051ce07ed1119600210917b19197cd9ea1c60078c5ba1"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/clinical-research/scripts/endpoint_selector.py",
-          "sha256": "f203e064e5e37cb964828ba893e5396dc46cdd44d79b7646a9bc4c3ba9edd73d"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/clinical-research/scripts/onboard.py",
-          "sha256": "7032774a75be13046bd2f3e810b882e09b1d1f24f4535eacffb3889e6bf59a48"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/clinical-research/scripts/phase_gate_scorer.py",
-          "sha256": "3f030a4aeefec1a38a153542c73168ac3c5a2d859376a3aefc8feb7e80bc85a3"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/clinical-research/scripts/sample_size_estimator.py",
-          "sha256": "c755b9d65630cef753d02d0c9a6ceffcb5531951f910937aa9498750ddc7bff5"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/research-ops/skills/market-research/SKILL.md",
-      "sha256": "0e4037294f8e6bea1cb53de035eaa97bd2d74349d06f9b61d85f4420d7c084c9",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/research-ops/skills/market-research/scripts/ar_evaluator.py",
-          "sha256": "d6093aab293a3aba3e092969f96935499a47041f8801df99f191d48c979556c7"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/market-research/scripts/config_loader.py",
-          "sha256": "12479462255f27eef0cb45eb2a903d205849b35af58bd229e2876d11fa8cc9ae"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/market-research/scripts/market_sizer.py",
-          "sha256": "baad9dc0d2c144f47a24126c0781878b6a41a9e093d99420f605806a936cac6c"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/market-research/scripts/onboard.py",
-          "sha256": "1bdae366637fe6c76bc31942382a4b3222fd2ab2311d0d544a3e0b7f9c758330"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/market-research/scripts/sample_size_planner.py",
-          "sha256": "633bb10418b65a3b9923fab465bd3802d232ffbce0ae0f543c510c414efad574"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/market-research/scripts/segmentation_scorer.py",
-          "sha256": "11387bc2d135b90d2de8b55cbd36fd02d983950750160a0dbc8077bc5acd1d56"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/research-ops/skills/product-research/SKILL.md",
-      "sha256": "a483e2e81808dc8cb55996a1ec8a120ef60c37c4585435a2fdba9c438fc37f84",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/research-ops/skills/product-research/scripts/ar_evaluator.py",
-          "sha256": "6782c5219a05e42ce81caba0874750bf072b82122b274cb11ce8825dc63232be"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/product-research/scripts/config_loader.py",
-          "sha256": "f66b80942f64ddcad09c85f884f4c775ba48e7c5625ff62f835aa57a75d19880"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/product-research/scripts/insight_synthesizer.py",
-          "sha256": "1af06a3cfa685a70426e51027a7967f3b371f87bedaa0ff9007bdbb4a6698e86"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/product-research/scripts/onboard.py",
-          "sha256": "11c365148e55741ac32424f2912c0c41d99aa679fefdb32555a596be759b89f9"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/product-research/scripts/saturation_planner.py",
-          "sha256": "e2d096cfa15aff2ebfdccf69cf6c54f254cdb3d5c7ae2b383504ef69aae5225b"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/product-research/scripts/study_designer.py",
-          "sha256": "d79a05e0caaae22bd3cdc26569f7460e7844164cce9b41b355b84687f754c36a"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/research-ops/skills/research-finance/SKILL.md",
-      "sha256": "a40e86d877bcab0a8c9018dca2b63e69fe1b2d9cf3d41c0f852abda699794ff4",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [
-        {
-          "path": "claude-skills/research-ops/skills/research-finance/scripts/ar_evaluator.py",
-          "sha256": "ff4aa9b9023cc6365007a4606c36cae1d2d7787a3a870d0b26a009f6e0af6641"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/research-finance/scripts/burn_runway_tracker.py",
-          "sha256": "eea0b80169000f2b4507355330c34d06806736f5df572719e3b1c33077197ffd"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/research-finance/scripts/capex_vs_opex_router.py",
-          "sha256": "ef39a805bd6f559c753400a2d0b60fa4c5be7edd55d1115f32592ca2b6c3141f"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/research-finance/scripts/config_loader.py",
-          "sha256": "810c5026bc57ea3af6239b409d5dd6e81bd47fff155138fa97b98dbb1825ecff"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/research-finance/scripts/onboard.py",
-          "sha256": "07612151ee0539baae500bdea9b20735615b6e286b790d2cf4900472470da6de"
-        },
-        {
-          "path": "claude-skills/research-ops/skills/research-finance/scripts/program_budget_planner.py",
-          "sha256": "5127aae1fa31cc9ecae9511d2fb9f1f6d9dd095785b164912c00502409a49fed"
-        }
-      ],
-      "execution": "disabled",
-      "inputSchema": null,
-      "outputSchema": null,
-      "requiredCapabilities": "not reviewed",
-      "validation": "inventory only; not certified safe or license-cleared"
-    },
-    {
-      "path": "claude-skills/research-ops/skills/research-ops-skills/SKILL.md",
-      "sha256": "58b58e51a1fc39d58efe284fd2e95bfdf7d0cc341ff2c3da982238c5bc803e75",
-      "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
-      "licenseNotices": [
-        "claude-skills/LICENSE"
-      ],
-      "scripts": [],
       "execution": "disabled",
       "inputSchema": null,
       "outputSchema": null,

@@ -68,5 +68,5 @@ Private data stays under ignored `data/`. The user signs in with `data/access-to
 2. Evaluate the single-agent baseline on representative business tasks. Only add delegation after measuring task success, cost and latency against that baseline.
 3. If host execution is required, design a real sandbox and validate each executable tool before enabling it. A permission label is insufficient.
 4. Before multi-user or remote hosting, implement principal-specific authorization, TLS/session deployment controls and tenant lifecycle tests. Current deployment is single-owner and loopback-only.
-5. Complete upstream revision/ownership/license review for vendored assets. The 388-document inventory and 10 license notices are an inventory, not legal clearance.
+5. Complete upstream revision/ownership/license review for vendored assets. The 387 tracked documents and 10 license notices are an inventory, not legal clearance. The initial CI run exposed an ignored local document in the generated inventory; the generator now uses tracked files so local and fresh-clone results agree.
 6. Review third-party rights and choose the intended project license before changing repository visibility. Committing and pushing source does not change repository visibility or resolve those licensing questions.
