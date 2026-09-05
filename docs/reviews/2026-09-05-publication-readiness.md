@@ -111,7 +111,7 @@ Enforce limits in code: steps, elapsed time, provider spend, delegation depth, c
 
 ## Public-source and licensing considerations
 
-The proprietary license matches the stated desire to reserve commercial rights, but a public repository exposes the implementation. A license is not a secrecy mechanism. Decide whether you want public source, or a public demonstration with the core kept private. Public visibility also has platform-specific viewing/forking implications; [GitHub's licensing guidance](https://choosealicense.com/no-permission/) explains the distinction between public access and broad permission to use code.
+At the time of this review, the proprietary license matched the stated desire to reserve commercial rights. The owner subsequently selected Apache-2.0 for original project-owned code and documentation; see the current root LICENSE and NOTICE. A license is not a secrecy mechanism: a public repository exposes the implementation. Public visibility also has platform-specific viewing/forking implications; [GitHub's licensing guidance](https://choosealicense.com/no-permission/) explains the distinction between public access and broad permission to use code.
 
 Existing third-party licenses and previously granted rights cannot be erased by the new root notice. The repository already contains MIT and Apache-licensed components, and stock photographs have separate terms. Retain their notices and finish an inventory before distribution. This review did not establish complete ownership or license compatibility for every imported file.
 

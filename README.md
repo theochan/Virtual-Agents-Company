@@ -156,4 +156,4 @@ For the current evidence and upstream blocker, see [hardening validation](docs/r
 
 ## License
 
-Copyright © 2026 Theo Chan. All rights reserved. This project uses the [proprietary license](LICENSE). Public source visibility is not a grant of broad use, modification, redistribution or commercial rights. Third-party licenses and previously granted rights remain applicable as described in the license and notices.
+Copyright © 2026 Theo Chan. Original project-owned code and documentation are licensed under the [Apache License, Version 2.0](LICENSE). See [NOTICE](NOTICE) for attribution and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party materials, which retain their respective licenses. Previously granted rights remain applicable.

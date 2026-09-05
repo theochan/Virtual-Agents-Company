@@ -1,6 +1,6 @@
 # Third-party notices
 
-The root proprietary notice applies to original project-owned code only. It does
+The root Apache-2.0 license applies to original project-owned code and documentation. It does
 not relicense or claim ownership of the following third-party materials.
 
 - **Claude skills:** `claude-skills/` contains materials from
@@ -15,7 +15,7 @@ not relicense or claim ownership of the following third-party materials.
   references externally hosted Unsplash photos. Photos remain subject to the
   [Unsplash License](https://unsplash.com/license) and applicable rights of the
   photographers and depicted people. They are not covered by the project's
-  proprietary license. Photo subjects are not employees or endorsers of this
+  Apache-2.0 license. Photo subjects are not employees or endorsers of this
   project, and labels do not assert their real names, roles, or gender identities.
 - **Earlier releases:** Nothing in the current notice withdraws rights validly
   granted for an earlier release or another party's contributions.
