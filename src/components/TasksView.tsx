@@ -128,8 +128,12 @@ export const TasksView: React.FC<TasksViewProps> = ({
       }
 
       // Project filter
-      if (selectedProjectId !== 'all' && item.projectId !== selectedProjectId) {
-        return false;
+      if (selectedProjectId !== 'all') {
+        if (item.projectId !== selectedProjectId) return false;
+      } else {
+        // Only show items that belong to an active project
+        const projectExists = projects.some((p) => p.id === item.projectId);
+        if (!projectExists) return false;
       }
 
       // Agent filter
@@ -144,7 +148,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
       return true;
     });
-  }, [workItems, searchQuery, selectedProjectId, selectedAgentFilter, selectedPriorityFilter]);
+  }, [workItems, projects, searchQuery, selectedProjectId, selectedAgentFilter, selectedPriorityFilter]);
 
   // Group into the 4 requested columns
   const columnData: Record<WorkItemStatus, WorkItem[]> = useMemo(() => {

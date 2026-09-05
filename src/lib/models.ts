@@ -10,7 +10,7 @@ export interface ModelOption {
   maxTokens: number;
   speed: 'Ultra Fast' | 'Fast' | 'Deep';
   isLocal?: boolean;
-  localSource?: 'ollama' | 'huggingface';
+  localSource?: 'ollama' | 'huggingface' | 'omniroute';
   endpoint?: string;
   parameters?: string;
 }
@@ -64,6 +64,72 @@ export const SUPPORTED_MODELS: ModelOption[] = [
     defaultTemp: 0.2,
     maxTokens: 8192,
     speed: 'Deep'
+  },
+
+  // OmniRoute Gateway Models
+  {
+    id: 'omniroute:auto',
+    name: 'OmniRoute Auto (Balanced)',
+    provider: 'OmniRoute Gateway',
+    badge: 'Auto-Fallback',
+    badgeColor: 'border-violet-500/30 text-violet-400 bg-violet-500/10',
+    description: 'Dynamic multi-provider routing across 350+ providers with quota-aware auto-fallback and LKGP.',
+    recommendedFor: 'Zero-downtime resilient execution, free tier pooling, automatic model switching',
+    defaultTemp: 0.3,
+    maxTokens: 8192,
+    speed: 'Fast',
+    isLocal: true,
+    localSource: 'omniroute',
+    endpoint: 'http://localhost:20128/v1',
+    parameters: '350+ Providers'
+  },
+  {
+    id: 'omniroute:auto/coding',
+    name: 'OmniRoute Coding',
+    provider: 'OmniRoute Gateway',
+    badge: 'Code Specialist',
+    badgeColor: 'border-cyan-500/30 text-cyan-400 bg-cyan-500/10',
+    description: 'Quality-first routing weights specifically calibrated for code generation, refactoring, and debugging.',
+    recommendedFor: 'Code generation, architectural design, automated testing, technical audits',
+    defaultTemp: 0.2,
+    maxTokens: 8192,
+    speed: 'Fast',
+    isLocal: true,
+    localSource: 'omniroute',
+    endpoint: 'http://localhost:20128/v1',
+    parameters: 'Quality-First'
+  },
+  {
+    id: 'omniroute:auto/fast',
+    name: 'OmniRoute Fast',
+    provider: 'OmniRoute Gateway',
+    badge: 'Lowest Latency',
+    badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
+    description: 'Routes directly to the lowest-latency healthy provider in the active pool.',
+    recommendedFor: 'Rapid interactive turns, streaming responses, high-frequency tasks',
+    defaultTemp: 0.3,
+    maxTokens: 4096,
+    speed: 'Ultra Fast',
+    isLocal: true,
+    localSource: 'omniroute',
+    endpoint: 'http://localhost:20128/v1',
+    parameters: 'Low Latency'
+  },
+  {
+    id: 'omniroute:auto/cheap',
+    name: 'OmniRoute Free & Cheap',
+    provider: 'OmniRoute Gateway',
+    badge: 'Cost Optimized',
+    badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
+    description: 'Prioritizes free-tier pools and cheapest per-token inference endpoints.',
+    recommendedFor: 'Background tasks, non-critical subroutines, budget optimization',
+    defaultTemp: 0.3,
+    maxTokens: 4096,
+    speed: 'Fast',
+    isLocal: true,
+    localSource: 'omniroute',
+    endpoint: 'http://localhost:20128/v1',
+    parameters: 'Cost Optimized'
   },
 
   // Local Models (Downloaded via Ollama)
@@ -259,6 +325,27 @@ export function getModelDetails(modelId?: string): ModelOption {
     };
   }
 
+  // If it's a dynamic OmniRoute model tag (e.g. "omniroute:auto" or "omniroute:gpt-4o")
+  if (modelId.startsWith('omniroute:')) {
+    const rawTag = modelId.replace('omniroute:', '');
+    return {
+      id: modelId,
+      name: `OmniRoute (${rawTag})`,
+      provider: 'OmniRoute Gateway',
+      badge: 'OmniRoute',
+      badgeColor: 'border-violet-500/30 text-violet-400 bg-violet-500/10',
+      description: `OmniRoute multi-provider gateway routed via localhost:20128/v1.`,
+      recommendedFor: 'Multi-provider resilient gateway routing',
+      defaultTemp: 0.3,
+      maxTokens: 8192,
+      speed: 'Fast',
+      isLocal: true,
+      localSource: 'omniroute',
+      endpoint: 'http://localhost:20128/v1',
+      parameters: 'Gateway Pool'
+    };
+  }
+
   // If it's a dynamic Hugging Face repo tag (e.g. "hf:meta-llama/...")
   if (modelId.startsWith('hf:')) {
     const rawRepo = modelId.replace('hf:', '');
@@ -286,7 +373,12 @@ export function getModelDetails(modelId?: string): ModelOption {
 export function isLocalModel(modelId?: string): boolean {
   if (!modelId) return false;
   const lower = modelId.toLowerCase();
-  return lower.startsWith('ollama:') || lower.startsWith('hf:') || lower.includes('local');
+  return lower.startsWith('ollama:') || lower.startsWith('hf:') || lower.startsWith('omniroute:') || lower.includes('local');
+}
+
+export function isOmniRouteModel(modelId?: string): boolean {
+  if (!modelId) return false;
+  return modelId.toLowerCase().startsWith('omniroute:');
 }
 
 export function isOllamaModel(modelId?: string): boolean {
@@ -301,6 +393,7 @@ export function isHuggingFaceModel(modelId?: string): boolean {
 
 export function getCleanModelTag(modelId?: string): string {
   if (!modelId) return 'gemini-3.8-flash';
+  if (modelId.startsWith('omniroute:')) return modelId.replace('omniroute:', '');
   if (modelId.startsWith('ollama:')) return modelId.replace('ollama:', '');
   if (modelId.startsWith('hf:')) return modelId.replace('hf:', '');
   return modelId;

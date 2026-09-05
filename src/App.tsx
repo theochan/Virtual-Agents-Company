@@ -21,15 +21,52 @@ import { AdminSettingsView } from './components/AdminSettingsView';
 
 export const App: React.FC = () => {
   // Core Enterprise State
-  const [agents, setAgents] = useState<Agent[]>(INITIAL_AGENTS);
-  const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS);
+  const [agents, setAgents] = useState<Agent[]>(() => {
+    try {
+      const saved = localStorage.getItem('vac_agents');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_AGENTS;
+  });
+  const [projects, setProjects] = useState<Project[]>(() => {
+    try {
+      const saved = localStorage.getItem('vac_projects');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_PROJECTS;
+  });
   const [memories, setMemories] = useState<MemoryItem[]>(INITIAL_MEMORIES);
   const [artifacts, setArtifacts] = useState<Artifact[]>(INITIAL_ARTIFACTS);
   const [tools, setTools] = useState<Tool[]>(INITIAL_TOOLS);
   const [approvals, setApprovals] = useState<ApprovalRequest[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [workItems, setWorkItems] = useState<WorkItem[]>(INITIAL_WORK_ITEMS);
+  const [workItems, setWorkItems] = useState<WorkItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('vac_work_items');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_WORK_ITEMS;
+  });
   const [events, setEvents] = useState<TaskEvent[]>([]);
+
+  // Local persistence sync
+  useEffect(() => {
+    try {
+      localStorage.setItem('vac_agents', JSON.stringify(agents));
+    } catch {}
+  }, [agents]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('vac_projects', JSON.stringify(projects));
+    } catch {}
+  }, [projects]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('vac_work_items', JSON.stringify(workItems));
+    } catch {}
+  }, [workItems]);
 
   // Navigation State
   const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings'>('chat');
@@ -40,28 +77,7 @@ export const App: React.FC = () => {
   const [activeTask, setActiveTask] = useState<Task | undefined>(undefined);
   const [isCollaborating, setIsCollaborating] = useState<boolean>(false);
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
-  const [messagesByAgent, setMessagesByAgent] = useState<Record<string, ChatMessage[]>>({
-    'agent-sarah': [
-      {
-        id: 'msg-init-sarah',
-        agentId: 'agent-sarah',
-        senderType: 'agent',
-        content: `**Conclusion First**: Project Phoenix database evaluation is in progress. I am directing Marcus on technical architecture, Emma on market benchmarks, and Daniel on runway cost modeling.
-
-You can delegate multi-agent tasks, query project memory, or inspect our 4-layer memory scopes anytime.`,
-        timestamp: new Date(Date.now() - 3600000).toISOString()
-      }
-    ],
-    'agent-emma': [
-      {
-        id: 'msg-init-emma',
-        agentId: 'agent-emma',
-        senderType: 'agent',
-        content: `Hello! I manage our market benchmarks and research index. Whenever you ask about Project Phoenix or previous workstream decisions, I query our 4-layer memory (Conversation → Project → Agent → Org) with priority scoring.`,
-        timestamp: new Date(Date.now() - 3600000).toISOString()
-      }
-    ]
-  });
+  const [messagesByAgent, setMessagesByAgent] = useState<Record<string, ChatMessage[]>>({});
 
   // Modals State
   const [isWizardOpen, setIsWizardOpen] = useState(false);
@@ -77,35 +93,53 @@ You can delegate multi-agent tasks, query project memory, or inspect our 4-layer
       .then((r) => r.json())
       .catch((e) => console.log('Using local client state until server ready'));
 
-    fetch('/api/projects')
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setProjects(data);
-        }
-      })
-      .catch((e) => console.log('Using local projects until server ready'));
+    const syncProjects = () => {
+      fetch('/api/projects')
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setProjects(data);
+          }
+        })
+        .catch((e) => console.log('Using local projects until server ready'));
+    };
 
     const syncWorkItems = () => {
       fetch('/api/work-items')
         .then((r) => r.json())
         .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             setWorkItems(data);
           }
         })
         .catch((e) => console.log('Work items sync note:', e));
     };
 
+    const syncAgents = () => {
+      fetch('/api/agents')
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setAgents(data);
+          }
+        })
+        .catch((e) => console.log('Using local agents until server ready'));
+    };
+
     const syncMessages = (agentId: string) => {
       fetch(`/api/chat/messages?agentId=${agentId}`)
         .then((r) => r.json())
         .then((serverMsgs) => {
-          if (Array.isArray(serverMsgs) && serverMsgs.length > 0) {
+          if (Array.isArray(serverMsgs)) {
             setMessagesByAgent((prev) => {
               const currentList = prev[agentId] || [];
-              // If server has more messages or different latest status, update
-              if (serverMsgs.length !== currentList.length || JSON.stringify(serverMsgs[serverMsgs.length - 1]?.metadata) !== JSON.stringify(currentList[currentList.length - 1]?.metadata)) {
+              // If server has different message count or different latest status, update
+              if (
+                serverMsgs.length !== currentList.length ||
+                (serverMsgs.length > 0 &&
+                  JSON.stringify(serverMsgs[serverMsgs.length - 1]?.metadata) !==
+                    JSON.stringify(currentList[currentList.length - 1]?.metadata))
+              ) {
                 return {
                   ...prev,
                   [agentId]: serverMsgs
@@ -119,11 +153,15 @@ You can delegate multi-agent tasks, query project memory, or inspect our 4-layer
     };
 
     // Initial load
+    syncAgents();
+    syncProjects();
     syncWorkItems();
     syncMessages(selectedAgentId);
 
     // Polling interval (every 2.5s) to capture async background delegation from Agent 1 -> Agent 2 -> completion
     const interval = setInterval(() => {
+      syncAgents();
+      syncProjects();
       syncWorkItems();
       syncMessages(selectedAgentId);
     }, 2500);
@@ -181,10 +219,10 @@ You can delegate multi-agent tasks, query project memory, or inspect our 4-layer
           }
           return remaining;
         });
-        // Unlink project in work items
-        setWorkItems((prev) =>
-          prev.map((wi) => (wi.projectId === projectId ? { ...wi, projectId: '' } : wi))
-        );
+        // Cascade delete work items for this project
+        setWorkItems((prev) => prev.filter((wi) => wi.projectId !== projectId));
+        // Cascade delete artifacts for this project
+        setArtifacts((prev) => prev.filter((art) => art.projectId !== projectId));
       }
     } catch (err) {
       console.error('Failed to delete project:', err);
@@ -511,7 +549,7 @@ I have finalized the deliverables and logged the closed work items to the projec
   };
 
   // Create Agent via 5-step Wizard
-  const handleCreateAgent = (newAgentData: Partial<Agent>) => {
+  const handleCreateAgent = async (newAgentData: Partial<Agent>) => {
     const fullAgent: Agent = {
       id: `agent-${Date.now()}`,
       workspaceId: 'ws-default',
@@ -579,9 +617,48 @@ I have finalized the deliverables and logged the closed work items to the projec
       createdAt: new Date().toISOString()
     };
 
+    try {
+      const res = await fetch('/api/agents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullAgent)
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setAgents((prev) => [...prev.filter((a) => a.id !== saved.id), saved]);
+        setSelectedAgentId(saved.id);
+        setCurrentTab('chat');
+        return;
+      }
+    } catch (e) {
+      console.log('Agent creation server fallback:', e);
+    }
+
     setAgents((prev) => [...prev, fullAgent]);
     setSelectedAgentId(fullAgent.id);
     setCurrentTab('chat');
+  };
+
+  const handleDeleteAgent = async (agentId: string) => {
+    try {
+      const res = await fetch(`/api/agents/${agentId}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setAgents((prev) => {
+          const remaining = prev.filter((a) => a.id !== agentId);
+          if (selectedAgentId === agentId) {
+            setSelectedAgentId(remaining[0]?.id || '');
+          }
+          return remaining;
+        });
+        if (profileAgent?.id === agentId) {
+          setProfileAgent(null);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to delete agent:', err);
+    }
   };
 
   // Tool Security Approval Decision
@@ -996,6 +1073,7 @@ I have finalized the deliverables and logged the closed work items to the projec
             }}
             onOpenProfile={(a) => setProfileAgent(a)}
             onUpdateReportingLine={handleUpdateAgentReportingLine}
+            onDeleteAgent={handleDeleteAgent}
           />
         )}
 
@@ -1083,6 +1161,7 @@ I have finalized the deliverables and logged the closed work items to the projec
           allAgents={agents}
           onUpdateReportingLine={handleUpdateAgentReportingLine}
           onUpdateAvatar={handleUpdateAgentAvatar}
+          onDeleteAgent={handleDeleteAgent}
         />
       )}
     </div>

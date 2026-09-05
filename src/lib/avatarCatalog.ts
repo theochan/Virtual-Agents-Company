@@ -113,6 +113,29 @@ export const CURATED_PORTRAITS: CuratedAvatar[] = [
     nationalityHint: 'Nigerian'
   },
 
+  // ADDITIONAL FEMALE PORTRAITS
+  {
+    url: 'https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+    label: 'Leila Chen - Principal Architect',
+    gender: 'female',
+    style: 'tech',
+    nationalityHint: 'Singaporean'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+    label: 'Dr. Maya Patel - Cognitive Analytics Lead',
+    gender: 'female',
+    style: 'research',
+    nationalityHint: 'Indian-British'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+    label: 'Sora Takahashi - Creative Director',
+    gender: 'female',
+    style: 'creative',
+    nationalityHint: 'Japanese'
+  },
+
   // MALE - Corporate, Tech & Architecture
   {
     url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
@@ -163,6 +186,13 @@ export const CURATED_PORTRAITS: CuratedAvatar[] = [
     style: 'creative',
     nationalityHint: 'French'
   },
+  {
+    url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+    label: 'Nathan Vance - Managing Director',
+    gender: 'male',
+    style: 'corporate',
+    nationalityHint: 'American'
+  },
 
   // NON-BINARY / UNIVERSAL
   {
@@ -185,8 +215,29 @@ export const CURATED_PORTRAITS: CuratedAvatar[] = [
     gender: 'non-binary',
     style: 'cyber',
     nationalityHint: 'German'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+    label: 'Taylor Hayes - Applied AI Fellow',
+    gender: 'non-binary',
+    style: 'research',
+    nationalityHint: 'Australian'
   }
 ];
+
+export function getCuratedPortraitsByFilter(
+  gender: 'female' | 'male' | 'non-binary' = 'female',
+  style?: AvatarStyle
+): CuratedAvatar[] {
+  let list = CURATED_PORTRAITS.filter((p) => p.gender === gender);
+  if (list.length === 0) list = CURATED_PORTRAITS;
+  if (style) {
+    const matching = list.filter((p) => p.style === style);
+    const others = list.filter((p) => p.style !== style);
+    return [...matching, ...others];
+  }
+  return list;
+}
 
 export interface BuildPromptParams {
   firstName?: string;
@@ -221,61 +272,97 @@ export function buildAvatarPrompt(params: BuildPromptParams): string {
   return `High-end photorealistic 8k close-up headshot portrait avatar of a ${ageStr} ${natStr} ${genStr}, ${titleStr} in ${deptStr}. Wearing ${styleObj.attire}, cinematic soft studio lighting, sharp focus on eyes, authentic skin texture, shallow depth of field, centered 1:1 square composition, executive portrait photography, neutral executive background.`;
 }
 
+export function createDynamicAvatarUrl(prompt: string, seed: number | string): string {
+  const cleanPrompt = prompt.replace(/[\r\n\t]+/g, ' ').trim();
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=512&height=512&nologo=true&seed=${seed}`;
+}
+
 export function getCuratedAvatarSuite(
   gender: 'female' | 'male' | 'non-binary' = 'female',
   style: AvatarStyle = 'corporate',
   seedString: string = ''
 ): { primary: CuratedAvatar; variations: CuratedAvatar[] } {
-  // First match exact gender and style
-  let matched = CURATED_PORTRAITS.filter(
-    (p) => p.gender === gender && p.style === style
-  );
-
-  // If not enough, relax style
-  if (matched.length < 4) {
-    const genderMatches = CURATED_PORTRAITS.filter((p) => p.gender === gender);
-    const set = new Set(matched.map((m) => m.url));
-    for (const item of genderMatches) {
-      if (!set.has(item.url)) {
-        matched.push(item);
-        set.add(item.url);
-      }
-    }
-  }
-
-  // Fallback to all if needed
-  if (matched.length === 0) {
-    matched = [...CURATED_PORTRAITS];
-  }
-
-  // Pick deterministic primary based on seed
   let hash = 0;
   for (let i = 0; i < seedString.length; i++) {
     hash = (hash << 5) - hash + seedString.charCodeAt(i);
     hash |= 0;
   }
-  const primaryIdx = Math.abs(hash) % matched.length;
-  const primary = matched[primaryIdx];
+  const baseSeed = Math.abs(hash) || Math.floor(Math.random() * 10000000);
 
-  const others = matched.filter((_, idx) => idx !== primaryIdx);
-  // Ensure 4 variations
-  const variations = others.slice(0, 4);
+  const styleObj = AVATAR_STYLES.find((s) => s.id === style) || AVATAR_STYLES[0];
+  const prompt = `High-end photorealistic 8k close-up headshot portrait avatar of a professional ${
+    gender === 'non-binary' ? 'person' : gender
+  }, wearing ${styleObj.attire}, cinematic soft studio lighting, sharp focus on eyes, authentic skin texture, shallow depth of field, centered 1:1 square composition, executive portrait photography, neutral executive background.`;
+
+  const pool = getCuratedPortraitsByFilter(gender, style);
+  const primaryFallback = pool[0]?.url || DEFAULT_FALLBACK_AVATAR;
+
+  const primary: CuratedAvatar = {
+    url: createDynamicAvatarUrl(prompt, baseSeed),
+    fallbackUrl: primaryFallback,
+    label: `AI Synthesis - ${styleObj.label}`,
+    badge: styleObj.badge,
+    gender,
+    style
+  };
+
+  // Provide 4 distinct curated portraits from the filtered pool for instantaneous, reliable preview
+  const offset = pool.length > 0 ? baseSeed % pool.length : 0;
+  const variations: CuratedAvatar[] = [];
+  const usedUrls = new Set<string>();
+
+  for (let i = 0; i < pool.length && variations.length < 4; i++) {
+    const item = pool[(offset + i) % pool.length];
+    if (!usedUrls.has(item.url)) {
+      usedUrls.add(item.url);
+      variations.push({
+        ...item,
+        fallbackUrl: item.url,
+        badge: item.style
+      });
+    }
+  }
+
+  // Ensure minimum 4 variations
+  while (variations.length < 4) {
+    const fallbackItem = CURATED_PORTRAITS[variations.length % CURATED_PORTRAITS.length];
+    variations.push({
+      ...fallbackItem,
+      fallbackUrl: fallbackItem.url,
+      badge: fallbackItem.style
+    });
+  }
 
   return {
     primary,
-    variations: variations.length > 0 ? variations : matched.slice(0, 4)
+    variations
   };
 }
 
 export const DEFAULT_FALLBACK_AVATAR =
-  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format';
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format';
+
+export function getSlotFallbackAvatar(
+  gender: 'female' | 'male' | 'non-binary' = 'female',
+  style: AvatarStyle = 'corporate',
+  slotIndex: number = 0
+): string {
+  const pool = getCuratedPortraitsByFilter(gender, style);
+  if (pool.length === 0) return DEFAULT_FALLBACK_AVATAR;
+  return pool[slotIndex % pool.length].url;
+}
 
 export function handleAvatarError(
   event: any,
-  fallbackUrl: string = DEFAULT_FALLBACK_AVATAR
+  fallbackUrl?: string,
+  gender: 'female' | 'male' | 'non-binary' = 'female',
+  style: AvatarStyle = 'corporate',
+  slotIndex: number = 0
 ) {
   const target = event?.currentTarget;
-  if (target && target.src !== fallbackUrl) {
-    target.src = fallbackUrl;
+  if (!target) return;
+  const chosenFallback = fallbackUrl || getSlotFallbackAvatar(gender, style, slotIndex);
+  if (target.src !== chosenFallback) {
+    target.src = chosenFallback;
   }
 }

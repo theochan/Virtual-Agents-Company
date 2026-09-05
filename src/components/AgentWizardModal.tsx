@@ -18,9 +18,10 @@ import {
   Link as LinkIcon,
   Plus,
   Wrench,
-  Search
+  Search,
+  Terminal
 } from 'lucide-react';
-import { AVATAR_STYLES, AvatarStyle, buildAvatarPrompt, getCuratedAvatarSuite } from '../lib/avatarCatalog';
+import { AVATAR_STYLES, AvatarStyle, buildAvatarPrompt, getCuratedAvatarSuite, handleAvatarError } from '../lib/avatarCatalog';
 import { SUPPORTED_MODELS, getModelDetails } from '../lib/models';
 
 interface AgentWizardModalProps {
@@ -63,24 +64,28 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
   const [avatarSource, setAvatarSource] = useState<'gemini_ai_generated' | 'ai_curated_neural'>('ai_curated_neural');
   const [avatarModel, setAvatarModel] = useState('Gemini 3.1 Flash Image Synthesis');
-  const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; label: string; badge?: string }>>([
+  const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; fallbackUrl?: string; label: string; badge?: string }>>([
     {
       url: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+      fallbackUrl: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
       label: 'Variant 1 - Cryptographer',
       badge: 'Security'
     },
     {
       url: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+      fallbackUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
       label: 'Variant 2 - Systems Architect',
       badge: 'Tech'
     },
     {
       url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+      fallbackUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
       label: 'Variant 3 - Strategic Systems',
       badge: 'Creative'
     },
     {
       url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
+      fallbackUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=faces&q=85&auto=format',
       label: 'Variant 4 - Security Fellow',
       badge: 'Research'
     }
@@ -132,11 +137,11 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   const [maxTokens, setMaxTokens] = useState(4096);
   const [autonomyLevel, setAutonomyLevel] = useState<1 | 2 | 3 | 4>(3);
   const [selectedTools, setSelectedTools] = useState<string[]>([
-    'tool-security-scanner',
-    'tool-database-query',
-    'tool-github-prs'
+    'tool-web-search',
+    'tool-doc-gen'
   ]);
   const [toolSearch, setToolSearch] = useState('');
+  const [toolCategoryFilter, setToolCategoryFilter] = useState('All');
   const [isAddingCustomTool, setIsAddingCustomTool] = useState(false);
   const [customToolName, setCustomToolName] = useState('');
   const [customToolDesc, setCustomToolDesc] = useState('');
@@ -204,11 +209,11 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
         throw new Error('API request failed');
       }
     } catch (err) {
-      console.log('Serving curated executive neural portrait suite for agent');
+      console.log('Serving dynamic executive neural portrait suite for agent');
       const fallback = getCuratedAvatarSuite(gender, chosenStyle, `${firstName}-${Date.now()}`);
       setAvatarUrl(fallback.primary.url);
-      setAvatarVariations(fallback.variations.map((v) => ({ url: v.url, label: v.label, badge: v.style })));
-      setAvatarSource('ai_curated_neural');
+      setAvatarVariations(fallback.variations.map((v) => ({ url: v.url, fallbackUrl: v.fallbackUrl || v.url, label: v.label, badge: v.badge || v.style })));
+      setAvatarSource('ai_generated');
     } finally {
       setIsGeneratingAvatar(false);
     }
@@ -411,6 +416,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                         src={avatarUrl}
                         alt="AI Avatar Preview"
                         referrerPolicy="no-referrer"
+                        onError={(e) => handleAvatarError(e, undefined, gender, avatarStyle, 0)}
                         className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
                           isGeneratingAvatar ? 'opacity-40 blur-xs' : 'opacity-100'
                         }`}
@@ -581,7 +587,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                               key={idx}
                               onClick={() => {
                                 setAvatarUrl(variant.url);
-                                setAvatarSource('ai_curated_neural');
+                                setAvatarSource('ai_generated');
                               }}
                               className={`group relative rounded border aspect-square overflow-hidden cursor-pointer transition ${
                                 isCurrent
@@ -593,6 +599,7 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                                 src={variant.url}
                                 alt={variant.label}
                                 referrerPolicy="no-referrer"
+                                onError={(e) => handleAvatarError(e, variant.fallbackUrl, gender, avatarStyle, idx + 1)}
                                 className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                               />
                               {isCurrent && (
@@ -1039,79 +1046,233 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
                   </div>
                 )}
 
+                {/* Selected Tools Quick Strip */}
+                {selectedTools.length > 0 && (
+                  <div className="p-2 rounded-lg bg-neutral-950 border border-neutral-800 space-y-1">
+                    <div className="flex items-center justify-between text-[11px] text-neutral-400">
+                      <span className="font-medium text-neutral-300">Selected Tools ({selectedTools.length})</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTools([])}
+                        className="text-[10px] text-red-400/80 hover:text-red-400 cursor-pointer"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
+                      {selectedTools.map((toolId) => {
+                        const toolObj = tools.find((t) => t.id === toolId);
+                        return (
+                          <span
+                            key={toolId}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#C5A358]/15 border border-[#C5A358]/30 text-[10px] text-[#E5C778]"
+                          >
+                            <span className="truncate max-w-[140px]">{toolObj?.name || toolId}</span>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedTools(selectedTools.filter((id) => id !== toolId))}
+                              className="hover:text-red-400 text-neutral-400 cursor-pointer"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* Filter / Search Tools */}
-                <div className="relative">
-                  <Search className="w-3 h-3 absolute left-2.5 top-2.5 text-neutral-500" />
-                  <input
-                    type="text"
-                    placeholder="Search available enterprise tools..."
-                    value={toolSearch}
-                    onChange={(e) => setToolSearch(e.target.value)}
-                    className="w-full pl-7 pr-3 py-1.5 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-neutral-300 placeholder-neutral-600 focus:outline-none focus:border-[#C5A358]"
-                  />
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-neutral-500" />
+                    <input
+                      type="text"
+                      placeholder="Search 390+ skills by title, description, or Python script..."
+                      value={toolSearch}
+                      onChange={(e) => setToolSearch(e.target.value)}
+                      className="w-full pl-8 pr-8 py-2 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-neutral-300 placeholder-neutral-600 focus:outline-none focus:border-[#C5A358]"
+                    />
+                    {toolSearch && (
+                      <button
+                        type="button"
+                        onClick={() => setToolSearch('')}
+                        className="absolute right-2.5 top-2 text-xs text-neutral-500 hover:text-neutral-300 cursor-pointer"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Category Pills (Horizontal Scroll) */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
+                    {[
+                      'All',
+                      'Selected',
+                      'Engineering & Architecture',
+                      'Executive & Strategy',
+                      'Marketing & Growth',
+                      'Operations & Productivity',
+                      'Regulatory & Compliance',
+                      'Product & Design',
+                      'Research & Intelligence',
+                      'Finance & Commercial',
+                      'Core Tools'
+                    ].map((cat) => {
+                      const isSelected = toolCategoryFilter === cat;
+                      let count = 0;
+                      if (cat === 'All') count = tools.length;
+                      else if (cat === 'Selected') count = selectedTools.length;
+                      else if (cat === 'Core Tools') count = tools.filter((t) => t.id.startsWith('tool-')).length;
+                      else count = tools.filter((t) => t.category === cat).length;
+
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => setToolCategoryFilter(cat)}
+                          className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-medium border transition cursor-pointer flex items-center gap-1 ${
+                            isSelected
+                              ? 'bg-[#C5A358] border-[#C5A358] text-black font-semibold'
+                              : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-neutral-200 hover:border-neutral-700'
+                          }`}
+                        >
+                          <span>{cat}</span>
+                          <span
+                            className={`text-[9px] px-1 py-0.2 rounded-full ${
+                              isSelected ? 'bg-black/20 text-black' : 'bg-neutral-900 text-neutral-500'
+                            }`}
+                          >
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Tools Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-                  {(tools.length > 0 ? tools : [
-                    { id: 'tool-web-search', name: 'Web Search & Intelligence', description: 'Web resources & documentation', category: 'Research' as const, permission: 'READ' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-database-query', name: 'PostgreSQL Query Runner', description: 'Queries schema and SQL', category: 'Engineering' as const, permission: 'READ' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-github-prs', name: 'GitHub PR & Diff Reviewer', description: 'Pull request diffs & tests', category: 'Engineering' as const, permission: 'READ' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-security-scanner', name: 'Trivy / Snyk Security Scanner', description: 'Vulnerability CVE scanner', category: 'Engineering' as const, permission: 'READ' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-financial-modeling', name: 'Financial Runway Estimator', description: 'Runway & infrastructure TCO', category: 'Finance' as const, permission: 'READ' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-doc-gen', name: 'Artifact & Document Generator', description: 'Markdown RFCs & specs', category: 'Productivity' as const, permission: 'WRITE' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-vector-indexer', name: 'pgvector Knowledge Indexer', description: 'Embeddings & knowledge store', category: 'Research' as const, permission: 'WRITE' as const, requiresApproval: false, schema: {} },
-                    { id: 'tool-cloud-deploy', name: 'Cloud Infrastructure Deployer', description: 'Deploys container revisions', category: 'Engineering' as const, permission: 'EXECUTE' as const, requiresApproval: true, schema: {} },
-                    { id: 'tool-notification-dispatch', name: 'Slack & Webhook Dispatcher', description: 'Operational broadcast alerts', category: 'Communication' as const, permission: 'WRITE' as const, requiresApproval: false, schema: {} }
-                  ])
-                    .filter((t) =>
-                      t.name.toLowerCase().includes(toolSearch.toLowerCase()) ||
-                      t.description.toLowerCase().includes(toolSearch.toLowerCase()) ||
-                      t.category.toLowerCase().includes(toolSearch.toLowerCase())
-                    )
-                    .map((t) => {
-                      const isSelected = selectedTools.includes(t.id);
-                      return (
-                        <label
-                          key={t.id}
-                          className={`p-2 rounded-lg border flex items-start justify-between gap-2 cursor-pointer transition ${
-                            isSelected
-                              ? 'bg-neutral-900 border-[#C5A358]/50 text-white'
-                              : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:border-neutral-700'
-                          }`}
-                        >
-                          <div className="flex items-start gap-2">
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedTools([...selectedTools, t.id]);
-                                } else {
-                                  setSelectedTools(selectedTools.filter((x) => x !== t.id));
-                                }
-                              }}
-                              className="accent-[#C5A358] rounded mt-0.5"
-                            />
-                            <div>
-                              <div className="flex items-center gap-1.5">
-                                <span className={`text-xs font-medium ${isSelected ? 'text-[#C5A358]' : 'text-neutral-200'}`}>
-                                  {t.name}
-                                </span>
-                                <span className="text-[9px] px-1 py-0.2 rounded bg-neutral-900 text-neutral-500 border border-neutral-800">
-                                  {t.category}
-                                </span>
+                {(() => {
+                  const filtered = (tools.length > 0
+                    ? tools
+                    : [
+                        {
+                          id: 'tool-web-search',
+                          name: 'Web Search & Intelligence',
+                          description: 'Searches live web resources and market data',
+                          category: 'Research' as const,
+                          permission: 'READ' as const,
+                          requiresApproval: false,
+                          schema: {}
+                        },
+                        {
+                          id: 'tool-doc-gen',
+                          name: 'Artifact & Document Generator',
+                          description: 'Generates markdown RFCs and specifications',
+                          category: 'Productivity' as const,
+                          permission: 'WRITE' as const,
+                          requiresApproval: false,
+                          schema: {}
+                        },
+                        {
+                          id: 'tool-task-delegator',
+                          name: 'Task Delegation Orchestrator',
+                          description: 'Dispatches delegation contracts and Kanban work items',
+                          category: 'Productivity' as const,
+                          permission: 'WRITE' as const,
+                          requiresApproval: false,
+                          schema: {}
+                        }
+                      ]
+                  ).filter((t) => {
+                    const isSelected = selectedTools.includes(t.id);
+                    if (toolCategoryFilter === 'Selected' && !isSelected) return false;
+                    if (toolCategoryFilter === 'Core Tools' && !t.id.startsWith('tool-')) return false;
+                    if (
+                      toolCategoryFilter !== 'All' &&
+                      toolCategoryFilter !== 'Selected' &&
+                      toolCategoryFilter !== 'Core Tools'
+                    ) {
+                      if (t.category !== toolCategoryFilter) return false;
+                    }
+                    if (toolSearch.trim()) {
+                      const q = toolSearch.toLowerCase();
+                      const matchName = t.name.toLowerCase().includes(q);
+                      const matchDesc = t.description.toLowerCase().includes(q);
+                      const matchCat = (t.category || '').toLowerCase().includes(q);
+                      const matchScript = t.scripts && t.scripts.some((s) => s.toLowerCase().includes(q));
+                      return matchName || matchDesc || matchCat || matchScript;
+                    }
+                    return true;
+                  });
+
+                  return (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[10px] text-neutral-500">
+                        <span>Showing {filtered.length} skills</span>
+                        <span>Click card to toggle selection</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-1">
+                        {filtered.map((t) => {
+                          const isSelected = selectedTools.includes(t.id);
+                          const hasScript = t.hasExecutableScript || (t.scripts && t.scripts.length > 0);
+
+                          return (
+                            <label
+                              key={t.id}
+                              className={`p-2.5 rounded-lg border flex flex-col justify-between gap-1.5 cursor-pointer transition ${
+                                isSelected
+                                  ? 'bg-neutral-900 border-[#C5A358]/60 text-white shadow-sm'
+                                  : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:border-neutral-700'
+                              }`}
+                            >
+                              <div className="flex items-start gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedTools([...selectedTools, t.id]);
+                                    } else {
+                                      setSelectedTools(selectedTools.filter((x) => x !== t.id));
+                                    }
+                                  }}
+                                  className="accent-[#C5A358] rounded mt-0.5 shrink-0"
+                                />
+                                <div className="space-y-1 min-w-0">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span
+                                      className={`text-xs font-medium ${
+                                        isSelected ? 'text-[#E5C778]' : 'text-neutral-200'
+                                      }`}
+                                    >
+                                      {t.name}
+                                    </span>
+                                    <span className="text-[9px] px-1 py-0.2 rounded bg-neutral-900 text-neutral-400 border border-neutral-800">
+                                      {t.category}
+                                    </span>
+                                    {hasScript && (
+                                      <span className="inline-flex items-center gap-1 text-[8px] font-mono px-1 py-0.2 rounded bg-emerald-950/70 text-emerald-400 border border-emerald-800/40">
+                                        <Terminal className="w-2.5 h-2.5" />
+                                        CLI
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[10px] text-neutral-500 line-clamp-2">{t.description}</p>
+                                </div>
                               </div>
-                              <p className="text-[10px] text-neutral-500 line-clamp-1">{t.description}</p>
-                            </div>
-                          </div>
-                          <span className="text-[9px] font-mono text-neutral-500 shrink-0">
-                            {t.permission}
-                          </span>
-                        </label>
-                      );
-                    })}
-                </div>
+                              <div className="pt-1 border-t border-neutral-900 flex items-center justify-between text-[9px] font-mono text-neutral-600">
+                                <span>{hasScript && t.scripts?.[0] ? t.scripts[0] : 'Methodology'}</span>
+                                <span className="uppercase">{t.permission}</span>
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {isCreating && (

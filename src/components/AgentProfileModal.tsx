@@ -23,7 +23,11 @@ import {
   Loader2,
   CheckCircle2,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Trash2,
+  Search,
+  Terminal,
+  Filter
 } from 'lucide-react';
 import { SUPPORTED_MODELS, getModelDetails } from '../lib/models';
 import {
@@ -31,6 +35,7 @@ import {
   AvatarStyle,
   buildAvatarPrompt,
   getCuratedAvatarSuite,
+  getSlotFallbackAvatar,
   DEFAULT_FALLBACK_AVATAR,
   handleAvatarError
 } from '../lib/avatarCatalog';
@@ -48,6 +53,7 @@ interface AgentProfileModalProps {
   allAgents?: Agent[];
   onUpdateReportingLine?: (agentId: string, newReportsToId: string | undefined) => void;
   onUpdateAvatar?: (agentId: string, newAvatarUrl: string) => void;
+  onDeleteAgent?: (agentId: string) => void;
 }
 
 export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
@@ -60,7 +66,8 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   onAddTool,
   allAgents = [],
   onUpdateReportingLine,
-  onUpdateAvatar
+  onUpdateAvatar,
+  onDeleteAgent
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
 
@@ -72,13 +79,18 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   const [hierarchyFeedback, setHierarchyFeedback] = useState<string | null>(null);
 
   // Avatar Studio State
-  const [currentAvatar, setCurrentAvatar] = useState<string>(agent?.avatarUrl || DEFAULT_FALLBACK_AVATAR);
+  const [currentAvatar, setCurrentAvatar] = useState<string>(
+    agent?.avatarUrl || getSlotFallbackAvatar(agent?.gender, agent?.avatarStyle, 0)
+  );
+  const [currentFallbackUrl, setCurrentFallbackUrl] = useState<string>(
+    getSlotFallbackAvatar(agent?.gender, agent?.avatarStyle, 0)
+  );
   const [avatarStyle, setAvatarStyle] = useState<AvatarStyle>('creative');
   const [avatarPrompt, setAvatarPrompt] = useState<string>('');
   const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
   const [avatarSource, setAvatarSource] = useState<'gemini_ai_generated' | 'ai_curated_neural' | 'custom_url'>('ai_curated_neural');
   const [avatarModel, setAvatarModel] = useState('Neural Portrait Engine (Photorealistic)');
-  const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; label: string; badge?: string }>>([]);
+  const [avatarVariations, setAvatarVariations] = useState<Array<{ url: string; fallbackUrl?: string; label: string; badge?: string }>>([]);
   const [customUrlInput, setCustomUrlInput] = useState('');
   const [showCustomUrl, setShowCustomUrl] = useState(false);
   const [avatarSaveSuccess, setAvatarSaveSuccess] = useState(false);
@@ -90,6 +102,10 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
   const [customToolCategory, setCustomToolCategory] = useState<Tool['category']>('Engineering');
   const [customToolPermission, setCustomToolPermission] = useState<ToolPermission>('READ');
   const [customToolApproval, setCustomToolApproval] = useState(false);
+
+  // Skill Filtering & Search State
+  const [toolSearchQuery, setToolSearchQuery] = useState('');
+  const [selectedToolCategory, setSelectedToolCategory] = useState<string>('All');
 
   const getInitialStyle = (a: Agent): AvatarStyle => {
     if (a.department === 'Design') return 'creative';
@@ -108,7 +124,9 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
 
       const style = getInitialStyle(agent);
       setAvatarStyle(style);
-      setCurrentAvatar(agent.avatarUrl || DEFAULT_FALLBACK_AVATAR);
+      const initialFallback = getSlotFallbackAvatar(agent.gender, style, 0);
+      setCurrentAvatar(agent.avatarUrl || initialFallback);
+      setCurrentFallbackUrl(initialFallback);
       setAvatarSaveSuccess(false);
 
       const computedPrompt = buildAvatarPrompt({
@@ -128,9 +146,13 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
         style,
         `${agent.displayName}-${agent.id}`
       );
+      if (suite.primary.fallbackUrl) {
+        setCurrentFallbackUrl(suite.primary.fallbackUrl);
+      }
       setAvatarVariations(
         suite.variations.map((v) => ({
           url: v.url,
+          fallbackUrl: v.fallbackUrl || v.url,
           label: v.label,
           badge: v.style
         }))
@@ -244,24 +266,36 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
     const jobTitle = agent.jobTitle || 'Specialist';
     const department = agent.department || 'Operations';
 
-    const computedPrompt = explicitPrompt !== undefined
-      ? explicitPrompt
-      : buildAvatarPrompt({
-          firstName,
-          lastName,
-          gender,
-          age,
-          nationality,
-          jobTitle,
-          department,
-          style: chosenStyle,
-          customPrompt: avatarPrompt
-        });
+    let computedPrompt: string;
+    if (explicitPrompt !== undefined && explicitPrompt.trim().length > 0) {
+      // User explicitly clicked "Regenerate with Prompt"
+      computedPrompt = explicitPrompt.trim();
+    } else {
+      // User clicked "Generate New AI Portrait" or selected a new style: generate randomized lighting & composition
+      const lightingModifiers = [
+        'cinematic warm studio lighting, 3/4 turn angle, crisp rimlight',
+        'diffuse natural window daylight, subtle contrast, approachable authentic expression',
+        'sleek dramatic edge illumination, sharp focal plane, commanding executive gaze',
+        'soft neutral boardroom studio lighting, shallow depth of field',
+        'clean architectural lighting, confident direct gaze, refined executive framing'
+      ];
+      const randomModifier = lightingModifiers[Math.floor(Math.random() * lightingModifiers.length)];
+      computedPrompt = buildAvatarPrompt({
+        firstName,
+        lastName,
+        gender,
+        age,
+        nationality,
+        jobTitle,
+        department,
+        style: chosenStyle
+      }) + `, ${randomModifier}`;
+    }
 
     setAvatarPrompt(computedPrompt);
 
     try {
-      const res = await fetch('/api/generate-avatar', {
+      const res = await fetch('/api/agents/generate-avatar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -281,8 +315,11 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
         const data = await res.json();
         if (data.avatarUrl) {
           setCurrentAvatar(data.avatarUrl);
-          setAvatarSource(data.source || 'gemini_ai_generated');
-          setAvatarModel(data.model || 'Neural Portrait Engine');
+          if (data.fallbackUrl) {
+            setCurrentFallbackUrl(data.fallbackUrl);
+          }
+          setAvatarSource(data.source || 'ai_generated');
+          setAvatarModel(data.model || 'Neural Portrait Engine (Flux)');
           if (data.variations) {
             setAvatarVariations(data.variations);
           }
@@ -298,9 +335,17 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
       console.warn('Avatar generation notice:', err);
       const fallback = getCuratedAvatarSuite(gender, chosenStyle, `${firstName}-${Date.now()}`);
       setCurrentAvatar(fallback.primary.url);
-      setAvatarVariations(fallback.variations.map((v) => ({ url: v.url, label: v.label, badge: v.style })));
-      setAvatarSource('ai_curated_neural');
-      setAvatarModel('Neural Portrait Archetype (Photorealistic)');
+      setCurrentFallbackUrl(fallback.primary.fallbackUrl || DEFAULT_FALLBACK_AVATAR);
+      setAvatarVariations(
+        fallback.variations.map((v) => ({
+          url: v.url,
+          fallbackUrl: v.fallbackUrl || v.url,
+          label: v.label,
+          badge: v.badge || v.style
+        }))
+      );
+      setAvatarSource('ai_generated');
+      setAvatarModel('Neural Portrait Engine (Photorealistic)');
     } finally {
       setIsGeneratingAvatar(false);
     }
@@ -308,6 +353,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
 
   const handleSelectVariation = (url: string) => {
     setCurrentAvatar(url);
+    setCurrentFallbackUrl(url);
     setAvatarSource('ai_curated_neural');
     setAvatarSaveSuccess(false);
   };
@@ -346,7 +392,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                 src={currentAvatar}
                 alt={agent.displayName}
                 referrerPolicy="no-referrer"
-                onError={(e) => handleAvatarError(e)}
+                onError={(e) => handleAvatarError(e, currentFallbackUrl, agent.gender, avatarStyle, 0)}
                 className="w-13 h-13 rounded object-cover border border-[#222] shadow group-hover:border-[#C5A358] transition"
               />
               <div className="absolute inset-0 bg-black/60 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-[#C5A358]">
@@ -506,7 +552,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                         src={currentAvatar}
                         alt="AI Avatar Staged Preview"
                         referrerPolicy="no-referrer"
-                        onError={(e) => handleAvatarError(e)}
+                        onError={(e) => handleAvatarError(e, currentFallbackUrl, agent.gender, avatarStyle, 0)}
                         className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                           isGeneratingAvatar ? 'opacity-30 blur-xs scale-95' : 'opacity-100'
                         }`}
@@ -531,24 +577,29 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                     </div>
 
                     {/* Primary Generation Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleGenerateAvatar()}
-                      disabled={isGeneratingAvatar}
-                      className="w-full py-2.5 px-3 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center justify-center gap-2 shadow-md transition cursor-pointer disabled:opacity-50"
-                    >
-                      {isGeneratingAvatar ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Generating AI Portrait...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Wand2 className="w-4 h-4" />
-                          <span>Generate New AI Portrait</span>
-                        </>
-                      )}
-                    </button>
+                    <div className="w-full space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateAvatar()}
+                        disabled={isGeneratingAvatar}
+                        className="w-full py-2.5 px-3 rounded bg-[#C5A358] hover:bg-[#D4B56C] text-black text-xs font-semibold flex items-center justify-center gap-2 shadow-md transition cursor-pointer disabled:opacity-50"
+                      >
+                        {isGeneratingAvatar ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Generating AI Portrait...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="w-4 h-4" />
+                            <span>Generate New AI Portrait</span>
+                          </>
+                        )}
+                      </button>
+                      <p className="text-[10px] text-[#777] text-center leading-tight">
+                        Synthesizes a brand new portrait with randomized studio lighting & seed
+                      </p>
+                    </div>
 
                     {/* Save Avatar to Profile Button */}
                     <button
@@ -673,7 +724,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                                   src={variant.url}
                                   alt={variant.label}
                                   referrerPolicy="no-referrer"
-                                  onError={(e) => handleAvatarError(e)}
+                                  onError={(e) => handleAvatarError(e, variant.fallbackUrl, agent.gender, avatarStyle, idx + 1)}
                                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent p-1.5 flex flex-col justify-end">
@@ -734,7 +785,7 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                         placeholder="Describe portrait characteristics, studio lighting, attire..."
                       />
 
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
                         <span className="text-[10px] text-[#666]">
                           Model: <span className="text-[#888]">{avatarModel}</span>
                         </span>
@@ -743,12 +794,16 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                           type="button"
                           onClick={() => handleGenerateAvatar(avatarStyle, avatarPrompt)}
                           disabled={isGeneratingAvatar}
+                          title="Generate portrait strictly following the customized prompt text above"
                           className="py-1 px-3 rounded bg-[#1A1A1A] hover:bg-[#252525] text-[#C5A358] text-xs font-medium border border-[#C5A358]/30 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                         >
                           <RefreshCw className={`w-3 h-3 ${isGeneratingAvatar ? 'animate-spin' : ''}`} />
                           <span>Regenerate with Prompt</span>
                         </button>
                       </div>
+                      <p className="text-[10px] text-[#555] leading-relaxed">
+                        Tip: Edit the prompt above to customize clothing, backdrop, lighting, or physical traits, then click &ldquo;Regenerate with Prompt&rdquo;.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1011,54 +1066,232 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
                 </form>
               )}
 
-              {/* List of all tools with toggle badges */}
-              <div className="space-y-2">
-                <span className="text-[10px] text-[#777] uppercase tracking-wider block">
-                  Click any tool to equip or unequip for {agent.displayName}:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {tools.map((t) => {
-                    const isEquipped = currentAgentTools.includes(t.id);
+              {/* Equipped Tools Quick Strip */}
+              {currentAgentTools.length > 0 && (
+                <div className="p-2.5 rounded-lg bg-[#080808] border border-[#1A1A1A] space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] text-[#888]">
+                    <span className="font-medium text-[#AAA]">Currently Equipped ({currentAgentTools.length})</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onUpdateAgentTools) onUpdateAgentTools(agent.id, []);
+                      }}
+                      className="text-[10px] text-red-400/80 hover:text-red-400 cursor-pointer"
+                    >
+                      Unequip All
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+                    {currentAgentTools.map((toolId) => {
+                      const toolObj = tools.find((t) => t.id === toolId);
+                      return (
+                        <span
+                          key={toolId}
+                          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#C5A358]/15 border border-[#C5A358]/30 text-[10px] text-[#E5C778] font-medium"
+                        >
+                          <span className="truncate max-w-[150px]">{toolObj?.name || toolId}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleTool(toolId)}
+                            className="hover:text-red-400 text-[#AAA] cursor-pointer text-xs"
+                            title="Unequip"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Search & Category Filter Navigation */}
+              <div className="space-y-2.5">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#666]" />
+                  <input
+                    type="text"
+                    placeholder="Search 390+ skills by title, description, or Python script..."
+                    value={toolSearchQuery}
+                    onChange={(e) => setToolSearchQuery(e.target.value)}
+                    className="w-full pl-8 pr-8 py-2 rounded-lg bg-[#070707] border border-[#222] text-xs text-[#EEE] placeholder-[#666] focus:outline-none focus:border-[#C5A358]"
+                  />
+                  {toolSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setToolSearchQuery('')}
+                      className="absolute right-2.5 top-2 text-xs text-[#777] hover:text-[#CCC] cursor-pointer"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+
+                {/* Category Pills (Horizontal Scroll) */}
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
+                  {[
+                    'All',
+                    'Equipped',
+                    'Engineering & Architecture',
+                    'Executive & Strategy',
+                    'Marketing & Growth',
+                    'Operations & Productivity',
+                    'Regulatory & Compliance',
+                    'Product & Design',
+                    'Research & Intelligence',
+                    'Finance & Commercial',
+                    'Core Tools'
+                  ].map((cat) => {
+                    const isSelected = selectedToolCategory === cat;
+                    let count = 0;
+                    if (cat === 'All') count = tools.length;
+                    else if (cat === 'Equipped') count = currentAgentTools.length;
+                    else if (cat === 'Core Tools') count = tools.filter((t) => t.id.startsWith('tool-')).length;
+                    else count = tools.filter((t) => t.category === cat).length;
+
                     return (
                       <button
-                        key={t.id}
+                        key={cat}
                         type="button"
-                        onClick={() => handleToggleTool(t.id)}
-                        className={`p-2.5 rounded border text-left cursor-pointer transition flex items-start justify-between gap-2 ${
-                          isEquipped
-                            ? 'bg-[#C5A358]/10 border-[#C5A358]/50 text-[#F0F0F0]'
-                            : 'bg-[#050505] border-[#181818] text-[#777] hover:border-[#282828] hover:text-[#BBB]'
+                        onClick={() => setSelectedToolCategory(cat)}
+                        className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-medium border transition cursor-pointer flex items-center gap-1 ${
+                          isSelected
+                            ? 'bg-[#C5A358] border-[#C5A358] text-black font-semibold shadow-sm'
+                            : 'bg-[#0A0A0A] border-[#1F1F1F] text-[#888] hover:text-[#CCC] hover:border-[#333]'
                         }`}
                       >
-                        <div className="space-y-0.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className={`text-xs font-medium ${isEquipped ? 'text-[#C5A358]' : 'text-[#DDD]'}`}>
-                              {t.name}
-                            </span>
-                            <span className="text-[9px] px-1 py-0.2 rounded bg-[#111] text-[#666] border border-[#222]">
-                              {t.permission}
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-[#666] line-clamp-1">{t.description}</p>
-                        </div>
-
-                        <div className="shrink-0 pt-0.5">
-                          {isEquipped ? (
-                            <span className="flex items-center gap-1 text-[10px] font-mono text-[#C5A358] font-semibold">
-                              <Check className="w-3.5 h-3.5" />
-                              Equipped
-                            </span>
-                          ) : (
-                            <span className="text-[10px] font-mono text-[#555] hover:text-[#AAA]">
-                              + Equip
-                            </span>
-                          )}
-                        </div>
+                        <span>{cat}</span>
+                        <span
+                          className={`text-[9px] px-1 py-0.2 rounded-full ${
+                            isSelected ? 'bg-black/20 text-black' : 'bg-[#161616] text-[#666]'
+                          }`}
+                        >
+                          {count}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
               </div>
+
+              {/* Tools Counter & Filter Header */}
+              {(() => {
+                const filteredTools = tools.filter((t) => {
+                  const isEquipped = currentAgentTools.includes(t.id);
+                  if (selectedToolCategory === 'Equipped' && !isEquipped) return false;
+                  if (selectedToolCategory === 'Core Tools' && !t.id.startsWith('tool-')) return false;
+                  if (
+                    selectedToolCategory !== 'All' &&
+                    selectedToolCategory !== 'Equipped' &&
+                    selectedToolCategory !== 'Core Tools'
+                  ) {
+                    if (t.category !== selectedToolCategory) return false;
+                  }
+                  if (toolSearchQuery.trim()) {
+                    const q = toolSearchQuery.toLowerCase();
+                    const matchName = t.name.toLowerCase().includes(q);
+                    const matchDesc = t.description.toLowerCase().includes(q);
+                    const matchCat = (t.category || '').toLowerCase().includes(q);
+                    const matchScript = t.scripts && t.scripts.some((s) => s.toLowerCase().includes(q));
+                    return matchName || matchDesc || matchCat || matchScript;
+                  }
+                  return true;
+                });
+
+                return (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[10px] text-[#666]">
+                      <span>
+                        Showing {filteredTools.length} {filteredTools.length === 1 ? 'skill' : 'skills'}
+                        {selectedToolCategory !== 'All' ? ` in ${selectedToolCategory}` : ''}
+                      </span>
+                      <span className="text-[#555]">Click card or button to equip</span>
+                    </div>
+
+                    {filteredTools.length === 0 ? (
+                      <div className="p-8 text-center rounded-lg border border-[#1A1A1A] bg-[#070707] space-y-1">
+                        <p className="text-xs text-[#888]">No skills found matching your search</p>
+                        <p className="text-[10px] text-[#555]">Try clearing your search query or selecting a different category pill</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[380px] overflow-y-auto pr-1">
+                        {filteredTools.map((t) => {
+                          const isEquipped = currentAgentTools.includes(t.id);
+                          const hasScript = t.hasExecutableScript || (t.scripts && t.scripts.length > 0);
+
+                          return (
+                            <div
+                              key={t.id}
+                              onClick={() => handleToggleTool(t.id)}
+                              className={`p-3 rounded-lg border text-left cursor-pointer transition flex flex-col justify-between gap-2.5 ${
+                                isEquipped
+                                  ? 'bg-[#C5A358]/10 border-[#C5A358]/60 text-[#F0F0F0] shadow-sm'
+                                  : 'bg-[#080808] border-[#181818] text-[#777] hover:border-[#2A2A2A] hover:text-[#CCC]'
+                              }`}
+                            >
+                              <div className="space-y-1.5">
+                                <div className="flex items-start justify-between gap-1.5">
+                                  <span
+                                    className={`text-xs font-semibold leading-snug ${
+                                      isEquipped ? 'text-[#E5C778]' : 'text-[#DDD]'
+                                    }`}
+                                  >
+                                    {t.name}
+                                  </span>
+                                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#121212] text-[#666] border border-[#222] shrink-0">
+                                    {t.permission}
+                                  </span>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#101010] text-[#888] border border-[#1C1C1C]">
+                                    {t.category}
+                                  </span>
+                                  {hasScript && (
+                                    <span className="inline-flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">
+                                      <Terminal className="w-2.5 h-2.5" />
+                                      <span>CLI Script</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                <p className="text-[11px] text-[#777] leading-relaxed line-clamp-2">
+                                  {t.description}
+                                </p>
+                              </div>
+
+                              <div className="pt-1.5 border-t border-[#161616] flex items-center justify-between text-[10px]">
+                                {hasScript && t.scripts?.[0] ? (
+                                  <span className="font-mono text-[9px] text-[#555] truncate max-w-[130px]">
+                                    {t.scripts[0]}
+                                  </span>
+                                ) : (
+                                  <span className="text-[9px] text-[#444]">Operational Framework</span>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleTool(t.id);
+                                  }}
+                                  className={`px-2 py-0.5 rounded font-mono text-[10px] font-semibold transition cursor-pointer ${
+                                    isEquipped
+                                      ? 'bg-[#C5A358]/20 text-[#E5C778] border border-[#C5A358]/40 hover:bg-red-950/40 hover:text-red-400 hover:border-red-800/40'
+                                      : 'bg-[#121212] text-[#888] border border-[#222] hover:bg-[#1A1A1A] hover:text-[#EEE]'
+                                  }`}
+                                >
+                                  {isEquipped ? '✓ Equipped' : '+ Equip'}
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -1184,7 +1417,28 @@ export const AgentProfileModal: React.FC<AgentProfileModalProps> = ({
 
         {/* Footer */}
         <div className="p-4 border-t border-[#1A1A1A] bg-[#070707] flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-[#777]">
+          <div className="flex items-center gap-3 text-xs text-[#777]">
+            {onDeleteAgent && agent && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    confirm(
+                      `Are you sure you want to delete ${agent.displayName}? This will permanently remove this agent from the company and release any assigned tasks.`
+                    )
+                  ) {
+                    onDeleteAgent(agent.id);
+                    onClose();
+                  }
+                }}
+                className="px-3 py-1.5 rounded border border-rose-900/50 bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 hover:text-rose-300 text-xs font-medium transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+                title={`Delete ${agent.displayName}`}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Agent</span>
+              </button>
+            )}
+
             {activeTab === 'avatar' && (
               <span>
                 {hasUnsavedAvatar ? (

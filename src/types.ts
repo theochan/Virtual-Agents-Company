@@ -128,12 +128,14 @@ export type ModelProvider =
   | 'openrouter'
   | 'qwen'
   | 'local'
+  | 'omniroute'
   | 'Gemini'
   | 'OpenAI'
   | 'Anthropic'
   | 'Ollama'
   | 'HuggingFace'
-  | 'OpenRouter';
+  | 'OpenRouter'
+  | 'OmniRoute';
 
 export interface LLMConfig {
   provider: ModelProvider;
@@ -142,10 +144,10 @@ export interface LLMConfig {
   maxTokens: number;
   contextLimit?: number;
   reasoningEffort?: 'low' | 'medium' | 'high';
-  // Local models downloaded via Ollama or Hugging Face
+  // Local models downloaded via Ollama, Hugging Face, or OmniRoute Gateway
   isLocal?: boolean;
-  localSource?: 'ollama' | 'huggingface' | 'vllm' | 'custom';
-  localEndpoint?: string; // e.g. "http://localhost:11434" or "http://localhost:8000/v1"
+  localSource?: 'ollama' | 'huggingface' | 'vllm' | 'omniroute' | 'custom';
+  localEndpoint?: string; // e.g. "http://localhost:11434", "http://localhost:8000/v1", or "http://localhost:20128/v1"
   hfRepoId?: string; // e.g. "meta-llama/Llama-3.2-3B-Instruct"
   quantization?: string; // e.g. "Q4_K_M", "Q8_0", "FP16"
 }
@@ -497,15 +499,36 @@ export interface ChatMessage {
 
 export type ToolPermission = 'READ' | 'WRITE' | 'EXECUTE' | 'DESTRUCTIVE';
 
+export type ToolCategory =
+  | 'Research'
+  | 'Engineering'
+  | 'Finance'
+  | 'Communication'
+  | 'Productivity'
+  | 'Engineering & Architecture'
+  | 'Executive & Strategy'
+  | 'Marketing & Growth'
+  | 'Operations & Productivity'
+  | 'Regulatory & Compliance'
+  | 'Product & Design'
+  | 'Research & Intelligence'
+  | 'Finance & Commercial'
+  | string;
+
 export interface Tool {
   id: string;
   name: string;
   description: string;
-  category: 'Research' | 'Engineering' | 'Finance' | 'Communication' | 'Productivity';
+  category: ToolCategory;
+  sourceCategory?: string;
   permission: ToolPermission;
   requiresApproval: boolean;
   schema: Record<string, any>;
   parameters?: Array<{ name: string; type: string; description?: string; required?: boolean }> | Record<string, any>;
+  skillPath?: string;
+  hasExecutableScript?: boolean;
+  scripts?: string[];
+  scriptPaths?: string[];
 }
 
 export interface ApprovalRequest {

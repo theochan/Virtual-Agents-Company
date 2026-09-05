@@ -1,4 +1,5 @@
 import { Agent, Project, MemoryItem, Artifact, Tool } from '../types';
+import claudeSkillsData from './claudeSkills.json';
 
 export const INITIAL_AGENTS: Agent[] = [
   {
@@ -70,8 +71,8 @@ export const INITIAL_AGENTS: Agent[] = [
       reasoningEffort: 'high'
     },
     autonomyLevel: 4,
-    toolIds: ['tool-task-delegator', 'tool-calendar', 'tool-doc-gen'],
-    tools: ['tool-task-delegator', 'tool-calendar', 'tool-doc-gen'],
+    toolIds: ['tool-task-delegator', 'tool-doc-gen', 'tool-web-search', 'skill-ceo-advisor', 'skill-coo-advisor'],
+    tools: ['tool-task-delegator', 'tool-doc-gen', 'tool-web-search', 'skill-ceo-advisor', 'skill-coo-advisor'],
     capabilities: [
       { agentId: 'agent-sarah', capability: 'planning', proficiency: 98, description: 'Multi-phase planning and task scoping' },
       { agentId: 'agent-sarah', capability: 'delegation', proficiency: 98, description: 'Matching specialist skills to subtask contracts' },
@@ -161,8 +162,8 @@ export const INITIAL_AGENTS: Agent[] = [
       reasoningEffort: 'high'
     },
     autonomyLevel: 3,
-    toolIds: ['tool-code-exec', 'tool-db-query', 'tool-github'],
-    tools: ['tool-code-exec', 'tool-db-query', 'tool-github'],
+    toolIds: ['tool-doc-gen', 'tool-web-search', 'tool-task-delegator', 'skill-senior-architect', 'skill-skill-security-auditor', 'skill-ci-cd-pipeline-builder'],
+    tools: ['tool-doc-gen', 'tool-web-search', 'tool-task-delegator', 'skill-senior-architect', 'skill-skill-security-auditor', 'skill-ci-cd-pipeline-builder'],
     capabilities: [
       { agentId: 'agent-marcus', capability: 'software_architecture', proficiency: 96, description: 'Microservices, monolith splitting, distributed data' },
       { agentId: 'agent-marcus', capability: 'database_design', proficiency: 94, description: 'PostgreSQL, relational schemas, indexing, migrations' },
@@ -251,8 +252,8 @@ export const INITIAL_AGENTS: Agent[] = [
       contextLimit: 32000
     },
     autonomyLevel: 3,
-    toolIds: ['tool-web-search', 'tool-doc-gen', 'tool-web-reader'],
-    tools: ['tool-web-search', 'tool-doc-gen', 'tool-web-reader'],
+    toolIds: ['tool-web-search', 'tool-doc-gen', 'skill-market-research', 'skill-deepread', 'skill-stock-analysis'],
+    tools: ['tool-web-search', 'tool-doc-gen', 'skill-market-research', 'skill-deepread', 'skill-stock-analysis'],
     capabilities: [
       { agentId: 'agent-emma', capability: 'web_research', proficiency: 96, description: 'Live web scraping, academic papers, vendor specs' },
       { agentId: 'agent-emma', capability: 'competitive_analysis', proficiency: 93, description: 'Feature parity grids, pricing models, market positioning' },
@@ -340,8 +341,8 @@ export const INITIAL_AGENTS: Agent[] = [
       contextLimit: 32000
     },
     autonomyLevel: 2,
-    toolIds: ['tool-web-search', 'tool-spreadsheet', 'tool-doc-gen'],
-    tools: ['tool-web-search', 'tool-spreadsheet', 'tool-doc-gen'],
+    toolIds: ['tool-web-search', 'tool-doc-gen', 'skill-saas-metrics-coach', 'skill-financial-analyst', 'skill-cfo-advisor'],
+    tools: ['tool-web-search', 'tool-doc-gen', 'skill-saas-metrics-coach', 'skill-financial-analyst', 'skill-cfo-advisor'],
     capabilities: [
       { agentId: 'agent-daniel', capability: 'financial_analysis', proficiency: 95, description: 'Cash flow, capital expenditure, unit economics' },
       { agentId: 'agent-daniel', capability: 'roi_modeling', proficiency: 92, description: 'Migration cost-benefit modeling and payback periods' },
@@ -429,8 +430,8 @@ export const INITIAL_AGENTS: Agent[] = [
       contextLimit: 32000
     },
     autonomyLevel: 3,
-    toolIds: ['tool-web-search', 'tool-doc-gen'],
-    tools: ['tool-web-search', 'tool-doc-gen'],
+    toolIds: ['tool-web-search', 'tool-doc-gen', 'skill-product-manager-toolkit', 'skill-ux-researcher-designer', 'skill-landing-page-generator'],
+    tools: ['tool-web-search', 'tool-doc-gen', 'skill-product-manager-toolkit', 'skill-ux-researcher-designer', 'skill-landing-page-generator'],
     capabilities: [
       { agentId: 'agent-ava', capability: 'design_systems', proficiency: 96, description: 'Component libraries, spacing tokens, typography scales' },
       { agentId: 'agent-ava', capability: 'ux_prototyping', proficiency: 94, description: 'Interactive wireframes and information flows' }
@@ -516,8 +517,8 @@ export const INITIAL_AGENTS: Agent[] = [
       contextLimit: 32000
     },
     autonomyLevel: 2,
-    toolIds: ['tool-web-search', 'tool-calendar', 'tool-doc-gen'],
-    tools: ['tool-web-search', 'tool-calendar', 'tool-doc-gen'],
+    toolIds: ['tool-web-search', 'tool-doc-gen', 'skill-sales-engineer'],
+    tools: ['tool-web-search', 'tool-doc-gen', 'skill-sales-engineer'],
     capabilities: [
       { agentId: 'agent-james', capability: 'enterprise_sales', proficiency: 95, description: 'Enterprise procurement cycles, enterprise SLA negotiation' },
       { agentId: 'agent-james', capability: 'negotiation', proficiency: 92, description: 'Contract terms and customer data agreements' }
@@ -978,11 +979,11 @@ PostgreSQL maintains 74% developer preference in enterprise data tiers according
   }
 ];
 
-export const INITIAL_TOOLS: Tool[] = [
+export const CORE_TOOLS: Tool[] = [
   {
     id: 'tool-web-search',
     name: 'Web Search & Intelligence',
-    description: 'Searches web resources, primary technical documentation, benchmarks, and market releases.',
+    description: 'Searches live web resources, primary technical documentation, benchmarks, and real-time market data.',
     category: 'Research',
     permission: 'READ',
     requiresApproval: false,
@@ -993,48 +994,9 @@ export const INITIAL_TOOLS: Tool[] = [
     ]
   },
   {
-    id: 'tool-code-exec',
-    name: 'Sandboxed Code Execution',
-    description: 'Executes TypeScript / SQL benchmarking scripts inside an isolated container.',
-    category: 'Engineering',
-    permission: 'EXECUTE',
-    requiresApproval: false,
-    schema: { language: 'string', code: 'string' },
-    parameters: [
-      { name: 'language', type: 'string', required: true, description: 'Runtime language (typescript, sql, bash)' },
-      { name: 'code', type: 'string', required: true, description: 'Executable script body' }
-    ]
-  },
-  {
-    id: 'tool-db-query',
-    name: 'Database Explorer & Schema Inspector',
-    description: 'Queries schema definitions, indexes, and execution plans.',
-    category: 'Engineering',
-    permission: 'READ',
-    requiresApproval: false,
-    schema: { query: 'string', readOnly: 'boolean' },
-    parameters: [
-      { name: 'query', type: 'string', required: true, description: 'SQL read statement' },
-      { name: 'readOnly', type: 'boolean', required: true, description: 'Enforce read-only constraint' }
-    ]
-  },
-  {
-    id: 'tool-spreadsheet',
-    name: 'Financial Model Spreadsheet',
-    description: 'Calculates amortized cloud TCO, cash flow impact, and engineering hours.',
-    category: 'Finance',
-    permission: 'WRITE',
-    requiresApproval: false,
-    schema: { modelType: 'string', variables: 'object' },
-    parameters: [
-      { name: 'modelType', type: 'string', required: true, description: 'Financial or infrastructure calculation archetype' },
-      { name: 'variables', type: 'object', required: true, description: 'Cost and time input variables' }
-    ]
-  },
-  {
     id: 'tool-doc-gen',
     name: 'Artifact & Document Generator',
-    description: 'Generates markdown RFCs, executive briefs, and technical specifications.',
+    description: 'Generates markdown RFCs, executive briefs, technical specifications, and documents.',
     category: 'Productivity',
     permission: 'WRITE',
     requiresApproval: false,
@@ -1046,34 +1008,9 @@ export const INITIAL_TOOLS: Tool[] = [
     ]
   },
   {
-    id: 'tool-db-migrate',
-    name: 'Production Database Migration Tool',
-    description: 'Executes DDL schema changes or runs production data backfills.',
-    category: 'Engineering',
-    permission: 'DESTRUCTIVE',
-    requiresApproval: true,
-    schema: { migrationName: 'string', sql: 'string' },
-    parameters: [
-      { name: 'migrationName', type: 'string', required: true, description: 'Unique migration descriptor' },
-      { name: 'sql', type: 'string', required: true, description: 'DDL or schema modification script' }
-    ]
-  },
-  {
-    id: 'tool-calendar',
-    name: 'Company Calendar & Schedules',
-    description: 'Checks team availability, deadlines, and milestone schedules.',
-    category: 'Communication',
-    permission: 'READ',
-    requiresApproval: false,
-    schema: { dateRange: 'string' },
-    parameters: [
-      { name: 'dateRange', type: 'string', required: true, description: 'Target date or ISO period' }
-    ]
-  },
-  {
     id: 'tool-task-delegator',
     name: 'Task Delegation Orchestrator',
-    description: 'Dispatches structured delegation contracts and updates the task blackboard.',
+    description: 'Dispatches structured delegation contracts and updates the task blackboard / Kanban board.',
     category: 'Productivity',
     permission: 'WRITE',
     requiresApproval: false,
@@ -1083,84 +1020,11 @@ export const INITIAL_TOOLS: Tool[] = [
       { name: 'objective', type: 'string', required: true, description: 'Delegated task requirement' },
       { name: 'expectedOutput', type: 'string', required: true, description: 'Deliverable specification' }
     ]
-  },
-  {
-    id: 'tool-github-prs',
-    name: 'GitHub PR & Diff Reviewer',
-    description: 'Inspects pull request diffs, checks CI test suites, and flags regressions.',
-    category: 'Engineering',
-    permission: 'READ',
-    requiresApproval: false,
-    schema: { repo: 'string', pullNumber: 'number' },
-    parameters: [
-      { name: 'repo', type: 'string', required: true, description: 'Target GitHub repository' },
-      { name: 'pullNumber', type: 'number', required: true, description: 'Pull Request number' }
-    ]
-  },
-  {
-    id: 'tool-security-scanner',
-    name: 'Trivy / Snyk Security Scanner',
-    description: 'Scans dependencies, container bases, and CVE vulnerability databases.',
-    category: 'Engineering',
-    permission: 'READ',
-    requiresApproval: false,
-    schema: { target: 'string', severityFilter: 'string' },
-    parameters: [
-      { name: 'target', type: 'string', required: true, description: 'Repository or container image URI' },
-      { name: 'severityFilter', type: 'string', required: false, description: 'Minimum CVE severity threshold' }
-    ]
-  },
-  {
-    id: 'tool-financial-modeling',
-    name: 'Runway & Cost-Benefit Estimator',
-    description: 'Models multi-year burn rates, infrastructure hosting costs, and ROI metrics.',
-    category: 'Finance',
-    permission: 'READ',
-    requiresApproval: false,
-    schema: { monthlySpend: 'number', growthRate: 'number' },
-    parameters: [
-      { name: 'monthlySpend', type: 'number', required: true, description: 'Baseline monthly burn' },
-      { name: 'growthRate', type: 'number', required: true, description: 'Estimated monthly growth rate' }
-    ]
-  },
-  {
-    id: 'tool-vector-indexer',
-    name: 'pgvector Memory & Knowledge Indexer',
-    description: 'Generates HNSW embeddings and registers semantic knowledge into PostgreSQL.',
-    category: 'Research',
-    permission: 'WRITE',
-    requiresApproval: false,
-    schema: { documentContent: 'string', scope: 'string' },
-    parameters: [
-      { name: 'documentContent', type: 'string', required: true, description: 'Source content text' },
-      { name: 'scope', type: 'string', required: true, description: 'Memory scope: project, organization, agent' }
-    ]
-  },
-  {
-    id: 'tool-cloud-deploy',
-    name: 'Cloud Infrastructure & Deployer',
-    description: 'Deploys container revisions to Cloud Run / Kubernetes with automated rollback.',
-    category: 'Engineering',
-    permission: 'EXECUTE',
-    requiresApproval: true,
-    schema: { service: 'string', tag: 'string', environment: 'string' },
-    parameters: [
-      { name: 'service', type: 'string', required: true, description: 'Target microservice name' },
-      { name: 'tag', type: 'string', required: true, description: 'Image tag version' },
-      { name: 'environment', type: 'string', required: true, description: 'Target stage (staging, production)' }
-    ]
-  },
-  {
-    id: 'tool-notification-dispatch',
-    name: 'Slack & Webhook Dispatcher',
-    description: 'Dispatches operational broadcasts, incident alerts, and milestone updates.',
-    category: 'Communication',
-    permission: 'WRITE',
-    requiresApproval: false,
-    schema: { channel: 'string', message: 'string' },
-    parameters: [
-      { name: 'channel', type: 'string', required: true, description: 'Target channel or webhook' },
-      { name: 'message', type: 'string', required: true, description: 'Alert message body' }
-    ]
   }
 ];
+
+export const INITIAL_TOOLS: Tool[] = [
+  ...CORE_TOOLS,
+  ...(claudeSkillsData as Tool[])
+];
+

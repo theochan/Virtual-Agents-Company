@@ -60,6 +60,14 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
       localCacheDir: '~/.cache/huggingface/hub',
       isConfigured: true,
       status: 'ready'
+    },
+    omniroute: {
+      defaultModel: 'auto',
+      endpoint: 'http://localhost:20128/v1',
+      apiKeyMasked: '',
+      isConfigured: false,
+      status: 'ready',
+      downloadedModels: ['auto', 'auto/coding', 'auto/fast', 'auto/cheap']
     }
   });
 
@@ -67,6 +75,8 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [qwenKeyInput, setQwenKeyInput] = useState('');
   const [geminiKeyInput, setGeminiKeyInput] = useState('');
   const [hfTokenInput, setHfTokenInput] = useState('');
+  const [omnirouteKeyInput, setOmnirouteKeyInput] = useState('');
+  const [omnirouteEndpointInput, setOmnirouteEndpointInput] = useState('http://127.0.0.1:20128/v1');
 
   // Local model inputs
   const [ollamaEndpointInput, setOllamaEndpointInput] = useState('http://localhost:11434');
@@ -81,6 +91,9 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [testingHf, setTestingHf] = useState(false);
   const [hfTestResult, setHfTestResult] = useState<{ connected: boolean; message: string; latencyMs?: number } | null>(null);
 
+  const [testingOmniroute, setTestingOmniroute] = useState(false);
+  const [omnirouteTestResult, setOmnirouteTestResult] = useState<{ connected: boolean; message: string; latencyMs?: number } | null>(null);
+
   const [savingProvider, setSavingProvider] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
@@ -92,6 +105,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           setSettings(data);
           if (data.ollama?.endpoint) setOllamaEndpointInput(data.ollama.endpoint);
           if (data.huggingface?.endpoint) setHfEndpointInput(data.huggingface.endpoint);
+          if (data.omniroute?.endpoint) setOmnirouteEndpointInput(data.omniroute.endpoint);
         }
       })
       .catch((err) => console.log('Could not load LLM settings:', err));
@@ -114,12 +128,51 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
         if (provider === 'qwen') setQwenKeyInput('');
         if (provider === 'gemini') setGeminiKeyInput('');
         if (provider === 'huggingface') setHfTokenInput('');
+        if (provider === 'omniroute') setOmnirouteKeyInput('');
         setTimeout(() => setSaveSuccess(null), 3000);
       }
     } catch (err) {
       console.error('Failed to save settings:', err);
     } finally {
       setSavingProvider(null);
+    }
+  };
+
+  const handleTestOmniRoute = async () => {
+    setTestingOmniroute(true);
+    setOmnirouteTestResult(null);
+    try {
+      const res = await fetch('/api/admin/omniroute/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          endpoint: omnirouteEndpointInput,
+          apiKey: omnirouteKeyInput || undefined
+        })
+      });
+      const data = await res.json();
+      setOmnirouteTestResult({
+        connected: data.connected,
+        message: data.message || (data.connected ? 'OmniRoute online' : 'Connection failed'),
+        latencyMs: data.latencyMs
+      });
+      if (data.models && data.models.length > 0) {
+        setSettings((prev) => ({
+          ...prev,
+          omniroute: {
+            ...prev.omniroute,
+            downloadedModels: data.models,
+            status: data.connected ? 'connected' : prev.omniroute?.status
+          }
+        }));
+      }
+    } catch (err: any) {
+      setOmnirouteTestResult({
+        connected: false,
+        message: `Failed to connect to OmniRoute: ${err.message}`
+      });
+    } finally {
+      setTestingOmniroute(false);
     }
   };
 
@@ -562,6 +615,140 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                 )}
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* SECTION: OmniRoute AI Gateway */}
+        <div className="p-5 rounded-xl border border-violet-950/40 bg-[#0A0712] shadow-lg space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🚀</span>
+              <div>
+                <h3 className="text-sm font-semibold text-[#F0F0F0] flex items-center gap-2">
+                  OmniRoute AI Gateway
+                  <span className="text-[10px] px-2 py-0.5 rounded font-mono bg-violet-950/60 text-violet-300 border border-violet-800/40">
+                    OpenAI-Compatible
+                  </span>
+                </h3>
+                <p className="text-xs text-[#888]">
+                  Unified endpoint routing across 350+ providers (Claude, GPT-4o, Gemini, DeepSeek) with quota-aware auto-fallback.
+                </p>
+              </div>
+            </div>
+            <span
+              className={`text-[9px] px-2 py-0.5 rounded font-mono ${
+                settings.omniroute?.status === 'connected'
+                  ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/40'
+                  : settings.omniroute?.isConfigured
+                  ? 'bg-violet-950/40 text-violet-400 border border-violet-800/40'
+                  : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
+              }`}
+            >
+              {settings.omniroute?.status === 'connected' ? 'CONNECTED' : settings.omniroute?.isConfigured ? 'CONFIGURED' : 'STANDBY'}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Gateway Endpoint */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-[10px] uppercase font-mono text-[#777]">Gateway Endpoint</label>
+                <button
+                  type="button"
+                  onClick={handleTestOmniRoute}
+                  disabled={testingOmniroute}
+                  className="text-[10px] text-violet-400 hover:text-violet-300 flex items-center gap-1 transition cursor-pointer"
+                >
+                  <Activity className={`w-3 h-3 ${testingOmniroute ? 'animate-spin' : ''}`} />
+                  <span>{testingOmniroute ? 'Testing...' : 'Test Connection'}</span>
+                </button>
+              </div>
+              <input
+                type="text"
+                value={omnirouteEndpointInput}
+                onChange={(e) => setOmnirouteEndpointInput(e.target.value)}
+                className="w-full px-2.5 py-1.5 rounded bg-[#050505] border border-[#222] focus:border-violet-500/50 text-xs text-[#E0E0E0] outline-none font-mono"
+                placeholder="http://localhost:20128/v1"
+              />
+            </div>
+
+            {/* API Key */}
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase font-mono text-[#777]">OmniRoute API Key / Token</label>
+              <input
+                type="password"
+                placeholder={settings.omniroute?.apiKeyMasked || 'Enter OmniRoute API key...'}
+                value={omnirouteKeyInput}
+                onChange={(e) => setOmnirouteKeyInput(e.target.value)}
+                className="w-full px-2.5 py-1.5 rounded bg-[#050505] border border-[#222] focus:border-violet-500/50 text-xs text-[#E0E0E0] outline-none font-mono placeholder-[#555]"
+              />
+            </div>
+
+            {/* Default Combo / Model */}
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase font-mono text-[#777]">Default Routing Strategy</label>
+              <select
+                value={settings.omniroute?.defaultModel || 'auto'}
+                onChange={(e) =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    omniroute: { ...prev.omniroute, defaultModel: e.target.value }
+                  }))
+                }
+                className="w-full px-2.5 py-1.5 rounded bg-[#050505] border border-[#222] focus:border-violet-500/50 text-xs text-[#E0E0E0] outline-none cursor-pointer font-mono"
+              >
+                <option value="auto">auto (Balanced LKGP default)</option>
+                <option value="auto/coding">auto/coding (Quality-first coding)</option>
+                <option value="auto/fast">auto/fast (Lowest latency)</option>
+                <option value="auto/cheap">auto/cheap (Cost & free tier first)</option>
+                {(settings.omniroute?.downloadedModels || [])
+                  .filter((m) => !['auto', 'auto/coding', 'auto/fast', 'auto/cheap'].includes(m))
+                  .map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Test connection feedback */}
+          {omnirouteTestResult && (
+            <div className="p-2.5 rounded bg-[#050505] border border-violet-900/30 text-xs text-[#BBB] font-mono flex items-center justify-between">
+              <span className={omnirouteTestResult.connected ? 'text-emerald-400' : 'text-amber-400'}>
+                {omnirouteTestResult.message}
+              </span>
+              {omnirouteTestResult.latencyMs !== undefined && (
+                <span className="text-violet-400 font-semibold">{omnirouteTestResult.latencyMs}ms</span>
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-end pt-1">
+            <button
+              onClick={() =>
+                handleSaveProvider('omniroute', {
+                  endpoint: omnirouteEndpointInput,
+                  apiKey: omnirouteKeyInput,
+                  defaultModel: settings.omniroute?.defaultModel || 'auto',
+                  downloadedModels: settings.omniroute?.downloadedModels || []
+                })
+              }
+              disabled={savingProvider === 'omniroute'}
+              className="px-5 py-1.5 rounded bg-violet-950/50 hover:bg-violet-900/60 border border-violet-800/50 text-xs text-violet-200 font-medium transition cursor-pointer flex items-center gap-1.5"
+            >
+              {saveSuccess === 'omniroute' ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-400">OmniRoute Settings Saved</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-3.5 h-3.5 text-violet-400" />
+                  <span>Save OmniRoute Configuration</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
 

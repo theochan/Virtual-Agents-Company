@@ -14,7 +14,8 @@ import {
   ExternalLink,
   ChevronRight,
   Network,
-  LayoutGrid
+  LayoutGrid,
+  Trash2
 } from 'lucide-react';
 import { OrgChartView } from './OrgChartView';
 import { handleAvatarError } from '../lib/avatarCatalog';
@@ -24,6 +25,7 @@ interface AgentDirectoryViewProps {
   onSelectAgent: (agentId: string) => void;
   onOpenProfile: (agent: Agent) => void;
   onUpdateReportingLine?: (agentId: string, newReportsToId: string | undefined) => void;
+  onDeleteAgent?: (agentId: string) => void;
   initialMode?: 'grid' | 'org_chart';
 }
 
@@ -32,6 +34,7 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
   onSelectAgent,
   onOpenProfile,
   onUpdateReportingLine,
+  onDeleteAgent,
   initialMode = 'grid'
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'org_chart'>(initialMode);
@@ -275,6 +278,24 @@ export const AgentDirectoryView: React.FC<AgentDirectoryViewProps> = ({
                   >
                     <Sliders className="w-3.5 h-3.5" />
                   </button>
+
+                  {onDeleteAgent && (
+                    <button
+                      onClick={() => {
+                        if (
+                          confirm(
+                            `Are you sure you want to delete ${agent.displayName}? This will permanently remove them from the company directory.`
+                          )
+                        ) {
+                          onDeleteAgent(agent.id);
+                        }
+                      }}
+                      className="py-1.5 px-2.5 rounded border border-[#1A1A1A] bg-[#070707] hover:border-rose-900/50 hover:bg-rose-950/20 text-[#666] hover:text-rose-400 text-xs font-medium transition cursor-pointer"
+                      title={`Delete ${agent.displayName}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             );
