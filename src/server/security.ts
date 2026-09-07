@@ -22,12 +22,20 @@ export function installSecurity(app: Express, directory: string, port: number) {
   if (!process.env.VAC_ACCESS_TOKEN && !fs.existsSync(tokenPath)) {
     fs.writeFileSync(tokenPath, crypto.randomBytes(32).toString('hex'), { mode: 0o600, flag: 'wx' });
   }
-  const token = process.env.VAC_ACCESS_TOKEN || fs.readFileSync(tokenPath, 'utf8').trim();
+  let token = process.env.VAC_ACCESS_TOKEN || fs.readFileSync(tokenPath, 'utf8').trim();
   if (token.length < 32) throw new Error('VAC_ACCESS_TOKEN must contain at least 32 characters');
   // A session is ephemeral; restarting requires signing in again, not reauthorizing work.
   const sessions = new Map<string, number>();
   let attempts = 0;
   let resetAt = Date.now() + 60000;
+  app.use((_req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    if (process.env.NODE_ENV === 'production') res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'");
+    next();
+  });
   app.use('/api', (req, res, next) => {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -59,6 +67,29 @@ export function installSecurity(app: Express, directory: string, port: number) {
     sessions.set(id, Date.now() + 12 * 60 * 60 * 1000);
     res.setHeader('Set-Cookie', `vac_session=${id}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=43200`);
     res.json({ authenticated: true });
+  });
+  app.delete('/api/session', (req, res) => {
+    const id = req.headers.cookie?.split(';').map(s => s.trim()).find(s => s.startsWith('vac_session='))?.slice(12);
+    if (id) sessions.delete(id);
+    res.setHeader('Set-Cookie', 'vac_session=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0');
+    res.json({ authenticated: false });
+  });
+  app.post('/api/session/revoke-all', (_req, res) => {
+    sessions.clear();
+    res.setHeader('Set-Cookie', 'vac_session=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0');
+    res.json({ authenticated: false });
+  });
+  app.post('/api/session/rotate-token', (req, res) => {
+    const proof = z.object({ currentToken: z.string().max(1024) }).safeParse(req.body);
+    if (!proof.success || !equal(proof.data.currentToken, token)) return res.status(403).json({ error: 'Current owner token is required' });
+    if (process.env.VAC_ACCESS_TOKEN) return res.status(409).json({ error: 'Token is environment-managed; change VAC_ACCESS_TOKEN and restart to invalidate old sessions' });
+    const nextToken = crypto.randomBytes(32).toString('hex');
+    const temporary = `${tokenPath}.${crypto.randomUUID()}.tmp`;
+    try { fs.writeFileSync(temporary, nextToken, { mode: 0o600, flag: 'wx' }); fs.renameSync(temporary, tokenPath); }
+    catch { if (fs.existsSync(temporary)) fs.unlinkSync(temporary); return res.status(500).json({ error: 'Token rotation could not be persisted' }); }
+    token = nextToken; sessions.clear();
+    res.setHeader('Set-Cookie', 'vac_session=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0');
+    res.json({ authenticated: false, message: 'Read the new token from the private access-token file and sign in again' });
   });
   console.log(`Workspace access token: ${process.env.VAC_ACCESS_TOKEN ? 'provided by environment' : tokenPath}`);
 }

@@ -1,0 +1,153 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "5df3bdf246f01867a9a5bcd79b0ef91b74b63a9febd7587c7f78475dce6c2696",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "startedAt": "2026-09-07T02:36:18.880Z",
+  "finishedAt": "2026-09-07T02:42:16.656Z",
+  "summary": {
+    "calculation": {
+      "passed": 8,
+      "total": 8
+    },
+    "project-summary": {
+      "passed": 7,
+      "total": 8
+    },
+    "research": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "quality": "Requires content review; automatic checks do not certify factual correctness",
+  "model": "qwen2.5:7b",
+  "corpusHash": "2b9aacc7c62946f8bf87360f2dff7b651e04855b693ed0fe049827d26b4409df",
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-09-07T02:36:00.668Z",
+    "revision": "e543b44f093ae9900f95f57de23d0476acc5a8d7",
+    "sourceHash": "90df9cd4ea9e4ffea7763d8458adb5a317f7cd36bb812005c9438b7a4f58d15f",
+    "node": "v24.19.0",
+    "assets": [
+      {
+        "path": "assets/index-1IheP-oo.js",
+        "sha256": "ea1d55e4a2fdc8a7510d36a4682cc96061b7304888a600625c1e391805679ac8"
+      },
+      {
+        "path": "assets/index-Ca5uJpFi.css",
+        "sha256": "8467035a6e86c21946d056a36480f84bc4e610b8ba10754f5667b1a75af38150"
+      },
+      {
+        "path": "index.html",
+        "sha256": "94e215d721360b267084857bb24d8808a44b22aa8c84b8138d05cd0d649f7a95"
+      },
+      {
+        "path": "server.cjs",
+        "sha256": "455c375eca109f5df9de6c0369940184749bd8fa36c8f33f6bc58bf699bcec26"
+      },
+      {
+        "path": "server.cjs.map",
+        "sha256": "f46c47807f16928df96b3d7ce4a171f5cfb49bdb1ae9667463a2b6ce98945646"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": false
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    },
+    {
+      "status": "reviewing",
+      "pass": true
+    }
+  ]
+}

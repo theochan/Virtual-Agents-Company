@@ -1,0 +1,38 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "b2cbb9b2d9077ae6891b122c3bb551d8029a28ae5af4f111fb3287c780910a12",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "at": "2026-09-07T04:17:59.661Z",
+  "error": "Command failed: /bin/launchctl bootstrap gui/501 <operator-home>/Library/LaunchAgents/com.theo.vac.plist\nBootstrap failed: 5: Input/output error\nTry re-running the command as root for richer errors.\n",
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-09-07T04:16:32.862Z",
+    "revision": "e543b44f093ae9900f95f57de23d0476acc5a8d7",
+    "sourceHash": "326eb3044ba7dcfc5e800ab1a13411e75576f7a3cd7e25cccab5fbd3040c0279",
+    "node": "v24.19.0",
+    "assets": [
+      {
+        "path": "assets/index-BHu6-kxn.css",
+        "sha256": "da11b192d691c276ccd276367c86647a4faa37cdfd88e30c527e664d7d0d8dfb"
+      },
+      {
+        "path": "assets/index-DK0kb7Ta.js",
+        "sha256": "f0187fdfb615100dc2e714badce9a647dfa9e4fa89ba3305b00d4eec020bc0e0"
+      },
+      {
+        "path": "index.html",
+        "sha256": "c2fb9696bdc7a7c6b17464ee902bd748af24fe63aa7536a926dd4125d0f0b770"
+      },
+      {
+        "path": "server.cjs",
+        "sha256": "a6f73e4ed69acaab2c4639c2a0aa4f9eccba9abddd437f2f42a4276ca73ffa1e"
+      },
+      {
+        "path": "server.cjs.map",
+        "sha256": "57864eafd058e6b57aafe77e742fc9b10f22a601553ac2d441b6be135dd10875"
+      }
+    ]
+  }
+}

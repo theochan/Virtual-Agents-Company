@@ -1,0 +1,40 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "7b46bccea50aab496dc9c73c9d6a495e460da315d2975e675d5825c573c4f094",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "at": "2026-09-07T04:13:52.400Z",
+  "pass": true,
+  "quarantinedCount": 30,
+  "preservedRecords": true,
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-09-07T04:12:39.273Z",
+    "revision": "e543b44f093ae9900f95f57de23d0476acc5a8d7",
+    "sourceHash": "a390344697101950e2d93bc5df79146052a9792ef148bdb6e81f92241ffab58b",
+    "node": "v24.19.0",
+    "assets": [
+      {
+        "path": "assets/index-BHu6-kxn.css",
+        "sha256": "da11b192d691c276ccd276367c86647a4faa37cdfd88e30c527e664d7d0d8dfb"
+      },
+      {
+        "path": "assets/index-DK0kb7Ta.js",
+        "sha256": "f0187fdfb615100dc2e714badce9a647dfa9e4fa89ba3305b00d4eec020bc0e0"
+      },
+      {
+        "path": "index.html",
+        "sha256": "c2fb9696bdc7a7c6b17464ee902bd748af24fe63aa7536a926dd4125d0f0b770"
+      },
+      {
+        "path": "server.cjs",
+        "sha256": "79ef4fad02a1a99410467b14b5dcefe35201b80f65d5df0f7a95c9195d56d6bd"
+      },
+      {
+        "path": "server.cjs.map",
+        "sha256": "7e404b423eb83b521244a5ab62433d550dc286403391325aa3277c58ca264b2f"
+      }
+    ]
+  }
+}

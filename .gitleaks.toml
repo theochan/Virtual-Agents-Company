@@ -1,0 +1,136 @@
+title = "Reviewed upstream example matches"
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/docs/skills/engineering/api\\-design\\-reviewer\\.md$"]
+regexes = ["^\\s*Idempotency\\-Key:\\ 123e4567\\-e89b\\-12d3\\-a456\\-426614174000\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/docs/skills/engineering\\-team/senior\\-secops\\.md$"]
+regexes = ["^\\s*API_KEY\\ =\\ \"sk\\-1234567890abcdef\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/api\\-design\\-reviewer/SKILL\\.md$"]
+regexes = ["^\\s*Idempotency\\-Key:\\ 123e4567\\-e89b\\-12d3\\-a456\\-426614174000\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skill\\-doctor/skills/skill\\-doctor/scripts/collect_sessions\\.py$"]
+regexes = ["^\\s*\\(\"output\",\\ \"export\\ OPENAI_API_KEY=sk\\-abcdefghijklmnopqrstuv1234\\ loaded\\ from\\ \\.env\"\\),\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/tech\\-debt\\-tracker/assets/sample_codebase/src/user_service\\.py$"]
+regexes = ["^\\s*API_KEY\\ =\\ \"sk\\-1234567890abcdef\"\\ \\ \\#\\ FIXME:\\ This\\ should\\ be\\ in\\ environment\\ variables\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/tech\\-debt\\-tracker/assets/sample_codebase/src/frontend\\.js$"]
+regexes = ["^\\s*const\\ API_KEY\\ =\\ \"abc123def456\";\\ //\\ FIXME:\\ Should\\ be\\ in\\ environment\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/skill\\-tester/tests/test_security_scorer\\.py$"]
+regexes = ["^\\s*token\\ =\\ \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\\.eyJzdWIiOiIxMjM0NTY3ODkwIn0\\.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/skill\\-tester/tests/test_security_scorer\\.py$"]
+regexes = ["^\\s*code\\ =\\ 'api_key\\ =\\ \"sk\\-1234567890abcdef\"'\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/skill\\-tester/tests/test_security_scorer\\.py$"]
+regexes = ["^\\s*code\\ =\\ 'token\\ =\\ \"ghp_1234567890abcdef\"'\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/skill\\-tester/tests/test_security_scorer\\.py$"]
+regexes = ["^\\s*api_key\\ =\\ \"sk\\-1234567890abcdef123456\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/skill\\-tester/tests/test_security_scorer\\.py$"]
+regexes = ["^\\s*token\\ =\\ \"ghp_1234567890abcdef\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering/skills/skill\\-tester/tests/test_security_scorer\\.py$"]
+regexes = ["^\\s*api_key\\ =\\ \"sk\\-1234567890abcdef\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering\\-team/skills/senior\\-secops/SKILL\\.md$"]
+regexes = ["^\\s*API_KEY\\ =\\ \"sk\\-1234567890abcdef\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering\\-team/skills/senior\\-secops/references/security_standards\\.md$"]
+regexes = ["^\\s*common_passwords\\ =\\ \\{'password123',\\ 'qwerty123456',\\ 'admin123456'\\}\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering\\-team/skills/senior\\-security/references/security\\-architecture\\-patterns\\.md$"]
+regexes = ["^\\s*API_KEY\\ =\\ \"sk\\-1234567890abcdef\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering\\-team/skills/senior\\-security/scripts/secret_scanner\\.py$"]
+regexes = ["^\\s*regex=r'\\-\\-\\-\\-\\-BEGIN\\ RSA\\ PRIVATE\\ KEY\\-\\-\\-\\-\\-',\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/engineering\\-team/skills/senior\\-security/scripts/secret_scanner\\.py$"]
+regexes = ["^\\s*regex=r'\\-\\-\\-\\-\\-BEGIN\\ OPENSSH\\ PRIVATE\\ KEY\\-\\-\\-\\-\\-',\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/productivity/handoff/skills/handoff/scripts/redaction_linter\\.py$"]
+regexes = ["^\\s*\"URL:\\ https://api\\.example\\.com/v1/data\\?token=abcdef1234567890\\\\n\"\\s*$"]
+
+[[allowlists]]
+description = "Exact upstream documentation or security-test fixture; reviewed 2026-09-07"
+condition = "AND"
+regexTarget = "line"
+paths = ["claude\\-skills/standards/security/security\\-standards\\.md$"]
+regexes = ["^\\s*API_KEY\\ =\\ \"sk\\-1234567890abcdef\"\\s*$"]

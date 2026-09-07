@@ -14,6 +14,11 @@ export class Store {
       CREATE TABLE IF NOT EXISTS records(kind TEXT NOT NULL, id TEXT NOT NULL, data TEXT NOT NULL,
         PRIMARY KEY(kind,id));
       INSERT OR IGNORE INTO migrations VALUES(1);`);
+    const version = (this.db.prepare('SELECT max(version) AS version FROM migrations').get() as any).version;
+    if (version > 2) { this.db.close(); throw new Error('Database schema is newer than this application; restore a compatible release'); }
+    this.db.exec(`CREATE INDEX IF NOT EXISTS records_status ON records(kind, json_extract(data,'$.status'));
+      CREATE INDEX IF NOT EXISTS records_conversation ON records(kind, json_extract(data,'$.conversationId'));
+      INSERT OR IGNORE INTO migrations VALUES(2);`);
     fs.chmodSync(path.join(directory, 'workspace.sqlite'), 0o600);
   }
   get<T>(kind: string, id: string): T | undefined {
@@ -22,6 +27,14 @@ export class Store {
   }
   all<T>(kind: string): T[] {
     return this.db.prepare('SELECT data FROM records WHERE kind=? ORDER BY rowid').all(kind).map((r: any) => JSON.parse(r.data));
+  }
+  matching<T>(kind: string, field: 'status' | 'conversationId', values: string[], limit = 10000, descending = false): T[] {
+    if (!values.length) return [];
+    return this.db.prepare(`SELECT data FROM records WHERE kind=? AND json_extract(data,'$.${field}') IN (${values.map(() => '?').join(',')}) ORDER BY rowid ${descending ? 'DESC' : 'ASC'} LIMIT ?`)
+      .all(kind, ...values, limit).map((r: any) => JSON.parse(r.data));
+  }
+  page<T>(kind: string, limit: number, offset = 0): T[] {
+    return this.db.prepare('SELECT data FROM records WHERE kind=? ORDER BY rowid DESC LIMIT ? OFFSET ?').all(kind, limit, offset).map((r: any) => JSON.parse(r.data));
   }
   put(kind: string, id: string, value: unknown) {
     this.db.prepare('INSERT INTO records VALUES(?,?,?) ON CONFLICT(kind,id) DO UPDATE SET data=excluded.data')

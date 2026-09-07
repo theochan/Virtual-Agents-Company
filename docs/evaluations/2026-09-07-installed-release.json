@@ -1,0 +1,266 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "dbf8265b74f78b16838b209845e120f7763e60c087ffb9aa77dd9e0e5a506e59",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "startedAt": "2026-09-07T03:10:57.622Z",
+  "completedAt": "2026-09-07T03:12:16.382Z",
+  "pass": true,
+  "preservedRecords": [
+    {
+      "kind": "agents",
+      "id": "agent-ava",
+      "sha256": "659e497f3746915bc820de550ab3918964fdb7bdee786585ff5f33ca31e5498b"
+    },
+    {
+      "kind": "agents",
+      "id": "agent-daniel",
+      "sha256": "24889707b97603b86202c6453b72937876fd965a1fd44a6e0f6d624d3eab46d8"
+    },
+    {
+      "kind": "agents",
+      "id": "agent-emma",
+      "sha256": "20c7d70bd904b16b1d9a935914c873d5d897b4254ae0a7410eab0fa0b386097f"
+    },
+    {
+      "kind": "agents",
+      "id": "agent-james",
+      "sha256": "e4944dce96827d2eb4057a941f9ba6ad49b0a7ee903c78b3d7939bf7366cc04b"
+    },
+    {
+      "kind": "agents",
+      "id": "agent-marcus",
+      "sha256": "3cf19213c82b6bd896aad586f241f356a454df084f0afeab6de108319aef8b5a"
+    },
+    {
+      "kind": "agents",
+      "id": "agent-sarah",
+      "sha256": "378d1ce47bf44d60b79f7d78182b9085fb596ba8080133aef831a49f14bf78f8"
+    },
+    {
+      "kind": "artifacts",
+      "id": "art-arch-1",
+      "sha256": "05b6722c0f372f3134ffe7f33551134526fbf8059ba92f2ddd5e8ded3a97103e"
+    },
+    {
+      "kind": "artifacts",
+      "id": "art-res-1",
+      "sha256": "d2adf51a0c31d4e84af4544c67bee843dd8cacfefacbd1288690f7646ae255a0"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-agent-daniel-1",
+      "sha256": "3002659593b63ce85f4700696d9d0121adc7fd7ca1a42b2672200a833f6a4b90"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-agent-emma-1",
+      "sha256": "8b954ebcb151da4759f96dacba99cde036f647300cba086572418e2ed7bb272e"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-agent-marcus-1",
+      "sha256": "977299c401d7376893fb25d2b4d28ad9f10b915bf1e1c74513db90c4e6f9b4d3"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-atlas-1",
+      "sha256": "8a0655a3bf861753cae059a06e54da79b078b4ffdde5e89eb6bbacf0b2519fa9"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-org-1",
+      "sha256": "143dbd59b95a903300d1db2404fdfce5cd9aa17dbc749a6765d7005f676467b0"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-org-2",
+      "sha256": "4b0a398cd7d6aa0943488a8429a7e36807e142caafa69800751ea086c2d518b3"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-org-3",
+      "sha256": "b6c76f1eeb30dd68a526ea148bf391da8907f3f9367006e77c5a0ca6bf9abb53"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-phx-1",
+      "sha256": "ff2df72a7cf4559a3750889e449e0a55ba6412a8a85f0e231cd56bbba9fe52a7"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-phx-2",
+      "sha256": "6645cabd1f6f29c713683e2b41900550f94f24558ee3259be14df477bf008c5b"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-phx-3",
+      "sha256": "90eda098764f16e7e0b3e083764cdcf41ac2f9ed700f52f68898bd5a022bbb98"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-phx-4",
+      "sha256": "f4d495ff9c6c056fd83557cae563619239942c1f65ff6a270f30b8ae440c8d2d"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-phx-5",
+      "sha256": "fd533f74da8ae43ebd185c92dee9563df71b8f72d3e436c46e460241c2e0b569"
+    },
+    {
+      "kind": "memories",
+      "id": "mem-phx-old-db",
+      "sha256": "bedd4167728546d72396b8b4708a25e3f1c875fb6e56928ee60f0d589ffbb2bd"
+    },
+    {
+      "kind": "projects",
+      "id": "proj-atlas",
+      "sha256": "d9330bdca6fd4f84e37950887fc760efb30185a304e08bc902f6aaac3fc4f482"
+    },
+    {
+      "kind": "projects",
+      "id": "proj-phoenix",
+      "sha256": "b003e93b03dc424775ff1f06834cf76271050e1677ef90d86b2cfb0d67c3eac8"
+    },
+    {
+      "kind": "runs",
+      "id": "021e15df-a4ca-4955-988f-8785dd5e33f9",
+      "sha256": "360ec4b0f66b0e0a4d6fb8f2a9cec9a40fc0f6d6d3283a516c1db2d196df128c"
+    },
+    {
+      "kind": "runs",
+      "id": "300a28b3-f755-4182-8f4d-ba29a0cf8dc1",
+      "sha256": "9d716d8443dd5da0da782b013e682b42afd6e8c4b25c1175fe795dc6ed510f88"
+    },
+    {
+      "kind": "runs",
+      "id": "5a425ae4-fb00-4fe1-a25d-b8b899fe7c82",
+      "sha256": "4abd79fab9259c6b7187fe82cb77c34b739c36be3a6b5c4ce16284da30425364"
+    },
+    {
+      "kind": "runs",
+      "id": "83653d8f-1cb2-4367-b6fc-bf92531681ab",
+      "sha256": "f0f9221784399c9f59773c023c580b5504e2b12949413960c6f3c43e821411e7"
+    },
+    {
+      "kind": "runs",
+      "id": "87038a37-1383-49ad-835c-07e277e5c1e1",
+      "sha256": "253267c4f28d96b11304f722350b324b3cb2f03563ea20c547a13acfd2ff280a"
+    },
+    {
+      "kind": "runs",
+      "id": "b93d3409-8478-407c-85b9-4d0b8fb1fd4c",
+      "sha256": "a33bcefa898b1199cda60f8af3856c901f303a372c63609f4a04d1f4c19e410d"
+    },
+    {
+      "kind": "runs",
+      "id": "cf4b4cfb-58f8-481c-8adc-a06d46a02fd2",
+      "sha256": "96d87d15668d4d3b331bd5e96cf4a38b1b0701c422fdf5cddc0a2cb19b761946"
+    },
+    {
+      "kind": "runs",
+      "id": "f414347b-70a1-4f0c-8853-c04eba10ae88",
+      "sha256": "38d0a5058eab71e9603560e51e5987c6ffd4e1e4db17a7387c20db86100f8b7b"
+    },
+    {
+      "kind": "runs",
+      "id": "fd4fe1c4-68c2-4076-843a-a4a2ec7d5d07",
+      "sha256": "f4534dd3e3ac4109ea13f71cb5fa3f4f57fb1c428e666270682dd73036f660e9"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-1",
+      "sha256": "feb8a6dab035dba2d2507cc36ac4b04ca6af9aacd086cac9c59cdc25f7e8ade0"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-10",
+      "sha256": "a28495f0e0e44b0aaedec7f2abbd660b67db28a0cc100afb686c150b44e0b5fb"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-11",
+      "sha256": "ef3299529a4a74b23631d0f278f2c934754140b601d10955db3a793d4ac8d8ce"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-1788571895899-evu5",
+      "sha256": "45c0b29ecd6761fabb524448e12ae6baea4da681bacfb5f64f9dac65a4f2df1f"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-1788580213438-bkwy",
+      "sha256": "6acfb59a95f8858be324916da0502652c67c1f6e0687a28e034ac9c7d6396b48"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-2",
+      "sha256": "62252bdace3ea0485a11e74a673a1aee5d3ba6aca7e76cce04b9203472ee61f8"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-3",
+      "sha256": "7582b21e3d8f0b3d8fdeee69ab31f7cecc04739e6d6598e66f9989f31dce14ac"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-4",
+      "sha256": "5e7d3ec88515ccb19184a3135715db8d3a7487ea7a104f984c4481bc442ee4e2"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-5",
+      "sha256": "e55697f036fbea9d5b3afef482ca7de31c96e2fb7f246d349acdc504f15c4062"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-6",
+      "sha256": "28ec02e5d99f18cbefe67e2643321df6a099a1a91ca3279cbb6618a2eb59ee5e"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-7",
+      "sha256": "175ab9a144e3f2ba334fe9574d505049cf9dd900c221cb9d449eb00a0e863cc2"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-8",
+      "sha256": "5b171600a2b48920f8d4093e2d9cac9c3c89d573133d9cc94030549277dabda9"
+    },
+    {
+      "kind": "work-items",
+      "id": "wi-9",
+      "sha256": "762f6c0bf569f240525a3448b53de2675b1e5d60f8d05f36c197700a3366b314"
+    }
+  ],
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-09-07T02:50:55.593Z",
+    "revision": "e543b44f093ae9900f95f57de23d0476acc5a8d7",
+    "sourceHash": "62487aa0dd08374d669439ee0b22d76bc97b225106e032c5b68001cb823af019",
+    "node": "v24.19.0",
+    "assets": [
+      {
+        "path": "assets/index-1IheP-oo.js",
+        "sha256": "ea1d55e4a2fdc8a7510d36a4682cc96061b7304888a600625c1e391805679ac8"
+      },
+      {
+        "path": "assets/index-Ca5uJpFi.css",
+        "sha256": "8467035a6e86c21946d056a36480f84bc4e610b8ba10754f5667b1a75af38150"
+      },
+      {
+        "path": "index.html",
+        "sha256": "94e215d721360b267084857bb24d8808a44b22aa8c84b8138d05cd0d649f7a95"
+      },
+      {
+        "path": "server.cjs",
+        "sha256": "eb411fd3d1fa293d5938f15dbdb502819217f3bcc58f2cff9740ac8415b5bf68"
+      },
+      {
+        "path": "server.cjs.map",
+        "sha256": "9dc747d764a8547cff56ce3999bc490589aee8b2bd0b2beb301fe46cee3c5c96"
+      }
+    ]
+  }
+}

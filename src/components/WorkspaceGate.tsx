@@ -6,6 +6,7 @@ export function WorkspaceGate() {
   const [token, setToken] = useState('');
   const [error, setError] = useState('');
   useEffect(() => { fetch('/api/session').then(r => r.json()).then(data => setSignedIn(data.authenticated)).catch(() => setError('Workspace server is unavailable.')); }, []);
+  useEffect(() => { const expired = () => setSignedIn(false); window.addEventListener('workspace-signed-out', expired); return () => window.removeEventListener('workspace-signed-out', expired); }, []);
   if (signedIn) return <App />;
   return <main className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
     <form className="w-full max-w-md bg-white border rounded-xl p-8 space-y-4" onSubmit={async event => {

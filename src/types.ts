@@ -71,7 +71,7 @@ export interface AgentCapability {
   description: string;
 }
 
-export type AgentStatus = 'offline' | 'idle' | 'thinking' | 'working' | 'waiting' | 'blocked' | 'needs_approval' | 'error';
+export type AgentStatus = 'offline' | 'idle' | 'thinking' | 'working' | 'waiting' | 'waiting_children' | 'blocked' | 'needs_approval' | 'error';
 
 export interface AgentRuntimeState {
   agentId?: string;
@@ -128,13 +128,11 @@ export type ModelProvider =
   | 'openrouter'
   | 'qwen'
   | 'local'
-  | 'omniroute'
   | 'OpenAI'
   | 'Anthropic'
   | 'Ollama'
   | 'HuggingFace'
-  | 'OpenRouter'
-  | 'OmniRoute';
+  | 'OpenRouter';
 
 export interface LLMConfig {
   provider: ModelProvider;
@@ -143,10 +141,10 @@ export interface LLMConfig {
   maxTokens: number;
   contextLimit?: number;
   reasoningEffort?: 'low' | 'medium' | 'high';
-  // Local models downloaded via Ollama, Hugging Face, or OmniRoute Gateway
+  // Local models downloaded via Ollama or Hugging Face
   isLocal?: boolean;
-  localSource?: 'ollama' | 'huggingface' | 'vllm' | 'omniroute' | 'custom';
-  localEndpoint?: string; // e.g. "http://localhost:11434", "http://localhost:8000/v1", or "http://localhost:20128/v1"
+  localSource?: 'ollama' | 'huggingface' | 'vllm' | 'custom';
+  localEndpoint?: string; // e.g. "http://localhost:11434" or "http://localhost:8000/v1"
   hfRepoId?: string; // e.g. "meta-llama/Llama-3.2-3B-Instruct"
   quantization?: string; // e.g. "Q4_K_M", "Q8_0", "FP16"
 }
@@ -284,7 +282,7 @@ export interface TaskWorkspace {
   contributors: string[]; // agent IDs
 }
 
-export type TaskStatus = 'queued' | 'planning' | 'working' | 'waiting' | 'blocked' | 'reviewing' | 'completed' | 'failed' | 'cancelled';
+export type TaskStatus = 'queued' | 'planning' | 'working' | 'waiting' | 'waiting_children' | 'blocked' | 'reviewing' | 'completed' | 'failed' | 'cancelled';
 
 export type WorkItemStatus = 'backlog' | 'todo' | 'in_progress' | 'done';
 

@@ -1,0 +1,17 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "e1f70ddc0873641164bdcf876ed5e68b9fe7c876009720011718073391e2ec48",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "at": "2026-09-07T04:19:11.527Z",
+  "pass": true,
+  "latencyMs": 14742,
+  "handoff": {
+    "rootStatus": "reviewing",
+    "childStatuses": [
+      "reviewing"
+    ],
+    "childCount": 1
+  }
+}

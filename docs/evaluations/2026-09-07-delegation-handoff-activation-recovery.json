@@ -1,0 +1,11 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "b40e2fe25e20da4314dfa265f6fb27480c4a3d4f381ea508fdc15921c1134d05",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "at": "2026-09-07T04:18:56.386Z",
+  "pass": true,
+  "quarantined": 30,
+  "preservedRecords": true
+}

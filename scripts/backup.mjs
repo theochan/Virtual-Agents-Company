@@ -1,6 +1,7 @@
 import { DatabaseSync, backup } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
+process.umask(0o077);
 const source = path.resolve(process.env.VAC_DATA_DIR || 'data', 'workspace.sqlite');
 const destination = process.argv[2];
 if (!destination) throw new Error('Usage: node scripts/backup.mjs /absolute/path/to/new-backup.sqlite');

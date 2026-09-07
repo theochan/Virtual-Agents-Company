@@ -2,13 +2,13 @@
 
 **Experimental, single-owner local workspace for AI-assisted work.** Configure agent profiles, organize projects and work items, and run a bounded model/tool loop with durable evidence and owner review.
 
-This is not an enterprise-ready autonomous organization. Multi-agent delegation, arbitrary Python execution, and automatic work completion are disabled. Earlier scripted demonstrations have been removed from the live execution paths.
+This is not an enterprise-ready autonomous organization. Arbitrary Python execution and automatic work completion are disabled. Direct-subordinate read-only delegation is available as an explicitly enabled pilot. Earlier scripted demonstrations have been removed from the live execution paths.
 
 ## What works
 
 - Agent creation and editing, role/personality configuration, organizational chart, projects and manually managed work items.
 - Stock portraits: 20 female and 20 male options; the non-binary selection exposes all 40. Custom HTTP(S) image URLs remain available. No age, nationality, synthesis prompt, or AI portrait generation is required.
-- Provider adapters for OmniRoute/OpenAI-compatible gateways, OpenAI, Anthropic, Ollama, local Hugging Face-compatible servers, and Qwen-compatible inference. Models must return the documented decision format; compatibility and quality vary by model.
+- Provider adapters for OpenAI, Anthropic, Ollama, local Hugging Face-compatible servers, and Qwen-compatible inference. Models must return the documented decision format; compatibility and quality vary by model.
 - A server-side single-agent loop with validated decisions, tool observations, bounded conversation history, and recorded provider usage when reported. Cost remains **unknown**, rather than invented.
 - Durable runs, steps/events, messages, approvals, artifacts and memories in SQLite. Interrupted active runs become blocked for explicit recovery; pending approvals survive restarts.
 - Owner authentication, loopback binding, host/origin checks, server-controlled tools and endpoint allowlists.
@@ -38,8 +38,8 @@ npm start
 
 ## First real run
 
-1. Configure OmniRoute or another provider under Settings. Save credentials before testing model discovery. Credentials entered in the UI last until restart; use environment variables for durable credentials.
-2. Assign a valid model to an agent. Gateway tags such as `omniroute:auto` select the gateway adapter; the actual inference destination depends on the gateway.
+1. Configure your chosen provider (Ollama, Anthropic, OpenAI, etc.) under Settings. Save credentials before testing model discovery. LLM credentials entered in the UI last until restart; use environment variables for durable LLM credentials. Search keys have the separate persistence policy below.
+2. Assign a valid model to an agent.
 3. Select a project and ask for a concrete draft in chat, for example a four-line birthday poem or a short specification.
 4. Open **Runs and approvals** to inspect the result and execution receipts. Model text is a draft, not proof that an external action occurred.
 5. If a tool requests approval, inspect its exact arguments. Approval resumes that operation once. When the final deliverable satisfies your request, record why and accept it.
@@ -48,11 +48,27 @@ Model discovery proves that a catalog was returned, not that inference succeeds.
 
 ## Testing with Ollama
 
-After downloading a model and starting Ollama, keep `OLLAMA_ENDPOINT=http://127.0.0.1:11434` in `.env` (or set the actual local endpoint), then restart this application if the environment changed. No OmniRoute credentials are needed for the Ollama adapter.
+After downloading a model and starting Ollama, keep `OLLAMA_ENDPOINT=http://127.0.0.1:11434` in `.env` (or set the actual local endpoint), then restart this application if the environment changed.
 
-In the agent's model selector, choose **Ollama**, enter the exact installed model tag, and save. Changing gateway settings alone does not change an agent's selected provider. The application uses Ollama's native `/api/chat` endpoint with JSON output; the model still needs to follow the decision contract below.
+In the agent's model selector, choose **Ollama**, enter the exact installed model tag, and save. The application uses Ollama's native `/api/chat` endpoint with JSON output; the model still needs to follow the decision contract below.
 
 Start with a short draft request, then equip `tool-calculator`, set access level 3 or 4, and explicitly ask the agent to use it for an arithmetic calculation. Inspect **Runs and approvals** for the tool call, observation and final draft before accepting it. A model appearing in discovery is not a successful inference test. Live Ollama quality validation remains outstanding.
+
+## Web search setup
+
+In **Settings → Web Search Providers**, enter a Tavily or Brave API key and save it. Equip the agent with **Web search** (`tool-web-search`) and set access level 3 or 4. Credentials belong to the workspace owner and are never supplied to the model.
+
+- **Tavily Only / Brave Only:** use exactly that provider. Missing credentials or provider failure returns an explicit failed search receipt.
+- **Auto:** tries configured Tavily, then Brave after a failure, then the limited DuckDuckGo lookup. Queries may be sent to multiple services; attempts and errors remain in the receipt. An empty valid response stops the search rather than triggering more paid calls.
+- **DuckDuckGo Only:** encyclopedia summaries, not broad web research or live quotes.
+
+Saved keys persist in owner-only `data/search-credentials.json` (or the configured data directory), separate from database backups. This is a private plaintext file, not encrypted storage. Saved values override `TAVILY_API_KEY` and `BRAVE_SEARCH_API_KEY`; **Remove key** saves an empty override that survives restart. Protect this file separately if credentials must be recovered. Provider selection is included in database backups. Existing database-stored search keys migrate to the private file at startup; old database pages, WAL files, or previously created backups can still contain those historical keys. Migration is not secure erasure.
+
+**Test Connection** sends one real search request and may consume provider credits. A configured key is not proof of a working subscription. Search snippets are partial evidence: publication dates may be absent, Brave page dates may indicate publication or modification, and neither integration is a live market data feed. The run stores source URLs, bounded snippets, executed queries, and attempted providers. Tavily's generated answer is not treated as source evidence.
+
+API contracts: [Tavily Search](https://docs.tavily.com/documentation/api-reference/endpoint/search), [Brave Web Search](https://api-dashboard.search.brave.com/api-reference/web/search/get).
+
+OmniRoute is no longer a supported provider. Existing records remain as historical evidence; choose a supported provider and model for affected agents. Old queued runs cannot use the retired adapter.
 
 ## Execution contract and limits
 
@@ -70,7 +86,7 @@ The provider receives role instructions, scoped reviewed memory, up to 12 recent
 {"action":"blocked","reason":"The information needed to proceed is missing"}
 ```
 
-The worker allows at most six model calls, caps each requested output at 2,048 tokens, limits accumulated context, and permits at most three minutes of active execution. There is one active worker per workspace and at most 20 queued/working/waiting runs. Pending owner approval does not consume active execution time. Actual provider billing can differ from reported usage; this is not a guaranteed dollar-spend limit.
+The worker allows at most six model calls, caps each requested output at 2,048 tokens, limits accumulated context, and permits at most ten minutes of active execution by default. There is one active worker per workspace and at most 20 queued/working/waiting runs. Pending owner approval does not consume active execution time. Actual provider billing can differ from reported usage; this is not a guaranteed dollar-spend limit.
 
 A final reply puts the run in `reviewing`. Only owner acceptance marks it `completed`. This is a human acceptance gate, not an automated guarantee of factual accuracy. A linked work item becomes Done only after that acceptance; manual board changes are recorded as owner changes.
 
@@ -80,10 +96,10 @@ A final reply puts the run in `reviewing`. Only owner acceptance marks it `compl
 |---|---|---|
 | `tool-read-project` | Read the current project's stored metadata and artifacts | No |
 | `tool-calculator` | Add, subtract, multiply or divide two finite numbers | No |
-| `tool-web-search` | DuckDuckGo instant-answer reference lookup; can return no result | No |
+| `tool-web-search` | Tavily or Brave web snippets; optional DuckDuckGo encyclopedia lookup; partial evidence only | No |
 | `tool-doc-gen` | Save supplied Markdown as a draft artifact in SQLite | Yes |
 
-Agents must have a tool equipped and access level 3 or 4 to execute it. Levels 1 and 2 produce advisory drafts only. Levels 3 and 4 currently have the same execution policy; neither grants delegation or unrestricted authority. Imported skills are documentation assets, not enabled runtime capabilities.
+Agents must have a tool equipped and access level 3 or 4 to execute it. Levels 1 and 2 produce advisory drafts only. Levels 3 and 4 currently have the same execution policy; neither alone grants delegation or unrestricted authority. Delegation also requires `VAC_ENABLE_DELEGATION=1`, explicit `tool-delegate` permission, and an equipped direct subordinate. Imported skills are documentation assets, not enabled runtime capabilities.
 
 There is no shell, host-file reader, arbitrary Python runner, email sender, deployment tool, or general URL-fetch tool. Unknown tools fail closed. Adding an executable tool requires implementation, schema validation, a capability review, a suitable isolation boundary, tests, and a registry version change. Clients cannot register paths or lower permissions.
 
@@ -148,7 +164,7 @@ For the current evidence and upstream blocker, see [hardening validation](docs/r
 
 - Single-owner, local-only deployment. Workspace IDs are enforced internally; this is not a supported multi-tenant service.
 - Human evaluation of generated drafts. No claim of autonomous correctness or independently validated business decisions.
-- No multi-agent delegation until a measured comparison demonstrates value over the single-agent baseline.
+- Read-only delegation remains an opt-in pilot. Broad rollout requires demonstrated value over a single equipped agent; successful execution alone does not establish business accuracy.
 - No imported script execution until sandboxing, resource/egress controls and individual tool validation exist.
 - No automatic retry of failed or uncertain operations. Idempotency is provided for run submission and supported internal artifact writes.
 - Polling and JSON records within SQLite suit a small local workspace; large datasets and distributed workers need additional design and testing.
@@ -157,3 +173,14 @@ For the current evidence and upstream blocker, see [hardening validation](docs/r
 ## License
 
 Copyright © 2026 Theo Chan. Original project-owned code and documentation are licensed under the [Apache License, Version 2.0](LICENSE). See [NOTICE](NOTICE) for attribution and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party materials, which retain their respective licenses. Previously granted rights remain applicable.
+
+
+## Release operations and verified scope
+
+See [the release contract](docs/production-contract.md), [operating procedures](docs/operations.md), and [prioritized readiness status](upgrades.md). The verified candidate targets a local single-owner draft workspace using Ollama `qwen2.5:7b`; Tavily has live evaluation evidence. Brave configuration and failure handling have automated fixture coverage, but no live Brave acceptance result.
+
+Paid cloud inference requires `VAC_ALLOW_PAID_INFERENCE=1` and operator-configured provider-side spending limits. Inference defaults to 100 attempted requests per UTC day; paid search defaults to zero until `VAC_SEARCH_REQUESTS_PER_DAY` is configured. These durable attempt caps include failed calls and connection tests. They are not dollar caps. Search credentials alone do not enable paid search with a zero request limit.
+
+The **Operations** screen shows authenticated runtime readiness, build identity, worker state and request budgets. **Sign out** invalidates the current browser session. The operations guide covers all-session revocation and owner-token rotation.
+
+`npm run release -- /absolute/new/release` prepares a runtime artifact without private data or vendored skill scripts. Run `npm ci --omit=dev` inside it. The documented launchd configuration and daily SQLite snapshot policy use a local backup folder; separately configured iCloud/Google Drive synchronization is not verified by application tests. Sync completed snapshots, not the running SQLite database/WAL.

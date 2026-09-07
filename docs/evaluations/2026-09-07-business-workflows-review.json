@@ -1,0 +1,161 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "865b61469ee146c1433695be1fa798c0f99813b0841e4dff029d8d8f57d33610",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "summary": [
+    {
+      "taskId": "release-brief",
+      "applicationCriticalPasses": 0,
+      "baselineCriticalPasses": 0,
+      "trials": 3,
+      "applicationMedianMs": 16435,
+      "baselineMedianMs": 16063,
+      "applicationCorrectionItems": 6,
+      "baselineCorrectionItems": 9,
+      "practicalBenefitAccepted": false
+    },
+    {
+      "taskId": "capacity-estimate",
+      "applicationCriticalPasses": 3,
+      "baselineCriticalPasses": 3,
+      "trials": 3,
+      "applicationMedianMs": 13702,
+      "baselineMedianMs": 19321,
+      "applicationCorrectionItems": 6,
+      "baselineCorrectionItems": 0,
+      "practicalBenefitAccepted": false
+    },
+    {
+      "taskId": "backup-runbook",
+      "applicationCriticalPasses": 0,
+      "baselineCriticalPasses": 0,
+      "trials": 3,
+      "applicationMedianMs": 22218,
+      "baselineMedianMs": 34452,
+      "applicationCorrectionItems": 3,
+      "baselineCorrectionItems": 12,
+      "practicalBenefitAccepted": false
+    }
+  ],
+  "decision": "REJECT broad business-workflow acceptance for this model/prompt configuration. Numerical calculation is a useful constrained capability, but owner time savings and the quality threshold across all three workflows are not established.",
+  "limitations": [
+    "Three repetitions per task are a small smoke evaluation, not a population reliability estimate.",
+    "Direct baseline uses identical retrieved snippets; its latency excludes retrieval and is not a complete research-workflow comparison.",
+    "Same local model, no blind independent human review or measured owner correction time.",
+    "Release brief evidence used terse Brave/paid search labels, which contributed ambiguity; revise inputs explicitly in a separately versioned follow-up, retaining these failures.",
+    "No automatic retry, threshold relaxation, or production search allowance increase was used."
+  ],
+  "rawSha256": "2f42db70d086b630a55140dbf298ccbb01926f324b5cac1a2bca20a29b78d7ab",
+  "cases": [
+    {
+      "taskId": "release-brief",
+      "repetition": 1,
+      "application": {
+        "status": "failed",
+        "latencyMs": 17048
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 17069
+      }
+    },
+    {
+      "taskId": "release-brief",
+      "repetition": 2,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 15221
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 16063
+      }
+    },
+    {
+      "taskId": "release-brief",
+      "repetition": 3,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 16435
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 15767
+      }
+    },
+    {
+      "taskId": "capacity-estimate",
+      "repetition": 1,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 17058
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 18724
+      }
+    },
+    {
+      "taskId": "capacity-estimate",
+      "repetition": 2,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 13702
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 19321
+      }
+    },
+    {
+      "taskId": "capacity-estimate",
+      "repetition": 3,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 13698
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 19775
+      }
+    },
+    {
+      "taskId": "backup-runbook",
+      "repetition": 1,
+      "application": {
+        "status": "failed",
+        "latencyMs": 26154
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 38001
+      }
+    },
+    {
+      "taskId": "backup-runbook",
+      "repetition": 2,
+      "application": {
+        "status": "failed",
+        "latencyMs": 22218
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 34452
+      }
+    },
+    {
+      "taskId": "backup-runbook",
+      "repetition": 3,
+      "application": {
+        "status": "failed",
+        "latencyMs": 20694
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 32336
+      }
+    }
+  ]
+}

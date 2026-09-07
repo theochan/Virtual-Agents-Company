@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { delegationEnabled, TREE_LIMITS } from './src/server/delegation';
 import express from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -7,33 +8,43 @@ import { INITIAL_AGENTS } from './src/data/initialData';
 import type { Agent, Project, MemoryItem, Artifact, WorkItem, ChatMessage } from './src/types';
 import { MemoryManager } from './src/lib/memory/memoryManager';
 import { Store } from './src/server/store';
+import { acquireWorkspaceLock } from './src/server/workspaceLock';
+import { OperationsLog, reserveRequest } from './src/server/operations';
+import { SearchCredentials } from './src/server/searchCredentials';
 import { HttpError, installSecurity, now, uid, validateEndpoint } from './src/server/security';
-import { allowedEndpoints, defaultSettings, discover, providerKey, setProviderKey, type ProviderSettings } from './src/server/providers';
+import { allowedEndpoints, defaultSettings, discover, providerKey, setProviderKey, searchKey, type ProviderSettings } from './src/server/providers';
 import { RunEngine, type Run, type Approval } from './src/server/runs';
-import { toolCatalog } from './src/server/tools';
+import { toolCatalog, fetchTavily, fetchBrave } from './src/server/tools';
 
 const directory = path.resolve(process.env.VAC_DATA_DIR || 'data');
 const port = z.coerce.number().int().min(1).max(65535).parse(process.env.PORT || '3001');
 const workspaceId = 'ws-default';
 fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
-// Only one worker process may own a workspace. SQLite alone does not establish worker ownership.
-const lockPath = path.join(directory, 'server.pid');
-if (fs.existsSync(lockPath)) {
-  const pid = Number(fs.readFileSync(lockPath, 'utf8'));
-  let alive = false;
-  try { process.kill(pid, 0); alive = true; } catch (error: any) { if (error.code !== 'ESRCH') alive = true; }
-  if (alive) throw new Error('This workspace is already open in another server process');
-  fs.unlinkSync(lockPath);
-}
-fs.writeFileSync(lockPath, String(process.pid), { flag: 'wx', mode: 0o600 });
-process.on('exit', () => { try { if (fs.readFileSync(lockPath, 'utf8') === String(process.pid)) fs.unlinkSync(lockPath); } catch {} });
+const releaseWorkspaceLock = acquireWorkspaceLock(directory);
+process.on('exit', releaseWorkspaceLock);
 const store = new Store(directory);
-const settings = () => store.get<ProviderSettings>('settings', 'providers') || structuredClone(defaultSettings);
+const searchCredentials = new SearchCredentials(directory, store);
+const settings = (): ProviderSettings => {
+  const saved = store.get<ProviderSettings>('settings', 'providers') || {};
+  return Object.fromEntries(Object.entries(defaultSettings).map(([name, value]) => [name, { ...value, ...saved[name] }]));
+};
 const engine = new RunEngine(store, settings);
+const log = new OperationsLog(directory);
+const buildFile = path.resolve('dist/build.json');
+const build = fs.existsSync(buildFile) ? JSON.parse(fs.readFileSync(buildFile, 'utf8')) : { status: 'unbuilt' };
+for (const [name, fallback] of [['VAC_SEARCH_REQUESTS_PER_DAY', '0'], ['VAC_INFERENCE_REQUESTS_PER_DAY', '100']]) {
+  const value = Number(process.env[name] ?? fallback);
+  if (!Number.isSafeInteger(value) || value < 0 || value > 10000) throw new Error(`Invalid ${name}`);
+}
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '128kb' }));
 installSecurity(app, directory, port);
+app.use('/api', (req, res, next) => {
+  const requestId = uid(); const started = Date.now(); res.setHeader('X-Request-Id', requestId);
+  res.on('finish', () => { if (req.method !== 'GET' || res.statusCode >= 400) log.record('API_REQUEST', { requestId, status: res.statusCode, durationMs: Date.now() - started }); });
+  next();
+});
 
 const text = z.string().trim().max(12000);
 const id = z.string().min(1).max(100);
@@ -63,7 +74,7 @@ function get<T extends { workspaceId?: string }>(kind: string, identifier: strin
 const all = <T extends { workspaceId?: string }>(kind: string) => store.all<T>(kind).filter(v => v.workspaceId === workspaceId);
 function checkTools(ids: string[]) { if (ids.some(t => !toolCatalog.some(allowed => allowed.id === t))) throw new HttpError(422, 'Only tools in the server registry can be equipped'); }
 function activeReference(agentId?: string, projectId?: string) {
-  if (store.all<Run>('runs').some(r => ['queued', 'working', 'waiting'].includes(r.status) && (!agentId || r.leadAgentId === agentId) && (!projectId || r.projectId === projectId))) throw new HttpError(409, 'Cancel active runs before removing their agent or project');
+  if (store.all<Run>('runs').some(r => ['queued', 'working', 'waiting', 'waiting_children'].includes(r.status) && (!agentId || r.leadAgentId === agentId) && (!projectId || r.projectId === projectId))) throw new HttpError(409, 'Cancel active runs before removing their agent or project');
 }
 const route = (fn: any) => (req: any, res: any, next: any) => Promise.resolve().then(() => fn(req, res)).catch(next);
 
@@ -102,12 +113,26 @@ if (!store.get('settings', 'initialized')) {
   });
 }
 
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', mode: 'experimental', execution: 'single-agent', hostScripts: 'disabled' }));
+// Liveness is cheap and does not expose private workspace diagnostics.
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', mode: 'experimental', execution: process.env.VAC_ENABLE_DELEGATION === '1' ? 'read-only-delegation-pilot' : 'single-agent', hostScripts: 'disabled' }));
+app.get('/api/ready', (_req, res) => {
+  let writable = false;
+  try { store.put('settings', 'readiness_check', { at: now() }); writable = true; } catch {}
+  const worker = engine.stats();
+  res.status(writable && worker.healthy ? 200 : 503).json({
+    status: writable && worker.healthy ? 'runtime-ready' : 'degraded',
+    storage: { writable }, worker, build,
+    delegation: { enabled: delegationEnabled(), limits: TREE_LIMITS },
+    requestBudgets: store.page('request-budgets', 14),
+    inference: { status: 'not-tested' }, search: { status: 'not-tested' },
+    limitation: 'Runtime readiness is not task quality or live provider validation.',
+  });
+});
 app.get('/api/agents', (_req, res) => {
   const runs = store.all<Run>('runs');
   res.json(all<Agent>('agents').map(agent => {
     const receipts = runs.filter(r => r.leadAgentId === agent.id).flatMap(r => r.receipts);
-    const active = runs.find(r => r.leadAgentId === agent.id && ['working', 'waiting', 'queued'].includes(r.status));
+    const active = runs.find(r => r.leadAgentId === agent.id && ['working', 'waiting', 'waiting_children', 'queued'].includes(r.status));
     return { ...agent, runtimeState: { status: active ? active.status === 'waiting' ? 'needs_approval' : 'working' : 'idle', currentTaskId: active?.id }, tokenUsage: { inputTokens: receipts.reduce((n, r) => n + (r.inputTokens || 0), 0), outputTokens: receipts.reduce((n, r) => n + (r.outputTokens || 0), 0), estimatedCost: null }, usageStatus: 'reported tokens only; cost unknown' };
   }));
 });
@@ -254,21 +279,30 @@ app.post('/api/chat/agent', route((req, res) => res.status(202).json({ run: engi
 app.post('/api/orchestrate/run', route((req, res) => {
   const data = z.object({ userInstruction: text.min(1), leadAgentId: id, projectId: id }).parse(req.body);
   const run = engine.create({ agentId: data.leadAgentId, projectId: data.projectId, userMessage: data.userInstruction }, key(req));
-  res.status(202).json({ task: run, mode: 'single-agent', message: 'Delegation is not enabled; the selected agent will produce a draft for review.' });
+  res.status(202).json({ task: run, mode: run.pilot ? 'delegation-pilot' : 'single-agent', message: run.pilot ? 'Read-only subordinate delegation is available within shared limits; outputs remain drafts.' : 'Single-agent draft; delegation permission is not enabled for this run.' });
 }));
-app.get(['/api/runs', '/api/tasks'], (_req, res) => res.json(store.all<Run>('runs').map(publicRun)));
+app.get(['/api/runs', '/api/tasks'], route((req, res) => {
+  const limit = z.coerce.number().int().min(1).max(200).parse(req.query.limit || 100);
+  const offset = z.coerce.number().int().min(0).parse(req.query.offset || 0);
+  const page = store.page<Run>('runs', limit, offset).reverse();
+  const active = offset === 0 ? store.matching<Run>('runs', 'status', ['queued', 'working', 'waiting', 'waiting_children']) : [];
+  res.setHeader('X-Next-Offset', String(offset + limit));
+  res.json([...new Map([...active, ...page].map(run => [run.id, run])).values()].map(publicRun));
+}));
 app.get(['/api/runs/:id', '/api/tasks/:id'], route((req, res) => res.json(publicRun(engine.get(req.params.id)))));
 app.get('/api/tasks/:id/events', route((req, res) => res.json(engine.get(req.params.id).events)));
+app.get('/api/runs/:id/tree', route((req, res) => { const run = engine.get(req.params.id); const root = engine.get(run.rootRunId || run.id); res.json({ root: publicRun(root), children: (root.childRunIds || []).map(id => publicRun(engine.get(id))) }); }));
 app.post('/api/runs/:id/cancel', route((req, res) => res.json(publicRun(engine.cancel(req.params.id)))));
 app.post('/api/runs/:id/resume', route((req, res) => res.json(publicRun(engine.resume(req.params.id)))));
 app.post('/api/runs/:id/accept', route((req, res) => {
   const { reason } = z.object({ reason: text.min(1) }).parse(req.body); res.json(publicRun(engine.accept(req.params.id, reason)));
 }));
-function publicRun(run: Run) { const { messages, ...result } = run; return result; }
+function publicRun(run: Run) { const { messages, ...result } = run; return { ...result, ...(run.pilot ? { treeBudget: store.get('tree-budgets', run.rootRunId || run.id) } : {}) }; }
 app.get('/api/tools', (_req, res) => res.json(toolCatalog));
 app.post('/api/tools', (_req, res) => res.status(403).json({ error: 'Tool registration is server-controlled. Imported skills and host scripts are disabled.' }));
 app.post('/api/tools/execute', route((req, res) => {
   const data = z.object({ agentId: id, projectId: id, toolId: id, parameters: z.record(z.string(), z.unknown()).default({}) }).parse(req.body);
+  if (data.toolId === 'tool-delegate') throw new HttpError(403, 'Delegate through a manager model run, not direct tool execution');
   const run = engine.create({ agentId: data.agentId, projectId: data.projectId, userMessage: `Execute ${data.toolId} with the supplied arguments.` }, key(req), { toolId: data.toolId, parameters: data.parameters });
   res.status(202).json({ status: 'queued', run: publicRun(run) });
 }));
@@ -283,7 +317,7 @@ function publicSettings() {
   return Object.fromEntries(Object.entries(settings()).map(([name, value]) => [name, { ...value, status: 'not-tested', isConfigured: Boolean(providerKey(name)) || name === 'ollama', apiKeyMasked: providerKey(name) ? '••••••••' : '', hfTokenMasked: providerKey(name) ? '••••••••' : '', credentialPersistence: 'environment only; UI key changes expire on restart' }]));
 }
 app.post('/api/admin/llm-settings', route((req, res) => {
-  const data = z.object({ provider: z.enum(['claude', 'openai', 'qwen', 'ollama', 'huggingface', 'omniroute']), defaultModel: text.optional(), endpoint: z.string().url().optional(), enabled: z.boolean().optional(), apiKey: z.string().max(4096).optional() }).parse(req.body);
+  const data = z.object({ provider: z.enum(['claude', 'openai', 'qwen', 'ollama', 'huggingface']), defaultModel: text.optional(), endpoint: z.string().url().optional(), enabled: z.boolean().optional(), apiKey: z.string().max(4096).optional() }).parse(req.body);
   const current = settings();
   if (data.endpoint) validateEndpoint(data.endpoint, allowedEndpoints(data.provider));
   const { provider, apiKey, ...update } = data;
@@ -292,8 +326,8 @@ app.post('/api/admin/llm-settings', route((req, res) => {
   if (apiKey) setProviderKey(provider, apiKey.trim());
   res.json({ success: true, settings: publicSettings(), message: 'Settings saved. Keys entered here last until restart; use environment variables for durable credentials.' });
 }));
-app.post(['/api/admin/omniroute/test-connection', '/api/admin/local-models/test-connection'], route(async (req, res) => {
-  const provider = req.path.includes('omniroute') ? 'omniroute' : z.enum(['ollama', 'huggingface']).parse(req.body.source);
+app.post('/api/admin/local-models/test-connection', route(async (req, res) => {
+  const provider = z.enum(['ollama', 'huggingface']).parse(req.body.source);
   const endpoint = req.body.endpoint || settings()[provider].endpoint;
   validateEndpoint(endpoint, allowedEndpoints(provider));
   const started = Date.now();
@@ -305,11 +339,88 @@ app.post(['/api/admin/omniroute/test-connection', '/api/admin/local-models/test-
 }));
 app.post('/api/admin/local-models/add', (_req, res) => res.status(422).json({ error: 'Install models in the provider, then refresh discovery. Adding a label does not download a model.' }));
 app.delete('/api/admin/local-models/remove', (_req, res) => res.status(422).json({ error: 'Manage installed models in the provider, then refresh discovery.' }));
+app.get('/api/admin/search-settings', (_req, res) => {
+  const saved = store.get<any>('settings', 'search') || {};
+  const tavilySet = Boolean(searchKey('tavily'));
+  const braveSet = Boolean(searchKey('brave'));
+  res.json({
+    activeProvider: saved.activeProvider || 'auto',
+    tavily: {
+      isConfigured: tavilySet,
+      apiKeyMasked: tavilySet ? '••••••••' : '',
+    },
+    brave: {
+      isConfigured: braveSet,
+      apiKeyMasked: braveSet ? '••••••••' : '',
+    },
+  });
+});
+app.post('/api/admin/search-settings', route((req, res) => {
+  const data = z.object({
+    activeProvider: z.enum(['auto', 'tavily', 'brave', 'duckduckgo']).optional(),
+    tavilyApiKey: z.string().max(4096).optional(),
+    braveApiKey: z.string().max(4096).optional(),
+  }).parse(req.body);
+
+  const current = { activeProvider: data.activeProvider ?? store.get<any>('settings', 'search')?.activeProvider ?? 'auto' };
+  searchCredentials.update({
+    ...(data.tavilyApiKey !== undefined ? { tavily: data.tavilyApiKey.trim() } : {}),
+    ...(data.braveApiKey !== undefined ? { brave: data.braveApiKey.trim() } : {}),
+  });
+  store.put('settings', 'search', current);
+
+  const tavilySet = Boolean(searchKey('tavily'));
+  const braveSet = Boolean(searchKey('brave'));
+  res.json({
+    success: true,
+    settings: {
+      activeProvider: current.activeProvider,
+      tavily: { isConfigured: tavilySet, apiKeyMasked: tavilySet ? '••••••••' : '' },
+      brave: { isConfigured: braveSet, apiKeyMasked: braveSet ? '••••••••' : '' },
+    },
+    message: 'Search engine settings saved.',
+  });
+}));
+app.post('/api/admin/search/test-connection', route(async (req, res) => {
+  const { provider, apiKey } = z.object({
+    provider: z.enum(['tavily', 'brave']),
+    apiKey: z.string().max(4096).optional(),
+  }).parse(req.body);
+
+  const keyToUse = apiKey?.trim() || searchKey(provider);
+  if (!keyToUse) throw new HttpError(400, `No API key configured for ${provider}`);
+
+  reserveRequest(store, 'search');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10000);
+  const started = Date.now();
+  try {
+    if (provider === 'tavily') {
+      await fetchTavily('ping', keyToUse, controller.signal);
+    } else {
+      await fetchBrave('ping', keyToUse, controller.signal);
+    }
+    clearTimeout(timer);
+    res.json({
+      success: true,
+      connected: true,
+      latencyMs: Date.now() - started,
+      message: `${provider === 'tavily' ? 'Tavily' : 'Brave Search'} API connection verified successfully.`,
+    });
+  } catch (error: any) {
+    clearTimeout(timer);
+    res.json({
+      success: false,
+      connected: false,
+      message: error instanceof Error && /^(Tavily|Brave) search returned HTTP \d{3}$/.test(error.message) ? error.message : 'Search connection failed: check credentials, network, and provider response',
+    });
+  }
+}));
 app.use('/api', (_req, res) => res.status(404).json({ error: 'API route not found' }));
 app.use((error: any, _req: any, res: any, _next: any) => {
   if (error instanceof z.ZodError) return res.status(400).json({ error: 'Invalid request', issues: error.issues.map(i => ({ path: i.path, message: i.message })) });
   const status = error instanceof HttpError ? error.status : error.type === 'entity.too.large' ? 413 : 500;
-  console.error('API error:', error instanceof Error ? error.message : 'unknown');
+  log.record('API_FAILURE', { status });
   res.status(status).json({ error: status === 500 ? 'Operation failed; no success was acknowledged. Check server logs.' : error.message });
 });
 

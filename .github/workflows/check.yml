@@ -18,7 +18,11 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run check:publication
       - run: npm run check
+      - run: npm run test:production
+      - run: npx playwright install --with-deps chromium --only-shell
+      - run: npm run test:browser
       - run: npm audit --audit-level=moderate
       - run: npm run skills:inventory && git diff --exit-code -- docs/skill-inventory.json
   secrets:

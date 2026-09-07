@@ -481,7 +481,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             <Target className="w-3.5 h-3.5 text-amber-700" />
             <span>OBJECTIVE</span>
           </div>
-          <p className="text-sm font-semibold text-slate-900 font-serif">{project.objective}</p>{(project as any).legacyUnverified && <p className="text-xs text-amber-800">Imported legacy record. Prior decisions and completion claims have not been verified.</p>}
+          <p className="text-sm font-semibold text-slate-900 font-serif">{project.objective}</p>{(project as any).legacyUnverified && <p className="text-xs text-amber-800">{(project as any).legacyReview?.disposition === 'archived-sample' ? 'Archived demonstration project. Original records are preserved; sample claims are not business evidence.' : 'Imported legacy record. Prior decisions and completion claims have not been verified.'}</p>}
           <p className="text-xs text-slate-600 leading-relaxed">{project.description}</p>
         </div>
 

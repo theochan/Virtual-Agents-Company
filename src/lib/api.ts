@@ -1,6 +1,7 @@
 export async function apiFetch(url: string, init?: RequestInit) {
   try {
     const response = await fetch(url, init);
+    if (response.status === 401) window.dispatchEvent(new Event('workspace-signed-out'));
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
       throw new Error(data.error || `Request failed (${response.status})`);

@@ -16,6 +16,7 @@ import { AdminSettingsView } from './components/AdminSettingsView';
 
 
 import { api } from './lib/api';
+import { OperationsView } from './components/OperationsView';
 import { RunReviewView } from './components/RunReviewView';
 
 export const App: React.FC = () => {
@@ -27,7 +28,7 @@ export const App: React.FC = () => {
   const [approvals, setApprovals] = useState<ApprovalRequest[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
-  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs'>('chat');
+  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'operations'>('chat');
   const [selectedAgentId, setSelectedAgentId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
@@ -43,7 +44,7 @@ export const App: React.FC = () => {
   const conversationKey = `${selectedProject?.id}:${selectedAgent?.id}`;
   const activeTask = [...tasks].reverse().find(t => t.projectId === selectedProject?.id && t.leadAgentId === selectedAgent?.id);
   const events: TaskEvent[] = tasks.flatMap(t => (t as any).events || []);
-  const isCollaborating = tasks.some(t => ['queued', 'working', 'waiting'].includes(t.status));
+  const isCollaborating = tasks.some(t => ['queued', 'working', 'waiting', 'waiting_children'].includes(t.status));
 
   useEffect(() => {
     const listener = (event: Event) => setError((event as CustomEvent).detail);
@@ -113,7 +114,9 @@ export const App: React.FC = () => {
   return (
     <div className="flex flex-col h-screen w-screen bg-[#F8F9FA] text-slate-900 overflow-hidden font-sans antialiased">
       <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs flex justify-between gap-4">
-        <span>Experimental · Single-agent drafts · Host scripts disabled · Imported legacy records are unverified</span>
+        <span>Local workspace · Human-reviewed drafts</span>
+        <button className="font-semibold underline" onClick={() => setCurrentTab('operations')}>Operations</button>
+        <button className="font-semibold underline" onClick={() => void api('/api/session', 'DELETE').then(() => window.dispatchEvent(new Event('workspace-signed-out')))}>Sign out</button>
         <button className="font-semibold underline" onClick={() => setCurrentTab('runs')}>Runs and approvals ({approvals.filter(a => a.status === 'pending').length})</button>
       </div>
       {error && <div role="alert" className="shrink-0 bg-red-50 text-red-800 px-4 py-2 text-sm">{error} <button className="underline ml-3" onClick={() => setError('')}>Dismiss</button></div>}
@@ -140,7 +143,8 @@ export const App: React.FC = () => {
 
       {/* Main Panel Router */}
       <main className="flex-1 flex overflow-hidden">
-        {currentTab === 'runs' && <RunReviewView runs={tasks} approvals={approvals} onDecide={handleDecideApproval} onAction={async (id, action, reason) => { await change(`/api/runs/${id}/${action}`, 'POST', reason ? { reason } : {}); }} />}
+        {currentTab === 'operations' && <OperationsView />}
+        {currentTab === 'runs' && <RunReviewView onSelectAgent={(agentId, projectId) => { setSelectedAgentId(agentId); setSelectedProjectId(projectId); setCurrentTab('chat'); }} runs={tasks} approvals={approvals} onDecide={handleDecideApproval} onAction={async (id, action, reason) => { await change(`/api/runs/${id}/${action}`, 'POST', reason ? { reason } : {}); }} />}
         {currentTab === 'chat' && (!selectedAgent || !selectedProject) && <div className="p-8">Create an agent and a project to start a conversation.</div>}
         {currentTab === 'chat' && selectedAgent && selectedProject && (
           <ChatPanel
@@ -150,7 +154,7 @@ export const App: React.FC = () => {
             activeProject={selectedProject}
             messages={messagesByAgent[conversationKey] || []}
             onSendMessage={handleSendMessage}
-            isSending={isSendingMessage || Boolean(activeTask && ['queued', 'working', 'waiting'].includes(activeTask.status))}
+            isSending={isSendingMessage || Boolean(activeTask && ['queued', 'working', 'waiting', 'waiting_children'].includes(activeTask.status))}
             onOpenProfile={(a) => setProfileAgent(a)}
             onOpenContextInspector={() => setIsContextInspectorOpen(true)}
             onOpenArtifact={(art) => setActiveArtifact(art)}
@@ -215,6 +219,7 @@ export const App: React.FC = () => {
               setCurrentTab('chat');
             }}
             onOpenProfile={(a) => setProfileAgent(a)}
+            onSetDelegation={(id, enabled) => void handleAssignAgentTool(id, 'tool-delegate', enabled)}
             onUpdateReportingLine={handleUpdateAgentReportingLine}
             onDeleteAgent={handleDeleteAgent}
           />
@@ -228,6 +233,7 @@ export const App: React.FC = () => {
               setCurrentTab('chat');
             }}
             onOpenProfile={(a) => setProfileAgent(a)}
+            onSetDelegation={(id, enabled) => void handleAssignAgentTool(id, 'tool-delegate', enabled)}
             onUpdateReportingLine={handleUpdateAgentReportingLine}
           />
         )}

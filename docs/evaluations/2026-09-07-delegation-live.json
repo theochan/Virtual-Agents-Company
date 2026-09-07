@@ -1,0 +1,73 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "5fa71742032919a96ef9f132a9c8f04c3f7b725f81c7c7626b9467ae8c774b9b",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "startedAt": "2026-09-07T04:10:35.001Z",
+  "finishedAt": "2026-09-07T04:13:31.024Z",
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-09-07T04:06:37.513Z",
+    "revision": "e543b44f093ae9900f95f57de23d0476acc5a8d7",
+    "sourceHash": "0cbdcc92b75f5245cf539a520bf479117124c2add0f83c450a3b48a6c0ad975f",
+    "node": "v24.19.0",
+    "assets": [
+      {
+        "path": "assets/index-BHu6-kxn.css",
+        "sha256": "da11b192d691c276ccd276367c86647a4faa37cdfd88e30c527e664d7d0d8dfb"
+      },
+      {
+        "path": "assets/index-DK0kb7Ta.js",
+        "sha256": "f0187fdfb615100dc2e714badce9a647dfa9e4fa89ba3305b00d4eec020bc0e0"
+      },
+      {
+        "path": "index.html",
+        "sha256": "c2fb9696bdc7a7c6b17464ee902bd748af24fe63aa7536a926dd4125d0f0b770"
+      },
+      {
+        "path": "server.cjs",
+        "sha256": "0e656451e61e0aceaffce0e3ff405654cf90c95f02c43f3c87bf6a38f70dd7bb"
+      },
+      {
+        "path": "server.cjs.map",
+        "sha256": "9253e6284b9d5de5e2abf842ddac0d2890b6e1ec65b68084e90282e5db11227a"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "topic": "SQLite Online Backup API official documentation",
+      "delegated": {
+        "status": "reviewing",
+        "latencyMs": 38704
+      },
+      "single": {
+        "status": "reviewing",
+        "latencyMs": 13689
+      }
+    },
+    {
+      "topic": "Node.js AbortController official documentation",
+      "delegated": {
+        "status": "reviewing",
+        "latencyMs": 43920
+      },
+      "single": {
+        "status": "reviewing",
+        "latencyMs": 20868
+      }
+    },
+    {
+      "topic": "Python sqlite3 official documentation",
+      "delegated": {
+        "status": "reviewing",
+        "latencyMs": 42855
+      },
+      "single": {
+        "status": "reviewing",
+        "latencyMs": 15810
+      }
+    }
+  ]
+}

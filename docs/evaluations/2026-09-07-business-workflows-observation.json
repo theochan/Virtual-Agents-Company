@@ -1,0 +1,149 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "2f42db70d086b630a55140dbf298ccbb01926f324b5cac1a2bca20a29b78d7ab",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "startedAt": "2026-09-07T03:24:36.569Z",
+  "finishedAt": "2026-09-07T03:30:57.625Z",
+  "corpusHash": "def9680a6940fc21081882a6a7b69294598e493a5e6b329027f0f53758f78aa2",
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-09-07T02:50:55.593Z",
+    "revision": "e543b44f093ae9900f95f57de23d0476acc5a8d7",
+    "sourceHash": "62487aa0dd08374d669439ee0b22d76bc97b225106e032c5b68001cb823af019",
+    "node": "v24.19.0",
+    "assets": [
+      {
+        "path": "assets/index-1IheP-oo.js",
+        "sha256": "ea1d55e4a2fdc8a7510d36a4682cc96061b7304888a600625c1e391805679ac8"
+      },
+      {
+        "path": "assets/index-Ca5uJpFi.css",
+        "sha256": "8467035a6e86c21946d056a36480f84bc4e610b8ba10754f5667b1a75af38150"
+      },
+      {
+        "path": "index.html",
+        "sha256": "94e215d721360b267084857bb24d8808a44b22aa8c84b8138d05cd0d649f7a95"
+      },
+      {
+        "path": "server.cjs",
+        "sha256": "eb411fd3d1fa293d5938f15dbdb502819217f3bcc58f2cff9740ac8415b5bf68"
+      },
+      {
+        "path": "server.cjs.map",
+        "sha256": "9dc747d764a8547cff56ce3999bc490589aee8b2bd0b2beb301fe46cee3c5c96"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "taskId": "release-brief",
+      "repetition": 1,
+      "application": {
+        "status": "failed",
+        "latencyMs": 17048
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 17069
+      }
+    },
+    {
+      "taskId": "release-brief",
+      "repetition": 2,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 15221
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 16063
+      }
+    },
+    {
+      "taskId": "release-brief",
+      "repetition": 3,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 16435
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 15767
+      }
+    },
+    {
+      "taskId": "capacity-estimate",
+      "repetition": 1,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 17058
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 18724
+      }
+    },
+    {
+      "taskId": "capacity-estimate",
+      "repetition": 2,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 13702
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 19321
+      }
+    },
+    {
+      "taskId": "capacity-estimate",
+      "repetition": 3,
+      "application": {
+        "status": "reviewing",
+        "latencyMs": 13698
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 19775
+      }
+    },
+    {
+      "taskId": "backup-runbook",
+      "repetition": 1,
+      "application": {
+        "status": "failed",
+        "latencyMs": 26154
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 38001
+      }
+    },
+    {
+      "taskId": "backup-runbook",
+      "repetition": 2,
+      "application": {
+        "status": "failed",
+        "latencyMs": 22218
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 34452
+      }
+    },
+    {
+      "taskId": "backup-runbook",
+      "repetition": 3,
+      "application": {
+        "status": "failed",
+        "latencyMs": 20694
+      },
+      "baseline": {
+        "status": null,
+        "latencyMs": 32336
+      }
+    }
+  ]
+}

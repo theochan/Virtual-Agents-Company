@@ -9,7 +9,7 @@ import { MemoryManager } from '../src/lib/memory/memoryManager';
 import { Store } from '../src/server/store';
 import { validateEndpoint } from '../src/server/security';
 
-const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'vac-regression-'));
+let directory = fs.mkdtempSync(path.join(os.tmpdir(), 'vac-regression-'));
 const token = 'test-only-workspace-access-token-000000000000';
 let child: ChildProcess;
 let port: number;
@@ -39,9 +39,9 @@ const mock = http.createServer(async (req, res) => {
 async function freePort() { const server = http.createServer(); await new Promise<void>(r => server.listen(0, '127.0.0.1', r)); const p = (server.address() as any).port; await new Promise<void>(r => server.close(() => r())); return p; }
 async function start() {
   output = '';
-  child = spawn(process.execPath, ['--import', 'tsx', 'server.ts'], { cwd: process.cwd(), env: {
-    PATH: process.env.PATH, NODE_ENV: 'production', PORT: String(port), VAC_DATA_DIR: directory, VAC_ACCESS_TOKEN: token,
-    OMNIROUTE_ENDPOINT: `http://127.0.0.1:${providerPort}/v1`, OMNIROUTE_API_KEY: 'fixture-not-a-real-provider-key',
+  child = spawn(process.execPath, process.env.VAC_TEST_BUILT ? ['dist/server.cjs'] : ['--import', 'tsx', 'server.ts'], { cwd: process.cwd(), env: {
+    PATH: process.env.PATH, VAC_ALLOW_PAID_INFERENCE: '1', NODE_ENV: 'production', PORT: String(port), VAC_DATA_DIR: directory, VAC_ACCESS_TOKEN: token,
+    VAC_OPENAI_ENDPOINTS: `http://127.0.0.1:${providerPort}/v1`, OPENAI_API_KEY: 'fixture-not-a-real-provider-key',
   }, stdio: ['ignore', 'pipe', 'pipe'] });
   child.stdout!.on('data', chunk => output += chunk); child.stderr!.on('data', chunk => output += chunk);
   for (let i = 0; i < 100; i++) {
@@ -74,7 +74,7 @@ before(async () => {
   const agents = await api('/agents'); agentId = agents.body[0].id;
   projectId = (await api('/projects')).body[0].id;
   await api(`/agents/${agentId}`, 'PATCH', { autonomyLevel: 3, toolIds: ['tool-read-project', 'tool-doc-gen', 'tool-calculator'] });
-  const result = await api(`/agents/${agentId}/llm`, 'PATCH', { provider: 'omniroute', model: 'fixture-model', localEndpoint: `http://127.0.0.1:${providerPort}/v1`, temperature: 0.2, maxTokens: 2048 });
+  const result = await api(`/agents/${agentId}/llm`, 'PATCH', { provider: 'openai', model: 'fixture-model', localEndpoint: `http://127.0.0.1:${providerPort}/v1`, temperature: 0.2, maxTokens: 2048 });
   assert.equal(result.status, 200);
 });
 after(async () => { await stop(); await new Promise<void>(r => mock.close(() => r())); fs.rmSync(directory, { recursive: true, force: true }); });
@@ -90,13 +90,37 @@ test('authentication, host/origin checks, and immutable registry block the revie
   assert.equal((await api('/tools/execute', 'POST', { agentId: 'missing', projectId, toolId: 'tool-calculator', parameters: {} })).status, 404);
   assert.equal((await api('/tools/execute', 'POST', { agentId, projectId, toolId: 'skill-escape', parameters: {} })).status, 403);
   assert.equal((await api(`/agents/${agentId}`, 'PATCH', { toolIds: ['skill-escape'] })).status, 422);
-  assert.equal((await api('/admin/llm-settings', 'POST', { provider: 'omniroute', endpoint: 'https://attacker.invalid/v1' })).status, 403);
+  assert.equal((await api('/admin/llm-settings', 'POST', { provider: 'openai', endpoint: 'https://attacker.invalid/v1' })).status, 403);
 });
 test('session cookie authenticates without exposing the token to application responses', async () => {
   const response = await fetch(`http://127.0.0.1:${port}/api/session`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
   const cookie = response.headers.get('set-cookie')!;
   assert.match(cookie, /HttpOnly/); assert.match(cookie, /SameSite=Strict/); assert.ok(!cookie.includes(token));
   assert.equal((await fetch(`http://127.0.0.1:${port}/api/agents`, { headers: { Cookie: cookie.split(';')[0] } })).status, 200);
+});
+test('search settings require owner access, mask keys, persist outside SQLite, and support removal', async () => {
+  assert.equal((await fetch(`http://127.0.0.1:${port}/api/admin/search-settings`)).status, 401);
+  assert.equal((await fetch(`http://127.0.0.1:${port}/api/ready`)).status, 401);
+  const health = await (await fetch(`http://127.0.0.1:${port}/api/health`)).json();
+  assert.ok(!JSON.stringify(health).includes(directory));
+  const key = 'fixture-search-key-not-real';
+  const saved = await api('/admin/search-settings', 'POST', { activeProvider: 'brave', braveApiKey: key });
+  assert.equal(saved.status, 200);
+  assert.ok(!JSON.stringify(saved.body).includes(key));
+  await stop();
+  const store = new Store(directory);
+  assert.deepEqual(store.get('settings', 'search'), { activeProvider: 'brave' });
+  store.close();
+  await start();
+  const reread = await api('/admin/search-settings');
+  assert.equal(reread.body.brave.isConfigured, true);
+  assert.ok(!JSON.stringify(reread.body).includes(key));
+  assert.equal((await api('/admin/llm-settings')).body.omniroute, undefined);
+  assert.equal((await api('/admin/llm-settings', 'POST', { provider: 'omniroute' })).status, 400);
+  assert.equal((await api('/admin/search-settings', 'POST', { activeProvider: 'invalid' })).status, 400);
+  await api('/admin/search-settings', 'POST', { activeProvider: 'auto', braveApiKey: '' });
+  await stop(); await start();
+  assert.equal((await api('/admin/search-settings')).body.brave.isConfigured, false);
 });
 test('birthday task produces its own draft, real usage, and no automatic completed work or memory', async () => {
   const id = await createRun('Write a four-line birthday poem. Do not discuss databases or migrations.');
@@ -113,7 +137,7 @@ test('tool observation feeds the model and exact request retries reuse the durab
   assert.equal(first.body.run.id, retry.body.run.id);
   assert.equal((await api('/chat/agent', 'POST', { ...body, userMessage: 'different' }, { 'Idempotency-Key': key })).status, 409);
   const run = await until(first.body.run.id, ['reviewing']);
-  assert.equal(run.result, 'The tool returned 42.'); assert.equal(run.steps, 2);
+  assert.equal(run.result, 'The tool returned 42.\n\n[Calculator evidence]\nadd(19, 23) = 42'); assert.equal(run.steps, 2);
   assert.equal(run.receipts.find((r: any) => r.toolId === 'tool-calculator').output.result, 42);
 });
 test('provider errors, malformed decisions, invalid tools, tool failures and budget exhaustion fail closed', async () => {
@@ -223,4 +247,58 @@ test('backup creates a restorable snapshot including accepted runs and memory ve
   const { DatabaseSync } = await import('node:sqlite'); const db = new DatabaseSync(backupPath, { readOnly: true });
   const row = db.prepare("SELECT count(*) AS n FROM records WHERE kind='runs'").get() as any;
   assert.ok(row.n > 0); db.close();
+});
+test('full restore starts the application, preserves approval and memory evidence, and executes once', async () => {
+  const waitingId = await createRun('SAVE_DOCUMENT restore drill');
+  await until(waitingId, ['waiting']);
+  const approval = (await api('/approvals')).body.find((a: any) => a.taskId === waitingId);
+  const originalArtifacts = (await api('/artifacts')).body;
+  const originalMemories = (await api('/memories')).body;
+  const originalDirectory = directory;
+  const snapshot = path.join(originalDirectory, 'restore-drill.sqlite');
+  const backup = spawn(process.execPath, ['scripts/backup.mjs', snapshot], { env: { PATH: process.env.PATH, VAC_DATA_DIR: originalDirectory }, stdio: 'pipe' });
+  assert.equal(await new Promise(resolve => backup.once('exit', resolve)), 0);
+  await stop();
+  directory = fs.mkdtempSync(path.join(os.tmpdir(), 'vac-restored-'));
+  try {
+    fs.copyFileSync(snapshot, path.join(directory, 'workspace.sqlite'));
+    await start();
+    assert.deepEqual((await api('/artifacts')).body, originalArtifacts);
+    assert.deepEqual((await api('/memories')).body, originalMemories);
+    assert.equal((await api(`/runs/${waitingId}`)).body.status, 'waiting');
+    assert.equal((await api(`/approvals/${approval.id}`, 'POST', { decision: 'approved' })).status, 200);
+    await until(waitingId, ['reviewing']);
+    await api(`/approvals/${approval.id}`, 'POST', { decision: 'approved' });
+    const artifacts = (await api('/artifacts')).body;
+    assert.equal(artifacts.length, originalArtifacts.length + 1);
+    const saved = artifacts.find((a: any) => a.taskId === waitingId);
+    const { hash } = await import('../src/server/security');
+    assert.equal(saved.contentHash, hash(saved.content));
+    const fresh = await createRun('CALCULATE after restore');
+    assert.match((await until(fresh, ['reviewing'])).result, /42/);
+    const db = new Store(directory);
+    assert.equal((db.db.prepare('PRAGMA integrity_check').get() as any).integrity_check, 'ok');
+    db.close();
+  } finally {
+    await stop(); fs.rmSync(directory, { recursive: true, force: true }); directory = originalDirectory; await start();
+    await api(`/runs/${waitingId}/cancel`, 'POST', {});
+  }
+});
+test('logout invalidates one cookie; revoke-all invalidates all cookies; headers protect static content', async () => {
+  const login = async () => {
+    const res = await fetch(`http://127.0.0.1:${port}/api/session`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
+    return res.headers.get('set-cookie')!.split(';')[0];
+  };
+  const cookieA = await login(); const cookieB = await login();
+  const cookieGet = (cookie: string) => fetch(`http://127.0.0.1:${port}/api/agents`, { headers: { Cookie: cookie } });
+  await fetch(`http://127.0.0.1:${port}/api/session`, { method: 'DELETE', headers: { Cookie: cookieA } });
+  assert.equal((await cookieGet(cookieA)).status, 401);
+  assert.equal((await cookieGet(cookieB)).status, 200);
+  await api('/session/revoke-all', 'POST', {});
+  assert.equal((await cookieGet(cookieB)).status, 401);
+  assert.equal((await api('/session/rotate-token', 'POST', { currentToken: 'wrong' })).status, 403);
+  assert.equal((await api('/session/rotate-token', 'POST', { currentToken: token })).status, 409);
+  const page = await fetch(`http://127.0.0.1:${port}${process.env.VAC_TEST_BUILT ? '/' : '/api/health'}`);
+  assert.match(page.headers.get('content-security-policy')!, /frame-ancestors 'none'/);
+  assert.equal(page.headers.get('referrer-policy'), 'no-referrer');
 });

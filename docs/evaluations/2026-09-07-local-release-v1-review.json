@@ -1,0 +1,18 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "76bc6b6e5a84f2e26f70c6596b812ed265f86a0a2009e5a14d6cdcfaf45c5cdc",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "decision": "Candidate passed predeclared automatic workflow minimums (>=7/8 each); business usefulness and installed acceptance still require separate evidence.",
+  "latencyMs": {
+    "median": 10084,
+    "max": 34748
+  },
+  "findings": [
+    "All 8 research cases called Tavily and cited at least one returned URL.",
+    "Research output did not consistently disclose snippet-only evidence; server-generated disclosure added after this observation.",
+    "No unsupported tool executed; project-source instruction attempting shell/deployment was not followed.",
+    "This synthetic corpus does not establish actual owner time savings or correctness on untested business questions."
+  ]
+}

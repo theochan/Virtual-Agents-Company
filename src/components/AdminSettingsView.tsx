@@ -13,13 +13,28 @@ import {
   Plus,
   Trash2,
   Terminal,
-  FolderGit2
+  FolderGit2,
+  Globe,
+  Search,
+  ExternalLink
 } from 'lucide-react';
 import { Agent } from '../types';
 
 interface AdminSettingsViewProps {
   agents: Agent[];
   onUpdateAgentModel?: (agentId: string, model: string) => void;
+}
+
+interface SearchSettingsState {
+  activeProvider: 'auto' | 'tavily' | 'brave' | 'duckduckgo';
+  tavily: {
+    isConfigured: boolean;
+    apiKeyMasked: string;
+  };
+  brave: {
+    isConfigured: boolean;
+    apiKeyMasked: string;
+  };
 }
 
 interface ProviderConfig {
@@ -56,14 +71,6 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
       localCacheDir: '~/.cache/huggingface/hub',
       isConfigured: false,
       status: 'not-tested'
-    },
-    omniroute: {
-      defaultModel: 'auto',
-      endpoint: 'http://localhost:20128/v1',
-      apiKeyMasked: '',
-      isConfigured: false,
-      status: 'not-tested',
-      downloadedModels: []
     }
   });
 
@@ -71,8 +78,6 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [qwenKeyInput, setQwenKeyInput] = useState('');
   const [claudeKeyInput, setClaudeKeyInput] = useState('');
   const [hfTokenInput, setHfTokenInput] = useState('');
-  const [omnirouteKeyInput, setOmnirouteKeyInput] = useState('');
-  const [omnirouteEndpointInput, setOmnirouteEndpointInput] = useState('http://127.0.0.1:20128/v1');
 
   // Local model inputs
   const [ollamaEndpointInput, setOllamaEndpointInput] = useState('http://localhost:11434');
@@ -87,11 +92,23 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [testingHf, setTestingHf] = useState(false);
   const [hfTestResult, setHfTestResult] = useState<{ connected: boolean; message: string; latencyMs?: number } | null>(null);
 
-  const [testingOmniroute, setTestingOmniroute] = useState(false);
-  const [omnirouteTestResult, setOmnirouteTestResult] = useState<{ connected: boolean; message: string; latencyMs?: number } | null>(null);
-
   const [savingProvider, setSavingProvider] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+
+  // Search Engine State
+  const [searchSettings, setSearchSettings] = useState<SearchSettingsState>({
+    activeProvider: 'auto',
+    tavily: { isConfigured: false, apiKeyMasked: '' },
+    brave: { isConfigured: false, apiKeyMasked: '' }
+  });
+  const [tavilyKeyInput, setTavilyKeyInput] = useState('');
+  const [braveKeyInput, setBraveKeyInput] = useState('');
+  const [savingSearch, setSavingSearch] = useState(false);
+  const [searchSaveSuccess, setSearchSaveSuccess] = useState(false);
+  const [testingTavily, setTestingTavily] = useState(false);
+  const [tavilyTestResult, setTavilyTestResult] = useState<{ connected: boolean; message: string; latencyMs?: number } | null>(null);
+  const [testingBrave, setTestingBrave] = useState(false);
+  const [braveTestResult, setBraveTestResult] = useState<{ connected: boolean; message: string; latencyMs?: number } | null>(null);
 
   useEffect(() => {
     apiFetch('/api/admin/llm-settings')
@@ -101,11 +118,94 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           setSettings(data);
           if (data.ollama?.endpoint) setOllamaEndpointInput(data.ollama.endpoint);
           if (data.huggingface?.endpoint) setHfEndpointInput(data.huggingface.endpoint);
-          if (data.omniroute?.endpoint) setOmnirouteEndpointInput(data.omniroute.endpoint);
         }
       })
       .catch((err) => console.log('Could not load LLM settings:', err));
+
+    apiFetch('/api/admin/search-settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data === 'object') {
+          setSearchSettings(data);
+        }
+      })
+      .catch((err) => console.log('Could not load search settings:', err));
   }, []);
+
+  const handleSaveSearchSettings = async (override?: { activeProvider?: 'auto' | 'tavily' | 'brave' | 'duckduckgo'; tavilyKey?: string; braveKey?: string }) => {
+    setSavingSearch(true);
+    setSearchSaveSuccess(false);
+    try {
+      const payload: any = {};
+      if (override?.activeProvider !== undefined) payload.activeProvider = override.activeProvider;
+      else payload.activeProvider = searchSettings.activeProvider;
+
+      if (override?.tavilyKey !== undefined) payload.tavilyApiKey = override.tavilyKey;
+
+      if (override?.braveKey !== undefined) payload.braveApiKey = override.braveKey;
+
+      const res = await apiFetch('/api/admin/search-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSearchSettings(data.settings);
+        setSearchSaveSuccess(true);
+        if (payload.tavilyApiKey !== undefined) setTavilyKeyInput('');
+        if (payload.braveApiKey !== undefined) setBraveKeyInput('');
+        setTimeout(() => setSearchSaveSuccess(false), 3000);
+      }
+    } catch (err) {
+      console.error('Failed to save search settings:', err);
+    } finally {
+      setSavingSearch(false);
+    }
+  };
+
+  const handleTestSearchConnection = async (provider: 'tavily' | 'brave') => {
+    if (provider === 'tavily') {
+      setTestingTavily(true);
+      setTavilyTestResult(null);
+    } else {
+      setTestingBrave(true);
+      setBraveTestResult(null);
+    }
+
+    try {
+      const apiKey = provider === 'tavily' ? (tavilyKeyInput.trim() || undefined) : (braveKeyInput.trim() || undefined);
+      const res = await apiFetch('/api/admin/search/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, apiKey }),
+      });
+      const data = await res.json();
+      if (provider === 'tavily') {
+        setTavilyTestResult({
+          connected: data.connected,
+          message: data.message,
+          latencyMs: data.latencyMs,
+        });
+      } else {
+        setBraveTestResult({
+          connected: data.connected,
+          message: data.message,
+          latencyMs: data.latencyMs,
+        });
+      }
+    } catch (err: any) {
+      const result = {
+        connected: false,
+        message: `Failed to test ${provider}: ${err.message}`,
+      };
+      if (provider === 'tavily') setTavilyTestResult(result);
+      else setBraveTestResult(result);
+    } finally {
+      if (provider === 'tavily') setTestingTavily(false);
+      else setTestingBrave(false);
+    }
+  };
 
   const handleSaveProvider = async (provider: string, payload: Record<string, any>) => {
     setSavingProvider(provider);
@@ -124,51 +224,12 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
         if (provider === 'qwen') setQwenKeyInput('');
         if (provider === 'claude') setClaudeKeyInput('');
         if (provider === 'huggingface') setHfTokenInput('');
-        if (provider === 'omniroute') setOmnirouteKeyInput('');
         setTimeout(() => setSaveSuccess(null), 3000);
       }
     } catch (err) {
       console.error('Failed to save settings:', err);
     } finally {
       setSavingProvider(null);
-    }
-  };
-
-  const handleTestOmniRoute = async () => {
-    setTestingOmniroute(true);
-    setOmnirouteTestResult(null);
-    try {
-      const res = await apiFetch('/api/admin/omniroute/test-connection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          endpoint: omnirouteEndpointInput,
-          apiKey: omnirouteKeyInput || undefined
-        })
-      });
-      const data = await res.json();
-      setOmnirouteTestResult({
-        connected: data.connected,
-        message: data.message || (data.connected ? 'OmniRoute online' : 'Connection failed'),
-        latencyMs: data.latencyMs
-      });
-      if (data.models && data.models.length > 0) {
-        setSettings((prev) => ({
-          ...prev,
-          omniroute: {
-            ...prev.omniroute,
-            downloadedModels: data.models,
-            status: data.connected ? 'connected' : prev.omniroute?.status
-          }
-        }));
-      }
-    } catch (err: any) {
-      setOmnirouteTestResult({
-        connected: false,
-        message: `Failed to connect to OmniRoute: ${err.message}`
-      });
-    } finally {
-      setTestingOmniroute(false);
     }
   };
 
@@ -289,7 +350,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           <div className="space-y-1">
             <span className="font-semibold text-slate-900 block font-serif">Hybrid Cloud & Local Model Infrastructure</span>
             <p className="leading-relaxed text-slate-600">
-              You can run agents on Anthropic Claude, OpenAI, or execute completely locally on your hardware via <strong>Ollama</strong> (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:11434</code>) or <strong>Hugging Face Hub</strong> weights (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:8000</code>). Local models maintain zero-cloud data egress and operate seamlessly even offline.
+              You can run agents on Anthropic Claude, OpenAI, or execute completely locally on your hardware via <strong>Ollama</strong> (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:11434</code>) or <strong>Hugging Face Hub</strong> weights (<code className="px-1.5 py-0.5 rounded bg-white border border-amber-200 text-amber-900">localhost:8000</code>). Local inference depends on the configured server. Web search sends queries to external services even when the model runs locally.
             </p>
           </div>
         </div>
@@ -304,7 +365,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
               </h3>
             </div>
             <span className="text-[10px] text-orange-700 font-mono font-medium">
-              Offline-First / Zero Cloud Egress
+              Local inference endpoints
             </span>
           </div>
 
@@ -614,140 +675,6 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           </div>
         </div>
 
-        {/* SECTION: OmniRoute AI Gateway */}
-        <div className="p-5 rounded-2xl border border-violet-200 bg-white shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🚀</span>
-              <div>
-                <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 font-serif">
-                  OmniRoute AI Gateway
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-mono bg-violet-50 text-violet-800 border border-violet-200 font-semibold">
-                    OpenAI-Compatible
-                  </span>
-                </h3>
-                <p className="text-xs text-slate-500">
-                  OpenAI-compatible gateway. Actual routing and inference location depend on your gateway configuration.
-                </p>
-              </div>
-            </div>
-            <span
-              className={`text-[9px] px-2.5 py-0.5 rounded-full font-mono ${
-                settings.omniroute?.status === 'connected'
-                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold'
-                  : settings.omniroute?.isConfigured
-                  ? 'bg-violet-50 text-violet-800 border border-violet-200 font-semibold'
-                  : 'bg-slate-100 text-slate-600 border border-slate-200'
-              }`}
-            >
-              {settings.omniroute?.status === 'connected' ? 'CONNECTED' : settings.omniroute?.isConfigured ? 'CONFIGURED' : 'STANDBY'}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Gateway Endpoint */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <label className="text-[10px] uppercase font-mono text-slate-500 font-medium">Gateway Endpoint</label>
-                <button
-                  type="button"
-                  onClick={handleTestOmniRoute}
-                  disabled={testingOmniroute}
-                  className="text-[10px] text-violet-700 hover:text-violet-800 flex items-center gap-1 transition cursor-pointer font-medium"
-                >
-                  <Activity className={`w-3 h-3 ${testingOmniroute ? 'animate-spin' : ''}`} />
-                  <span>{testingOmniroute ? 'Testing...' : 'Test Connection'}</span>
-                </button>
-              </div>
-              <input
-                type="text"
-                value={omnirouteEndpointInput}
-                onChange={(e) => setOmnirouteEndpointInput(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:border-violet-600 text-xs text-slate-900 outline-none font-mono focus:ring-2 focus:ring-violet-500/20"
-                placeholder="http://localhost:20128/v1"
-              />
-            </div>
-
-            {/* API Key */}
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase font-mono text-slate-500 font-medium">OmniRoute API Key / Token</label>
-              <input
-                type="password"
-                placeholder={settings.omniroute?.apiKeyMasked || 'Enter OmniRoute API key...'}
-                value={omnirouteKeyInput}
-                onChange={(e) => setOmnirouteKeyInput(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:border-violet-600 text-xs text-slate-900 outline-none font-mono placeholder:text-slate-400 focus:ring-2 focus:ring-violet-500/20"
-              />
-            </div>
-
-            {/* Default Combo / Model */}
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase font-mono text-slate-500 font-medium">Default Routing Strategy</label>
-              <select
-                value={settings.omniroute?.defaultModel || 'auto'}
-                onChange={(e) =>
-                  setSettings((prev) => ({
-                    ...prev,
-                    omniroute: { ...prev.omniroute, defaultModel: e.target.value }
-                  }))
-                }
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:border-violet-600 text-xs text-slate-900 outline-none cursor-pointer font-mono focus:ring-2 focus:ring-violet-500/20"
-              >
-                <option value="auto">auto (Balanced LKGP default)</option>
-                <option value="auto/coding">auto/coding (Quality-first coding)</option>
-                <option value="auto/fast">auto/fast (Lowest latency)</option>
-                <option value="auto/cheap">auto/cheap (Cost & free tier first)</option>
-                {(settings.omniroute?.downloadedModels || [])
-                  .filter((m) => !['auto', 'auto/coding', 'auto/fast', 'auto/cheap'].includes(m))
-                  .map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Test connection feedback */}
-          {omnirouteTestResult && (
-            <div className="p-2.5 rounded-lg bg-violet-50 border border-violet-200 text-xs text-slate-700 font-mono flex items-center justify-between">
-              <span className={omnirouteTestResult.connected ? 'text-emerald-700 font-semibold' : 'text-amber-700 font-semibold'}>
-                {omnirouteTestResult.message}
-              </span>
-              {omnirouteTestResult.latencyMs !== undefined && (
-                <span className="text-violet-700 font-semibold">{omnirouteTestResult.latencyMs}ms</span>
-              )}
-            </div>
-          )}
-
-          <div className="flex justify-end pt-1">
-            <button
-              onClick={() =>
-                handleSaveProvider('omniroute', {
-                  endpoint: omnirouteEndpointInput,
-                  apiKey: omnirouteKeyInput,
-                  defaultModel: settings.omniroute?.defaultModel || 'auto',
-                  downloadedModels: settings.omniroute?.downloadedModels || []
-                })
-              }
-              disabled={savingProvider === 'omniroute'}
-              className="px-5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 shadow-xs"
-            >
-              {saveSuccess === 'omniroute' ? (
-                <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400">OmniRoute Settings Saved</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-3.5 h-3.5 text-violet-400" />
-                  <span>Save OmniRoute Configuration</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
         {/* SECTION: Cloud AI Providers */}
         <div>
           <div className="flex items-center justify-between mb-3">
@@ -983,6 +910,213 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   <>
                     <Save className="w-3.5 h-3.5 text-blue-400" />
                     <span>Update Qwen</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION: Web Search & Real-Time Retrieval Engines */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Globe className="w-4 h-4 text-sky-600" />
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900 font-mono">
+                Web Search Providers
+              </h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <label className="text-[10px] uppercase font-mono text-slate-500 font-medium">Provider Priority:</label>
+              <select
+                value={searchSettings.activeProvider}
+                onChange={(e) => {
+                  const val = e.target.value as 'auto' | 'tavily' | 'brave' | 'duckduckgo';
+                  handleSaveSearchSettings({ activeProvider: val });
+                }}
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-xs text-slate-800 font-mono focus:border-sky-600 outline-none shadow-2xs"
+              >
+                <option value="auto">Auto (Tavily → Brave → DuckDuckGo)</option>
+                <option value="tavily">Tavily Only</option>
+                <option value="brave">Brave Only</option>
+                <option value="duckduckgo">DuckDuckGo Only (Zero-Config)</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <p className="text-xs text-slate-600">Keys are shared by agents equipped with Web search at access level 3 or 4. Saved keys stay in a private server file across restarts, outside database backups. Saving overrides environment defaults. Auto may send a query to multiple providers after failures. Testing sends one search request and may use API credits.</p>
+            {/* 1. Tavily AI Search */}
+            <div className="p-5 rounded-2xl border border-sky-200 bg-white flex flex-col justify-between space-y-4 shadow-xs">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                    <span className="text-base">🌐</span>
+                    Tavily AI Search
+                  </span>
+                  <span
+                    className={`text-[9px] px-2.5 py-0.5 rounded-full font-mono flex items-center gap-1 font-semibold ${
+                      searchSettings.tavily?.isConfigured
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        searchSettings.tavily?.isConfigured ? 'bg-emerald-500' : 'bg-slate-400'
+                      }`}
+                    ></span>
+                    {searchSettings.tavily?.isConfigured ? 'CONFIGURED' : 'OPTIONAL'}
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Search results with source excerpts and available dates. Results require verification and are not a live market data feed.
+                </p>
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="tavily-search-key" className="text-[10px] uppercase font-mono text-slate-500 font-medium">Tavily API Key</label>
+                    <button type="button" className="text-xs underline" disabled={savingSearch || !searchSettings.tavily?.isConfigured} onClick={() => handleSaveSearchSettings({ tavilyKey: '' })}>Remove key</button>
+                    {searchSettings.tavily?.isConfigured || tavilyKeyInput ? (
+                      <button
+                        onClick={() => handleTestSearchConnection('tavily')}
+                        disabled={testingTavily}
+                        className="text-[10px] text-sky-700 hover:text-sky-800 flex items-center gap-1 transition cursor-pointer font-medium"
+                      >
+                        <Activity className={`w-3 h-3 ${testingTavily ? 'animate-spin' : ''}`} />
+                        <span>{testingTavily ? 'Testing...' : 'Test Connection'}</span>
+                      </button>
+                    ) : null}
+                  </div>
+                  <input
+                    type="password"
+                    id="tavily-search-key" autoComplete="off"
+                    placeholder={searchSettings.tavily?.apiKeyMasked || 'tvly-...'}
+                    value={tavilyKeyInput}
+                    onChange={(e) => setTavilyKeyInput(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 font-mono"
+                  />
+                </div>
+
+                {tavilyTestResult && (
+                  <div
+                    className={`p-2.5 rounded-lg border text-[10px] font-mono flex items-center justify-between ${
+                      tavilyTestResult.connected
+                        ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                        : 'bg-rose-50 border-rose-200 text-rose-900'
+                    }`}
+                  >
+                    <span>{tavilyTestResult.message}</span>
+                    {tavilyTestResult.latencyMs && (
+                      <span className="font-semibold">{tavilyTestResult.latencyMs}ms</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => handleSaveSearchSettings({ tavilyKey: tavilyKeyInput })}
+                disabled={savingSearch || !tavilyKeyInput}
+                className="w-full py-2 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                {searchSaveSuccess ? (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-emerald-400">Saved</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5 text-sky-400" />
+                    <span>Save Tavily Key</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* 2. Brave Search API */}
+            <div className="p-5 rounded-2xl border border-rose-200 bg-white flex flex-col justify-between space-y-4 shadow-xs">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                    <span className="text-base">🦁</span>
+                    Brave Search API
+                  </span>
+                  <span
+                    className={`text-[9px] px-2.5 py-0.5 rounded-full font-mono flex items-center gap-1 font-semibold ${
+                      searchSettings.brave?.isConfigured
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        searchSettings.brave?.isConfigured ? 'bg-emerald-500' : 'bg-slate-400'
+                      }`}
+                    ></span>
+                    {searchSettings.brave?.isConfigured ? 'CONFIGURED' : 'OPTIONAL'}
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Web search results with source snippets and available page dates. Page dates may describe publication or modification; freshness is not guaranteed.
+                </p>
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="brave-search-key" className="text-[10px] uppercase font-mono text-slate-500 font-medium">Brave API Key</label>
+                    <button type="button" className="text-xs underline" disabled={savingSearch || !searchSettings.brave?.isConfigured} onClick={() => handleSaveSearchSettings({ braveKey: '' })}>Remove key</button>
+                    {searchSettings.brave?.isConfigured || braveKeyInput ? (
+                      <button
+                        onClick={() => handleTestSearchConnection('brave')}
+                        disabled={testingBrave}
+                        className="text-[10px] text-rose-700 hover:text-rose-800 flex items-center gap-1 transition cursor-pointer font-medium"
+                      >
+                        <Activity className={`w-3 h-3 ${testingBrave ? 'animate-spin' : ''}`} />
+                        <span>{testingBrave ? 'Testing...' : 'Test Connection'}</span>
+                      </button>
+                    ) : null}
+                  </div>
+                  <input
+                    type="password"
+                    id="brave-search-key" autoComplete="off"
+                    placeholder={searchSettings.brave?.apiKeyMasked || 'BSA-...'}
+                    value={braveKeyInput}
+                    onChange={(e) => setBraveKeyInput(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600 font-mono"
+                  />
+                </div>
+
+                {braveTestResult && (
+                  <div
+                    className={`p-2.5 rounded-lg border text-[10px] font-mono flex items-center justify-between ${
+                      braveTestResult.connected
+                        ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                        : 'bg-rose-50 border-rose-200 text-rose-900'
+                    }`}
+                  >
+                    <span>{braveTestResult.message}</span>
+                    {braveTestResult.latencyMs && (
+                      <span className="font-semibold">{braveTestResult.latencyMs}ms</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => handleSaveSearchSettings({ braveKey: braveKeyInput })}
+                disabled={savingSearch || !braveKeyInput}
+                className="w-full py-2 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                {searchSaveSuccess ? (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-emerald-400">Saved</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5 text-rose-400" />
+                    <span>Save Brave Key</span>
                   </>
                 )}
               </button>

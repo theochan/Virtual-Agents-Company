@@ -1,0 +1,67 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "cb7a8a970f79386d150b130f207f71ed2f04b857e8d98a00a6509c061e78c615",
+    "note": "Private original retained by operator. Paths, workspace records, run identifiers and raw model/tool payloads are omitted. Original evidence hashes in review documents refer to private originals, not this derivative."
+  },
+  "at": "2026-09-07T03:49:31.527Z",
+  "summary": [
+    {
+      "taskId": "release-brief",
+      "trials": 3,
+      "applicationCriticalPasses": 3,
+      "baselineCriticalPasses": 0,
+      "applicationValidDecisions": 3,
+      "applicationMedianMs": 18556,
+      "baselineMedianMs": 16185
+    },
+    {
+      "taskId": "capacity-estimate",
+      "trials": 3,
+      "applicationCriticalPasses": 3,
+      "baselineCriticalPasses": 3,
+      "applicationValidDecisions": 3,
+      "applicationMedianMs": 15212,
+      "baselineMedianMs": 19640
+    },
+    {
+      "taskId": "backup-runbook",
+      "trials": 3,
+      "applicationCriticalPasses": 0,
+      "baselineCriticalPasses": 0,
+      "applicationValidDecisions": 3,
+      "applicationMedianMs": 42038,
+      "baselineMedianMs": 38470
+    }
+  ],
+  "decision": "Decision-format and explicit missing-capability gates passed. Release-brief and budget critical rubric checks passed in this small sample; research factual acceptance remains REJECT. No broad business-readiness or measured owner-time claim.",
+  "rawSha256": "0394020d761ec8aadf6f4a30810a73484923da8d4ec26fe5d0c35c5ecf92ea1b",
+  "sameCorpusHashAsPrior": true,
+  "corrections": {
+    "release-brief": [
+      "Material facts retained in all three drafts. Merge overlapping owner-productivity/business-usefulness gaps into one and identify a distinct third action before use."
+    ],
+    "capacity-estimate": [
+      "Required numerical breakdown and fixed contingency retained in all three drafts. Calculator expressions are appended independently of model prose. No substantive numeric correction identified in this sample."
+    ],
+    "backup-runbook": [
+      "All three drafts still conflate checksum checking with database integrity validation.",
+      "Trials 1 and 2 incorrectly use SQLITE_OK as the completion condition for sqlite3_backup_step; it is SQLITE_DONE.",
+      "Trials 1 and 3 misidentify application provider keys as cloud-sync credentials.",
+      "Trial 3 incorrectly characterizes WAL/online-backup behavior and last-checkpoint coverage.",
+      "These are rejected drafts, not operational instructions."
+    ],
+    "baseline": [
+      "Release briefs retain prior advertising/cloud-deployment confusion.",
+      "Research baseline misstates committed WAL changes as uncommitted, describes API behavior as copying both files, and substitutes dump/hash commands for database integrity checking. It also misidentifies API keys."
+    ]
+  },
+  "limits": [
+    "Three repetitions do not establish population reliability.",
+    "Same model and corpus; direct research baseline receives identical snippets but excludes retrieval latency.",
+    "Structured decoding constrains syntax and tool schemas, not factual correctness.",
+    "Missing-tool preflight detects explicit web-search phrases and caller-declared requiredToolIds; it is not a complete natural-language intent parser.",
+    "Candidate agents are tool-equipped, not guaranteed provider-ready.",
+    "Owner correction minutes and blind human review remain unmeasured."
+  ]
+}

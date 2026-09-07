@@ -49,7 +49,7 @@
       "path": "claude-skills/agent-launcher/skills/agent-launcher-orchestrator/SKILL.md",
       "sha256": "f16d36be3d672caf32bb67e9d556743a78dc41badf7a480349f51e32f2189d8f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -77,7 +77,7 @@
       "path": "claude-skills/agent-launcher/skills/grade-iterate/SKILL.md",
       "sha256": "ebab2fb7024c0f68bd3a46d632e41036626f22aa55348c135be7d8e1cd1f9912",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -105,7 +105,7 @@
       "path": "claude-skills/agent-launcher/skills/interview/SKILL.md",
       "sha256": "45040d96a04f4731aca5d7d1e8b9fbca79fd731ea1ac02593b439a16fc018d0a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -133,7 +133,7 @@
       "path": "claude-skills/agent-launcher/skills/run-without-you/SKILL.md",
       "sha256": "6c517aeb5155801dc36ed6be0d7f0fe72b7c91671782435eb572de715acb5fb7",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -161,7 +161,7 @@
       "path": "claude-skills/agent-launcher/skills/stage-launch/SKILL.md",
       "sha256": "466f59676c36c423ddb7ce2cfc23466407083627b91d764a52410d9a793db12e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -189,7 +189,7 @@
       "path": "claude-skills/agent-launcher/skills/wrap-up/SKILL.md",
       "sha256": "6e83891b547fcf7680d512e07f64cc68221c45ffa7ba3f8078035dd9fe54d5a5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -217,7 +217,7 @@
       "path": "claude-skills/business-growth/skills/business-growth-skills/SKILL.md",
       "sha256": "de3297ff9829a4c1360e9f01cc726a1e1c60547a2b9034a91ddd5ef9f7f800eb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -232,7 +232,7 @@
       "path": "claude-skills/business-growth/skills/contract-and-proposal-writer/SKILL.md",
       "sha256": "a92cdbb79c691731dc017b5cbc18370a88f081cb6e54872282678c00cae4a097",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -247,7 +247,7 @@
       "path": "claude-skills/business-growth/skills/customer-success-manager/SKILL.md",
       "sha256": "ea53629ec26895fc84229d817f91512879be54331122521b180df3a568826546",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -275,7 +275,7 @@
       "path": "claude-skills/business-growth/skills/revenue-operations/SKILL.md",
       "sha256": "9ba340d0b1f3ff05eef9b8beef9de35a9f9082fef6cbc8cedd09022e4735c9b0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -303,7 +303,7 @@
       "path": "claude-skills/business-growth/skills/sales-engineer/SKILL.md",
       "sha256": "7081cae4383df30c2e4908b522ae5bbf54497bc9e7a3f4472d81c5343ea8f93e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -331,7 +331,7 @@
       "path": "claude-skills/business-operations/skills/business-operations-skills/SKILL.md",
       "sha256": "c4ee20e1550a604c30e7351bb48d82b4d5212f26568e7b4e588f11cd67149f52",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -346,7 +346,7 @@
       "path": "claude-skills/business-operations/skills/capacity-planner/SKILL.md",
       "sha256": "436f8c3586c577ca28aa05136b49c2687d8bd3bf058e49de3a173b8004968a7a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -374,7 +374,7 @@
       "path": "claude-skills/business-operations/skills/internal-comms/SKILL.md",
       "sha256": "bd7cf520e647847d6add238b2c993313853519e16f8bce0d16fc5b4a57245f55",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -402,7 +402,7 @@
       "path": "claude-skills/business-operations/skills/knowledge-ops/SKILL.md",
       "sha256": "980ee103958c7a209e7598da975cd1962e83a8deede181fd20f2a6a230afdb45",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -430,7 +430,7 @@
       "path": "claude-skills/business-operations/skills/process-mapper/SKILL.md",
       "sha256": "e71210a50f9d3771a64892200ed454aa3e1a6b53eaef0d2cdcd1625cede7a57c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -458,7 +458,7 @@
       "path": "claude-skills/business-operations/skills/procurement-optimizer/SKILL.md",
       "sha256": "308e0858ae3fd62fb1f0fdb03a9b16264897099aa48e397b152528ceec4edeea",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -486,7 +486,7 @@
       "path": "claude-skills/business-operations/skills/vendor-management/SKILL.md",
       "sha256": "57fb2f47bfef9f3475703d05c9734a4840d68c1197923d90d68fd88ad95cb6b4",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -514,7 +514,7 @@
       "path": "claude-skills/c-level-advisor/arquiteto-de-empresa/skills/arquiteto-de-empresa/SKILL.md",
       "sha256": "a04aeacb1b74531e84569aa01b947185d106f567a8a550817e61fcf6e642a322",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -542,7 +542,7 @@
       "path": "claude-skills/c-level-advisor/chief-ai-officer-advisor/skills/chief-ai-officer-advisor/SKILL.md",
       "sha256": "f578a33ea16493c2c981ead3215d9428f76d7770e3fb779518ca510c4f524c26",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -570,7 +570,7 @@
       "path": "claude-skills/c-level-advisor/chief-customer-officer-advisor/skills/chief-customer-officer-advisor/SKILL.md",
       "sha256": "8a985a538ffdf5a31325ea757fe25fc35aba2af187763f6f6d7dd50932fc7465",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -598,7 +598,7 @@
       "path": "claude-skills/c-level-advisor/chief-data-officer-advisor/skills/chief-data-officer-advisor/SKILL.md",
       "sha256": "bb519c5ce49415e37300d5e9d36e202a9eb25680c1fa9d9449137e67ad2b996e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -626,7 +626,7 @@
       "path": "claude-skills/c-level-advisor/executive-mentor/skills/board-prep/SKILL.md",
       "sha256": "7c1d19e1114b41fee8a27b8a575c5744e613484a3067a396c743245f21ed3352",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -641,7 +641,7 @@
       "path": "claude-skills/c-level-advisor/executive-mentor/skills/challenge/SKILL.md",
       "sha256": "eb04f1e49bae8a81681ad5b84c262a15798637b67aeff686f3a6da5a98f86904",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -656,7 +656,7 @@
       "path": "claude-skills/c-level-advisor/executive-mentor/skills/executive-mentor/SKILL.md",
       "sha256": "8c4f6b85b37e348f0e969cf03fad1c0b7b6afaf66a2331e384e9f0d34119542a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -680,7 +680,7 @@
       "path": "claude-skills/c-level-advisor/executive-mentor/skills/hard-call/SKILL.md",
       "sha256": "39aaad9cd0c148de43890ac71532a39df8139beeed191b7fe261fe948670e232",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -695,7 +695,7 @@
       "path": "claude-skills/c-level-advisor/executive-mentor/skills/postmortem/SKILL.md",
       "sha256": "ca1b7ab332c72f523beefdf5d2be7399f475582a09fee4e36daffab51394a78e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -710,7 +710,7 @@
       "path": "claude-skills/c-level-advisor/executive-mentor/skills/stress-test/SKILL.md",
       "sha256": "bfa5b78f085c2b7b6f72f6993b4dde409e0fd2f2b0d4183a304326c0b01646c6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -725,7 +725,7 @@
       "path": "claude-skills/c-level-advisor/general-counsel-advisor/skills/general-counsel-advisor/SKILL.md",
       "sha256": "57f3c7afd76e8a7babbf81d2f70c03346987cc0de3db6a7d1c8a6e6a4d6291a3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -749,7 +749,7 @@
       "path": "claude-skills/c-level-advisor/skills/agent-protocol/SKILL.md",
       "sha256": "fda98bece66a8903d95c79fa6dab49eb4e636014626ee119264e2c0e4224154e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -764,7 +764,7 @@
       "path": "claude-skills/c-level-advisor/skills/arquiteto-de-empresa/SKILL.md",
       "sha256": "a04aeacb1b74531e84569aa01b947185d106f567a8a550817e61fcf6e642a322",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -792,7 +792,7 @@
       "path": "claude-skills/c-level-advisor/skills/board-deck-builder/SKILL.md",
       "sha256": "73ca16546887edd28fe97e9c40647034f4b09dae692530d738d24b7d5bfc60a0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -807,7 +807,7 @@
       "path": "claude-skills/c-level-advisor/skills/board-meeting/SKILL.md",
       "sha256": "cb9bca1b04867a7e11e4aa716e0776bc787053de397ef2dacbcbf51638460e05",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -822,7 +822,7 @@
       "path": "claude-skills/c-level-advisor/skills/c-level-skills/SKILL.md",
       "sha256": "dcb4929a38868316b83d22098cf6d2a32fb590aed9c07a06e2ed7b8339197083",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -837,7 +837,7 @@
       "path": "claude-skills/c-level-advisor/skills/ceo-advisor/SKILL.md",
       "sha256": "df3063c65e85400d2aa877f74aedecf561a5e3b78e8b6dd316860f2c31337c4c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -861,7 +861,7 @@
       "path": "claude-skills/c-level-advisor/skills/cfo-advisor/SKILL.md",
       "sha256": "9fcae3f3683725337b96fae510ef0c659ffc3551fca5838c2e94c576696f91f2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -889,7 +889,7 @@
       "path": "claude-skills/c-level-advisor/skills/change-management/SKILL.md",
       "sha256": "309d1563533a38d84bc13c0e32c46dcda4c9fade3ee1fad22997ed3ff0af30f6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -904,7 +904,7 @@
       "path": "claude-skills/c-level-advisor/skills/chief-ai-officer-advisor/SKILL.md",
       "sha256": "f578a33ea16493c2c981ead3215d9428f76d7770e3fb779518ca510c4f524c26",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -932,7 +932,7 @@
       "path": "claude-skills/c-level-advisor/skills/chief-customer-officer-advisor/SKILL.md",
       "sha256": "8a985a538ffdf5a31325ea757fe25fc35aba2af187763f6f6d7dd50932fc7465",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -960,7 +960,7 @@
       "path": "claude-skills/c-level-advisor/skills/chief-data-officer-advisor/SKILL.md",
       "sha256": "bb519c5ce49415e37300d5e9d36e202a9eb25680c1fa9d9449137e67ad2b996e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -988,7 +988,7 @@
       "path": "claude-skills/c-level-advisor/skills/chief-of-staff/SKILL.md",
       "sha256": "bc217ed8a294363fb61c895c54fcc70f55221f92aab16841df25c8ed8a05e9a5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1003,7 +1003,7 @@
       "path": "claude-skills/c-level-advisor/skills/chro-advisor/SKILL.md",
       "sha256": "efd98eaba78e41b3399006a48536df2e146c1638dd758155f46886f07070d70d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1027,7 +1027,7 @@
       "path": "claude-skills/c-level-advisor/skills/ciso-advisor/SKILL.md",
       "sha256": "ca2c14e65ff74b576e2d40ac39d0b26b00cca206488254ba525b78cbdb7c2b37",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1051,7 +1051,7 @@
       "path": "claude-skills/c-level-advisor/skills/cmo-advisor/SKILL.md",
       "sha256": "aa76f8740b2384e18066e4f02950bec552e0a8b5ff17a526a51b724163592cc7",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1075,7 +1075,7 @@
       "path": "claude-skills/c-level-advisor/skills/company-os/SKILL.md",
       "sha256": "beb4f6dac3dc1380548230bd278664e850af7bd8930142be2e2051f97bd85b6f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1090,7 +1090,7 @@
       "path": "claude-skills/c-level-advisor/skills/competitive-intel/SKILL.md",
       "sha256": "647c53414f51372dabe8323f98e65be06db5fb900d3dd30ffb783f2a977b9831",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1105,7 +1105,7 @@
       "path": "claude-skills/c-level-advisor/skills/context-engine/SKILL.md",
       "sha256": "c42fcd0b2cbd3bfded844a990a6b8129118b63b5208b49a4b08806954a74a1b8",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1120,7 +1120,7 @@
       "path": "claude-skills/c-level-advisor/skills/coo-advisor/SKILL.md",
       "sha256": "f7f47376610ef7a280be4af34a3816adb9225a24d6af52e148a4808b13c6df64",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1144,7 +1144,7 @@
       "path": "claude-skills/c-level-advisor/skills/cpo-advisor/SKILL.md",
       "sha256": "aa60b2c210f1b0ae1b6668f285ee1dd85b21c607f236f57a7b9bb0e9417a4225",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1168,7 +1168,7 @@
       "path": "claude-skills/c-level-advisor/skills/cro-advisor/SKILL.md",
       "sha256": "cd712605d907badd29df29bd8c9cd8cb638bb845be285f3c5ecbd03c51a6bbd0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1192,7 +1192,7 @@
       "path": "claude-skills/c-level-advisor/skills/cs-onboard/SKILL.md",
       "sha256": "8867e51eb0fcdfd054039aa139a55db8565a4ed14f5e14fea976b504aa33c643",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1207,7 +1207,7 @@
       "path": "claude-skills/c-level-advisor/skills/cto-advisor/SKILL.md",
       "sha256": "163188fbfa003cfe593f460f814aadcfa4228c85d6de96fe7589442afbee8adb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1231,7 +1231,7 @@
       "path": "claude-skills/c-level-advisor/skills/culture-architect/SKILL.md",
       "sha256": "7d057648e470951de883cc00c8078640fadc0dfc38cdaaac4e26435d2caec2a0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1246,7 +1246,7 @@
       "path": "claude-skills/c-level-advisor/skills/decision-logger/SKILL.md",
       "sha256": "f7f5902cd4970015389e52e0196274146a9d334a32e90137e6f480032414697d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1266,7 +1266,7 @@
       "path": "claude-skills/c-level-advisor/skills/founder-coach/SKILL.md",
       "sha256": "5dddb18187c7bbbcb91bcbed07eff1bf739ffa20b91668e09f89743c4255a230",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1281,7 +1281,7 @@
       "path": "claude-skills/c-level-advisor/skills/general-counsel-advisor/SKILL.md",
       "sha256": "57f3c7afd76e8a7babbf81d2f70c03346987cc0de3db6a7d1c8a6e6a4d6291a3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1305,7 +1305,7 @@
       "path": "claude-skills/c-level-advisor/skills/internal-narrative/SKILL.md",
       "sha256": "1c3558eddccc7547fea27a6f25875c9861e32d5899db5f027b71d3c2036d922e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1320,7 +1320,7 @@
       "path": "claude-skills/c-level-advisor/skills/intl-expansion/SKILL.md",
       "sha256": "4ff404139d02174ca6151c3e0ee7f65b199fce7cf2afb16fe567709381ad390c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1335,7 +1335,7 @@
       "path": "claude-skills/c-level-advisor/skills/ma-playbook/SKILL.md",
       "sha256": "e27101055e873209979459047b94f2228e82a46240fb1da59735d54752e7f7c5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1350,7 +1350,7 @@
       "path": "claude-skills/c-level-advisor/skills/org-health-diagnostic/SKILL.md",
       "sha256": "935fbe7470247d6740dccb1619bbd6c1365a8e9ff3d7b5d5239f92933da0f84c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1370,7 +1370,7 @@
       "path": "claude-skills/c-level-advisor/skills/scenario-war-room/SKILL.md",
       "sha256": "bbc259eb11e8ba20e3eee2c5a531ef43994685c7274514a4e3709dba2dd6bf3a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1390,7 +1390,7 @@
       "path": "claude-skills/c-level-advisor/skills/strategic-alignment/SKILL.md",
       "sha256": "b6c7a58907851b103de7c46c2b9063362fc61d7d1e450fc612710f4fc04ea6ab",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1410,7 +1410,7 @@
       "path": "claude-skills/c-level-advisor/skills/vpe-advisor/SKILL.md",
       "sha256": "a351ad1eb48f779a5ab63c9d3a29cea39de64997006bfdd3df2c88b2353ce7dd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1438,7 +1438,7 @@
       "path": "claude-skills/c-level-advisor/vpe-advisor/skills/vpe-advisor/SKILL.md",
       "sha256": "a351ad1eb48f779a5ab63c9d3a29cea39de64997006bfdd3df2c88b2353ce7dd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1466,7 +1466,7 @@
       "path": "claude-skills/c-level-agents/skills/boardroom/SKILL.md",
       "sha256": "f3fbe354cb7683637caee407d839c62c968482163ab0a0471a461c0c1e88206b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1481,7 +1481,7 @@
       "path": "claude-skills/c-level-agents/skills/brief/SKILL.md",
       "sha256": "8e883f382d96456a79cf444587507e6e22a55b70e8278eeed175cc7ef2790f6e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1496,7 +1496,7 @@
       "path": "claude-skills/c-level-agents/skills/c-level-agents/SKILL.md",
       "sha256": "87a4193b3ad7445c0a8421c32e60be9237104a559570e01b35eff2b540e89252",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1511,7 +1511,7 @@
       "path": "claude-skills/c-level-agents/skills/caio-review/SKILL.md",
       "sha256": "cbb7d7486efd038efc90a5cc7606d63dce2aadaebbdd4dce4794167af12d9a13",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1526,7 +1526,7 @@
       "path": "claude-skills/c-level-agents/skills/cco-review/SKILL.md",
       "sha256": "2d51a9832f54c90a2865ce224571283e15644fecffcd76cd6dd942f1cdcabee5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1541,7 +1541,7 @@
       "path": "claude-skills/c-level-agents/skills/cdo-review/SKILL.md",
       "sha256": "bb2ec96ce1dd754f6adefcec4569a7a0f3b99816c4c0a9d4eb2896951c73912e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1556,7 +1556,7 @@
       "path": "claude-skills/c-level-agents/skills/cfo-review/SKILL.md",
       "sha256": "6b1154b367766d9f3f622929e8458a0b7ee53a396b55444e1b7d0e72a4f88288",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1571,7 +1571,7 @@
       "path": "claude-skills/c-level-agents/skills/ciso-review/SKILL.md",
       "sha256": "a01052ca3b197558d9d4295877d0c79376d5baa83826869b8e950fe0debc695e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1586,7 +1586,7 @@
       "path": "claude-skills/c-level-agents/skills/cmo-review/SKILL.md",
       "sha256": "eb570120eb291f2f273e0fd9cdc280d1a01d678ca7ef8407713ff4151709b1cb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1601,7 +1601,7 @@
       "path": "claude-skills/c-level-agents/skills/cpo-review/SKILL.md",
       "sha256": "ea10de58a736386d4706985f5ca2ae4a63c7d931783d0b75959115dd2c5646dc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1616,7 +1616,7 @@
       "path": "claude-skills/c-level-agents/skills/cro-review/SKILL.md",
       "sha256": "69bbc505a3716e361d43bbd1bee388bada5c92a561b140ef7fc364dcf95f3e99",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1631,7 +1631,7 @@
       "path": "claude-skills/c-level-agents/skills/cross-eval/SKILL.md",
       "sha256": "bf2222d1c936e5e18acb634a92c7d17f73f44088784b85157fd6d81fd807004f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1646,7 +1646,7 @@
       "path": "claude-skills/c-level-agents/skills/cto-review/SKILL.md",
       "sha256": "a0b1e579b4e9facdbfe9c94e98ffe67c2887ba22774bddfb75e128cccafe1de2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1661,7 +1661,7 @@
       "path": "claude-skills/c-level-agents/skills/decide/SKILL.md",
       "sha256": "cdc4cee218a662df55f403c5873f274eed258936e49921862f7a24ea154ffba0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1676,7 +1676,7 @@
       "path": "claude-skills/c-level-agents/skills/execute/SKILL.md",
       "sha256": "ad08d9ab3f7ff5b6b8639a0f1e65eefe8f483ede401bd4f77f6997bc6b3a4577",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1691,7 +1691,7 @@
       "path": "claude-skills/c-level-agents/skills/founder-mode/SKILL.md",
       "sha256": "14c2baf9b39a74684259b0931c9a5adbcecbc303293746d784e7a9b10d86e3d8",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1706,7 +1706,7 @@
       "path": "claude-skills/c-level-agents/skills/freeze/SKILL.md",
       "sha256": "61514fa19f56ec07eeabd9d9c1b66083a0f615121999cc461b3787104a534eb5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1721,7 +1721,7 @@
       "path": "claude-skills/c-level-agents/skills/gc-review/SKILL.md",
       "sha256": "89ae32636540db36674aeaa653e037e11607851e3b66470263378a7e5f2b45c8",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1736,7 +1736,7 @@
       "path": "claude-skills/c-level-agents/skills/office-hours/SKILL.md",
       "sha256": "250c36b8bf9f32964f2ca141a8c6956b6935eff739d8e7b61ba9062a28a0dd4a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1751,7 +1751,7 @@
       "path": "claude-skills/c-level-agents/skills/onboard/SKILL.md",
       "sha256": "b34d69709fb6f8b11c8911715187a53eecf60df3afdd13a5edabf063c9cb9393",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1766,7 +1766,7 @@
       "path": "claude-skills/c-level-agents/skills/post-mortem/SKILL.md",
       "sha256": "d10aca55ecb042fd690a92c6a0c9b1b9257f19ab26d25628c6b4957fc6b530f3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1781,7 +1781,7 @@
       "path": "claude-skills/c-level-agents/skills/vpe-review/SKILL.md",
       "sha256": "799b0b5ebed290647e61a39330479ca7679b093ae19e80a08487600ed8ecd4a0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1796,7 +1796,7 @@
       "path": "claude-skills/commercial/skills/channel-economics/SKILL.md",
       "sha256": "fb1b193f7efcfe36189cdfcb660294e1ed95413d92cab9dd084c0b417aaab3e0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1824,7 +1824,7 @@
       "path": "claude-skills/commercial/skills/commercial-forecaster/SKILL.md",
       "sha256": "ad604e6d0e26b42a446029160e24097af88992c3d4b4a63a528bbc6f835de40d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1852,7 +1852,7 @@
       "path": "claude-skills/commercial/skills/commercial-policy/SKILL.md",
       "sha256": "6e812240f2b99e369cb1053dfe8b70567629696be1e10c6a87e076cdfb19fd73",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1880,7 +1880,7 @@
       "path": "claude-skills/commercial/skills/commercial-skills/SKILL.md",
       "sha256": "58983bd3e32e38d711be4ece7630f08b69caf87fc8004bcf70c92d491c9a6a7a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1895,7 +1895,7 @@
       "path": "claude-skills/commercial/skills/deal-desk/SKILL.md",
       "sha256": "39dcfb0d50983bbfaf2b25876ce5fe4fb23b2cf5b3d5469191de9c349743af20",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1923,7 +1923,7 @@
       "path": "claude-skills/commercial/skills/partnerships-architect/SKILL.md",
       "sha256": "224a929d13179997de1e8092d385e8683a4891fb34173f379678a6cf6602bb10",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1951,7 +1951,7 @@
       "path": "claude-skills/commercial/skills/pricing-strategist/SKILL.md",
       "sha256": "0dcefcdeb60a2c319a0c12119290d1f812919ef7fe98aed9748aee2f9e79c9e6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -1979,7 +1979,7 @@
       "path": "claude-skills/commercial/skills/rfp-responder/SKILL.md",
       "sha256": "7d70369c5fe2f512c7bf7b92ce286cb078cfdeabe15fdb76902d72244d9ccf7c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2007,7 +2007,7 @@
       "path": "claude-skills/compliance-os/skills/ai-act-readiness/SKILL.md",
       "sha256": "6dae080a48c671919a108b7fa545e8ef56b8b13151f0aa2beb9da3b12944b741",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2022,7 +2022,7 @@
       "path": "claude-skills/compliance-os/skills/aims-audit/SKILL.md",
       "sha256": "dbc94d37ec38c1ad13e018872638a4143f4d161549feaa91aadac2246e302e1b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2037,7 +2037,7 @@
       "path": "claude-skills/compliance-os/skills/compliance-os/SKILL.md",
       "sha256": "0d05747013572dbcf093c05f3fd536f96b56e5bdd92bf780f0dfed9aaeb191bd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2069,7 +2069,7 @@
       "path": "claude-skills/compliance-os/skills/compliance-readiness/SKILL.md",
       "sha256": "c6a621a1f6a708823d5f9548f0ae955d5aced533eba6ac027f235163f2db90aa",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2084,7 +2084,7 @@
       "path": "claude-skills/compliance-os/skills/fda-qsr-audit-prep/SKILL.md",
       "sha256": "a119c8414430c08344fe380e35569ee74b5af3a06d72fd7081577f53527c072b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2099,7 +2099,7 @@
       "path": "claude-skills/compliance-os/skills/gdpr-audit-prep/SKILL.md",
       "sha256": "a3352e908b283bb5ddd548342ead0f5de8862af6030c14b59023db84f1b0f0cb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2114,7 +2114,7 @@
       "path": "claude-skills/compliance-os/skills/iso13485-audit-prep/SKILL.md",
       "sha256": "9a7f9b137a3683266796ab01f6bcf75bbc1e0c1b0461945b25ee7440f08cb0a2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2129,7 +2129,7 @@
       "path": "claude-skills/compliance-os/skills/iso27001-audit-prep/SKILL.md",
       "sha256": "e222c68dc68bffc8001c894c4418cd49b1012360ed87ffb97c19f56306bf1b7a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2144,7 +2144,7 @@
       "path": "claude-skills/compliance-os/skills/soc2-audit-prep/SKILL.md",
       "sha256": "01b805170d6d1b6a768c2cf09649ddd27736abd84bca6fdeccd2c16d9f79aa6b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2159,7 +2159,7 @@
       "path": "claude-skills/engineering-team/a11y-audit/skills/a11y-audit/SKILL.md",
       "sha256": "e1cbabce8168ea0cb18d44b49c754c7de2e2dc29f8560cb9c4631a89e8652e4e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2183,7 +2183,7 @@
       "path": "claude-skills/engineering-team/google-workspace-cli/skills/google-workspace-cli/SKILL.md",
       "sha256": "c44cc6e4492dc42358482045c22516910cd30637818d582f9bdb68575c113fe1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2219,7 +2219,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/browserstack/SKILL.md",
       "sha256": "f3240872b87c93e8757707c6c1ebaf9d8117ba17b05c70c7c3664e89e575deff",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2235,7 +2235,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/fix/SKILL.md",
       "sha256": "1374297e8c327505bc7df63dd2e7390c6e205d1e1a613a0b7f4f07035bf373ff",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2251,7 +2251,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/generate/SKILL.md",
       "sha256": "995f6cf365634ab96d9124203e8f9d9a05997dbbd89786f217cd7cade884d367",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2267,7 +2267,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/migrate/SKILL.md",
       "sha256": "fe9cd99c045f095a4c1e9da88c835afdf00a4b4961c3c13cd7096c4687f2c059",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2283,7 +2283,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/pw-init/SKILL.md",
       "sha256": "91975ef9bd3c00c9fe4f16e69b64b15183cc7f7d0576b5eda88821a381bc7d39",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2299,7 +2299,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/pw-review/SKILL.md",
       "sha256": "442833f0bcde3221a7afaef58c19f87e345a8dbb247bc4357537aa458bbdb69a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2315,7 +2315,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/pw/SKILL.md",
       "sha256": "7267483b06508dff86259a42054ca658e03dd62e628b8158f1564dd35536bef2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2331,7 +2331,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/report/SKILL.md",
       "sha256": "d1ba6caafa62ec1f117cce2ad9abd132c7f54a702acba6fee581d9318a83bc3c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2347,7 +2347,7 @@
       "path": "claude-skills/engineering-team/playwright-pro/skills/testrail/SKILL.md",
       "sha256": "61be7f48b674e7058f490c7f59d8ab9dc98a375f74fdcb6934a6435a58ad1842",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/playwright-pro/LICENSE",
         "claude-skills/LICENSE"
@@ -2363,7 +2363,7 @@
       "path": "claude-skills/engineering-team/self-improving-agent/skills/extract/SKILL.md",
       "sha256": "eabdb4c6ffd2624a51108649623b29ccdc02d2b390305e65e2b7a981dc4d72dd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/self-improving-agent/LICENSE",
         "claude-skills/LICENSE"
@@ -2379,7 +2379,7 @@
       "path": "claude-skills/engineering-team/self-improving-agent/skills/memory-review/SKILL.md",
       "sha256": "51caa5e982dff97a33b0c20ee63061425aca01e70e21bbfd41fa9915c183c6fd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/self-improving-agent/LICENSE",
         "claude-skills/LICENSE"
@@ -2395,7 +2395,7 @@
       "path": "claude-skills/engineering-team/self-improving-agent/skills/memory-status/SKILL.md",
       "sha256": "76a903945568faba3146a5523654d1a606f297bb704dc3d283e00a2780e87bc0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/self-improving-agent/LICENSE",
         "claude-skills/LICENSE"
@@ -2411,7 +2411,7 @@
       "path": "claude-skills/engineering-team/self-improving-agent/skills/promote/SKILL.md",
       "sha256": "ac90d59f83c7fcb4a3e63376d6546aa17f5d134f204bc08881a0f7fff4777ade",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/self-improving-agent/LICENSE",
         "claude-skills/LICENSE"
@@ -2427,7 +2427,7 @@
       "path": "claude-skills/engineering-team/self-improving-agent/skills/remember/SKILL.md",
       "sha256": "7d596b07a8791019c54bd9c32e4ac8116604971aecef3e3084ff4b78b54e9a3f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/self-improving-agent/LICENSE",
         "claude-skills/LICENSE"
@@ -2443,7 +2443,7 @@
       "path": "claude-skills/engineering-team/self-improving-agent/skills/self-improving-agent/SKILL.md",
       "sha256": "c259260503478672ee829b7dcc1ef5d1937875db3e286e9bfda7013d235e7d60",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering-team/self-improving-agent/LICENSE",
         "claude-skills/LICENSE"
@@ -2459,7 +2459,7 @@
       "path": "claude-skills/engineering-team/skills/adversarial-reviewer/SKILL.md",
       "sha256": "d69e917a7c84405a18b40bd6e41d5fae9aba966db903171028f86bb5c25f6f94",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2474,7 +2474,7 @@
       "path": "claude-skills/engineering-team/skills/ai-security/SKILL.md",
       "sha256": "dac7c1312e5433e02fb287ca476979468d9a21901ed0d0fd67a64a8239ac6287",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2494,7 +2494,7 @@
       "path": "claude-skills/engineering-team/skills/aws-solution-architect/SKILL.md",
       "sha256": "4d5f067b82f3ea77d3ed6356eb18e6cda86126a2b36f9e53b7614bbc149e973c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2522,7 +2522,7 @@
       "path": "claude-skills/engineering-team/skills/azure-cloud-architect/SKILL.md",
       "sha256": "d92c2d096b11cc10d2525f79bcaff3f75727968b84c24a629ef589082ad2a825",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2550,7 +2550,7 @@
       "path": "claude-skills/engineering-team/skills/cloud-security/SKILL.md",
       "sha256": "b21c8b13654e421a65784430df2c6bba90bddfdae87fe5000d4bae0c3cd1a7c5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2570,7 +2570,7 @@
       "path": "claude-skills/engineering-team/skills/code-reviewer/SKILL.md",
       "sha256": "28d80f6710369919e751679e588ba67db3fe5d11461a8f59c53fead2e119978a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2598,7 +2598,7 @@
       "path": "claude-skills/engineering-team/skills/email-template-builder/SKILL.md",
       "sha256": "e01efa4b96637071fede0bfbf3c3d178e5da7a1ee6ee35ab33cf1cfcb4589e69",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2613,7 +2613,7 @@
       "path": "claude-skills/engineering-team/skills/embedded-iot-mentor/SKILL.md",
       "sha256": "5f9a3c5d1b4ec322b36f0f2e9f01a5978935c669e416753309fec1dc2811c55e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2628,7 +2628,7 @@
       "path": "claude-skills/engineering-team/skills/engineering-skills/SKILL.md",
       "sha256": "99c775af2aa507257a7dce7e3cb2b13c7976a20b04c8655f12d70cad40eaa132",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2643,7 +2643,7 @@
       "path": "claude-skills/engineering-team/skills/epic-design/SKILL.md",
       "sha256": "f5f7c9f9edd5d6b469dbfff28cece10202588c69def3fe5be3c797ebfda37142",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2663,7 +2663,7 @@
       "path": "claude-skills/engineering-team/skills/gcp-cloud-architect/SKILL.md",
       "sha256": "5ea03c02ce083de1a846a843213bf18da03e2bd335af71e50a7807fb05e84c7d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2691,7 +2691,7 @@
       "path": "claude-skills/engineering-team/skills/incident-commander/SKILL.md",
       "sha256": "b7f8d0442f1c7379f67dc3089b105a3f7b668eed76beff623bc59f795d2642a4",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2719,7 +2719,7 @@
       "path": "claude-skills/engineering-team/skills/incident-response/SKILL.md",
       "sha256": "6ae60c0ff441d76e1621c41fc1bee320728cc9e852df37c12d7468abc840abb7",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2739,7 +2739,7 @@
       "path": "claude-skills/engineering-team/skills/ms365-tenant-manager/SKILL.md",
       "sha256": "4a2ac8effcaa94b5d610232c1b57e9c2d2f89a6e339a21f5885bcbc14da9948f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2767,7 +2767,7 @@
       "path": "claude-skills/engineering-team/skills/named-persona-adversarial-review/SKILL.md",
       "sha256": "192af7fe0359f52fc2a02b7f3b829e425a4ae16bf4e0c256fda3b792de5843a6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2782,7 +2782,7 @@
       "path": "claude-skills/engineering-team/skills/red-team/SKILL.md",
       "sha256": "86c488d786387de64bb99036ba6091a1179c73258997093e2fede45abd5bb292",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2802,7 +2802,7 @@
       "path": "claude-skills/engineering-team/skills/security-pen-testing/SKILL.md",
       "sha256": "7fa4287746fd751ad144750817181efe55062963d778947d4b27bac1666efff7",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2830,7 +2830,7 @@
       "path": "claude-skills/engineering-team/skills/senior-architect/SKILL.md",
       "sha256": "559d402c361591423b22de37485ad3900b3aba8c437bed1ebf70aa4e828e0e22",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2858,7 +2858,7 @@
       "path": "claude-skills/engineering-team/skills/senior-backend/SKILL.md",
       "sha256": "4f1ae6929b9cb723bdf63c27aa2147ca36c7b028a8ab1d6d622f09c0a061f672",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2890,7 +2890,7 @@
       "path": "claude-skills/engineering-team/skills/senior-computer-vision/SKILL.md",
       "sha256": "af273171f5e786e0d80a306fdb039e60d264f47633fb61a6cce2ca14ac5bf531",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2918,7 +2918,7 @@
       "path": "claude-skills/engineering-team/skills/senior-data-engineer/SKILL.md",
       "sha256": "20495d2ee96a7b5a6d7026713f254f274682438997dd44933b7bca1882a1dae2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2946,7 +2946,7 @@
       "path": "claude-skills/engineering-team/skills/senior-data-scientist/SKILL.md",
       "sha256": "6d0418ae7e9f28d14b31b7850375e831355ab6275eff556afeccf06633a3299c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -2974,7 +2974,7 @@
       "path": "claude-skills/engineering-team/skills/senior-devops/SKILL.md",
       "sha256": "6eaeee798f2ffc82496c5d8dffb9a111a98e911284daa6886be3107a41917979",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3002,7 +3002,7 @@
       "path": "claude-skills/engineering-team/skills/senior-frontend/SKILL.md",
       "sha256": "886e83d1713b473f01091954683d7f008cefd1100d32114ccaf85368fb67a9a5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3034,7 +3034,7 @@
       "path": "claude-skills/engineering-team/skills/senior-fullstack/SKILL.md",
       "sha256": "fa3567f3bd96e76803a0125d8e949937a0a477f292c675920d43abcb7c2a84c5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3062,7 +3062,7 @@
       "path": "claude-skills/engineering-team/skills/senior-ml-engineer/SKILL.md",
       "sha256": "78756b7e74b3e024d56c8d631ca40d6cbfd655ec5d98a9cbe19afff2617fc856",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3090,7 +3090,7 @@
       "path": "claude-skills/engineering-team/skills/senior-prompt-engineer/SKILL.md",
       "sha256": "bbf9324400a094eef1a92b076d3e2bd2303bc2962db4dd59157adcc827f7e7ef",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3118,7 +3118,7 @@
       "path": "claude-skills/engineering-team/skills/senior-qa/SKILL.md",
       "sha256": "a67b326aa3dccd186b2d076f7e01a2ce5775537c643bba819f759743d2b6678c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3146,7 +3146,7 @@
       "path": "claude-skills/engineering-team/skills/senior-secops/SKILL.md",
       "sha256": "49e933139a7ce3fe02e7ae1e6d59f2fdf947afeabcee125a8e2c4cda7b575bd9",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3174,7 +3174,7 @@
       "path": "claude-skills/engineering-team/skills/senior-security/SKILL.md",
       "sha256": "454188e4f0188d3e0219f58c70dc666e0a9e98383d53a7437a027b13db68643a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3198,7 +3198,7 @@
       "path": "claude-skills/engineering-team/skills/stripe-integration-expert/SKILL.md",
       "sha256": "a2466d6e1d3d08a1da1ab558e93747758ec5d1ecba1730fb0c41aa65adaafacb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3213,7 +3213,7 @@
       "path": "claude-skills/engineering-team/skills/tdd-guide/SKILL.md",
       "sha256": "b12e75f376db6a72d0f5a9971c720c04546d02f0ecf68f40fd0efde22e46aa6d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3261,7 +3261,7 @@
       "path": "claude-skills/engineering-team/skills/tech-stack-evaluator/SKILL.md",
       "sha256": "4bc1f2b465bc3bd4a41137a366f597b467c139c553c15965da84232c62ab9790",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3305,7 +3305,7 @@
       "path": "claude-skills/engineering-team/skills/threat-detection/SKILL.md",
       "sha256": "55d4170de0e6732f8c2a9cd62ab66753ad3f466550a3952830d9782fed081ab3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3325,7 +3325,7 @@
       "path": "claude-skills/engineering-team/snowflake-development/skills/snowflake-development/SKILL.md",
       "sha256": "5269d44cdc1e4589cde886eb592dc6c37873a6e41acff494ed8bf8e695a31a0d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3345,7 +3345,7 @@
       "path": "claude-skills/engineering/agent-harness/skills/agent-harness/SKILL.md",
       "sha256": "cc31a8a9507264465de02bfa239935506ed0b7091f78e051a8992b6064a31829",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3373,7 +3373,7 @@
       "path": "claude-skills/engineering/agent-memory/skills/agent-memory/SKILL.md",
       "sha256": "9c95ad2d18a41b1ca4d575377868c84ff5d294fd0e96a83aafd67fe404aec078",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3409,7 +3409,7 @@
       "path": "claude-skills/engineering/agenthub/skills/agenthub/SKILL.md",
       "sha256": "c350408074e38f852253e30c0c2eab059b1f53fbf812a2316b23faea6d527571",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3449,7 +3449,7 @@
       "path": "claude-skills/engineering/agenthub/skills/board/SKILL.md",
       "sha256": "07580733dc58eac8c0e32dd160ddd13cfd61a706f7def2382dbee1c5396bc4f9",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3464,7 +3464,7 @@
       "path": "claude-skills/engineering/agenthub/skills/eval/SKILL.md",
       "sha256": "270d7d054f0f8755b91acfe5095e900c053f8959404f9ce25f7cd3884b6ce5e1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3479,7 +3479,7 @@
       "path": "claude-skills/engineering/agenthub/skills/hub-init/SKILL.md",
       "sha256": "42e791364f562593c5dfd8ca20116f0257c35992fd709c9da696312e21db256c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3494,7 +3494,7 @@
       "path": "claude-skills/engineering/agenthub/skills/hub-status/SKILL.md",
       "sha256": "86a244c0367d945976c91b7040222ee428deb5b748dc97d25fef349422711d60",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3509,7 +3509,7 @@
       "path": "claude-skills/engineering/agenthub/skills/merge/SKILL.md",
       "sha256": "3d002340c3ac079ee3f235165c7e9d44d9524c21e06515abba9e26e330166b66",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3524,7 +3524,7 @@
       "path": "claude-skills/engineering/agenthub/skills/run/SKILL.md",
       "sha256": "2e963eafc7f48da4387e375f9b6059bc921181cc81f1c3430b05336fbd657bc8",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3539,7 +3539,7 @@
       "path": "claude-skills/engineering/agenthub/skills/spawn/SKILL.md",
       "sha256": "9b3cadeba61806ae9ec4abb4828fddcfb2230b1d7ec30df3b894a21ff78b1059",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3554,7 +3554,7 @@
       "path": "claude-skills/engineering/autoresearch-agent/skills/ar-resume/SKILL.md",
       "sha256": "ed0d88126b8535c1a37c52f5e80e09845b03ad9000c6060defe0760dbd4f6ee5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3569,7 +3569,7 @@
       "path": "claude-skills/engineering/autoresearch-agent/skills/ar-status/SKILL.md",
       "sha256": "bbe6b290690b680ff96a3d8ce958f6dec77e6645b0a91f1e6626daceb07fcb98",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3584,7 +3584,7 @@
       "path": "claude-skills/engineering/autoresearch-agent/skills/autoresearch-agent/SKILL.md",
       "sha256": "4ed65a361470d1c31bdcd269e1847a8751b0f7e4b938fe2fa54fc13f8a069e3e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3612,7 +3612,7 @@
       "path": "claude-skills/engineering/autoresearch-agent/skills/loop/SKILL.md",
       "sha256": "e86eb27f7ef887fdef68222879cb34780d0de44200ee3dcdd8a9c12fe75f8f7f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3627,7 +3627,7 @@
       "path": "claude-skills/engineering/autoresearch-agent/skills/run/SKILL.md",
       "sha256": "c2d57519f2bcbe286566af670d3da9fb92c8e035d8d4d415915325fc909dbe7d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3642,7 +3642,7 @@
       "path": "claude-skills/engineering/autoresearch-agent/skills/setup/SKILL.md",
       "sha256": "e0d053a89ea12e9d86f963416348c6d0b6bfc72fd7a9e6c1586ee574f741552d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3657,7 +3657,7 @@
       "path": "claude-skills/engineering/behuman/skills/behuman/SKILL.md",
       "sha256": "689947e18e7841dd8293f9084a5225940a5c51932d96118f80c13d038b4962dc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3672,7 +3672,7 @@
       "path": "claude-skills/engineering/book-to-skill/skills/book-to-skill/SKILL.md",
       "sha256": "ea8195653ada2575833cc2622f2b88d8717fb60d7e056aabcb183f5da0ab2e5d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering/book-to-skill/LICENSE",
         "claude-skills/LICENSE"
@@ -3765,7 +3765,7 @@
       "path": "claude-skills/engineering/boost-asio-pro/SKILL.md",
       "sha256": "1447d9c7dd75532b0cbb94f1e8781bfdf3cf0562be520f5f7084068ae4c0ddf0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3780,7 +3780,7 @@
       "path": "claude-skills/engineering/caveman/skills/caveman/SKILL.md",
       "sha256": "410f63421118bf740f66d3c8fff5f7c4c4c945edc5e673c3675239de50795e86",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3808,7 +3808,7 @@
       "path": "claude-skills/engineering/chaos-engineering/skills/chaos-engineering/SKILL.md",
       "sha256": "fde41aeb8b9977e85e33a69140c9d5aac099698f480bac6c89a9a5ef8baca8bc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3836,7 +3836,7 @@
       "path": "claude-skills/engineering/claude-coach/skills/claude-coach/SKILL.md",
       "sha256": "f4faf08c2042a5ec0649b4a3e75a6941ff9d3704beb53231e248ea0119c5ea0e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3864,7 +3864,7 @@
       "path": "claude-skills/engineering/code-tour/skills/code-tour/SKILL.md",
       "sha256": "3497bd672c185df19a2205190f897fddf64f9b55a599ad3c24443b87241139e6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3879,7 +3879,7 @@
       "path": "claude-skills/engineering/collab-proof/skills/collab-proof/SKILL.md",
       "sha256": "0a06dd8a7db057c9bf3c3bcf054927e1e39f0e837fcb7867df4f2d6ac95c5f8d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering/collab-proof/LICENSE",
         "claude-skills/LICENSE"
@@ -3895,7 +3895,7 @@
       "path": "claude-skills/engineering/data-quality-auditor/skills/data-quality-auditor/SKILL.md",
       "sha256": "9de27d68f5f8402c81a708f36033139471ee07079af3ac557f6b74ccacb7eedc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3923,7 +3923,7 @@
       "path": "claude-skills/engineering/deep-learning-book/skills/deep-learning-book/SKILL.md",
       "sha256": "d08dbf58db06299310321316fa40228e88adaf27356c1c38c5a79bfc3fca28b3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3955,7 +3955,7 @@
       "path": "claude-skills/engineering/demo-video/skills/demo-video/SKILL.md",
       "sha256": "1fd0bed0afa9965a6422005de8d930bdf17e1823d5319ca911a621be9e2c6d6d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3970,7 +3970,7 @@
       "path": "claude-skills/engineering/docker-development/skills/docker-development/SKILL.md",
       "sha256": "6471aa331d8a13d1b451dfcf5f1603b585d65b5fa70f99078604e778a7ab9f1c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -3994,7 +3994,7 @@
       "path": "claude-skills/engineering/feature-flags-architect/skills/feature-flags-architect/SKILL.md",
       "sha256": "8beb229d269bf25c1a94f6683c3d731662c7d53b774ed5d3e7b65fe23a9234b6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4022,7 +4022,7 @@
       "path": "claude-skills/engineering/grill-me/skills/grill-me/SKILL.md",
       "sha256": "37d338a1d58c5f1b77b2ef3c9fe8212450b0d391c24dd0eeffe4b9a30a5ccb73",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4050,7 +4050,7 @@
       "path": "claude-skills/engineering/grill-with-docs/skills/grill-with-docs/SKILL.md",
       "sha256": "1f319168e7cf1f65dc77c4a566f067880a297eb8da0242e02120c95a9ae75a14",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4078,7 +4078,7 @@
       "path": "claude-skills/engineering/handoff/skills/handoff/SKILL.md",
       "sha256": "0727c9b53ea976a412fc52d0cec769e056b2c9b0a96069eeb98bd7fd757df476",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4106,7 +4106,7 @@
       "path": "claude-skills/engineering/helm-chart-builder/skills/helm-chart-builder/SKILL.md",
       "sha256": "a4a2a63c2dec21e9b795b50f7a315c4af2e2b204a3ecc37dff39e1ace1c59e57",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4130,7 +4130,7 @@
       "path": "claude-skills/engineering/hivemind/SKILL.md",
       "sha256": "fe5816a83b2c82e2cb575b681536ef18e0388955b9f88ff3851fcd1f6ddd7e8c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering/hivemind/LICENSE.txt",
         "claude-skills/LICENSE"
@@ -4146,7 +4146,7 @@
       "path": "claude-skills/engineering/human-gate/skills/human-gate/SKILL.md",
       "sha256": "60bccda7c5c3845e69a232c0db5b8bb319307a871347e6ac1356ede7925a78b4",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4174,7 +4174,7 @@
       "path": "claude-skills/engineering/karpathy-coder/skills/karpathy-coder/SKILL.md",
       "sha256": "79a886c5beef75ed948b0e7bf1c6babbb0ee8566fdea7cf021b894cda3b87588",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4206,7 +4206,7 @@
       "path": "claude-skills/engineering/kubernetes-operator/skills/kubernetes-operator/SKILL.md",
       "sha256": "b621796329b70f36d382319415cd837e1aa022937560cb7b8c7d7a0121ed31fc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4234,7 +4234,7 @@
       "path": "claude-skills/engineering/llm-cost-optimizer/skills/llm-cost-optimizer/SKILL.md",
       "sha256": "31c8c3048115168f6e968c164fb661a260370ff9989557f502688f81b4fed3b3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4249,7 +4249,7 @@
       "path": "claude-skills/engineering/llm-wiki/skills/llm-wiki/SKILL.md",
       "sha256": "e7893d31b5e32271d2e3399d5ff8686236812827ab10f6b6d575396915d9b368",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4297,7 +4297,7 @@
       "path": "claude-skills/engineering/memory-engineering/skills/memory-engineering/SKILL.md",
       "sha256": "77b420549bc6bcd1e871c62481d0f0183e9d1eb0b8aa88801c471002cf8453e5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4329,7 +4329,7 @@
       "path": "claude-skills/engineering/minimalist/SKILL.md",
       "sha256": "a5202194563aeb30dabea5852b14ef0ed53b99fe8c6c3fecf496a5e5a35dad23",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4344,7 +4344,7 @@
       "path": "claude-skills/engineering/prompt-governance/skills/prompt-governance/SKILL.md",
       "sha256": "a269ce5a289573ee82d3316824ba56e4faf5a40c599fb356fed8ab4054d82dcd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4359,7 +4359,7 @@
       "path": "claude-skills/engineering/security-guidance/skills/security-guidance/SKILL.md",
       "sha256": "7a0449eb90d09f37fe5050d888b8f2b220ac8d93c16e8557815598fe53e1b198",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4374,7 +4374,7 @@
       "path": "claude-skills/engineering/skill-doctor/skills/skill-doctor/SKILL.md",
       "sha256": "068bb9078ec1313072bb91b285d8c4ed5ef3d5af3d27aba5162aa788a5877a1f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering/skill-doctor/LICENSE",
         "claude-skills/LICENSE"
@@ -4403,7 +4403,7 @@
       "path": "claude-skills/engineering/skillopt-sleep/skills/skillopt-sleep/SKILL.md",
       "sha256": "34a226425186dca65cb1f8dcceaaae0e22c2db5ecf184fa3e2b7f7391601891c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering/skillopt-sleep/LICENSE",
         "claude-skills/LICENSE"
@@ -4419,7 +4419,7 @@
       "path": "claude-skills/engineering/skills/agent-designer/SKILL.md",
       "sha256": "47aac56bacc6ec6fcb94cab8ecad0b4d1d7287e6c80d46383fe892488982202a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4447,7 +4447,7 @@
       "path": "claude-skills/engineering/skills/agent-workflow-designer/SKILL.md",
       "sha256": "f1133218f4bc98e1aed526f2e2a60b30c02b6dac18c717a04eac45551242a9dd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4467,7 +4467,7 @@
       "path": "claude-skills/engineering/skills/api-design-reviewer/SKILL.md",
       "sha256": "a4e61a67981d7cab02f479f959b9e83d032e705c17b72e763d07ef9a3247bf54",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4495,7 +4495,7 @@
       "path": "claude-skills/engineering/skills/api-test-suite-builder/SKILL.md",
       "sha256": "a0db3fd9004317097c1c9c7ef7da6276a98d205a1c2af79fbbddd72fab976d42",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4510,7 +4510,7 @@
       "path": "claude-skills/engineering/skills/browser-automation/SKILL.md",
       "sha256": "f4211364d10e3a28eb2051b201889be89b589f4613b822a3c1dd2ce6a30f8b59",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4538,7 +4538,7 @@
       "path": "claude-skills/engineering/skills/changelog-generator/SKILL.md",
       "sha256": "0866b458e0eff49b95328452a32e326a866b661bbdd3b2f4ac2d3f9b9f3ddc25",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4566,7 +4566,7 @@
       "path": "claude-skills/engineering/skills/chaos-engineering/SKILL.md",
       "sha256": "fde41aeb8b9977e85e33a69140c9d5aac099698f480bac6c89a9a5ef8baca8bc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4594,7 +4594,7 @@
       "path": "claude-skills/engineering/skills/ci-cd-pipeline-builder/SKILL.md",
       "sha256": "b9628224a9fe77caca4aedda49a72938147000ab275da92ebccf190c3ba8f161",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4618,7 +4618,7 @@
       "path": "claude-skills/engineering/skills/codebase-onboarding/SKILL.md",
       "sha256": "70261b95a8855d422b0d7538e138ef7434f032a953bd646507ac09a8379e6b7c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4638,7 +4638,7 @@
       "path": "claude-skills/engineering/skills/database-designer/SKILL.md",
       "sha256": "3729790a4e29e45ea0e9cb0bbb220d2162fea0e954d32f2abf8728aa8ef41ad1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4666,7 +4666,7 @@
       "path": "claude-skills/engineering/skills/database-schema-designer/SKILL.md",
       "sha256": "0a964937e39dc65462ad5b3e36e30ebd08f17eea6503e0f7d0b2dbe86fbe35fc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4681,7 +4681,7 @@
       "path": "claude-skills/engineering/skills/dependency-auditor/SKILL.md",
       "sha256": "4bde5bd43d14b39a9c282f1ab74b202d102b070b99a5083724e84526bc5e2f0a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4709,7 +4709,7 @@
       "path": "claude-skills/engineering/skills/engineering-advanced-skills/SKILL.md",
       "sha256": "687a25384ff9944b04ced15d12dfff07b15c566957859753ead63ffe9fac6785",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4724,7 +4724,7 @@
       "path": "claude-skills/engineering/skills/env-secrets-manager/SKILL.md",
       "sha256": "6724d5bd32506212977fe6e78be754d97458e16ae164fbc6adb69e30d31caaee",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4744,7 +4744,7 @@
       "path": "claude-skills/engineering/skills/feature-flags-architect/SKILL.md",
       "sha256": "8beb229d269bf25c1a94f6683c3d731662c7d53b774ed5d3e7b65fe23a9234b6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4772,7 +4772,7 @@
       "path": "claude-skills/engineering/skills/focused-fix/SKILL.md",
       "sha256": "84f2c465a23aa02c2b57269628254d8c35858ba0d5bd113daed38c7446bfe016",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4787,7 +4787,7 @@
       "path": "claude-skills/engineering/skills/full-page-screenshot/SKILL.md",
       "sha256": "6cc0bebc9d5b772b778f4b63ca15f7735aa24593826a2edc93e02ae826f7b374",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4802,7 +4802,7 @@
       "path": "claude-skills/engineering/skills/git-worktree-manager/SKILL.md",
       "sha256": "c972e7576a18df4180b92f83af3d5e375814a8d6133267acce44ec89709f4dac",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4826,7 +4826,7 @@
       "path": "claude-skills/engineering/skills/interview-system-designer/SKILL.md",
       "sha256": "957a7aba436105471ae84cb2e4cb22668dc11bbf77c292bc06d66bc22adedfd1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4858,7 +4858,7 @@
       "path": "claude-skills/engineering/skills/kubernetes-operator/SKILL.md",
       "sha256": "b621796329b70f36d382319415cd837e1aa022937560cb7b8c7d7a0121ed31fc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4886,7 +4886,7 @@
       "path": "claude-skills/engineering/skills/mcp-server-builder/SKILL.md",
       "sha256": "363e0984c512f16b1b45635fc7197ca259435ca75a13d3b4f6b28dc2b25fe9d0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4910,7 +4910,7 @@
       "path": "claude-skills/engineering/skills/migration-architect/SKILL.md",
       "sha256": "b262c3b4eea8389b4fb65016734a092a99e096a226662c37efc89bc93c69a77a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4938,7 +4938,7 @@
       "path": "claude-skills/engineering/skills/monorepo-navigator/SKILL.md",
       "sha256": "19184d57f8eea27ed974b0e7eac2033b366b9cdacb6454bb9a1977314b182335",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4958,7 +4958,7 @@
       "path": "claude-skills/engineering/skills/observability-designer/SKILL.md",
       "sha256": "70ab54164e3cb58f30f4f4e1500bd54361c67f6ecbde954b13596dc2902fe2ac",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -4986,7 +4986,7 @@
       "path": "claude-skills/engineering/skills/performance-profiler/SKILL.md",
       "sha256": "953948b591db0afc4dac8ff4e84d65a2c34fa62b7b579e3ba6cf3398e79ec18b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5006,7 +5006,7 @@
       "path": "claude-skills/engineering/skills/pr-review-expert/SKILL.md",
       "sha256": "548a4d03c274203d803abb07a7a318a484ccad8191594480374de658592c6b49",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5021,7 +5021,7 @@
       "path": "claude-skills/engineering/skills/rag-architect/SKILL.md",
       "sha256": "5cdf05a3ea5645f04a9e9eb08a5a1d1dd332c280b3ddd2eb5624e348f7a0bb27",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5049,7 +5049,7 @@
       "path": "claude-skills/engineering/skills/runbook-generator/SKILL.md",
       "sha256": "ef426a9b8a04cb766ac002efeaf4907083aff817887c7652c3fbd4258661fa53",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5069,7 +5069,7 @@
       "path": "claude-skills/engineering/skills/secrets-vault-manager/SKILL.md",
       "sha256": "208077ec32ddf526cc4aa8cfb71ac9318ae71e6127b787fd63e32d867f6066fc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5097,7 +5097,7 @@
       "path": "claude-skills/engineering/skills/self-eval/SKILL.md",
       "sha256": "0396394941477744e8a46f7653d2af20d4ea8ba325469f039244bba986c72642",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5112,7 +5112,7 @@
       "path": "claude-skills/engineering/skills/ship-gate/SKILL.md",
       "sha256": "05f7eee0d78735f3076fc02c732e4c660f55e2f058922e1ef46280a414294fa5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5132,7 +5132,7 @@
       "path": "claude-skills/engineering/skills/skill-security-auditor/SKILL.md",
       "sha256": "8281b2a45e2ab66d21d45910fa47e02158113e319391d51c60215d39090db686",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5152,7 +5152,7 @@
       "path": "claude-skills/engineering/skills/skill-tester/SKILL.md",
       "sha256": "a62efa4e6d596e442083543f86a6bfc5724b0d06a4921d9a31bbc1c5d12e23e0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5192,7 +5192,7 @@
       "path": "claude-skills/engineering/skills/skill-tester/assets/sample-skill/SKILL.md",
       "sha256": "b2a71a1fcc551957cab451e51fcc963485cb605ec9647416b4c2fa2f78ef2671",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5212,7 +5212,7 @@
       "path": "claude-skills/engineering/skills/slo-architect/SKILL.md",
       "sha256": "63917f3e02caa905a9b81a5526f4d750780aa7049436f1cc56bfe43450c29afa",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5240,7 +5240,7 @@
       "path": "claude-skills/engineering/skills/spec-driven-workflow/SKILL.md",
       "sha256": "f4eab8a81a5b908fc7d182994f6bb1076512ed1129da7c00440a3af6ba3ab176",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5268,7 +5268,7 @@
       "path": "claude-skills/engineering/skills/sql-database-assistant/SKILL.md",
       "sha256": "f767c7f1296e54877d1bf4fb71a7887931e65e4d374e43a2f578e3ee2bec1641",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5296,7 +5296,7 @@
       "path": "claude-skills/engineering/skills/tc-tracker/SKILL.md",
       "sha256": "988e40e73758bbaed5dc553dc80656448fd32ba9715c016ef414d67f7912b047",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5332,7 +5332,7 @@
       "path": "claude-skills/engineering/skills/tech-debt-tracker/SKILL.md",
       "sha256": "8e7492db76ae8bc2827f3e265a2061a8e656c4eac155a37340d13da077f6687e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5368,7 +5368,7 @@
       "path": "claude-skills/engineering/slo-architect/skills/slo-architect/SKILL.md",
       "sha256": "63917f3e02caa905a9b81a5526f4d750780aa7049436f1cc56bfe43450c29afa",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5396,7 +5396,7 @@
       "path": "claude-skills/engineering/spinning-up-deep-rl/skills/spinning-up-deep-rl/SKILL.md",
       "sha256": "cc260f900e2caa1fa06bc5319a89649cc41cf7e6fa0aa21a91c621b63e25c14f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/engineering/spinning-up-deep-rl/LICENSE",
         "claude-skills/LICENSE"
@@ -5412,7 +5412,7 @@
       "path": "claude-skills/engineering/statistical-analyst/skills/statistical-analyst/SKILL.md",
       "sha256": "2cb58384cdbb19e175093de2cad0891156e60aad03a047153e57ca5ec607fd9d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5440,7 +5440,7 @@
       "path": "claude-skills/engineering/strict-api/SKILL.md",
       "sha256": "3f49d2767c4db846d60aa555f370e1cfe61175ec4bae5fa3b1bf0d81bbe40c15",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5455,7 +5455,7 @@
       "path": "claude-skills/engineering/terraform-patterns/skills/terraform-patterns/SKILL.md",
       "sha256": "e32b34b04f6f8ad33fd2105f3f4d2b304960a6a41ccc6e5465a2db7c0f2d1596",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5479,7 +5479,7 @@
       "path": "claude-skills/engineering/universal-scraping-architect/skills/universal-scraping-architect/SKILL.md",
       "sha256": "35b7fc88661ea8a919a4f1d94f7e01057c8de10170bf165e3de50f67eb5f0548",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5507,7 +5507,7 @@
       "path": "claude-skills/engineering/workflow-builder/skills/workflow-builder/SKILL.md",
       "sha256": "a1eb48404e9342ce5fea24a2e819ce23f83a46138a8766acbc4e9c59bc126bd0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5535,7 +5535,7 @@
       "path": "claude-skills/engineering/write-a-skill/skills/write-a-skill/SKILL.md",
       "sha256": "446a0235f2ef8b4ea6d394a1a4209d36ba6d8e6960958cd54095cd3393c83692",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5563,7 +5563,7 @@
       "path": "claude-skills/engineering/zero-hallucination-coder/skills/zero-hallucination-coder/SKILL.md",
       "sha256": "9f49f791530fc5970db5c8be924f50e0ecc7af4600a08689f81ad4a3cb58bdb1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5578,7 +5578,7 @@
       "path": "claude-skills/finance/business-investment-advisor/skills/business-investment-advisor/SKILL.md",
       "sha256": "8d3c386f999900cdce3c9f28f8639c6365b659b01ebdeca9ee06c58cdb1b0745",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5593,7 +5593,7 @@
       "path": "claude-skills/finance/skills/finance-skills/SKILL.md",
       "sha256": "7482aca0118302cdaa5f55c3a2742a6af8abe87f36e6369a5ed284ab3054a16f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5608,7 +5608,7 @@
       "path": "claude-skills/finance/skills/financial-analyst/SKILL.md",
       "sha256": "96e7844b15c0e6f4edefa9f6d3fbce8943e9e89187b26d11bc7cef7544ba80df",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5640,7 +5640,7 @@
       "path": "claude-skills/finance/skills/saas-metrics-coach/SKILL.md",
       "sha256": "bc6fcf0302ee0e2cf88bb05a61a2dbd3301051e1f99155fbd664f14e9aab4291",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5668,7 +5668,7 @@
       "path": "claude-skills/finance/skills/stock-analysis/SKILL.md",
       "sha256": "f46e5d7da41013ea5fc6837e92d5ab3b7691db572bc2b81ef0fd42b641e71e90",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5704,7 +5704,7 @@
       "path": "claude-skills/loop-library/SKILL.md",
       "sha256": "0a976cfc29e86c7eaa56e761d9e68bc55284b50fce05b4bdddaf78e2bde38425",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/loop-library/LICENSE",
         "claude-skills/LICENSE"
@@ -5720,7 +5720,7 @@
       "path": "claude-skills/markdown-html/skills/design-system/SKILL.md",
       "sha256": "3696d4b85012b09c6ac7973e003203668d15ab282128e09bc8552e790121d766",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5748,7 +5748,7 @@
       "path": "claude-skills/markdown-html/skills/markdown-html-orchestrator/SKILL.md",
       "sha256": "a7e7c18f92b03927d52e89f05a0ae52ae8d595681baab80dbcf9d58ddd3006fb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5776,7 +5776,7 @@
       "path": "claude-skills/markdown-html/skills/md-document/SKILL.md",
       "sha256": "1b008228609e23dad425ddf8c9351fec427a94126abc9c7f80f16cbd79a7f336",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5804,7 +5804,7 @@
       "path": "claude-skills/markdown-html/skills/md-review/SKILL.md",
       "sha256": "35bc4f00511cdb9996745841014ff8792cb3e38a3682b0890a461920b7839a62",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5832,7 +5832,7 @@
       "path": "claude-skills/markdown-html/skills/md-slides/SKILL.md",
       "sha256": "ac8d8c9b09b2ad72544412279d03673c36b6e2fee024ccddc9463272d62c46ab",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5860,7 +5860,7 @@
       "path": "claude-skills/marketing-skill/skills/ab-test-setup/SKILL.md",
       "sha256": "7d451f2c296c8ccabdc1441d73a5ed7bfb993b61bdacd6f569ddc6fa0c032f8d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5880,7 +5880,7 @@
       "path": "claude-skills/marketing-skill/skills/ad-creative/SKILL.md",
       "sha256": "598054b269d2ad4b8d509cc97e0b1a7a14489154a6fc4752916f42a5aff2ef07",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5900,7 +5900,7 @@
       "path": "claude-skills/marketing-skill/skills/aeo/SKILL.md",
       "sha256": "c2b1fe51416b7e4e951ce55072d937c4c5783b92573c88714c58e27cefa862fe",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5928,7 +5928,7 @@
       "path": "claude-skills/marketing-skill/skills/analytics-tracking/SKILL.md",
       "sha256": "e5ac8c8f9826ff62727966e94231c3737de73bf12781d76ea92adc517d67b339",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5948,7 +5948,7 @@
       "path": "claude-skills/marketing-skill/skills/app-store-optimization/SKILL.md",
       "sha256": "05e10346aa393379a2b790e6c56568f2d24e8c56d271e728ff242c726e50f41a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -5996,7 +5996,7 @@
       "path": "claude-skills/marketing-skill/skills/brand-guidelines/SKILL.md",
       "sha256": "2c4bce4eaf394a76d6e0f81394c2b13078153408f56cf4b7fe46d3bbb88eacd2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6011,7 +6011,7 @@
       "path": "claude-skills/marketing-skill/skills/business-name-fit/SKILL.md",
       "sha256": "5024e239fcccfd5cd32b2278aaee87731c57a48cb820d00a0917e99f2cfbc703",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6026,7 +6026,7 @@
       "path": "claude-skills/marketing-skill/skills/campaign-analytics/SKILL.md",
       "sha256": "c2a7431cbe7e92b08802597f6c02bbd0f173aebe508a1fc7b067f082764c67c1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6054,7 +6054,7 @@
       "path": "claude-skills/marketing-skill/skills/churn-prevention/SKILL.md",
       "sha256": "92c0132bdc156c0cd856d278e0c06fca162f0e474473c5f6c699bab50047b611",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6074,7 +6074,7 @@
       "path": "claude-skills/marketing-skill/skills/cold-email/SKILL.md",
       "sha256": "edb7c11d193300c871365f489fd9688906c076a40df0735c593d53985a8f9ba6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6094,7 +6094,7 @@
       "path": "claude-skills/marketing-skill/skills/competitor-alternatives/SKILL.md",
       "sha256": "4fb425b9e5e61298447c78ec944ceac74287849efb95c7aa046ada53f3d0e365",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6114,7 +6114,7 @@
       "path": "claude-skills/marketing-skill/skills/content-creator/SKILL.md",
       "sha256": "0f548f6236783d8cf0dcc3d4f793ea6072e67bfd4eba36f773137fcd810e4a00",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6129,7 +6129,7 @@
       "path": "claude-skills/marketing-skill/skills/content-humanizer/SKILL.md",
       "sha256": "394c104c21992e984d1d14e0de40f0b244a59407e7d16232d6ea8c55ee892cdb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6149,7 +6149,7 @@
       "path": "claude-skills/marketing-skill/skills/content-production/SKILL.md",
       "sha256": "8e893a54ee044459e6dc8f3c901aa6617cfa6f66d940f60881b9957fd7c1aed3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6181,7 +6181,7 @@
       "path": "claude-skills/marketing-skill/skills/content-strategy/SKILL.md",
       "sha256": "eddbe5788b8bf6806dabe308c0f8babdd7d0e79a04e848d112c016cccd05bc83",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6201,7 +6201,7 @@
       "path": "claude-skills/marketing-skill/skills/copy-editing/SKILL.md",
       "sha256": "ecdbe7a6ff18422470eb277f5e9a307e76601c2fb54d4b6bf7ba7cb76caabeb1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6225,7 +6225,7 @@
       "path": "claude-skills/marketing-skill/skills/copywriting/SKILL.md",
       "sha256": "f6415e5e3f1a2e0e62b112bb29566e8050c087f5aa6b674e5712805f2633c9b8",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6245,7 +6245,7 @@
       "path": "claude-skills/marketing-skill/skills/email-sequence/SKILL.md",
       "sha256": "bd291de8f67291efcf61e24abb904f8d8db0455ee08bb2b51e08b5e1ca779f4c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6265,7 +6265,7 @@
       "path": "claude-skills/marketing-skill/skills/form-cro/SKILL.md",
       "sha256": "613b78af57e61291c106c34115b6f0da1618a644c1918d158bc66320a90c62d4",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6285,7 +6285,7 @@
       "path": "claude-skills/marketing-skill/skills/free-tool-strategy/SKILL.md",
       "sha256": "1deb39b71ff522db9c678f90f06e62e1d7d4bf5030f2f1b75bc664aa81f8256d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6305,7 +6305,7 @@
       "path": "claude-skills/marketing-skill/skills/launch-strategy/SKILL.md",
       "sha256": "8c28d7ad81b510088e42030e8f282f75773efe6a48a684532022083f5cc8338b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6325,7 +6325,7 @@
       "path": "claude-skills/marketing-skill/skills/local-seo-manager/SKILL.md",
       "sha256": "6d93fc13f7e0bd4907722c5950aa0e7803e186d941405cec9bdccc553e027ecc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6353,7 +6353,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-context/SKILL.md",
       "sha256": "c023b0105f1d6177effe6f6af01b40eadb4619667bedf4a04e9954af2608c93f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6373,7 +6373,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-demand-acquisition/SKILL.md",
       "sha256": "dae4f8b4275322d86d5bcdb3ce37d36a275d4b8507be93af7cf33b583f1c1d48",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6393,7 +6393,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-ideas/SKILL.md",
       "sha256": "1bdb8c3e96c115633d8b0269b48c5805870ad8e37f579f072eba782d813df26c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6408,7 +6408,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-ops/SKILL.md",
       "sha256": "5161ad6ef1fccb690362d3519f3f3a9f6f1a11c1b01f831af12723eb3d565dee",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6428,7 +6428,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-psychology/SKILL.md",
       "sha256": "32716116e6756d57592f3e7c02e25673075bcbedb64f86f4bc2268a655881ac7",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6443,7 +6443,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-skills/SKILL.md",
       "sha256": "b4bbb03864bc0c098b37a676afaaf40420aafca470f3b95597544b078dd9218a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6458,7 +6458,7 @@
       "path": "claude-skills/marketing-skill/skills/marketing-strategy-pmm/SKILL.md",
       "sha256": "da0d88832df6a10b675596e1def74732613b083eafbf6b6f350f671bab440f5d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6473,7 +6473,7 @@
       "path": "claude-skills/marketing-skill/skills/onboarding-cro/SKILL.md",
       "sha256": "9fecfb3fbe9770408063d419c8a3336940ea5f86df9130495ab461f28745280b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6493,7 +6493,7 @@
       "path": "claude-skills/marketing-skill/skills/page-cro/SKILL.md",
       "sha256": "5017f078d779365a6f6b7326804270857475a24535f278eb1b1dc436ef5a343a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6513,7 +6513,7 @@
       "path": "claude-skills/marketing-skill/skills/paid-ads/SKILL.md",
       "sha256": "87351be1779ec4f02c72543afc620ce1543865cfceaaf857d7488302eb5f0d45",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6537,7 +6537,7 @@
       "path": "claude-skills/marketing-skill/skills/paywall-upgrade-cro/SKILL.md",
       "sha256": "4f6f3916b9fcdee631fe898f3970e91a6a27e387868919e7feb33c8a0edae002",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6552,7 +6552,7 @@
       "path": "claude-skills/marketing-skill/skills/popup-cro/SKILL.md",
       "sha256": "c8af49f0c29b87c80b9e2d2f266f410d989a21ecee29b584e59e5e89a0d2f65f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6567,7 +6567,7 @@
       "path": "claude-skills/marketing-skill/skills/pricing-strategy/SKILL.md",
       "sha256": "7b92d0f653fb30784c1317cd60fb58a7a15220debd1ea6884ee5893098acc15a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6587,7 +6587,7 @@
       "path": "claude-skills/marketing-skill/skills/programmatic-seo/SKILL.md",
       "sha256": "0851f7c8ab34a21d52a27ee1c7993ea0b37e670b7a51293939c6ad82b6102e22",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6607,7 +6607,7 @@
       "path": "claude-skills/marketing-skill/skills/prompt-engineer-toolkit/SKILL.md",
       "sha256": "619516d20520a7a84b54aaad8f35d35d42317a1b633e173bb2595f575b2ac4df",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6631,7 +6631,7 @@
       "path": "claude-skills/marketing-skill/skills/referral-program/SKILL.md",
       "sha256": "24e4624f1374f6fbe86b678f27d0ec0c06002a826f143cfc57796572621fd905",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6651,7 +6651,7 @@
       "path": "claude-skills/marketing-skill/skills/schema-markup/SKILL.md",
       "sha256": "949186b826c714ae173d8d2e9dd73c705dbd4ee5fe33645e9583a5b451e1dfcc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6671,7 +6671,7 @@
       "path": "claude-skills/marketing-skill/skills/seo-audit/SKILL.md",
       "sha256": "e91739cc21461f4b92979fc79bd11d606e1e10f5a50911b1ef02b2ce46dd25a6",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6695,7 +6695,7 @@
       "path": "claude-skills/marketing-skill/skills/signup-flow-cro/SKILL.md",
       "sha256": "d9927eb3fc91c33bcab0b3c615536066c51fde4de87966d06559ca2426fca615",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6715,7 +6715,7 @@
       "path": "claude-skills/marketing-skill/skills/site-architecture/SKILL.md",
       "sha256": "cc087247b41768403428424a0aee891bbebc548e189e5e4032014f24ebb8e119",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6735,7 +6735,7 @@
       "path": "claude-skills/marketing-skill/skills/social-content/SKILL.md",
       "sha256": "02008f95432fd0c9088bccd71a3358b3ead1f06ac6115f3fe3fe5f562fc2da37",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6750,7 +6750,7 @@
       "path": "claude-skills/marketing-skill/skills/social-media-analyzer/SKILL.md",
       "sha256": "68cc6de8b9fa26b7543f37a197d6b8c7035b91caf1aa203911640621a9b7b86e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6774,7 +6774,7 @@
       "path": "claude-skills/marketing-skill/skills/social-media-manager/SKILL.md",
       "sha256": "a72fbb003a99607ad370ec791fbd42c832348c6e766f6ffc1d45b465e6adab08",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6794,7 +6794,7 @@
       "path": "claude-skills/marketing-skill/skills/webinar-marketing/SKILL.md",
       "sha256": "b0f422e8578708221dc7cd8ee3504701a80c8458182cff72444258ae5cbc2ac1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6814,7 +6814,7 @@
       "path": "claude-skills/marketing-skill/skills/x-twitter-growth/SKILL.md",
       "sha256": "f25b551a88fee2c5654e315e7113182d6fd956260ae170b2503a459e3d9d23db",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6850,7 +6850,7 @@
       "path": "claude-skills/marketing-skill/skills/youtube-full/SKILL.md",
       "sha256": "0035de6d16bb11384365276fd88ee84be5fa0bb590aae5f7c0542084ad07933f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6865,7 +6865,7 @@
       "path": "claude-skills/marketing-skill/video-content-strategist/skills/video-content-strategist/SKILL.md",
       "sha256": "0788d327bc4deec2fa6adf78813b78d8fb54f91e595fb42b9b928f44e5ca301b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6880,7 +6880,7 @@
       "path": "claude-skills/marketing/landing/skills/landing/SKILL.md",
       "sha256": "74e1d9266012254c6481c8702e9cc43662d037d05161772f06e39b4883436b47",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6908,7 +6908,7 @@
       "path": "claude-skills/marketing/linkedin/skills/linkedin-analytics/SKILL.md",
       "sha256": "fd5c6cbb99c1215a4c5b87555208477494732fb4c0f46b62156162399596caa3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6936,7 +6936,7 @@
       "path": "claude-skills/marketing/linkedin/skills/linkedin-content/SKILL.md",
       "sha256": "7e78b602667dcf4f75499dedb440d380f93765589981073da6291fb432b0f20e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6964,7 +6964,7 @@
       "path": "claude-skills/marketing/linkedin/skills/linkedin-engagement/SKILL.md",
       "sha256": "6203dedcb7d1f594e5f3d836aa38062caf48c09d31487c814d2cb7c0ad0622d3",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -6992,7 +6992,7 @@
       "path": "claude-skills/marketing/linkedin/skills/linkedin-profile/SKILL.md",
       "sha256": "c390751661ca290893bac1994926c4739322f192167015cbd0e20fa26c74da96",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7020,7 +7020,7 @@
       "path": "claude-skills/marketing/linkedin/skills/linkedin-skills/SKILL.md",
       "sha256": "9b162dfd610689c9e046a1734ca0f905a86cd777f1856f8b2cb753480097c86b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7044,7 +7044,7 @@
       "path": "claude-skills/marketing/linkedin/skills/linkedin-strategy/SKILL.md",
       "sha256": "9e1c5c934a85142ed6b791f5bfb55ee0d2ad9852fe31f7fd83a36215ab15e72e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7072,7 +7072,7 @@
       "path": "claude-skills/product-team/agile-product-owner/skills/agile-product-owner/SKILL.md",
       "sha256": "b378f4d66707ac272f1840aed944b93b263183b8314b096028e0c9968b1b5cbd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7092,7 +7092,7 @@
       "path": "claude-skills/product-team/apple-hig-expert/skills/apple-hig-expert/SKILL.md",
       "sha256": "85c5aaa9653aeb9671b7047a9ea64063bdaee81955a918bc627aa38b307eb68c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7112,7 +7112,7 @@
       "path": "claude-skills/product-team/code-to-prd/skills/code-to-prd/SKILL.md",
       "sha256": "7a11ba564076b882d8d67f26bdd1ed115b3bb2281f029581c384357b82425305",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7136,7 +7136,7 @@
       "path": "claude-skills/product-team/research-summarizer/skills/research-summarizer/SKILL.md",
       "sha256": "057b410fd89b3a0dc982c61eae22db89da3480e2e738f1333b8001d20ada3eb0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7160,7 +7160,7 @@
       "path": "claude-skills/product-team/skills/competitive-teardown/SKILL.md",
       "sha256": "e7df2e7aa6afdbdf7fcdd0b755364a21b7ff726d64a57af1dd153e0e8a35134a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7180,7 +7180,7 @@
       "path": "claude-skills/product-team/skills/experiment-designer/SKILL.md",
       "sha256": "c686e366cd57d0c8e7458a10e9e5ad9348dd3132b7176af6d25015d9842b1793",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7200,7 +7200,7 @@
       "path": "claude-skills/product-team/skills/landing-page-generator/SKILL.md",
       "sha256": "c5c07fa98752269c1158c20cc777c19476b7614fef30a0526785cc09aea82444",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7220,7 +7220,7 @@
       "path": "claude-skills/product-team/skills/product-analytics/SKILL.md",
       "sha256": "1c459548d5209d83b97a19bdfbf1add985284a39a806d9c5ed471d01e811a250",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7240,7 +7240,7 @@
       "path": "claude-skills/product-team/skills/product-discovery/SKILL.md",
       "sha256": "52d492cb9eefe2136b21a295a9041bc60e11d7261f3f8ce84f3b58d83c8e75e4",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7260,7 +7260,7 @@
       "path": "claude-skills/product-team/skills/product-manager-toolkit/SKILL.md",
       "sha256": "cb8e692dc9f0c51a64ed592e093af4aeabd999751ff0012d6d4beee59b74df77",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7284,7 +7284,7 @@
       "path": "claude-skills/product-team/skills/product-skills/SKILL.md",
       "sha256": "50493409784ab8d70c66a7823ffce61b0758efd72a479a0273d41c2d88c9e6cb",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7312,7 +7312,7 @@
       "path": "claude-skills/product-team/skills/product-strategist/SKILL.md",
       "sha256": "96762613353ca78815f60b316dbd63eca0a4269e36d2e611bb9d3c9a351953e5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7332,7 +7332,7 @@
       "path": "claude-skills/product-team/skills/roadmap-communicator/SKILL.md",
       "sha256": "d54b8192051b329d60d8258b1367f39c50c91c725ac326742c3932b91834ac64",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7352,7 +7352,7 @@
       "path": "claude-skills/product-team/skills/saas-scaffolder/SKILL.md",
       "sha256": "7ac2dc5e06b9c7a7dfc79e4a3845109bfb18e45a20183872667e334d99ebd642",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7372,7 +7372,7 @@
       "path": "claude-skills/product-team/skills/spec-to-repo/SKILL.md",
       "sha256": "c33ffb417e85f415bec825c623eedaac65ed7b04ba090eb035fed93c77d16067",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7392,7 +7392,7 @@
       "path": "claude-skills/product-team/skills/ui-design-system/SKILL.md",
       "sha256": "7f8c1714af2602bcd2b3b49b6aaf0f53351fb739b26062d548f6a9c8c1b10e8d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7412,7 +7412,7 @@
       "path": "claude-skills/product-team/skills/ux-researcher-designer/SKILL.md",
       "sha256": "e19ce820e246bf34834e99ea361afcf93fb780ffbb2a4248b32a9947ae4a43ca",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7432,7 +7432,7 @@
       "path": "claude-skills/productivity/andreessen/skills/andreessen/SKILL.md",
       "sha256": "fa4dec4ebe56d407e8ef794ab96a86336718bf3e92517aec5de87e35e0a0e65e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7460,7 +7460,7 @@
       "path": "claude-skills/productivity/capture/skills/capture/SKILL.md",
       "sha256": "ee14662627bf466c9a92cff8eb68dec4b57f208948f9a67b4d186ddb36200c6a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7488,7 +7488,7 @@
       "path": "claude-skills/productivity/deep-work/skills/deep-work/SKILL.md",
       "sha256": "ed801572d6e8c24b795383950b2b20139a455d4d9f157d8a5d2383863ae2f499",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7516,7 +7516,7 @@
       "path": "claude-skills/productivity/email/skills/inbox-setup/SKILL.md",
       "sha256": "fe623288107aa3e719584ef857663347a9f2ec4e7259e5911a58692ecd0aa4e8",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7544,7 +7544,7 @@
       "path": "claude-skills/productivity/email/skills/inbox-triage/SKILL.md",
       "sha256": "b09d1fbafd3dbd484238c05855de85141ed5cc0ee55abd44a810cc08f4436e7e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7572,7 +7572,7 @@
       "path": "claude-skills/productivity/fable-goal/skills/fable-goal/SKILL.md",
       "sha256": "3764113250bad205848a2b68f15c6d577b249eb3a7a491b365acf362b8e4df48",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7592,7 +7592,7 @@
       "path": "claude-skills/productivity/handoff/skills/handoff/SKILL.md",
       "sha256": "082a8f5e139c4b41a1a1b6bc50b5bcc9c2a0dbcbd2f09d0c275387b7546cf7b9",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7636,7 +7636,7 @@
       "path": "claude-skills/productivity/meetings/skills/meetings/SKILL.md",
       "sha256": "c990f9c02f47da992739d68773ce9d6a33ca7d4cdcc462d0adf9ca962a674c5d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7664,7 +7664,7 @@
       "path": "claude-skills/productivity/reflect/skills/reflect/SKILL.md",
       "sha256": "0a5133831e855d958978767cc808585196840c5d488abe684946c521de6a3ed5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7692,7 +7692,7 @@
       "path": "claude-skills/productivity/roast/skills/roast/SKILL.md",
       "sha256": "aa9e60b4e107cc0fccdd2b534a7caf6a9c837d3ac424b1d9b0cd48e1f7e0004c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7720,7 +7720,7 @@
       "path": "claude-skills/productivity/swedish-mentor/SKILL.md",
       "sha256": "6d4c86d25f013148818d09910b813428cf54d81d68ecc53d7e4f958eb2bdf438",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7735,7 +7735,7 @@
       "path": "claude-skills/productivity/weekly-review/skills/weekly-review/SKILL.md",
       "sha256": "3df151a1102d44eb45f131637119a02e03e4e9719f23e7130327a299e7a18f17",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7763,7 +7763,7 @@
       "path": "claude-skills/project-management/skills/atlassian-admin/SKILL.md",
       "sha256": "44933862df5559357f9220abf560788f75c515cd22ed0bfe349b166fa28018de",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7783,7 +7783,7 @@
       "path": "claude-skills/project-management/skills/atlassian-templates/SKILL.md",
       "sha256": "7182d75bf85ce85e5c435dc7966ec3828e5e06eec167d55c3b8197c0c4b9357a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7803,7 +7803,7 @@
       "path": "claude-skills/project-management/skills/confluence-expert/SKILL.md",
       "sha256": "f0d5062618eaf048f5215fc6b41d19c9549132c021a504f789c8689352f37be2",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7827,7 +7827,7 @@
       "path": "claude-skills/project-management/skills/jira-expert/SKILL.md",
       "sha256": "36d647d487ccad59c871d38b7b799a92a27683455909ad07b05f89a898ac608f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7851,7 +7851,7 @@
       "path": "claude-skills/project-management/skills/meeting-analyzer/SKILL.md",
       "sha256": "c44d4af0e91f46105dde6fbf5b63fb624872e69232344bfe64d5c84a5cc92530",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7866,7 +7866,7 @@
       "path": "claude-skills/project-management/skills/pm-skills/SKILL.md",
       "sha256": "92318bad0543a35c1d6f8330783e7d751f0f478707b19ae259616e4589065059",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7894,7 +7894,7 @@
       "path": "claude-skills/project-management/skills/scrum-master/SKILL.md",
       "sha256": "aa2f4ffcec2439e2e8df877b7fb7b158dadfdb3ab46b95726ea78bbd0f7a280c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7922,7 +7922,7 @@
       "path": "claude-skills/project-management/skills/senior-pm/SKILL.md",
       "sha256": "60ae71507d3752a1c7504ae92e0a503a2c00cb57c1d1a025fcacdd6b9cb02a8f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7950,7 +7950,7 @@
       "path": "claude-skills/project-management/skills/team-communications/SKILL.md",
       "sha256": "b6b7e1ce17fb86f735e9d99bdb9692f321d2a22a8a987f7821fb09c0a1f983fe",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7965,7 +7965,7 @@
       "path": "claude-skills/ra-qm-team/compliance-team-eu-ai-act/skills/eu-ai-act-specialist/SKILL.md",
       "sha256": "fe5d4ea4f5c03bc49302f06b7a09b9ff263fe4a3ae5d9434f3bfa081b6c414fd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -7993,7 +7993,7 @@
       "path": "claude-skills/ra-qm-team/compliance-team-iso42001/skills/iso42001-specialist/SKILL.md",
       "sha256": "96b964d4bbae3f94c9dd48c5a3decc467bb07e8ce5b4c1765c2214d48c76933a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8021,7 +8021,7 @@
       "path": "claude-skills/ra-qm-team/skills/agent-decision-receipts/SKILL.md",
       "sha256": "61834517519a01472bf729b9e5c5b5ba9d3f434b306299746cb6378afb47ce70",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8041,7 +8041,7 @@
       "path": "claude-skills/ra-qm-team/skills/capa-officer/SKILL.md",
       "sha256": "6c6ca18e86128fcfbffbe5b216b500984f94ef156c8183d518afab606c7eb74e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8065,7 +8065,7 @@
       "path": "claude-skills/ra-qm-team/skills/eu-ai-act-specialist/SKILL.md",
       "sha256": "fe5d4ea4f5c03bc49302f06b7a09b9ff263fe4a3ae5d9434f3bfa081b6c414fd",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8093,7 +8093,7 @@
       "path": "claude-skills/ra-qm-team/skills/fda-consultant-specialist/SKILL.md",
       "sha256": "eabacba02030144b65ca466aa7f7e91571a1275431a166f0083100153363f6e0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8121,7 +8121,7 @@
       "path": "claude-skills/ra-qm-team/skills/gdpr-dsgvo-expert/SKILL.md",
       "sha256": "e38fb1b48caa820bb00a8d978d59c6b38d38e150590795f4a662ce0ed4604f50",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8149,7 +8149,7 @@
       "path": "claude-skills/ra-qm-team/skills/information-security-manager-iso27001/SKILL.md",
       "sha256": "ea00ebeff008acc2b94359ac15912823417d0784f4132acfa02002128da7d101",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8173,7 +8173,7 @@
       "path": "claude-skills/ra-qm-team/skills/isms-audit-expert/SKILL.md",
       "sha256": "99fddd2db9f85167eeb47474bf3b30eea28062377c8e14dc2f188c2607062e8e",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8193,7 +8193,7 @@
       "path": "claude-skills/ra-qm-team/skills/iso42001-specialist/SKILL.md",
       "sha256": "96b964d4bbae3f94c9dd48c5a3decc467bb07e8ce5b4c1765c2214d48c76933a",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8221,7 +8221,7 @@
       "path": "claude-skills/ra-qm-team/skills/mdr-745-specialist/SKILL.md",
       "sha256": "054682d1d6cd2eeb0f783845589ba498c3fc8770d4edd23792e2b2cf616aad1d",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8241,7 +8241,7 @@
       "path": "claude-skills/ra-qm-team/skills/qms-audit-expert/SKILL.md",
       "sha256": "118f50d21ef29b6945fd3b6a5e1edbe5b3c7966fa6c995b94b2a3b97e00bbd92",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8261,7 +8261,7 @@
       "path": "claude-skills/ra-qm-team/skills/quality-documentation-manager/SKILL.md",
       "sha256": "8b677b83f5f9ad0c1f4a1dbe0691a1193c41a531fb20381872a8be5f5f0fd355",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8285,7 +8285,7 @@
       "path": "claude-skills/ra-qm-team/skills/quality-manager-qmr/SKILL.md",
       "sha256": "8ff6dfdfdbe2361c5a1f4a37a9d1a635cc42c010693dcad4ffd697845bb4afe1",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8309,7 +8309,7 @@
       "path": "claude-skills/ra-qm-team/skills/quality-manager-qms-iso13485/SKILL.md",
       "sha256": "be426a7fa7c7b64988e836dcb388adcc8399beba86769aad71b4103c034f8833",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8329,7 +8329,7 @@
       "path": "claude-skills/ra-qm-team/skills/ra-qm-skills/SKILL.md",
       "sha256": "0567bc2c021733109eb87b227069bdf1070c4311470ab92fbf7c4375edebb308",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8344,7 +8344,7 @@
       "path": "claude-skills/ra-qm-team/skills/regulatory-affairs-head/SKILL.md",
       "sha256": "e2e4fa920a82cbc24f437fc5e2a8a1b1a219c61b81dbc5a5d9f7c86e56b08b4c",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8368,7 +8368,7 @@
       "path": "claude-skills/ra-qm-team/skills/risk-management-specialist/SKILL.md",
       "sha256": "8d46b54a8d7c896a921f1df4a9976b8921560b44602891deb3553b4012d6b72f",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8392,7 +8392,7 @@
       "path": "claude-skills/ra-qm-team/skills/soc2-compliance/SKILL.md",
       "sha256": "10f4ff429805eef06e53a4f72c94001481c2c0ac2c4bd98c463d46e5351af6c9",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8420,7 +8420,7 @@
       "path": "claude-skills/research-ops/skills/clinical-research/SKILL.md",
       "sha256": "2ee6764353ca5dd7b2366557be898e4aea17c7223e0f9ac6799c9b21a0ef8041",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8460,7 +8460,7 @@
       "path": "claude-skills/research-ops/skills/market-research/SKILL.md",
       "sha256": "0e4037294f8e6bea1cb53de035eaa97bd2d74349d06f9b61d85f4420d7c084c9",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8500,7 +8500,7 @@
       "path": "claude-skills/research-ops/skills/product-research/SKILL.md",
       "sha256": "a483e2e81808dc8cb55996a1ec8a120ef60c37c4585435a2fdba9c438fc37f84",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8540,7 +8540,7 @@
       "path": "claude-skills/research-ops/skills/research-finance/SKILL.md",
       "sha256": "a40e86d877bcab0a8c9018dca2b63e69fe1b2d9cf3d41c0f852abda699794ff4",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8580,7 +8580,7 @@
       "path": "claude-skills/research-ops/skills/research-ops-skills/SKILL.md",
       "sha256": "58b58e51a1fc39d58efe284fd2e95bfdf7d0cc341ff2c3da982238c5bc803e75",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8595,7 +8595,7 @@
       "path": "claude-skills/research/deep-research/skills/deep-research/SKILL.md",
       "sha256": "0c3f02d1ba581a2368c5e8a3b99a2428f42e78081136621359cfecef2fabca25",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8610,7 +8610,7 @@
       "path": "claude-skills/research/deepread/SKILL.md",
       "sha256": "d36bb7b98610b4cfe0b11547cc63bf146b4d2b63f6456af31160c6c197cfdd34",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8625,7 +8625,7 @@
       "path": "claude-skills/research/dossier/skills/dossier/SKILL.md",
       "sha256": "a39c2d91f58cc61117dcb9304997985ac42425884ab1e217ba6c6111a69eda2b",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8653,7 +8653,7 @@
       "path": "claude-skills/research/grants/skills/grants/SKILL.md",
       "sha256": "3ada40fc2c17bd031f9baaa956414523cf00315ec1c61c9cdb7054356ef15cd5",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8681,7 +8681,7 @@
       "path": "claude-skills/research/litreview/skills/litreview/SKILL.md",
       "sha256": "f2f14318547dd689dd617219d115cfc12a4c3a36f4118a9dae0bd717f17b0f09",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8713,7 +8713,7 @@
       "path": "claude-skills/research/notebooklm/skills/notebooklm/SKILL.md",
       "sha256": "1f15ad8dbdd865f26002c270142776248b54b7f64352f9167134b371c8be23a0",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8741,7 +8741,7 @@
       "path": "claude-skills/research/patent/skills/patent/SKILL.md",
       "sha256": "7cf68646b2572da081b0769e001f1379665c4f33de43c9651317112c147e84ba",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8769,7 +8769,7 @@
       "path": "claude-skills/research/pulse/skills/pulse/SKILL.md",
       "sha256": "28a04eb629ea8701b595332ca31be50568d81f44a321ff78faadcc04c5574ad9",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8797,7 +8797,7 @@
       "path": "claude-skills/research/research/skills/research/SKILL.md",
       "sha256": "a2ca342e71adcc21800b20a423bc166f1f4a2edbec426dd889bfb7fcb82bb3ff",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],
@@ -8825,7 +8825,7 @@
       "path": "claude-skills/research/syllabus/skills/syllabus/SKILL.md",
       "sha256": "77b6a8841c62f78ea5bb785da2cbea88d720a95b05ac7ec5d3e63f930d1b70fc",
       "origin": "vendored claude-skills; consult original file and notices",
-      "upstreamRevision": null,
+      "upstreamRevision": "19392f7a08264ed00486a251f5b2098321771f94",
       "licenseNotices": [
         "claude-skills/LICENSE"
       ],

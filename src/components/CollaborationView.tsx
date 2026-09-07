@@ -98,7 +98,7 @@ export const CollaborationView: React.FC<CollaborationViewProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               Request a draft deliverable
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">Delegation disabled · Max 6 model steps</span>
+            <span className="text-[10px] text-slate-400 font-mono">Read-only delegation requires manager permission · See run evidence</span>
           </div>
 
           <form onSubmit={handleStart} className="space-y-4">
