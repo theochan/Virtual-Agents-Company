@@ -9,7 +9,7 @@ import type { Agent, Project, MemoryItem, Artifact, WorkItem, ChatMessage } from
 import { MemoryManager } from './src/lib/memory/memoryManager';
 import { Store } from './src/server/store';
 import { acquireWorkspaceLock } from './src/server/workspaceLock';
-import { OperationsLog, reserveRequest } from './src/server/operations';
+import { requestLimit, OperationsLog, reserveRequest } from './src/server/operations';
 import { SearchCredentials } from './src/server/searchCredentials';
 import { HttpError, installSecurity, now, uid, validateEndpoint } from './src/server/security';
 import { allowedEndpoints, defaultSettings, discover, providerKey, setProviderKey, searchKey, type ProviderSettings } from './src/server/providers';
@@ -32,10 +32,7 @@ const engine = new RunEngine(store, settings);
 const log = new OperationsLog(directory);
 const buildFile = path.resolve('dist/build.json');
 const build = fs.existsSync(buildFile) ? JSON.parse(fs.readFileSync(buildFile, 'utf8')) : { status: 'unbuilt' };
-for (const [name, fallback] of [['VAC_SEARCH_REQUESTS_PER_DAY', '0'], ['VAC_INFERENCE_REQUESTS_PER_DAY', '100']]) {
-  const value = Number(process.env[name] ?? fallback);
-  if (!Number.isSafeInteger(value) || value < 0 || value > 10000) throw new Error(`Invalid ${name}`);
-}
+requestLimit('search'); requestLimit('inference');
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '128kb' }));
@@ -124,6 +121,7 @@ app.get('/api/ready', (_req, res) => {
     storage: { writable }, worker, build,
     delegation: { enabled: delegationEnabled(), limits: TREE_LIMITS },
     requestBudgets: store.page('request-budgets', 14),
+    requestLimits: { search: requestLimit('search') ?? 'unlimited', inference: requestLimit('inference') },
     inference: { status: 'not-tested' }, search: { status: 'not-tested' },
     limitation: 'Runtime readiness is not task quality or live provider validation.',
   });
@@ -248,19 +246,20 @@ app.post('/api/work-items', route((req, res) => {
   store.put('work-items', value.id, value); res.status(201).json(value);
 }));
 app.patch('/api/work-items/:id', route((req, res) => {
-  const item = get<WorkItem>('work-items', req.params.id); const data = workSchema.partial().parse(req.body);
+  const item = get<WorkItem>('work-items', req.params.id); if (item.delegatedRunId) throw new HttpError(409, 'Delegated items follow run evidence; cancel or accept the parent run.'); const data = workSchema.partial().parse(req.body);
   if (data.projectId) get<Project>('projects', data.projectId); if (data.assignedAgentId) get<Agent>('agents', data.assignedAgentId);
   const value = { ...item, ...data, updatedAt: now(), history: [...item.history, { id: uid(), authorName: 'Workspace owner', timestamp: now(), newStatus: data.status || item.status, comment: data.comment || 'Manual owner update; not an agent execution claim.' }] };
   store.put('work-items', item.id, value); res.json(value);
 }));
 app.delete('/api/work-items/:id', route((req, res) => {
-  get<WorkItem>('work-items', req.params.id);
+  if (get<WorkItem>('work-items', req.params.id).delegatedRunId) throw new HttpError(409, 'Retain delegated work evidence; cancel the parent run instead.');
   if (store.all<Run>('runs').some(r => r.workItemId === req.params.id)) throw new HttpError(409, 'Work item has run evidence; retain it for audit');
   store.delete('work-items', req.params.id); res.json({ success: true });
 }));
 const key = (req: any) => req.get('Idempotency-Key') || '';
 app.post('/api/work-items/:id/agent-work', route((req, res) => {
   const item = get<WorkItem>('work-items', req.params.id);
+  if (item.delegatedRunId) throw new HttpError(409, 'Delegated work is already linked to a run; submit a new parent request.');
   const input = z.object({ agentId: id, customPrompt: text.optional() }).parse(req.body);
   const run = engine.create({ agentId: input.agentId, projectId: item.projectId, workItemId: item.id, userMessage: `${input.customPrompt || 'Produce a draft deliverable for this work item.'}\n${item.title}\n${item.description}` }, key(req));
   res.status(202).json({ item, run, comment: 'Run queued; work is not yet complete.' });
@@ -273,7 +272,10 @@ app.post('/api/work-items/agent-generate', route((req, res) => {
 app.get('/api/chat/messages', route((req, res) => {
   const query = z.object({ agentId: id, projectId: id, conversationId: id.optional() }).parse(req.query);
   get<Agent>('agents', query.agentId); get<Project>('projects', query.projectId);
-  res.json(engine.history(query.agentId, query.projectId, query.conversationId));
+  res.json(engine.history(query.agentId, query.projectId, query.conversationId).map(message => {
+    const run = message.taskId ? store.get<Run>('runs', message.taskId) : undefined;
+    return run && run.leadAgentId === query.agentId && run.projectId === query.projectId ? { ...message, metadata: { ...message.metadata, runReview: { status: run.status, parentRunId: run.parentRunId } } } : message;
+  }));
 }));
 app.post('/api/chat/agent', route((req, res) => res.status(202).json({ run: engine.create(req.body, key(req)) })));
 app.post('/api/orchestrate/run', route((req, res) => {

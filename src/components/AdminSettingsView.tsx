@@ -18,11 +18,12 @@ import {
   Search,
   ExternalLink
 } from 'lucide-react';
-import { Agent } from '../types';
+import { Agent, LLMConfig } from '../types';
+import { ModelSelector } from './ModelSelector';
 
 interface AdminSettingsViewProps {
   agents: Agent[];
-  onUpdateAgentModel?: (agentId: string, model: string) => void;
+  onUpdateAgentLLMConfig?: (agentId: string, config: Partial<LLMConfig>) => void;
 }
 
 interface SearchSettingsState {
@@ -51,7 +52,7 @@ interface ProviderConfig {
 
 export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   agents,
-  onUpdateAgentModel,
+  onUpdateAgentLLMConfig,
 }) => {
   const [settings, setSettings] = useState<Record<string, ProviderConfig>>({
     claude: { defaultModel: 'claude-3-5-sonnet', apiKeyMasked: '', isConfigured: false },
@@ -420,26 +421,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   </div>
                 )}
 
-                {/* Default Model */}
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-500 font-medium">Default Local Model</label>
-                  <select
-                    value={settings.ollama?.defaultModel || 'llama3.2:latest'}
-                    onChange={(e) =>
-                      setSettings((prev) => ({
-                        ...prev,
-                        ollama: { ...prev.ollama, defaultModel: e.target.value },
-                      }))
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:border-orange-500 text-xs text-slate-900 outline-none cursor-pointer font-mono focus:ring-2 focus:ring-orange-500/20"
-                  >
-                    {(settings.ollama?.downloadedModels || []).map((m) => (
-                      <option key={m} value={m}>
-                        {m}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <p className="text-xs text-slate-500">Choose each coworker’s model below or in their chat. Provider settings do not override coworker assignments.</p>
 
                 {/* Downloaded Models List */}
                 <div className="space-y-1.5 pt-1">
@@ -577,26 +559,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   />
                 </div>
 
-                {/* Default Model */}
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-500 font-medium">Default Local HF Model</label>
-                  <select
-                    value={settings.huggingface?.defaultModel || 'meta-llama/Llama-3.2-3B-Instruct'}
-                    onChange={(e) =>
-                      setSettings((prev) => ({
-                        ...prev,
-                        huggingface: { ...prev.huggingface, defaultModel: e.target.value },
-                      }))
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:border-amber-600 text-xs text-slate-900 outline-none cursor-pointer font-mono focus:ring-2 focus:ring-amber-500/20"
-                  >
-                    {(settings.huggingface?.downloadedModels || []).map((m) => (
-                      <option key={m} value={m}>
-                        {m}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <p className="text-xs text-slate-500">Choose each coworker’s model below or in their chat. Provider settings do not override coworker assignments.</p>
 
                 {/* Downloaded Models List */}
                 <div className="space-y-1.5 pt-1">
@@ -944,10 +907,10 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             </div>
           </div>
 
+          <p className="mb-5 text-xs leading-relaxed text-slate-600">Keys are shared by agents equipped with Web search at access level 3 or 4. Saved keys stay in a private server file across restarts, outside database backups. Saving overrides environment defaults. Auto may send a query to multiple providers after failures. Testing sends one search request and may use API credits.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <p className="text-xs text-slate-600">Keys are shared by agents equipped with Web search at access level 3 or 4. Saved keys stay in a private server file across restarts, outside database backups. Saving overrides environment defaults. Auto may send a query to multiple providers after failures. Testing sends one search request and may use API credits.</p>
             {/* 1. Tavily AI Search */}
-            <div className="p-5 rounded-2xl border border-sky-200 bg-white flex flex-col justify-between space-y-4 shadow-xs">
+            <div data-testid="search-provider-tavily" className="p-5 rounded-2xl border border-sky-200 bg-white flex flex-col justify-between space-y-4 shadow-xs">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
@@ -1035,7 +998,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             </div>
 
             {/* 2. Brave Search API */}
-            <div className="p-5 rounded-2xl border border-rose-200 bg-white flex flex-col justify-between space-y-4 shadow-xs">
+            <div data-testid="search-provider-brave" className="p-5 rounded-2xl border border-rose-200 bg-white flex flex-col justify-between space-y-4 shadow-xs">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
@@ -1138,7 +1101,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             </span>
           </div>
 
-          <div className="divide-y divide-slate-100 overflow-x-auto">
+          <div className="divide-y divide-slate-100">
             {agents.map((agent) => (
               <div key={agent.id} className="py-3 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-[200px]">
@@ -1157,41 +1120,9 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   <span className="text-[10px] font-mono text-slate-500 hidden sm:inline">
                     {agent.department}
                   </span>
-                  <select
-                    value={agent.llmConfig?.model || agent.defaultModel || 'claude-3-5-sonnet'}
-                    onChange={(e) => onUpdateAgentModel && onUpdateAgentModel(agent.id, e.target.value)}
-                    className="px-3 py-1.5 rounded-lg bg-white border border-slate-300 focus:border-amber-600 text-xs text-slate-900 outline-none transition cursor-pointer font-mono shadow-2xs"
-                  >
-                    <optgroup label="Local Models (Ollama)">
-                      {(settings.ollama?.downloadedModels || []).map((m) => (
-                        <option key={`ollama:${m}`} value={`ollama:${m}`}>
-                          🦙 {m} (Local Daemon)
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Local Models (Hugging Face)">
-                      {(settings.huggingface?.downloadedModels || []).map((m) => (
-                        <option key={`hf:${m}`} value={`hf:${m}`}>
-                          🤗 {m} (Local Weights)
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Anthropic Claude (Cloud)">
-                      <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
-                      <option value="claude-3-5-haiku">Claude 3.5 Haiku</option>
-                      <option value="claude-3-7-sonnet">Claude 3.7 Sonnet</option>
-                    </optgroup>
-                    <optgroup label="OpenAI (Cloud)">
-                      <option value="gpt-4o">GPT-4o</option>
-                      <option value="gpt-4o-mini">GPT-4o Mini</option>
-                      <option value="o3-mini">o3-mini</option>
-                    </optgroup>
-                    <optgroup label="Qwen / DashScope (Cloud)">
-                      <option value="qwen-max">Qwen Max</option>
-                      <option value="qwen-plus">Qwen Plus</option>
-                      <option value="qwen-turbo">Qwen Turbo</option>
-                    </optgroup>
-                  </select>
+                  <div data-testid={`model-assignment-${agent.id}`}>
+                    {onUpdateAgentLLMConfig && <ModelSelector agent={agent} onUpdateLLMConfig={onUpdateAgentLLMConfig} />}
+                  </div>
                 </div>
               </div>
             ))}

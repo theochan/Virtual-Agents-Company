@@ -299,6 +299,9 @@ export interface WorkItemUpdateLog {
 }
 
 export interface WorkItem {
+  delegatedRunId?: string;
+  rootRunId?: string;
+  executionStatus?: TaskStatus;
   id: string;
   workspaceId: string;
   projectId: string;
@@ -443,6 +446,7 @@ export interface ChatMessage {
   taskId?: string;
   attachments?: Artifact[];
   metadata?: {
+    runReview?: { status: TaskStatus; parentRunId?: string };
     isMultiAgentExecution?: boolean;
     internalActivities?: Array<{ text: string; time?: string; type?: string }>;
     taskPlan?: any;

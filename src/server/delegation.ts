@@ -17,3 +17,24 @@ export function validateSubordinate(manager: Agent, child: Agent | undefined, pr
  if (!required.length || required.some(t => !(READ_TOOLS as readonly string[]).includes(t) || !child.toolIds.includes(t)) || child.autonomyLevel < 3) throw new HttpError(403, 'Subordinate lacks the required read-only tools');
  return child;
 }
+
+export function subordinateProfile(a: Agent) {
+ return { id: a.id, name: a.displayName, role: a.jobTitle, department: a.department,
+  expertise: a.expertise || [], responsibilities: [a.primaryResponsibility, ...(a.secondaryResponsibilities || [])].filter(Boolean),
+  tools: a.toolIds.filter(t => (READ_TOOLS as readonly string[]).includes(t)) };
+}
+// Preferences never grant access: callers must supply only eligible direct reports.
+export function routeSubordinate(request: string, candidates: Agent[], proposedId: string) {
+ const proposed = candidates.find(a => a.id === proposedId);
+ if (!proposed) throw new HttpError(403, 'Proposed subordinate is not eligible');
+ const named = candidates.filter(a => new RegExp(`\\b${a.displayName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(request));
+ if (named.length === 1) return { agent: named[0], reason: 'Explicitly named by the user; required tools and project permissions verified.' };
+ const finance = /\b(share price|stock price|last traded|market research|company research|earnings|valuation|financial analysis)\b/i.test(request);
+ const engineering = /\b(software|architecture|code|database|debug|api design|engineering)\b/i.test(request);
+ if (finance !== engineering) {
+  const preferredId = finance ? 'agent-emma' : 'agent-marcus';
+  const specialist = candidates.find(a => a.id === preferredId) || candidates.find(a => (finance ? /research|financial|market/i : /software|architect|engineering/i).test([a.jobTitle,a.department,...(a.expertise || [])].join(' ')));
+  if (specialist) return { agent: specialist, reason: `${finance ? 'Market/company research' : 'Software architecture/engineering'} preference; specialist is an eligible direct report with the required tools.` };
+ }
+ return { agent: proposed, reason: 'No unambiguous domain preference or eligible preferred specialist; retained the model selection after permission and tool checks.' };
+}

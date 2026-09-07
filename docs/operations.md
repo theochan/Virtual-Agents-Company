@@ -96,6 +96,25 @@ Set `VAC_ENABLE_DELEGATION=1` in the private service environment and restart thr
 
 Search additionally requires a configured provider and its daily allowance. This pilot does not raise `VAC_SEARCH_REQUESTS_PER_DAY`; a saved key alone does not enable paid search. Search credentials remain private and are not passed between models.
 
-Runs shows parent/child links, shared reservations and deadline. Accept only the parent after reviewing evidence. Cancel either member to stop the entire tree. Interrupted execution needs explicit root resume, within the original 600-second wall deadline; no silent external retry occurs. Children may read project context, calculate or search, with at most two children and no grandchildren. Parent writes still require normal exact-operation approval. Disable the feature or revoke manager permission to block pending delegation work.
+Runs shows parent/child links, shared reservations and deadline. Successful child and parent runs complete independently; request corrections through chat. Cancel either member to stop the entire tree. Interrupted execution needs explicit root resume, within the original 600-second wall deadline; no silent external retry occurs. Children may read project context, calculate or search, with at most two children and no grandchildren. Parent writes still require normal exact-operation approval. Disable the feature or revoke manager permission to block pending delegation work.
 
 Passing transport and permission tests does not establish research accuracy. Previous research-runbook failures remain open. Use a single equipped agent for simple lookups when delegation adds no measurable benefit.
+
+### Unlimited daily search
+
+`VAC_SEARCH_REQUESTS_PER_DAY=unlimited` removes the application-wide daily Tavily/Brave request cap while retaining durable attempt counts. Authenticated readiness reports `requestLimits.search: "unlimited"`; usage records use `maximum: null`. Numeric values retain their existing meaning, including zero disabling paid search. Provider-side limits and per-run loop/time limits still apply. Inference limits are separate and do not accept `unlimited`.
+
+### Delegation in Tasks
+
+Every real child run creates one durable work item assigned to the child agent. Existing child-run evidence is reconciled at startup without re-executing work. Queued and active children display their current execution state. Blocked, failed or cancelled children return to Backlog with their actual outcome. Successful children move to Completed when their assigned work finishes, independently of the parent. These items cannot be manually reassigned, advanced or executed again; use Open parent run to review/cancel, or submit a new request. No percentage of inferred work completion is manufactured.
+
+### Review and navigation
+
+Successful runs and subtasks complete automatically after required-tool evidence checks. There is no human draft acceptance control in chat or Audit. Request corrections through chat. Audit retains run evidence, delegation selection reasons and exact-operation approvals. Completion means execution finished, not that facts have been independently verified.
+
+Open **Settings → Operations** for diagnostics, backups and configured limits. Settings is the last main navigation item; Sign out occupies the separate bottom slot. The global status strip has been removed; Audit shows a badge only for pending approvals.
+
+
+## Current completion and routing policy
+
+The latest workflow supersedes the dated installation snapshots above. Use authenticated `/api/ready` to identify the installed build. Agent chat and Settings share the same provider/model assignment. Delegation includes role, expertise and responsibilities, with eligible specialist preferences for market/company research and software architecture. Historical produced drafts transition once to Completed with a policy event; no human approval or new execution is fabricated.

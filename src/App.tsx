@@ -28,7 +28,8 @@ export const App: React.FC = () => {
   const [approvals, setApprovals] = useState<ApprovalRequest[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
-  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'operations'>('chat');
+  const [settingsSection, setSettingsSection] = useState<'configuration' | 'operations'>('configuration');
+  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs'>('chat');
   const [selectedAgentId, setSelectedAgentId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
@@ -113,16 +114,12 @@ export const App: React.FC = () => {
   const handleUpdateAgentAvatar = async (id: string, avatarUrl: string) => { await change(`/api/agents/${id}`, 'PATCH', { avatarUrl }); };
   return (
     <div className="flex flex-col h-screen w-screen bg-[#F8F9FA] text-slate-900 overflow-hidden font-sans antialiased">
-      <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs flex justify-between gap-4">
-        <span>Local workspace · Human-reviewed drafts</span>
-        <button className="font-semibold underline" onClick={() => setCurrentTab('operations')}>Operations</button>
-        <button className="font-semibold underline" onClick={() => void api('/api/session', 'DELETE').then(() => window.dispatchEvent(new Event('workspace-signed-out')))}>Sign out</button>
-        <button className="font-semibold underline" onClick={() => setCurrentTab('runs')}>Runs and approvals ({approvals.filter(a => a.status === 'pending').length})</button>
-      </div>
       {error && <div role="alert" className="shrink-0 bg-red-50 text-red-800 px-4 py-2 text-sm">{error} <button className="underline ml-3" onClick={() => setError('')}>Dismiss</button></div>}
       <div className="flex flex-1 min-h-0">
       {/* Sidebar Navigation */}
       <Sidebar
+        onSignOut={() => void api('/api/session', 'DELETE').then(() => window.dispatchEvent(new Event('workspace-signed-out')))}
+        attentionCount={approvals.filter(a => a.status === 'pending').length}
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
         agents={agents}
@@ -143,7 +140,6 @@ export const App: React.FC = () => {
 
       {/* Main Panel Router */}
       <main className="flex-1 flex overflow-hidden">
-        {currentTab === 'operations' && <OperationsView />}
         {currentTab === 'runs' && <RunReviewView onSelectAgent={(agentId, projectId) => { setSelectedAgentId(agentId); setSelectedProjectId(projectId); setCurrentTab('chat'); }} runs={tasks} approvals={approvals} onDecide={handleDecideApproval} onAction={async (id, action, reason) => { await change(`/api/runs/${id}/${action}`, 'POST', reason ? { reason } : {}); }} />}
         {currentTab === 'chat' && (!selectedAgent || !selectedProject) && <div className="p-8">Create an agent and a project to start a conversation.</div>}
         {currentTab === 'chat' && selectedAgent && selectedProject && (
@@ -153,6 +149,7 @@ export const App: React.FC = () => {
             projects={projects}
             activeProject={selectedProject}
             messages={messagesByAgent[conversationKey] || []}
+            runs={tasks}
             onSendMessage={handleSendMessage}
             isSending={isSendingMessage || Boolean(activeTask && ['queued', 'working', 'waiting', 'waiting_children'].includes(activeTask.status))}
             onOpenProfile={(a) => setProfileAgent(a)}
@@ -193,6 +190,7 @@ export const App: React.FC = () => {
 
         {currentTab === 'collaborate' && (
           <TasksView
+            onOpenRun={(id) => { setCurrentTab('runs'); window.location.hash = `run-${id}`; }}
             workItems={workItems}
             agents={agents}
             projects={projects}
@@ -264,12 +262,14 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {currentTab === 'settings' && (
-          <AdminSettingsView
-            agents={agents}
-            onUpdateAgentModel={handleUpdateAgentModel}
-          />
-        )}
+        {currentTab === 'settings' && <section className="flex flex-col flex-1 min-w-0 min-h-0">
+          <nav aria-label="Settings sections" className="flex items-center gap-3 border-b bg-white px-6 py-3">
+            <button aria-pressed={settingsSection === 'configuration'} className="px-3 py-2 rounded-lg border text-sm" onClick={() => setSettingsSection('configuration')}>Configuration</button>
+            <button aria-pressed={settingsSection === 'operations'} className="px-3 py-2 rounded-lg border text-sm" onClick={() => setSettingsSection('operations')}>Operations</button>
+          </nav>
+          <div className="flex flex-1 min-h-0">{settingsSection === 'operations' ? <OperationsView /> : <AdminSettingsView agents={agents} onUpdateAgentLLMConfig={handleUpdateAgentLLMConfig} />}</div>
+        </section>}
+
       </main>
 
       {/* Modals */}

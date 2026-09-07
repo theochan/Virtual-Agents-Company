@@ -122,13 +122,14 @@ test('search settings require owner access, mask keys, persist outside SQLite, a
   await stop(); await start();
   assert.equal((await api('/admin/search-settings')).body.brave.isConfigured, false);
 });
-test('birthday task produces its own draft, real usage, and no automatic completed work or memory', async () => {
+test('birthday task produces its own draft, real usage, and completion without fabricated work items or memory', async () => {
   const id = await createRun('Write a four-line birthday poem. Do not discuss databases or migrations.');
-  const run = await until(id, ['reviewing']);
+  const run = await until(id, ['completed']);
   assert.equal(run.result.split('\n').length, 4); assert.doesNotMatch(run.result, /postgres|firebase/i);
   assert.equal((await api('/work-items')).body.length, 0); assert.equal((await api('/memories')).body.length, 0);
   assert.equal(run.receipts[0].inputTokens, 12); assert.equal(run.receipts[0].cost, null);
-  assert.equal((await api(`/runs/${id}/accept`, 'POST', { reason: 'Four lines and birthday theme checked.' })).body.status, 'completed');
+  assert.equal(run.acceptance, undefined);
+  assert.equal((await api(`/runs/${id}/accept`, 'POST', { reason: 'obsolete acceptance' })).status, 409);
 });
 test('tool observation feeds the model and exact request retries reuse the durable run', async () => {
   const key = crypto.randomUUID(); const body = { agentId, projectId, userMessage: 'CALCULATE 19 plus 23.' };
@@ -136,7 +137,7 @@ test('tool observation feeds the model and exact request retries reuse the durab
   const retry = await api('/chat/agent', 'POST', body, { 'Idempotency-Key': key });
   assert.equal(first.body.run.id, retry.body.run.id);
   assert.equal((await api('/chat/agent', 'POST', { ...body, userMessage: 'different' }, { 'Idempotency-Key': key })).status, 409);
-  const run = await until(first.body.run.id, ['reviewing']);
+  const run = await until(first.body.run.id, ['completed']);
   assert.equal(run.result, 'The tool returned 42.\n\n[Calculator evidence]\nadd(19, 23) = 42'); assert.equal(run.steps, 2);
   assert.equal(run.receipts.find((r: any) => r.toolId === 'tool-calculator').output.result, 42);
 });
@@ -156,13 +157,13 @@ test('approval survives restart, resumes exact operation once, and persists evid
   await stop(); await start();
   assert.equal((await api(`/runs/${id}`)).body.status, 'waiting');
   assert.equal((await api(`/approvals/${approval.id}`, 'POST', { decision: 'approved' })).status, 200);
-  const run = await until(id, ['reviewing']);
+  const run = await until(id, ['completed']);
   assert.equal(run.workspace.artifacts.length, 1);
   assert.equal((await api(`/approvals/${approval.id}`, 'POST', { decision: 'approved' })).status, 200);
   assert.equal((await api(`/approvals/${approval.id}`, 'POST', { decision: 'rejected' })).status, 409);
   await stop(); await start();
   assert.equal((await api('/artifacts')).body.length, 1);
-  assert.equal((await api(`/runs/${id}`)).body.status, 'reviewing');
+  assert.equal((await api(`/runs/${id}`)).body.status, 'completed');
 });
 test('rejection and cancellation cannot execute the pending operation', async () => {
   const id = await createRun('SAVE_DOCUMENT another draft'); await until(id, ['waiting']);
@@ -181,16 +182,16 @@ test('agent edits preserve runs; interrupted work is blocked and explicitly resu
   child.kill('SIGKILL'); await new Promise(r => child.once('exit', r)); await start();
   assert.equal((await api(`/runs/${id}`)).body.status, 'blocked');
   assert.equal((await api(`/runs/${id}/resume`, 'POST', {})).status, 200);
-  await until(id, ['reviewing']);
+  await until(id, ['completed']);
 });
 test('project conversations are isolated and recent turns reach inference', async () => {
   const other = (await api('/projects', 'POST', { name: 'Other project', description: '' })).body.id;
   const beforeCount = requests.length;
-  const id = await createRun('A fresh birthday poem in another project.', other); await until(id, ['reviewing']);
+  const id = await createRun('A fresh birthday poem in another project.', other); await until(id, ['completed']);
   const messages = requests[beforeCount].messages;
   assert.equal(messages.filter((m: any) => m.role === 'user').length, 1);
   assert.equal((await api(`/chat/messages?agentId=${agentId}&projectId=${other}`)).body.length, 2);
-  const followup = await createRun('What did I just ask?', other); await until(followup, ['reviewing']);
+  const followup = await createRun('What did I just ask?', other); await until(followup, ['completed']);
   assert.ok(requests.at(-1).messages.some((m: any) => m.content === 'A fresh birthday poem in another project.'));
 });
 test('memory creation/promotion is durable and preserves immutable provenance', async () => {
@@ -267,7 +268,7 @@ test('full restore starts the application, preserves approval and memory evidenc
     assert.deepEqual((await api('/memories')).body, originalMemories);
     assert.equal((await api(`/runs/${waitingId}`)).body.status, 'waiting');
     assert.equal((await api(`/approvals/${approval.id}`, 'POST', { decision: 'approved' })).status, 200);
-    await until(waitingId, ['reviewing']);
+    await until(waitingId, ['completed']);
     await api(`/approvals/${approval.id}`, 'POST', { decision: 'approved' });
     const artifacts = (await api('/artifacts')).body;
     assert.equal(artifacts.length, originalArtifacts.length + 1);
@@ -275,7 +276,7 @@ test('full restore starts the application, preserves approval and memory evidenc
     const { hash } = await import('../src/server/security');
     assert.equal(saved.contentHash, hash(saved.content));
     const fresh = await createRun('CALCULATE after restore');
-    assert.match((await until(fresh, ['reviewing'])).result, /42/);
+    assert.match((await until(fresh, ['completed'])).result, /42/);
     const db = new Store(directory);
     assert.equal((db.db.prepare('PRAGMA integrity_check').get() as any).integrity_check, 'ok');
     db.close();

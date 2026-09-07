@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 
 interface TasksViewProps {
+  onOpenRun?: (id: string) => void;
   workItems: WorkItem[];
   agents: Agent[];
   projects: Project[];
@@ -48,6 +49,7 @@ interface TasksViewProps {
 
 export const TasksView: React.FC<TasksViewProps> = ({
   workItems,
+  onOpenRun,
   agents,
   projects,
   activeProject,
@@ -75,7 +77,8 @@ export const TasksView: React.FC<TasksViewProps> = ({
   // Modals & Drawers
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAutoPlanModalOpen, setIsAutoPlanModalOpen] = useState(false);
-  const [selectedItemDetail, setSelectedItemDetail] = useState<WorkItem | null>(null);
+  const [selectedItemSnapshot, setSelectedItemDetail] = useState<WorkItem | null>(null);
+  const selectedItemDetail = workItems.find(w => w.id === selectedItemSnapshot?.id) || selectedItemSnapshot;
 
   // New Item Form State
   const [newItemTitle, setNewItemTitle] = useState('');
@@ -327,7 +330,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
     {
       id: 'done',
       title: 'Completed',
-      subtitle: 'Owner-marked Done',
+      subtitle: 'Finished work',
       badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold',
       borderAccent: 'border-t-emerald-500',
       dotColor: 'bg-emerald-500',
@@ -598,7 +601,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                         return (
                           <div
                             key={item.id}
-                            draggable
+                            draggable={!item.delegatedRunId}
                             onDragStart={(e) => handleDragStart(e, item.id)}
                             onClick={() => setSelectedItemDetail(item)}
                             className="p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-amber-300 hover:shadow-md transition cursor-pointer space-y-3 group relative shadow-2xs"
@@ -623,6 +626,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                               </span>
                             </div>
 
+                            {item.delegatedRunId && <p data-testid="delegated-work-status" className="text-xs text-amber-800">Delegated · {item.status === 'done' ? 'Completed' : item.executionStatus === 'reviewing' ? 'Awaiting parent review' : item.executionStatus?.replaceAll('_', ' ')} · Status follows run evidence <button className="underline" onClick={e=>{e.stopPropagation();onOpenRun?.(item.rootRunId!);}}>Open parent run</button></p>}
                             {/* Assigned Coworker & Time Estimate */}
                             <div className="flex items-center justify-between text-xs pt-0.5">
                               <div className="flex items-center gap-2">
@@ -688,6 +692,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                               <div className="flex items-center gap-1">
                                 {/* Quick Agent Work Trigger */}
                                 <button
+                                  disabled={Boolean(item.delegatedRunId)}
                                   onClick={(e) => handleTriggerAgentWork(item, e)}
                                   title="Trigger Agent to Work / Advance Item"
                                   className="p-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition cursor-pointer shadow-xs"
@@ -696,7 +701,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 </button>
 
                                 {/* Left Move arrow */}
-                                {col.id !== 'backlog' && (
+                                {!item.delegatedRunId && col.id !== 'backlog' && (
                                   <button
                                     onClick={(e) => {
                                       const prevMap: Record<WorkItemStatus, WorkItemStatus> = {
@@ -715,7 +720,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 )}
 
                                 {/* Right Move arrow */}
-                                {col.id !== 'done' && (
+                                {!item.delegatedRunId && col.id !== 'done' && (
                                   <button
                                     onClick={(e) => {
                                       const nextMap: Record<WorkItemStatus, WorkItemStatus> = {
@@ -824,7 +829,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                           <button
-                            onClick={() => handleTriggerAgentWork(item)}
+                            disabled={Boolean(item.delegatedRunId)} onClick={() => handleTriggerAgentWork(item)}
                             title="Agent Work"
                             className="p-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 shadow-xs cursor-pointer"
                           >
@@ -848,7 +853,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 <div>
                   <h3 className="text-base font-serif font-bold text-slate-900">Single-Agent Draft Run</h3>
                   <p className="text-xs text-slate-500">
-                    A selected agent produces a draft. Review results and approvals in Runs and approvals.
+                    A selected agent produces a draft. Review results and approvals in Audit.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
@@ -1264,6 +1269,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 </div>
               )}
 
+              {selectedItemDetail.delegatedRunId && <div className="p-3 border rounded-xl text-sm text-amber-900">This delegated item follows execution evidence. Review or cancel the parent run to change its outcome.<button className="block mt-2 underline" onClick={()=>onOpenRun?.(selectedItemDetail.rootRunId!)}>Open parent run</button></div>}
               {/* Quick Stage Transition Buttons */}
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                 <span className="text-[10px] uppercase font-mono text-slate-500 font-semibold block">Transition Work Item Stage</span>
@@ -1271,6 +1277,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   {(['backlog', 'todo', 'in_progress', 'done'] as WorkItemStatus[]).map((st) => (
                     <button
                       key={st}
+                      disabled={Boolean(selectedItemDetail.delegatedRunId)}
                       onClick={() => handleQuickMove(selectedItemDetail, st)}
                       className={`py-1.5 px-2 rounded-lg text-[11px] font-mono uppercase font-bold transition cursor-pointer border shadow-xs ${
                         selectedItemDetail.status === st
@@ -1291,7 +1298,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     <Zap className="w-3.5 h-3.5 text-amber-600" />
                     <span>Agent Draft Console</span>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono">Drafts require acceptance</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Completed runs finish assigned work</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1343,7 +1350,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   </span>
                   <button
                     onClick={handleExecuteAgentUpdate}
-                    disabled={isAgentExecuting}
+                    disabled={isAgentExecuting || Boolean(selectedItemDetail?.delegatedRunId)}
                     className="py-2 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition disabled:opacity-50 cursor-pointer"
                   >
                     <Zap className={`w-3.5 h-3.5 text-white ${isAgentExecuting ? 'animate-spin' : ''}`} />
@@ -1393,8 +1400,9 @@ export const TasksView: React.FC<TasksViewProps> = ({
             {/* Modal Footer */}
             <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
               <button
+                disabled={Boolean(selectedItemDetail.delegatedRunId)}
                 onClick={async () => {
-                  if (confirm('Delete this work item?')) {
+                  if (!selectedItemDetail.delegatedRunId && confirm('Delete this work item?')) {
                     await onDeleteWorkItem(selectedItemDetail.id);
                     setSelectedItemDetail(null);
                   }

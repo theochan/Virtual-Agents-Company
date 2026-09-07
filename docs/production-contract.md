@@ -1,6 +1,6 @@
 # Local production release contract
 
-Date: 2026-09-07. Scope chosen provisionally from the existing application while the owner workflow question is pending. This is a small local single-owner product, with mandatory review of drafts. It is not a hosted multi-tenant service or a general autonomous organization.
+Date: 2026-09-07. Scope chosen provisionally from the existing application while the owner workflow question is pending. This is a small local single-owner product, with automatic completion of successful work and user feedback through chat. It is not a hosted multi-tenant service or a general autonomous organization.
 
 ## Workflows
 
@@ -38,3 +38,8 @@ Before operational acceptance, run a **15-minute disposable release soak**: auth
 Imported skill scripts, external writes, remote hosting, and multiple principals remain disabled. Direct-subordinate read-only delegation is a separately enabled pilot with explicit manager permission and shared limits; it is not an autonomous business-readiness claim. The runtime release excludes vendored skill trees and private state; distribution review of the full source repository remains separate.
 
 The owner must still confirm the workflows are useful for actual work and choose the routine search credit limit. The owner selected local snapshot folders with separately managed cloud backup. Workflow usefulness and a nonzero routine search allowance must not be represented as already approved. Operational deployment into the existing port-3001 workspace is a separate step from preparing and testing a release directory.
+
+
+## Current workflow policy
+
+Successful runs and subordinate tasks complete without human draft acceptance. Exact-operation approvals remain mandatory where the tool requires them. Completion is an execution status, not a factual-quality verdict; the historical evaluation criteria and results above are unchanged.

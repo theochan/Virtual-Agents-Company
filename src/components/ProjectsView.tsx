@@ -144,7 +144,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             </div>
             <div>
               <h2 className="text-lg font-serif italic text-slate-900 tracking-tight">Initiatives & Projects</h2>
-              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">Local workspace</span>
+
             </div>
           </div>
 
@@ -300,7 +300,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               >
                 {project.status}
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">Local workspace</span>
+
             </div>
             <p className="text-xs text-slate-500 mt-1 max-w-xl line-clamp-1">{project.description}</p>
           </div>
@@ -414,7 +414,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
 
                 {/* Footer Actions */}
                 <div className="p-2.5 border-t border-slate-100 bg-slate-50/90 flex items-center justify-between">
-                  <span className="text-[10px] text-slate-500 font-mono">Local workspace</span>
+
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);

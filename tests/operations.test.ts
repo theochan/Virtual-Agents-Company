@@ -66,3 +66,8 @@ test('log retention is bounded and owner-only', () => {
     for (const file of files) assert.equal(fs.statSync(path.join(directory, file)).mode & 0o777, 0o600);
   } finally { store.close(); fs.rmSync(directory, { recursive: true, force: true }); }
 });
+test('unlimited search records usage beyond numeric limits and survives restart', () => {
+ const { directory, store } = temporary();process.env.VAC_SEARCH_REQUESTS_PER_DAY='unlimited';
+ try {const day=new Date().toISOString().slice(0,10);store.put('request-budgets',`${day}:search`,{count:10000});assert.equal(reserveRequest(store,'search').maximum,null);store.close();const restored=new Store(directory);try{const r=reserveRequest(restored,'search');assert.equal(r.reservedAttempt,10002);assert.equal(r.maximum,null);}finally{restored.close();}}
+ finally{delete process.env.VAC_SEARCH_REQUESTS_PER_DAY;fs.rmSync(directory,{recursive:true,force:true});}
+});

@@ -2,6 +2,12 @@
 
 Created: 2026-09-06. Updated: 2026-09-07. Status: verified local release candidate; operational rollout verified; owner-usefulness acceptance remains open. Unchecked items may be partially implemented; consult the dated evidence below.
 
+## Current workflow update — completion and specialist routing
+
+Successful runs and delegated subtasks now complete automatically after required-tool evidence checks. Users request revisions in chat; Audit retains execution evidence and exact-operation approvals, with no human draft acceptance step. Existing produced drafts transition once with a policy-change event, without claiming human approval or rerunning work. Completion describes execution, not factual verification.
+
+Managers receive eligible subordinates' roles, expertise and responsibilities. Routing prefers Emma for market/company research and Marcus for software architecture, within hierarchy, project and tool permissions. Explicit user naming wins; ambiguous requests retain the model's eligible selection. Audit records the proposed and selected agent and the policy reason. Historical evaluation results below remain unchanged.
+
 ## Latest follow-up — read-only hierarchy delegation
 
 The implemented pilot passes 52 source tests, 52 built-server tests and eight browser tests. Three live search handoffs succeeded, but were slower than a single equipped agent and showed no quality advantage. An installed calculator handoff exposed copied delegation wording; the failed run is preserved and the corrected worker contract passed both isolated and installed real-model validation (installed: 14.7 seconds, calculator result 42). See the validation report below for final installed evidence and remaining limits.

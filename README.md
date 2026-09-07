@@ -1,8 +1,8 @@
 # Virtual Agents Company
 
-**Experimental, single-owner local workspace for AI-assisted work.** Configure agent profiles, organize projects and work items, and run a bounded model/tool loop with durable evidence and owner review.
+**Experimental, single-owner local workspace for AI-assisted work.** Configure agent profiles, organize projects and work items, and run a bounded model/tool loop with durable execution evidence and chat feedback.
 
-This is not an enterprise-ready autonomous organization. Arbitrary Python execution and automatic work completion are disabled. Direct-subordinate read-only delegation is available as an explicitly enabled pilot. Earlier scripted demonstrations have been removed from the live execution paths.
+This is not an enterprise-ready autonomous organization. Arbitrary Python execution is disabled. Successful runs complete automatically; completion does not certify factual accuracy. Direct-subordinate read-only delegation is available as an explicitly enabled pilot. Earlier scripted demonstrations have been removed from the live execution paths.
 
 ## What works
 
@@ -12,7 +12,7 @@ This is not an enterprise-ready autonomous organization. Arbitrary Python execut
 - A server-side single-agent loop with validated decisions, tool observations, bounded conversation history, and recorded provider usage when reported. Cost remains **unknown**, rather than invented.
 - Durable runs, steps/events, messages, approvals, artifacts and memories in SQLite. Interrupted active runs become blocked for explicit recovery; pending approvals survive restarts.
 - Owner authentication, loopback binding, host/origin checks, server-controlled tools and endpoint allowlists.
-- Draft review, cancellation, exact-operation approvals, and explicit acceptance before a run is marked completed.
+- Automatic completion of successful runs and delegated subtasks, chat feedback, cancellation, and exact-operation approvals.
 
 ## Quick start
 
@@ -41,8 +41,8 @@ npm start
 1. Configure your chosen provider (Ollama, Anthropic, OpenAI, etc.) under Settings. Save credentials before testing model discovery. LLM credentials entered in the UI last until restart; use environment variables for durable LLM credentials. Search keys have the separate persistence policy below.
 2. Assign a valid model to an agent.
 3. Select a project and ask for a concrete draft in chat, for example a four-line birthday poem or a short specification.
-4. Open **Runs and approvals** to inspect the result and execution receipts. Model text is a draft, not proof that an external action occurred.
-5. If a tool requests approval, inspect its exact arguments. Approval resumes that operation once. When the final deliverable satisfies your request, record why and accept it.
+4. Open **Audit** to inspect the result and execution receipts. Model text is a draft, not proof that an external action occurred.
+5. If a tool requests approval, inspect its exact arguments. Approval resumes that operation once. Successful work completes automatically; request corrections through chat.
 
 Model discovery proves that a catalog was returned, not that inference succeeds. Provider failures, invalid decisions, missing tools, timeouts and exhausted budgets produce failed or blocked runs; there is no canned-success fallback.
 
@@ -52,7 +52,7 @@ After downloading a model and starting Ollama, keep `OLLAMA_ENDPOINT=http://127.
 
 In the agent's model selector, choose **Ollama**, enter the exact installed model tag, and save. The application uses Ollama's native `/api/chat` endpoint with JSON output; the model still needs to follow the decision contract below.
 
-Start with a short draft request, then equip `tool-calculator`, set access level 3 or 4, and explicitly ask the agent to use it for an arithmetic calculation. Inspect **Runs and approvals** for the tool call, observation and final draft before accepting it. A model appearing in discovery is not a successful inference test. Live Ollama quality validation remains outstanding.
+Start with a short draft request, then equip `tool-calculator`, set access level 3 or 4, and explicitly ask the agent to use it for an arithmetic calculation. Inspect **Audit** for the tool call, observation and final answer before relying on it. A model appearing in discovery is not a successful inference test. Live Ollama quality validation remains outstanding.
 
 ## Web search setup
 

@@ -34,7 +34,7 @@ CI contains these source/build/browser/inventory/audit gates and a pinned full-h
 
 ## Product boundary
 
-The restored Team canvas retains portraits, curved connectors, amber root treatment, zoom and department filtering, while displaying real hierarchy, actual autonomy levels and direct-report counts. Reporting and delegation controls are secondary disclosures inside cards. Child-run safety and owner review are unchanged.
+The restored Team canvas retains portraits, curved connectors, amber root treatment, zoom and department filtering, while displaying real hierarchy, actual autonomy levels and direct-report counts. Reporting and delegation controls are secondary disclosures inside cards. Child-run permission checks and exact-operation approvals remain enforced. Successful tasks now complete automatically; users provide feedback in chat.
 
 Research correctness, freshness selection and measured owner benefit remain open. Public documentation must retain those limitations and the preserved negative evaluation outcomes.
 
@@ -43,3 +43,10 @@ Research correctness, freshness selection and measured owner benefit remain open
 A fresh export of the staged candidate passed installation, publication inventory, TypeScript, build, all 52 source tests, all 52 built-server tests, eight browser tests, zero-vulnerability npm audit and deterministic skill inventory regeneration. The Team canvas screenshot was visually inspected. No private data or credentials were copied into the clean checkout. GitHub-hosted CI is pending an authorized push; no successful remote run is claimed.
 
 The reviewed implementation is committed as `ea3fd34`. Local release `459dccf096da` is installed, its runtime assets exactly match the tested clean export, and live Team rendering was verified. Existing records and all 30 quarantined records were preserved. Sanitized installation evidence: `docs/evaluations/2026-09-07-team-restoration-installed.json`. The working release has not been pushed and repository visibility has not been changed.
+
+
+## Current publication follow-up
+
+The previously pending release was pushed to main and passed GitHub CI. The current follow-up adds automatic completion, specialist routing with Audit reasons, delegated work items, unlimited daily search configuration, synchronized agent model settings, and chat/navigation fixes. README and operational instructions describe the current behavior; older dated evaluation observations remain historical evidence. Local runtime data, private installation reports and credentials remain ignored. The next push must pass the same CI gates before changing visibility.
+
+The final staged follow-up was exported without private runtime files and validated with fresh dependencies: 58 source tests, 58 built-server tests and 10 browser tests passed; npm audit reported zero vulnerabilities. The deterministic vendor inventory was unchanged. Gitleaks 8.30.1 found no leaks in reachable history or the staged candidate using the existing narrowly reviewed fixture allowances. Publication inventory checked 5,545 tracked files. Private vulnerability reporting could not be confirmed through the GitHub API; the SECURITY.md fallback remains applicable. Remote CI for the follow-up is the remaining post-push verification.

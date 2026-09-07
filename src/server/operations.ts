@@ -21,16 +21,21 @@ export class OperationsLog {
 }
 
 /** Reserve request attempts before external access; unknown billing is never refunded. */
-export function reserveRequest(store: Store, category: 'inference' | 'search') {
+export function requestLimit(category: 'inference' | 'search'): number | null {
   const name = category === 'search' ? 'VAC_SEARCH_REQUESTS_PER_DAY' : 'VAC_INFERENCE_REQUESTS_PER_DAY';
   const raw = process.env[name] ?? (category === 'search' ? '0' : '100');
+  if (category === 'search' && raw === 'unlimited') return null;
   const maximum = Number(raw);
   if (!Number.isSafeInteger(maximum) || maximum < 0 || maximum > 10000) throw new Error(`Invalid ${name}: expected integer 0..10000`);
+  return maximum;
+}
+export function reserveRequest(store: Store, category: 'inference' | 'search') {
+  const maximum = requestLimit(category);
   return store.transaction(() => {
     const day = new Date().toISOString().slice(0, 10);
     const id = `${day}:${category}`;
     const usage = store.get<{ count: number }>('request-budgets', id) || { count: 0 };
-    if (usage.count >= maximum) throw new Error(`${category} daily request budget exhausted (${maximum}); no external request sent`);
+    if (maximum !== null && usage.count >= maximum) throw new Error(`${category} daily request budget exhausted (${maximum}); no external request sent`);
     store.put('request-budgets', id, { count: usage.count + 1, maximum, day, category });
     return { day, reservedAttempt: usage.count + 1, maximum };
   });
