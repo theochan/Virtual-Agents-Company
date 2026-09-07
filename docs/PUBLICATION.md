@@ -41,3 +41,5 @@ Research correctness, freshness selection and measured owner benefit remain open
 ## Local validation result
 
 A fresh export of the staged candidate passed installation, publication inventory, TypeScript, build, all 52 source tests, all 52 built-server tests, eight browser tests, zero-vulnerability npm audit and deterministic skill inventory regeneration. The Team canvas screenshot was visually inspected. No private data or credentials were copied into the clean checkout. GitHub-hosted CI is pending an authorized push; no successful remote run is claimed.
+
+The reviewed implementation is committed as `ea3fd34`. Local release `459dccf096da` is installed, its runtime assets exactly match the tested clean export, and live Team rendering was verified. Existing records and all 30 quarantined records were preserved. Sanitized installation evidence: `docs/evaluations/2026-09-07-team-restoration-installed.json`. The working release has not been pushed and repository visibility has not been changed.

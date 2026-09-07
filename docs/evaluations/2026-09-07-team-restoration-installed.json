@@ -1,0 +1,18 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "originalSha256": "8556e2eb227c7327a727fcc26ef853a72a4765a8c0c89f0bd9167788a6339f10",
+    "note": "Private installation evidence retained by operator. Workspace data and machine paths omitted."
+  },
+  "pass": true,
+  "sourceHash": "459dccf096dac29a0cb6c1dfe3fe94f35341d118ab4180e5676074a157ce79dc",
+  "revision": "ea3fd347e1b81880e548a00e64ce362885989133",
+  "preservedRecords": true,
+  "quarantinedCount": 30,
+  "liveUi": {
+    "cards": 9,
+    "connectorGroups": 3,
+    "fitControlVerified": true
+  },
+  "runtimeAssetsMatchCleanTestExport": true
+}

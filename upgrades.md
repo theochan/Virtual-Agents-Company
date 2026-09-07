@@ -10,7 +10,7 @@ The implemented pilot passes 52 source tests, 52 built-server tests and eight br
 
 [Schema/capability validation](docs/reviews/2026-09-07-schema-capability-validation.md): 42 source tests, 42 production tests and seven browser tests passed. The unchanged corpus now produces 9/9 valid drafts; release briefs and budgets pass their critical criteria 3/3 each, while research factual acceptance remains 0/3. Explicit missing-tool tests now block 3/3 before provider calls, with equipped-agent selection available. The earlier failed observations remain preserved.
 
-Active release: `326eb3044ba7`. A bounded read-only hierarchy delegation pilot is now implemented and installed; [validation and remaining limits](docs/reviews/2026-09-07-delegation-validation.md). [The detailed design](docs/hierarchy-delegation-design.md) maps reporting relationships to bounded child-run authority, scheduling, budgets, cancellation and evidence. Host scripts remain disabled. Owner time savings and broad business readiness remain open.
+Active release: `459dccf096da` (Team design restored; publication candidate committed). A bounded read-only hierarchy delegation pilot is now implemented and installed; [validation and remaining limits](docs/reviews/2026-09-07-delegation-validation.md). [The detailed design](docs/hierarchy-delegation-design.md) maps reporting relationships to bounded child-run authority, scheduling, budgets, cancellation and evidence. Host scripts remain disabled. Owner time savings and broad business readiness remain open.
 
 ## Latest acceptance result — workflow and legacy review
 
