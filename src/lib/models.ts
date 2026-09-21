@@ -16,6 +16,13 @@ export interface ModelOption {
 }
 
 export const SUPPORTED_MODELS: ModelOption[] = [
+  {
+    id: 'qwen3.5:9b', name: 'Qwen 3.5 9B', provider: 'Ollama', badge: 'Local default',
+    badgeColor: 'border-emerald-500/30 text-emerald-700 bg-emerald-500/10',
+    description: 'Local Qwen model for manual agents and swarm coordination. Requires an Ollama download.',
+    recommendedFor: 'Local coordination, bounded tool use and drafting', defaultTemp: 0.2,
+    maxTokens: 2048, speed: 'Fast', isLocal: true, localSource: 'ollama', parameters: '9B Q4_K_M'
+  },
   // Cloud Foundation Models (Anthropic & OpenAI)
   {
     id: 'claude-3-5-sonnet',
@@ -243,7 +250,7 @@ export const SUPPORTED_MODELS: ModelOption[] = [
   }
 ];
 
-export const DEFAULT_MODEL_ID = 'claude-3-5-sonnet';
+export const DEFAULT_MODEL_ID = 'qwen3.5:9b';
 
 export function getModelDetails(modelId?: string): ModelOption {
   if (!modelId) return SUPPORTED_MODELS[0];

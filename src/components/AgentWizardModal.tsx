@@ -90,10 +90,10 @@ export const AgentWizardModal: React.FC<AgentWizardModalProps> = ({
   });
 
   // Step 5: Model & Tools
-  const [provider, setProvider] = useState<ModelProvider>('anthropic');
-  const [model, setModel] = useState('claude-3-5-sonnet');
+  const [provider, setProvider] = useState<ModelProvider>('ollama');
+  const [model, setModel] = useState('qwen3.5:9b');
   const [temperature, setTemperature] = useState(0.2);
-  const [maxTokens, setMaxTokens] = useState(4096);
+  const [maxTokens, setMaxTokens] = useState(2048);
   const [autonomyLevel, setAutonomyLevel] = useState<1 | 2 | 3 | 4>(3);
   const [selectedTools, setSelectedTools] = useState<string[]>([
     'tool-web-search',

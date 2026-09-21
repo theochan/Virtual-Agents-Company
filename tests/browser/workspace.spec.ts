@@ -115,3 +115,62 @@ test('local model dropdown lists both models regardless of current selection and
  const agent=await(await request.post('/api/agents',{headers,data:{displayName:'ModelChooser',llmConfig:{provider:'ollama',model:gemma,temperature:0.1,maxTokens:128}}})).json();await expect(page.getByText('ModelChooser',{exact:true}).first()).toBeVisible();await page.getByText('ModelChooser',{exact:true}).first().click();await page.locator('summary').filter({hasText:'Model:'}).click();const selector=page.getByRole('combobox',{name:'Model ID',exact:true});await expect(selector.locator('option')).toHaveCount(3);await expect(selector).toHaveValue(gemma);await selector.selectOption('qwen2.5:7b');await page.getByRole('button',{name:'Save model',exact:true}).click();await expect.poll(async()=>{const agents=await(await request.get('/api/agents',{headers})).json();return agents.find((a:any)=>a.id===agent.id).llmConfig.model;}).toBe('qwen2.5:7b');await expect(selector.locator('option')).toHaveCount(3);
  await page.getByRole('button',{name:'Settings',exact:true}).click();await expect(page.getByText('Default Local Model',{exact:true})).toHaveCount(0);const row=page.getByTestId(`model-assignment-${agent.id}`);await expect(row.locator('summary')).toHaveText('Model: qwen2.5:7b');await row.locator('summary').click();await expect(row.getByRole('combobox',{name:'Model ID',exact:true})).toHaveValue('qwen2.5:7b');await row.getByRole('combobox',{name:'Model ID',exact:true}).selectOption(gemma);await row.getByRole('button',{name:'Save model',exact:true}).click();await expect.poll(async()=>{const agents=await(await request.get('/api/agents',{headers})).json();return agents.find((a:any)=>a.id===agent.id).llmConfig;}).toMatchObject({model:gemma,provider:'ollama'});await page.getByText('ModelChooser',{exact:true}).first().click();await expect(page.locator('summary').filter({hasText:'Model:'})).toHaveText(`Model: ${gemma}`);
 });
+
+test('AI Swarm UI submits dynamic work, renders actual specialists and survives reload',async({page,request},testInfo)=>{
+ const headers={Authorization:`Bearer ${token}`};
+ const manager=await(await request.post('/api/agents',{headers,data:{displayName:'SwarmCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();
+ const project=await(await request.post('/api/projects',{headers,data:{name:'Swarm browser project',members:[]}})).json();
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();
+ await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);
+ await page.getByLabel('Team composition').selectOption('dynamic');
+ await page.getByLabel('Swarm objective').fill('Calculate 19 plus 23 with two independent specialists.');
+ await page.getByRole('button',{name:'Start swarm',exact:true}).click();
+ await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible({timeout:20000});
+ await expect(page.getByText('Temporary specialist',{exact:true})).toHaveCount(2);
+ await expect(page.getByText('Execution tree',{exact:true})).toBeVisible();
+ const swarms=await(await request.get('/api/swarms',{headers})).json();const r=swarms.find((r:any)=>r.coordinatorId===manager.id);
+ expect(r.status).toBe('completed');expect(r.nodes).toHaveLength(3);expect(r.budget.modelCalls).toBe(6);expect(r.nodes[1].receipts.some((x:any)=>x.toolId==='tool-calculator')).toBe(true);
+ const permanent=await(await request.get('/api/agents',{headers})).json();expect(permanent.some((a:any)=>a.id===r.nodes[1].id)).toBe(false);
+ await page.setViewportSize({width:1600,height:1100});await page.getByRole('main',{name:'AI Swarm workspace'}).evaluate(el=>el.scrollTop=0);
+ await page.screenshot({path:testInfo.outputPath('swarm-completed.png'),fullPage:true});
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();
+});
+
+
+test('recursive swarm UI saves browser permissions and renders depth-two evidence',async({page,request},testInfo)=>{
+ const headers={Authorization:`Bearer ${token}`};
+ const manager=await(await request.post('/api/agents',{headers,data:{displayName:'NestedCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();
+ const project=await(await request.post('/api/projects',{headers,data:{name:'Nested UI project',members:[]}})).json();
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();
+ await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);
+ await page.getByLabel('Swarm objective').fill('RECURSIVE_UI verify nested delegation');
+ await page.getByLabel('Browser automation',{exact:true}).check();await page.getByLabel('Browser origins').fill('https://example.com');
+ await page.getByRole('button',{name:'Show resource limits'}).click();await page.getByLabel('maxDepth',{exact:true}).fill('2');
+ await page.getByRole('button',{name:'Start swarm',exact:true}).click();
+ await expect(page.getByText('Nested UI evidence: 42.',{exact:true})).toBeVisible({timeout:20000});
+ const runs=await(await request.get('/api/swarms',{headers})).json();const run=runs.find((r:any)=>r.coordinatorId===manager.id);
+ expect(run.status).toBe('completed');expect(run.nodes.map((n:any)=>n.depth)).toEqual([0,1,2]);expect(run.browserPolicy).toEqual({allowedOrigins:['https://example.com'],allowActions:false});
+ await page.getByRole('button').filter({hasText:'NestedLeaf'}).click();await expect(page.getByText(/Depth 2/)).toBeVisible();
+ await page.screenshot({path:testInfo.outputPath('nested-swarm.png'),fullPage:true});
+});
+
+test('persistent workspace uploads and downloads files and saves capped routine templates',async({page,request})=>{
+ const headers={Authorization:`Bearer ${token}`};const projects=await(await request.get('/api/projects',{headers})).json();const runs=await(await request.get('/api/swarms',{headers})).json();const project=projects.find((p:any)=>p.id===runs[0].projectId);
+ await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);
+ const bytes=Buffer.from('product,revenue\nA,600\n');await page.getByLabel('Upload project file').setInputFiles({name:'sales-ui.csv',mimeType:'text/csv',buffer:bytes});
+ const link=page.getByRole('link',{name:'sales-ui.csv',exact:true});await expect(link).toBeVisible();const download=await request.get((await link.getAttribute('href'))!,{headers});expect(download.headers()['content-disposition']).toContain('attachment');expect(await download.body()).toEqual(bytes);
+ const conflict=await request.post(`/api/projects/${project.id}/files`,{headers,data:{name:'sales-ui.csv',base64:bytes.toString('base64'),expectedVersion:0}});expect(conflict.status()).toBe(409);
+ await page.getByText('Reusable skills and scheduled routines',{exact:true}).click();await page.getByLabel('Skill name').fill('UI saved workflow');await page.getByRole('button',{name:'Save selected run as skill'}).click();await expect(page.getByLabel('Routine skill').locator('option')).toContainText(['Choose pinned skill version','UI saved workflow']);
+ const skills=await(await request.get(`/api/projects/${project.id}/skills`,{headers})).json();expect(skills.at(-1).version).toBe(1);
+ const create=await request.post('/api/swarm-routines',{headers,data:{skillId:skills.at(-1).id,intervalMinutes:60,maxRuns:1,startsAt:new Date(Date.now()+3600000).toISOString()}});expect(create.status()).toBe(201);const routine=await create.json();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await page.getByText('Reusable skills and scheduled routines',{exact:true}).click();await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.getByText(/UI saved workflow · paused/)).toBeVisible();expect((await(await request.get(`/api/projects/${project.id}/routines`,{headers})).json()).find((r:any)=>r.id===routine.id).status).toBe('paused');
+});
+
+test('repeatable plan UI compiles a worker before inference and retains its evidence contract',async({page,request})=>{
+ const headers={Authorization:`Bearer ${token}`};const manager=await(await request.post('/api/agents',{headers,data:{displayName:'PlanCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();const project=await(await request.post('/api/projects',{headers,data:{name:'Planned UI project',members:[]}})).json();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);await page.getByText('Repeatable workflow plan (optional)',{exact:true}).click();await page.getByLabel('Workflow plan').fill(JSON.stringify([{key:'compute',name:'Planned calculator',role:'Calculator',instructions:'Use calculator',objective:'Calculate 19 plus 23',toolIds:['tool-calculator'],requiredToolIds:['tool-calculator'],acceptanceCriteria:['42']} ]));await page.getByLabel('Swarm objective').fill('Verify the planned calculator result');await page.getByRole('button',{name:'Start swarm',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();const runs=await(await request.get('/api/swarms',{headers})).json();const r=runs.find((r:any)=>r.projectId===project.id);expect(r.status).toBe('completed');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(3);expect(r.events.some((e:any)=>e.type==='PLAN_COMPILED')).toBe(true);expect(r.nodes[1].requiredToolIds).toEqual(['tool-calculator']);
+});
+
+test('Deep Agents planning selection persists generated workflow and budget evidence',async({page,request})=>{
+ const headers={Authorization:`Bearer ${token}`};const manager=await(await request.post('/api/agents',{headers,data:{displayName:'HarnessCoordinator',autonomyLevel:3,toolIds:['tool-calculator'],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();const project=await(await request.post('/api/projects',{headers,data:{name:'Harness UI project',members:[]}})).json();
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);await page.getByLabel('Planning engine').selectOption('deepagents');await page.getByLabel('Swarm objective').fill('Delegate calculation of 19 plus 23 and report its evidence.');await page.getByRole('button',{name:'Start swarm',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();
+ const runs=await(await request.get('/api/swarms',{headers})).json();const r=runs.find((r:any)=>r.projectId===project.id);expect(r.harness).toBe('deepagents');expect(r.harnessResult.harness).toBe('deepagents@1.14.0');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(4);expect(r.events.some((e:any)=>e.type==='HARNESS_DECISION')).toBe(true);
+});

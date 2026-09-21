@@ -1,5 +1,7 @@
 # Local production release contract
 
+**2026-09-21 source enhancement:** [AI Swarm](swarm-system.md) adds local Ollama orchestration alongside manual execution. The dated acceptance evidence below belongs to the earlier installed release; it does not certify the swarm revision or current deployment.
+
 Date: 2026-09-07. Scope chosen provisionally from the existing application while the owner workflow question is pending. This is a small local single-owner product, with automatic completion of successful work and user feedback through chat. It is not a hosted multi-tenant service or a general autonomous organization.
 
 ## Workflows
@@ -35,7 +37,7 @@ Before operational acceptance, run a **15-minute disposable release soak**: auth
 
 ## Exclusions and remaining owner decisions
 
-Imported skill scripts, external writes, remote hosting, and multiple principals remain disabled. Direct-subordinate read-only delegation is a separately enabled pilot with explicit manager permission and shared limits; it is not an autonomous business-readiness claim. The runtime release excludes vendored skill trees and private state; distribution review of the full source repository remains separate.
+Imported skill scripts, arbitrary host execution, remote hosting, and multiple principals remain disabled. AI Swarm browser interactions may change external state only when the owner explicitly enables interactive actions for exact approved origins; ordinary chat does not expose the browser tool. Browser grants, recursive depth and shared budgets follow the current swarm-system contract. Direct-subordinate read-only delegation is a separately enabled pilot with explicit manager permission and shared limits; it is not an autonomous business-readiness claim. The runtime release excludes vendored skill trees and private state; distribution review of the full source repository remains separate.
 
 The owner must still confirm the workflows are useful for actual work and choose the routine search credit limit. The owner selected local snapshot folders with separately managed cloud backup. Workflow usefulness and a nonzero routine search allowance must not be represented as already approved. Operational deployment into the existing port-3001 workspace is a separate step from preparing and testing a release directory.
 

@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { Routines } from './src/server/routines';
+import { fileName } from './src/server/workspace';
 import { delegationEnabled, TREE_LIMITS } from './src/server/delegation';
 import express from 'express';
 import fs from 'node:fs';
@@ -13,6 +15,8 @@ import { requestLimit, OperationsLog, reserveRequest } from './src/server/operat
 import { SearchCredentials } from './src/server/searchCredentials';
 import { HttpError, installSecurity, now, uid, validateEndpoint } from './src/server/security';
 import { allowedEndpoints, defaultSettings, discover, providerKey, setProviderKey, searchKey, type ProviderSettings } from './src/server/providers';
+import { SwarmEngine, SWARM_TOOL_IDS, swarmLimitsSchema, swarmCommunicationCatalog } from './src/server/swarm';
+import { localInferenceLimit } from './src/server/providers';
 import { RunEngine, type Run, type Approval } from './src/server/runs';
 import { toolCatalog, fetchTavily, fetchBrave } from './src/server/tools';
 
@@ -29,14 +33,20 @@ const settings = (): ProviderSettings => {
   return Object.fromEntries(Object.entries(defaultSettings).map(([name, value]) => [name, { ...value, ...saved[name] }]));
 };
 const engine = new RunEngine(store, settings);
+const swarm = new SwarmEngine(store, settings);
+const routines = new Routines(swarm);
+const registry=[...toolCatalog,...swarmCommunicationCatalog];
+localInferenceLimit();
 const log = new OperationsLog(directory);
 const buildFile = path.resolve('dist/build.json');
 const build = fs.existsSync(buildFile) ? JSON.parse(fs.readFileSync(buildFile, 'utf8')) : { status: 'unbuilt' };
 requestLimit('search'); requestLimit('inference');
 const app = express();
 app.disable('x-powered-by');
-app.use(express.json({ limit: '128kb' }));
+app.use('/api/session',express.json({limit:'128kb'}));
 installSecurity(app, directory, port);
+app.use('/api/projects/:id/files', express.json({ limit: '8500kb' }));
+app.use(express.json({ limit: '128kb' }));
 app.use('/api', (req, res, next) => {
   const requestId = uid(); const started = Date.now(); res.setHeader('X-Request-Id', requestId);
   res.on('finish', () => { if (req.method !== 'GET' || res.statusCode >= 400) log.record('API_REQUEST', { requestId, status: res.statusCode, durationMs: Date.now() - started }); });
@@ -69,8 +79,9 @@ function get<T extends { workspaceId?: string }>(kind: string, identifier: strin
   return value;
 }
 const all = <T extends { workspaceId?: string }>(kind: string) => store.all<T>(kind).filter(v => v.workspaceId === workspaceId);
-function checkTools(ids: string[]) { if (ids.some(t => !toolCatalog.some(allowed => allowed.id === t))) throw new HttpError(422, 'Only tools in the server registry can be equipped'); }
+function checkTools(ids: string[]) { if (ids.some(t => !registry.some(allowed => allowed.id === t))) throw new HttpError(422, 'Only tools in the server registry can be equipped'); }
 function activeReference(agentId?: string, projectId?: string) {
+  if (swarm.list().some(j => ['queued','working','waiting_children','waiting_approval'].includes(j.status) && (!projectId || j.projectId === projectId) && (!agentId || j.coordinatorId === agentId || j.nodes.some(n => n.sourceAgentId === agentId)))) throw new HttpError(409, 'Cancel active swarms before removing their agents or project');
   if (store.all<Run>('runs').some(r => ['queued', 'working', 'waiting', 'waiting_children'].includes(r.status) && (!agentId || r.leadAgentId === agentId) && (!projectId || r.projectId === projectId))) throw new HttpError(409, 'Cancel active runs before removing their agent or project');
 }
 const route = (fn: any) => (req: any, res: any, next: any) => Promise.resolve().then(() => fn(req, res)).catch(next);
@@ -111,14 +122,15 @@ if (!store.get('settings', 'initialized')) {
 }
 
 // Liveness is cheap and does not expose private workspace diagnostics.
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', mode: 'experimental', execution: process.env.VAC_ENABLE_DELEGATION === '1' ? 'read-only-delegation-pilot' : 'single-agent', hostScripts: 'disabled' }));
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', mode: 'experimental', execution: 'static-and-dynamic-swarm', hostScripts: 'disabled' }));
 app.get('/api/ready', (_req, res) => {
   let writable = false;
   try { store.put('settings', 'readiness_check', { at: now() }); writable = true; } catch {}
   const worker = engine.stats();
-  res.status(writable && worker.healthy ? 200 : 503).json({
-    status: writable && worker.healthy ? 'runtime-ready' : 'degraded',
-    storage: { writable }, worker, build,
+  const swarmStats = swarm.stats();
+  res.status(writable && worker.healthy && swarmStats.healthy ? 200 : 503).json({
+    status: writable && worker.healthy && swarmStats.healthy ? 'runtime-ready' : 'degraded',
+    storage: { writable }, worker, swarm: swarmStats, build,
     delegation: { enabled: delegationEnabled(), limits: TREE_LIMITS },
     requestBudgets: store.page('request-budgets', 14),
     requestLimits: { search: requestLimit('search') ?? 'unlimited', inference: requestLimit('inference') },
@@ -128,10 +140,13 @@ app.get('/api/ready', (_req, res) => {
 });
 app.get('/api/agents', (_req, res) => {
   const runs = store.all<Run>('runs');
+  const swarmNodes = store.all<import('./src/swarmTypes').SwarmNodeView>('swarm-nodes');
+  const activeSwarmIds = new Set(store.matching<import('./src/swarmTypes').SwarmJob>('swarms','status',['queued','working','waiting_children','waiting_approval']).map(j=>j.id));
   res.json(all<Agent>('agents').map(agent => {
-    const receipts = runs.filter(r => r.leadAgentId === agent.id).flatMap(r => r.receipts);
+    const receipts = [...runs.filter(r => r.leadAgentId === agent.id).flatMap(r => r.receipts), ...swarmNodes.filter(n=>n.sourceAgentId===agent.id).flatMap(n=>n.receipts)];
+    const swarmActive = swarmNodes.find(n=>n.sourceAgentId===agent.id && activeSwarmIds.has(n.rootId) && ['queued','working','waiting_children','waiting_approval'].includes(n.status));
     const active = runs.find(r => r.leadAgentId === agent.id && ['working', 'waiting', 'waiting_children', 'queued'].includes(r.status));
-    return { ...agent, runtimeState: { status: active ? active.status === 'waiting' ? 'needs_approval' : 'working' : 'idle', currentTaskId: active?.id }, tokenUsage: { inputTokens: receipts.reduce((n, r) => n + (r.inputTokens || 0), 0), outputTokens: receipts.reduce((n, r) => n + (r.outputTokens || 0), 0), estimatedCost: null }, usageStatus: 'reported tokens only; cost unknown' };
+    return { ...agent, runtimeState: { status: active ? active.status === 'waiting' ? 'needs_approval' : 'working' : swarmActive ? 'working' : 'idle', currentTaskId: active?.id || swarmActive?.rootId }, tokenUsage: { inputTokens: receipts.reduce((n, r) => n + (r.inputTokens || 0), 0), outputTokens: receipts.reduce((n, r) => n + (r.outputTokens || 0), 0), estimatedCost: null }, usageStatus: 'reported tokens only; cost unknown' };
   }));
 });
 app.get('/api/agents/:id', route((req, res) => res.json(get<Agent>('agents', req.params.id))));
@@ -278,6 +293,28 @@ app.get('/api/chat/messages', route((req, res) => {
   }));
 }));
 app.post('/api/chat/agent', route((req, res) => res.status(202).json({ run: engine.create(req.body, key(req)) })));
+app.get('/api/projects/:id/files',route((req,res)=>res.json(swarm.workspace.files(req.params.id))));
+app.post('/api/projects/:id/files',route((req,res)=>{const a=z.object({name:fileName,base64:z.string().max(8400000),expectedVersion:z.number().int().min(0)}).strict().parse(req.body);const bytes=Buffer.from(a.base64,'base64');if(bytes.toString('base64')!==a.base64)throw new HttpError(400,'Invalid file encoding');res.status(201).json(swarm.workspace.write(req.params.id,a.name,bytes,a.expectedVersion,'owner'));}));
+app.get('/api/projects/:id/files/download',route((req,res)=>{const f=swarm.workspace.file(req.params.id,fileName.parse(req.query.name),req.query.version?z.coerce.number().int().positive().parse(req.query.version):undefined);res.setHeader('Content-Type',f.mime);res.setHeader('Content-Disposition',`attachment; filename="${path.basename(f.name)}"`);res.setHeader('X-Content-SHA256',f.sha256);res.send(Buffer.from(f.base64,'base64'));}));
+app.get('/api/projects/:id/swarm-memory',route((req,res)=>res.json(swarm.workspace.memories(req.params.id))));
+app.post('/api/swarm-memory/:id/decision',route((req,res)=>res.json(swarm.workspace.decideMemory(req.params.id,z.enum(['approved','rejected']).parse(req.body.decision)))));
+app.get('/api/projects/:id/skills',route((req,res)=>res.json(routines.skills(req.params.id))));
+app.post('/api/swarm-skills',route((req,res)=>res.status(201).json(routines.saveSkill(req.body))));
+app.get('/api/projects/:id/routines',route((req,res)=>res.json(routines.list(req.params.id))));
+app.post('/api/swarm-routines',route((req,res)=>res.status(201).json(routines.create(req.body))));
+app.post('/api/swarm-routines/:id/pause',route((req,res)=>res.json(routines.pause(req.params.id))));
+app.get('/api/swarm-connectors',route((_req,res)=>res.json(swarm.workspace.connectors())));
+app.post('/api/swarm-connectors',route((req,res)=>res.status(201).json(swarm.workspace.saveConnector(req.body))));
+app.post('/api/swarm-connectors/:id/disable',route((req,res)=>{const c=store.get<any>('swarm-connectors',req.params.id);if(!c)throw new HttpError(404,'Connector not found');c.enabled=false;store.put('swarm-connectors',c.id,c);res.json({disabled:true});}));
+app.get('/api/projects/:id/browser-profiles',route((req,res)=>res.json(swarm.browserProfiles(req.params.id))));
+app.delete('/api/projects/:id/browser-profiles/:profile',route((req,res)=>res.json(swarm.deleteBrowserProfile(req.params.id,req.params.profile))));
+app.post('/api/swarm-approvals/:id/decision',route((req,res)=>res.json(swarm.decideApproval(req.params.id,z.enum(['approved','rejected']).parse(req.body.decision)))));
+app.get('/api/swarms/config' , (_req, res) => res.json({ defaults: swarmLimitsSchema.parse({}), toolIds: SWARM_TOOL_IDS, localInferenceConcurrency: localInferenceLimit() }));
+app.get('/api/swarms', route((_req, res) => res.json(swarm.list())));
+app.post('/api/swarms', route((req, res) => res.status(202).json(swarm.create(req.body, key(req)))));
+app.get('/api/swarms/:id', route((req, res) => res.json(swarm.get(req.params.id))));
+app.post('/api/swarms/:id/cancel', route((req, res) => res.json(swarm.cancel(req.params.id))));
+app.post('/api/swarms/:id/resume', route((req, res) => res.json(swarm.resume(req.params.id))));
 app.post('/api/orchestrate/run', route((req, res) => {
   const data = z.object({ userInstruction: text.min(1), leadAgentId: id, projectId: id }).parse(req.body);
   const run = engine.create({ agentId: data.leadAgentId, projectId: data.projectId, userMessage: data.userInstruction }, key(req));
@@ -300,7 +337,7 @@ app.post('/api/runs/:id/accept', route((req, res) => {
   const { reason } = z.object({ reason: text.min(1) }).parse(req.body); res.json(publicRun(engine.accept(req.params.id, reason)));
 }));
 function publicRun(run: Run) { const { messages, ...result } = run; return { ...result, ...(run.pilot ? { treeBudget: store.get('tree-budgets', run.rootRunId || run.id) } : {}) }; }
-app.get('/api/tools', (_req, res) => res.json(toolCatalog));
+app.get('/api/tools', (_req, res) => res.json(registry));
 app.post('/api/tools', (_req, res) => res.status(403).json({ error: 'Tool registration is server-controlled. Imported skills and host scripts are disabled.' }));
 app.post('/api/tools/execute', route((req, res) => {
   const data = z.object({ agentId: id, projectId: id, toolId: id, parameters: z.record(z.string(), z.unknown()).default({}) }).parse(req.body);
@@ -434,7 +471,7 @@ async function start() {
     app.use(express.static(path.resolve('dist')));
     app.get('*', (_req, res) => res.sendFile(path.resolve('dist/index.html')));
   }
-  const server = app.listen(port, '127.0.0.1', () => { engine.start(); console.log(`Experimental workspace: http://127.0.0.1:${port}`); });
-  for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => { engine.stop(); server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 2000).unref(); });
+  const server = app.listen(port, '127.0.0.1', () => { engine.start(); swarm.start(); routines.start(); console.log(`Experimental workspace: http://127.0.0.1:${port}`); });
+  for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => { routines.stop(); engine.stop(); swarm.stop(); server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 2000).unref(); });
 }
 start().catch(error => { console.error(error); process.exit(1); });

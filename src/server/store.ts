@@ -41,10 +41,13 @@ export class Store {
       .run(kind, id, JSON.stringify(value));
   }
   delete(kind: string, id: string) { this.db.prepare('DELETE FROM records WHERE kind=? AND id=?').run(kind, id); }
+  private transactionDepth = 0;
   transaction<T>(fn: () => T): T {
+    if(this.transactionDepth){const name=`nested_${this.transactionDepth++}`;this.db.exec(`SAVEPOINT ${name}`);try{const value=fn();this.db.exec(`RELEASE ${name}`);return value;}catch(e){this.db.exec(`ROLLBACK TO ${name}`);this.db.exec(`RELEASE ${name}`);throw e;}finally{this.transactionDepth--;}}
     this.db.exec('BEGIN IMMEDIATE');
+    this.transactionDepth++;
     try { const result = fn(); this.db.exec('COMMIT'); return result; }
-    catch (error) { this.db.exec('ROLLBACK'); throw error; }
+    catch (error) { this.db.exec('ROLLBACK'); throw error; } finally { this.transactionDepth--; }
   }
   close() { this.db.close(); }
 }

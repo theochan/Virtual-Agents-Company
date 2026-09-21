@@ -1,0 +1,17 @@
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
+import { Store } from '../src/server/store';import { SwarmEngine } from '../src/server/swarm';import { INITIAL_AGENTS } from '../src/data/initialData';import { defaultSettings } from '../src/server/providers';
+const model=process.argv[2]||'qwen3.5:9b';const destination=process.argv[3];
+if(!destination)throw new Error('Usage: node --import tsx scripts/validate-swarm.ts MODEL OUTPUT.json');
+const directory=fs.mkdtempSync(path.join(os.tmpdir(),'vac-live-swarm-'));const store=new Store(directory);
+const agent={...structuredClone(INITIAL_AGENTS[0]),id:'live-coordinator',workspaceId:'ws-default',displayName:'Coordinator',autonomyLevel:3 as const,primaryResponsibility:'Decompose independent tasks into specialists and synthesize evidence.',toolIds:['tool-calculator'],llmConfig:{provider:'ollama',model,temperature:0,maxTokens:1024}};
+store.put('agents',agent.id,agent);store.put('projects','live-project',{id:'live-project',workspaceId:'ws-default',name:'Live swarm acceptance',description:'Bounded arithmetic verification. No external search or writes.',members:[]});
+const engine=new SwarmEngine(store,()=>defaultSettings);
+const job=engine.create({coordinatorId:agent.id,projectId:'live-project',mode:'dynamic',allowedToolIds:['tool-calculator'],requiredToolIds:['tool-calculator'],objective:'Use tool-spawn-agent to create exactly TWO temporary specialists in ONE batch. Specialist A must use tool-calculator to multiply 17 by 23. Specialist B must use tool-calculator to add 125 and 275. Give each a distinct objective and only tool-calculator. Wait for both specialist results, then report both verified answers and use your calculator to add those two answers. Your final deliverable must contain all three numbers and explain which specialist produced each result.',limits:{maxAgents:3,concurrency:2,maxModelCalls:18,maxCallsPerAgent:6,maxMinutes:15,maxTokensPerCall:1024}},'live-swarm-acceptance-001');
+const started=Date.now();let last='';
+try{
+ while(['queued','working','waiting_children'].includes(engine.get(job.id).status)){
+  await engine.tick();const r=engine.get(job.id);const state=r.nodes.map(n=>`${n.name}:${n.status}:${n.calls}`).join(' | ');if(state!==last){console.log(state);last=state;}
+ }
+ const result=engine.get(job.id);const checks={completed:result.status==='completed',twoSpecialists:result.nodes.length===3,allSpecialistsCompleted:result.nodes.slice(1).every(n=>n.status==='completed'),multiplyEvidence:result.nodes.slice(1).some(n=>n.receipts.some(r=>r.toolId==='tool-calculator'&&r.output?.result===391)),addEvidence:result.nodes.slice(1).some(n=>n.receipts.some(r=>r.toolId==='tool-calculator'&&r.output?.result===400)),synthesisEvidence:result.nodes[0].receipts.some(r=>r.toolId==='tool-calculator'&&r.output?.result===791),finalNumbers:['391','400','791'].every(n=>result.result?.includes(n)),noPermanentChildren:store.all('agents').length===1};
+ const report={at:new Date().toISOString(),model,durationMs:Date.now()-started,checks,passed:Object.values(checks).every(Boolean),result};fs.mkdirSync(path.dirname(path.resolve(destination)),{recursive:true});fs.writeFileSync(destination,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({passed:report.passed,checks,durationMs:report.durationMs,status:result.status,result:result.result}));if(!report.passed)process.exitCode=1;
+}finally{engine.stop();store.close();fs.rmSync(directory,{recursive:true,force:true});}

@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-21T10:38:21.465Z",
+  "durationMs": 44020,
+  "passed": false,
+  "reports": [
+    {
+      "kind": "recursive",
+      "checks": {
+        "completed": true,
+        "grandchild": false,
+        "calculator": false,
+        "final": true
+      },
+      "passed": false
+    },
+    {
+      "kind": "browser",
+      "checks": {
+        "completed": false,
+        "browserReceipt": false,
+        "network": false
+      },
+      "passed": false
+    }
+  ],
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "Synthetic evaluation. Operational prompts, node records, paths and identifiers omitted; original evidence retained privately."
+  }
+}

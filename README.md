@@ -1,22 +1,23 @@
 # Virtual Agents Company
 
-**Experimental, single-owner local workspace for AI-assisted work.** Configure agent profiles, organize projects and work items, and run a bounded model/tool loop with durable execution evidence and chat feedback.
+**Local, single-owner AI Swarm workspace.** Create agents manually, dispatch existing team members, or let an Ollama coordinator create temporary specialists with owner-approved tools. Follow their execution, shared resource limits and durable evidence in the AI Swarm screen.
 
-This is not an enterprise-ready autonomous organization. Arbitrary Python execution is disabled. Successful runs complete automatically; completion does not certify factual accuracy. Direct-subordinate read-only delegation is available as an explicitly enabled pilot. Earlier scripted demonstrations have been removed from the live execution paths.
+This is not an enterprise-ready autonomous organization. Host-shell execution is disabled; swarm Python and shell jobs run only in the resource-limited Docker sandbox. Successful runs complete automatically; completion does not certify factual accuracy. Dynamic and existing-team swarms are available through AI Swarm; legacy direct-subordinate delegation remains separately configurable. Earlier scripted demonstrations have been removed from the live execution paths.
 
 ## What works
 
 - Agent creation and editing, role/personality configuration, organizational chart, projects and manually managed work items.
 - Stock portraits: 20 female and 20 male options; the non-binary selection exposes all 40. Custom HTTP(S) image URLs remain available. No age, nationality, synthesis prompt, or AI portrait generation is required.
 - Provider adapters for OpenAI, Anthropic, Ollama, local Hugging Face-compatible servers, and Qwen-compatible inference. Models must return the documented decision format; compatibility and quality vary by model.
-- A server-side single-agent loop with validated decisions, tool observations, bounded conversation history, and recorded provider usage when reported. Cost remains **unknown**, rather than invented.
+- Manual chat plus a concurrent swarm scheduler with temporary agent profiles, bounded recursive delegation, isolated browser automation, shared budgets, validated decisions and durable evidence. Ollama requests across both paths share a concurrency ceiling.
+- Reported token usage is separated from conservative reservations. Monetary cost remains **unknown**, rather than invented.
 - Durable runs, steps/events, messages, approvals, artifacts and memories in SQLite. Interrupted active runs become blocked for explicit recovery; pending approvals survive restarts.
 - Owner authentication, loopback binding, host/origin checks, server-controlled tools and endpoint allowlists.
 - Automatic completion of successful runs and delegated subtasks, chat feedback, cancellation, and exact-operation approvals.
 
 ## Quick start
 
-Requires **Node.js 24.x** and npm. Python is not needed for the supported runtime. Node 24's built-in SQLite module may print an experimental warning.
+Requires **Node.js 24.x** and npm. Host Python is not required. Docker is required for sandboxed code and document generation; Playwright Chromium is required for browser tools and browser integration tests. Node 24's built-in SQLite module may print an experimental warning.
 
 ```sh
 npm ci
@@ -52,7 +53,61 @@ After downloading a model and starting Ollama, keep `OLLAMA_ENDPOINT=http://127.
 
 In the agent's model selector, choose **Ollama**, enter the exact installed model tag, and save. The application uses Ollama's native `/api/chat` endpoint with JSON output; the model still needs to follow the decision contract below.
 
-Start with a short draft request, then equip `tool-calculator`, set access level 3 or 4, and explicitly ask the agent to use it for an arithmetic calculation. Inspect **Audit** for the tool call, observation and final answer before relying on it. A model appearing in discovery is not a successful inference test. Live Ollama quality validation remains outstanding.
+Start with a short draft request, then equip `tool-calculator`, set access level 3 or 4, and explicitly ask the agent to use it for an arithmetic calculation. Inspect **Audit** for the tool call, observation and final answer before relying on it. A model appearing in discovery is not a successful inference test. Live Qwen3.5:9b validation passed controlled workflows and a smaller harness-generated report task; complex autonomous planning remains unqualified. See the validation results below.
+
+## AI Swarm
+
+1. Install and start Ollama, then download a suitable model. The tested local configuration is `qwen3.5:9b` on a 24 GB M4 Mac mini.
+2. Configure the coordinator with that Ollama model and access level 3 or 4 in Team.
+3. Open **AI Swarm**, choose a project and existing, temporary or hybrid team composition.
+4. Select a planning engine, enter the objective, grant tools and set root limits. Add deliverable contracts when correctness can be checked mechanically.
+5. Inspect the execution tree, approvals, artifacts and receipts. **Stop entire swarm** cancels active descendants.
+
+Team composition and planning are separate choices:
+
+| Choice | Behavior |
+|---|---|
+| Existing agents | Dispatch eligible manually created profiles |
+| Temporary specialists | Create run-scoped profiles with inherited model and tool grants |
+| Hybrid | Combine existing and temporary profiles |
+| Native planning, default | Agents decide steps and may spawn bounded descendants during execution |
+| Explicit workflow | Owner supplies workers, hierarchy, dependencies and optional ordered tool steps |
+| Deep Agents, experimental | The harness generates a workflow; VAC validates and executes it |
+
+[Deep Agents JS](https://github.com/langchain-ai/deepagentsjs) is pinned to **1.14.0**. In this integration it can record one todo list and submit/correct a workflow, with at most four actual planning calls charged to the same root budgets. It cannot independently invoke filesystem, shell, browser or subagent tools. Leave the explicit workflow plan `[]` and coordinator sequence empty when selecting it. Accepted plans become bounded VAC workers; failed plans do not create workers. Native remains the default because full-workflow autonomous qualification has not passed. See [the harness architecture](docs/HARNESS-ARCHITECTURE.md).
+
+Default envelope: nine total agents, two concurrent workers, forty model calls, maximum delegation depth three and a thirty-minute lifetime. Server bounds cap agents, depth, calls, input/output reservations, tool/search/browser/sandbox use and elapsed time. Temporary agents do not clutter the permanent Team. More agents do not create more local compute. Swarms use Ollama only; web search can still consume paid credits.
+
+### Swarm tools and persistent workspace
+
+| Capability | Boundary |
+|---|---|
+| Project metadata and calculator | Scoped reads and deterministic arithmetic |
+| Web search | Configured provider attempts and partial source evidence |
+| Browser automation | Approved public origins, optional project profile, exact approval for interactive actions |
+| Files and reports | Versioned project files, hashes, uploads/downloads and current-run artifact checks |
+| Python and shell | Docker only, no network/host mounts, CPU/memory/PID/time/output limits |
+| Document generation | Built-in CSV recipe produces JSON, DOCX, XLSX, PPTX and PDF |
+| Peer collaboration | Same-root messages, dependency-aware work and retained evidence lookup |
+| Memory | Provenance-bearing proposals; owner approval before future retrieval |
+| Connectors | Exact allowlisted JSON-RPC tools, typed arguments, server-side credentials and approved writes |
+| Skills and routines | Immutable run templates, capped dispatches, no overlap, pause controls |
+
+Browser setup:
+
+```sh
+npx playwright install chromium
+```
+
+Build the pinned document sandbox once with Docker running:
+
+```sh
+docker build -t vac-sandbox:2026-09-21 sandbox
+```
+
+The default sandbox image matches this tag; configure `VAC_SANDBOX_IMAGE` for a separately reviewed image. There is no host-execution fallback. Routines execute only while VAC is running; this is not an always-on cloud scheduler. Saved browser state is project-scoped and does not import a personal browser or provide human login handoff. The connector gateway is not a complete MCP client.
+
+See [the swarm contract](docs/swarm-system.md) and [workspace operator guide](docs/SWARM-WORKSPACE.md) for API contracts, grants, recovery and limits.
 
 ## Web search setup
 
@@ -86,11 +141,11 @@ The provider receives role instructions, scoped reviewed memory, up to 12 recent
 {"action":"blocked","reason":"The information needed to proceed is missing"}
 ```
 
-The worker allows at most six model calls, caps each requested output at 2,048 tokens, limits accumulated context, and permits at most ten minutes of active execution by default. There is one active worker per workspace and at most 20 queued/working/waiting runs. Pending owner approval does not consume active execution time. Actual provider billing can differ from reported usage; this is not a guaranteed dollar-spend limit.
+The manual-chat worker allows at most six model calls, caps each requested output at 2,048 tokens, limits accumulated context, and permits at most ten minutes of active execution by default. There is one active worker per workspace and at most 20 queued/working/waiting runs. Pending owner approval does not consume active execution time. Actual provider billing can differ from reported usage; this is not a guaranteed dollar-spend limit.
 
-A final reply puts the run in `reviewing`. Only owner acceptance marks it `completed`. This is a human acceptance gate, not an automated guarantee of factual accuracy. A linked work item becomes Done only after that acceptance; manual board changes are recorded as owner changes.
+A successful final reply marks the run `completed` automatically. This records execution, not factual accuracy or owner acceptance. Linked manual-chat work items become Done after successful execution. Use chat feedback to request corrections. Swarms expose `partial` results when specialist work fails; no false owner-acceptance record is created.
 
-## Supported tools
+## Manual-chat tools
 
 | Tool | Capability | Approval |
 |---|---|---|
@@ -99,28 +154,53 @@ A final reply puts the run in `reviewing`. Only owner acceptance marks it `compl
 | `tool-web-search` | Tavily or Brave web snippets; optional DuckDuckGo encyclopedia lookup; partial evidence only | No |
 | `tool-doc-gen` | Save supplied Markdown as a draft artifact in SQLite | Yes |
 
-Agents must have a tool equipped and access level 3 or 4 to execute it. Levels 1 and 2 produce advisory drafts only. Levels 3 and 4 currently have the same execution policy; neither alone grants delegation or unrestricted authority. Delegation also requires `VAC_ENABLE_DELEGATION=1`, explicit `tool-delegate` permission, and an equipped direct subordinate. Imported skills are documentation assets, not enabled runtime capabilities.
+Agents must have a tool equipped and access level 3 or 4 to execute it. Levels 1 and 2 produce advisory drafts only. Levels 3 and 4 currently have the same execution policy; neither alone grants delegation or unrestricted authority. Legacy manual-chat delegation also requires `VAC_ENABLE_DELEGATION=1`, explicit `tool-delegate` permission, and an equipped direct subordinate. Imported skills are documentation assets, not enabled runtime capabilities.
 
-There is no shell, host-file reader, arbitrary Python runner, email sender, deployment tool, or general URL-fetch tool. Unknown tools fail closed. Adding an executable tool requires implementation, schema validation, a capability review, a suitable isolation boundary, tests, and a registry version change. Clients cannot register paths or lower permissions.
+There is no host-shell or host-file access. The AI Swarm workspace provides Python/shell only inside its bounded Docker sandbox, public-origin browser automation and approved connector tools. Ordinary chat does not gain those swarm-only capabilities. Unknown tools fail closed. Adding an executable tool requires implementation, schema validation, a capability review, a suitable isolation boundary, tests, and a registry version change. Clients cannot register paths or lower permissions.
 
 ## Architecture
 
+VAC is a local, single-owner modular monolith: React, an authenticated Express API, and SQLite. Manual chat and AI Swarm have separate execution loops and share the Ollama concurrency gate.
+
 ```mermaid
 flowchart TD
-    UI[React client] --> API[Authenticated Express API and schemas]
-    API --> DB[(SQLite records and run evidence)]
-    DB --> Worker[Single durable run worker]
-    Worker --> Provider[Provider adapter]
-    Provider --> Decision[Validated decision]
-    Decision --> Policy[Tool entitlement and exact approval]
-    Policy --> Tools[Allowlisted application tools]
-    Tools --> DB
-    Tools --> Worker
-    Decision --> Review[Draft and owner acceptance]
-    Review --> DB
+    UI[React workspace and run inspection] --> API[Authenticated Express API]
+    API --> Chat[Manual chat worker]
+    API --> Mode{Swarm planning engine}
+    Mode --> Native[Native step-by-step decisions]
+    Mode --> Fixed[Owner-supplied workflow]
+    Mode --> Harness[Deep Agents bounded planner]
+    Harness --> Validate[Validate grants, hierarchy and dependencies]
+    Fixed --> Validate
+    Validate --> Swarm[Durable swarm scheduler]
+    Native --> Swarm
+    Chat --> Model[Shared provider concurrency gate]
+    Swarm --> Model
+    Swarm --> Policy[Persistent root budgets and exact-action approvals]
+    Policy --> Registry[Approved tool registry]
+    Registry --> Browser[Isolated public-origin browser]
+    Registry --> Sandbox[Networkless Docker code and documents]
+    Registry --> Workspace[Versioned files, memory and connector gateway]
+    Chat --> DB[(SQLite state and evidence)]
+    Swarm --> DB
+    Workspace --> DB
+    Swarm --> Verify[Current-run artifact contracts]
+    Verify --> UI
 ```
 
-The backend remains a modular monolith. Runtime modules are in `src/server/`: `security.ts`, `store.ts`, `providers.ts`, `tools.ts`, and `runs.ts`. `server.ts` provides API composition and domain CRUD. The UI uses server state; browser storage is not a second database.
+| Module | Responsibility |
+|---|---|
+| `server.ts` | API composition, authentication and domain routes |
+| `src/server/runs.ts` | Backward-compatible manual chat and legacy delegation |
+| `src/server/swarm.ts` | Temporary profiles, recursive workers, dependency scheduling, budgets, approvals and completion gates |
+| `src/server/harness.ts` | Restricted Deep Agents planner using VAC's budgeted Ollama adapter |
+| `src/server/workspace.ts` | Versioned files, Docker execution, artifact contracts, reviewed memory and typed connector gateway |
+| `src/server/browser.ts` | Browser isolation, origin controls, project profiles and action binding |
+| `src/server/routines.ts` | Versioned skills and durable capped scheduling |
+| `src/server/providers.ts` | Provider adapters, usage receipts and shared local concurrency |
+| `src/server/store.ts` | SQLite persistence and transactional changes |
+
+The browser is not a second database. Plans, workers, decisions, usage, tool receipts and artifact provenance are retained server-side. A model's completion claim cannot substitute for required tool evidence or current-run artifact contracts.
 
 Memory retrieval enforces workspace, project/agent scope, reviewed status and expiration. Model-derived candidates require an accepted source run and remain unreviewed until owner review. Promotion creates a new version with provenance; confidence scores and tag overlap never automatically replace organization policy. Retrieved material is data, not authority to grant capabilities.
 
@@ -141,12 +221,16 @@ To restore, stop the server, preserve the current data directory, and place the 
 ## Validation and maintenance
 
 ```sh
+npx playwright install chromium
 npm run check
+npm run test:browser
+# With Docker and the sandbox image available:
+VAC_TEST_SANDBOX=1 npm test
 npm audit
 npm run skills:inventory
 ```
 
-The regression suite uses disposable localhost instances and a deterministic provider fixture. It covers authentication, the former file/script escape paths, malformed and failed inference, tool failures, bounded execution, idempotency, approval replay and restart, cancellation, interrupted-run recovery, conversation isolation, memory provenance and transaction rollback. It does not prove every live model's task quality.
+Most model decisions in the regression suite use deterministic fixtures and disposable localhost instances; browser integration exercises real Chromium. Docker tests run when `VAC_TEST_SANDBOX=1` is set. It covers authentication, the former file/script escape paths, malformed and failed inference, tool failures, bounded execution, idempotency, approval replay and restart, cancellation, interrupted-run recovery, conversation isolation, memory provenance and transaction rollback. It does not prove every live model's task quality.
 
 GitHub Actions runs types, tests, build, dependency auditing, and secret scanning. Before publication, run the secret scanner over all Git history, inspect findings, confirm third-party rights and verify one real provider run. Enabling repository visibility or hosted deployment is a separate action.
 
@@ -164,7 +248,7 @@ For the current evidence and upstream blocker, see [hardening validation](docs/r
 
 - Single-owner, local-only deployment. Workspace IDs are enforced internally; this is not a supported multi-tenant service.
 - Human evaluation of generated drafts. No claim of autonomous correctness or independently validated business decisions.
-- Read-only delegation remains an opt-in pilot. Broad rollout requires demonstrated value over a single equipped agent; successful execution alone does not establish business accuracy.
+- Swarms support existing, dynamic and hybrid teams. Specialists can spawn recursively within inherited permissions, configured depth and shared root limits. Successful execution alone does not establish business accuracy or an advantage over a single equipped agent.
 - No imported script execution until sandboxing, resource/egress controls and individual tool validation exist.
 - No automatic retry of failed or uncertain operations. Idempotency is provided for run submission and supported internal artifact writes.
 - Polling and JSON records within SQLite suit a small local workspace; large datasets and distributed workers need additional design and testing.
@@ -177,10 +261,28 @@ Copyright © 2026 Theo Chan. Original project-owned code and documentation are l
 
 ## Release operations and verified scope
 
-See [the release contract](docs/production-contract.md), [operating procedures](docs/operations.md), and [prioritized readiness status](upgrades.md). The verified candidate targets a local single-owner draft workspace using Ollama `qwen2.5:7b`; Tavily has live evaluation evidence. Brave configuration and failure handling have automated fixture coverage, but no live Brave acceptance result.
+See [the release contract](docs/production-contract.md), [operating procedures](docs/operations.md), and [prioritized readiness status](upgrades.md). The current swarm evaluation uses local Ollama `qwen3.5:9b`; earlier manual-chat evidence used `qwen2.5:7b`. Tavily has separate live evaluation evidence. Brave configuration and failure handling have automated fixture coverage, but no live Brave acceptance result.
 
 Paid cloud inference requires `VAC_ALLOW_PAID_INFERENCE=1` and operator-configured provider-side spending limits. Inference defaults to 100 attempted requests per UTC day; paid search defaults to zero until `VAC_SEARCH_REQUESTS_PER_DAY` is configured. These durable attempt caps include failed calls and connection tests. They are not dollar caps. Search credentials alone do not enable paid search with a zero request limit.
 
 The **Operations** screen shows authenticated runtime readiness, build identity, worker state and request budgets. **Sign out** invalidates the current browser session. The operations guide covers all-session revocation and owner-token rotation.
 
 `npm run release -- /absolute/new/release` prepares a runtime artifact without private data or vendored skill scripts. Run `npm ci --omit=dev` inside it. The documented launchd configuration and daily SQLite snapshot policy use a local backup folder; separately configured iCloud/Google Drive synchronization is not verified by application tests. Sync completed snapshots, not the running SQLite database/WAL.
+
+## Validation results and remaining limits
+
+Results recorded on 2026-09-21; fixture tests and live model quality are different evidence:
+
+| Evaluation | Result |
+|---|---|
+| Backend/integration tests, including real Docker tests | 118 passed, no failures or skips |
+| Browser UI tests | 15 passed |
+| Real Qwen full tool-registry workflow with an owner-supplied plan | Passed all 12 scenario checks in 376.39 seconds |
+| Installed one-shot routine and nested explicit workflow | Passed |
+| Fresh-input Deep Agents-generated report workflow | Passed: generated plan, specialist, current-run documents and independent calculator verification |
+| Four complex Deep Agents autonomous workflow trials | Failed: invalid topology/grants and unsuccessful correction/context handling |
+| Harness trial with earlier reports already present | Failed; current-run contracts prevented stale files from passing as new output |
+
+The complete scenario uses synthetic sales data and a local connector fixture. It does not prove production business-app integration. The successful smaller harness task does not establish reliable general autonomy. Failed trials remain documented in [the public validation summary](docs/reviews/2026-09-21-swarm-release.md).
+
+**Grok Bot/Kimi Swarm product parity is not achieved.** Outstanding work includes complex autonomous planning, full MCP/native connectors, broad authenticated-app workflows and login handoff, independent semantic review, always-on/distributed execution, enterprise identity and measured long-horizon/large-scale reliability. See [capability research](docs/SWARM-CAPABILITY-RESEARCH.md). Static/manual agents and explicit workflows remain supported.

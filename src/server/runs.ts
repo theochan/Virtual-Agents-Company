@@ -118,7 +118,7 @@ export class RunEngine {
       const capability = capabilityCheck(agent, this.store.all<Agent>('agents'), requiredToolsForRequest(input.userMessage, input.requiredToolIds));
       const memories = new MemoryManager(this.store.all('memories'));
       const packet = memories.buildContextPacket({ workspaceId: project.workspaceId, taskId: '', taskTitle: input.userMessage.slice(0, 120), taskObjective: input.userMessage, projectId: project.id, agentId: agent.id, topic: input.userMessage, projectSummary: project.description });
-      const available = toolCatalog.filter(t => agent.toolIds.includes(t.id) && agent.autonomyLevel >= 3 &&
+      const available = toolCatalog.filter(t => !['tool-browser','tool-files','tool-write-file','tool-code','tool-memory','tool-connector','tool-peer','tool-evidence'].includes(t.id) && agent.toolIds.includes(t.id) && agent.autonomyLevel >= 3 &&
         (childContext ? (input.requiredToolIds || []).includes(t.id) && (READ_TOOLS as readonly string[]).includes(t.id) : t.id !== DELEGATE_TOOL || pilot));
       const subordinates = pilot && !childContext ? this.store.all<Agent>('agents').filter(a => {
         try { validateSubordinate(agent, a, project, a.toolIds.filter(t => (READ_TOOLS as readonly string[]).includes(t))); return true; } catch { return false; }
@@ -312,7 +312,7 @@ TOOLS: ${JSON.stringify(available)}`;
         if (run.pilot) this.reserveTree(run, Math.min(run.provider.maxTokens, 1024));
         const reservation = reserveRequest(this.store, 'inference');
         this.save(run, 'AGENT_MESSAGE_SENT', { reservation });
-        const response = await this.inference(run.pilot ? { ...run.provider, maxTokens: Math.min(run.provider.maxTokens, 1024) } : run.provider, run.messages, controller.signal, toolCatalog.filter(t => agent.autonomyLevel >= 3 && agent.toolIds.includes(t.id) && (!run.allowedToolIds || run.allowedToolIds.includes(t.id))));
+        const response = await this.inference(run.pilot ? { ...run.provider, maxTokens: Math.min(run.provider.maxTokens, 1024) } : run.provider, run.messages, controller.signal, toolCatalog.filter(t => !['tool-browser','tool-files','tool-write-file','tool-code','tool-memory','tool-connector','tool-peer','tool-evidence'].includes(t.id) && agent.autonomyLevel >= 3 && agent.toolIds.includes(t.id) && (!run.allowedToolIds || run.allowedToolIds.includes(t.id))));
         providerPending = false;
         controller.signal.throwIfAborted();
         if (run.pilot) this.checkTreeAuthority(run);
@@ -328,7 +328,7 @@ TOOLS: ${JSON.stringify(available)}`;
       const current = this.get(id);
       run.status = current.status === 'cancelled' ? 'cancelled' : this.stopping ? 'blocked' : 'failed';
       run.result = run.status === 'cancelled' ? 'Cancelled by owner.' : this.stopping ? 'Interrupted by process restart. Review evidence and resume explicitly; no uncertain external action is retried automatically.' : error instanceof Error ? error.message : 'Execution failed';
-      if (providerPending) run.receipts.push({ provider: run.provider.provider, model: run.provider.model, status: 'failed', inputTokens: null, outputTokens: null, cost: null, error: run.result, timestamp: now() });
+      if (providerPending) run.receipts.push((error as any)?.receipt || { provider: run.provider.provider, model: run.provider.model, status: 'failed', inputTokens: null, outputTokens: null, cost: null, error: run.result, timestamp: now() });
       this.save(run, 'REVIEW_REQUESTED', { status: run.status, reason: run.result }); this.recordReply(run);
     } finally {
       clearTimeout(timeout); this.active.delete(id);

@@ -8,7 +8,7 @@ run('node_modules/.bin/esbuild', ['server.ts', '--bundle', '--platform=node', '-
 const hash = data => crypto.createHash('sha256').update(data).digest('hex');
 const files = [];
 function visit(directory) { for (const entry of fs.readdirSync(directory, { withFileTypes: true })) { const file = path.join(directory, entry.name); if (entry.isDirectory()) visit(file); else if (entry.isFile()) files.push(file); } }
-visit('src'); visit('scripts');
+visit('src'); visit('scripts'); visit('sandbox');
 files.push('server.ts', 'package.json', 'package-lock.json', 'index.html', 'vite.config.ts', 'tsconfig.json');
 const sourceHash = hash(files.sort().map(file => `${file}:${hash(fs.readFileSync(file))}`).join('\n'));
 const assets = [];

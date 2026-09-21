@@ -1,0 +1,190 @@
+{
+  "sourceHash": "25d2fb020e317f256495c8dd94318c60143dacc7651908dd9b432427a44fbb03",
+  "backendTests": 118,
+  "backendFailures": 0,
+  "backendSkipped": 0,
+  "browserTests": 15,
+  "browserFailures": 0,
+  "harness": "deepagents@1.14.0",
+  "defaultEngine": "native",
+  "fullProductParity": false,
+  "complexAutonomousQualification": false,
+  "cases": [
+    {
+      "file": "Workspace-Scripted-Final-Acceptance-4.json",
+      "passed": true,
+      "durationSeconds": 1.257,
+      "checks": {
+        "completed": true,
+        "contracts": true,
+        "allRegistryTools": true,
+        "recursive": true,
+        "savedAgent": true,
+        "dependency": true,
+        "peerMessage": true,
+        "approvedMemory": true,
+        "browserProfile": true,
+        "exactConnectorWrite": true,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "sourceHash": null,
+      "status": "completed"
+    },
+    {
+      "file": "Workspace-Ollama-Final-Acceptance.json",
+      "passed": true,
+      "durationSeconds": 376.39,
+      "checks": {
+        "completed": true,
+        "contracts": true,
+        "allRegistryTools": true,
+        "recursive": true,
+        "savedAgent": true,
+        "dependency": true,
+        "peerMessage": true,
+        "approvedMemory": true,
+        "browserProfile": true,
+        "exactConnectorWrite": true,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "sourceHash": null,
+      "status": "completed"
+    },
+    {
+      "file": "Workspace-Installed-Plan-Final-Acceptance.json",
+      "passed": true,
+      "durationSeconds": null,
+      "checks": {
+        "completed": true,
+        "depthTwo": true,
+        "contracts": true,
+        "calculator": true,
+        "sourceHash": true,
+        "previousRunsPreserved": true
+      },
+      "sourceHash": "61530ea613397fd0e50ecfa77dee6c9ceb4f22e74e9251579a91affa329dd123",
+      "status": "completed"
+    },
+    {
+      "file": "Workspace-Installed-Harness-Acceptance.json",
+      "passed": false,
+      "durationSeconds": null,
+      "checks": {
+        "completed": false,
+        "harnessGenerated": true,
+        "worker": true,
+        "contracts": false,
+        "calculator": false,
+        "sourceHash": true,
+        "previousRunsPreserved": true
+      },
+      "sourceHash": "cf65836f16214ff75dea1da1b037edbb5dc39b7f9057ea2a511bd7c39c0bd7e7",
+      "status": "blocked"
+    },
+    {
+      "file": "Workspace-Installed-Harness-Fresh-Acceptance.json",
+      "passed": true,
+      "durationSeconds": null,
+      "checks": {
+        "completed": true,
+        "harnessGenerated": true,
+        "worker": true,
+        "contracts": true,
+        "calculator": true,
+        "sourceHash": true,
+        "previousRunsPreserved": true
+      },
+      "sourceHash": "25d2fb020e317f256495c8dd94318c60143dacc7651908dd9b432427a44fbb03",
+      "status": "completed"
+    },
+    {
+      "file": "Workspace-DeepAgents-Acceptance-1.json",
+      "passed": false,
+      "durationSeconds": 72.426,
+      "checks": {
+        "completed": false,
+        "contracts": false,
+        "allRegistryTools": false,
+        "recursive": false,
+        "savedAgent": false,
+        "dependency": false,
+        "peerMessage": false,
+        "approvedMemory": false,
+        "browserProfile": false,
+        "exactConnectorWrite": false,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "sourceHash": null,
+      "status": "budget_exhausted"
+    },
+    {
+      "file": "Workspace-DeepAgents-Acceptance-2.json",
+      "passed": false,
+      "durationSeconds": 68.087,
+      "checks": {
+        "completed": false,
+        "contracts": false,
+        "allRegistryTools": false,
+        "recursive": false,
+        "savedAgent": false,
+        "dependency": false,
+        "peerMessage": false,
+        "approvedMemory": false,
+        "browserProfile": false,
+        "exactConnectorWrite": false,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "sourceHash": null,
+      "status": "budget_exhausted"
+    },
+    {
+      "file": "Workspace-DeepAgents-Acceptance-3.json",
+      "passed": false,
+      "durationSeconds": 102.945,
+      "checks": {
+        "completed": false,
+        "contracts": false,
+        "allRegistryTools": false,
+        "recursive": false,
+        "savedAgent": false,
+        "dependency": false,
+        "peerMessage": false,
+        "approvedMemory": false,
+        "browserProfile": false,
+        "exactConnectorWrite": false,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "sourceHash": null,
+      "status": "failed"
+    },
+    {
+      "file": "Workspace-DeepAgents-Acceptance-4.json",
+      "passed": false,
+      "durationSeconds": 163.378,
+      "checks": {
+        "completed": false,
+        "contracts": false,
+        "allRegistryTools": false,
+        "recursive": false,
+        "savedAgent": false,
+        "dependency": false,
+        "peerMessage": false,
+        "approvedMemory": false,
+        "browserProfile": false,
+        "exactConnectorWrite": false,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "sourceHash": null,
+      "status": "failed"
+    }
+  ],
+  "publication": {
+    "kind": "sanitized-summary"
+  }
+}

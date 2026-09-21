@@ -1,0 +1,31 @@
+{
+  "at": "2026-09-21T18:56:32+0800",
+  "sourceHash": "089a7f8e98b2c35e6bd0cabec06b64589b50479c7fa854ae616bc7f6285464c7",
+  "durationSeconds": 94.3,
+  "passed": true,
+  "reports": [
+    {
+      "kind": "recursive",
+      "checks": {
+        "completed": true,
+        "grandchild": true,
+        "calculator": true,
+        "final": true
+      },
+      "passed": true
+    },
+    {
+      "kind": "browser",
+      "checks": {
+        "completed": true,
+        "browserEvidence": true,
+        "network": true
+      },
+      "passed": true
+    }
+  ],
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "Synthetic evaluation. Operational prompts, node records, paths and identifiers omitted; original evidence retained privately."
+  }
+}

@@ -1,3 +1,5 @@
+import { workspaceCatalog, WORKSPACE_TOOL_IDS } from './workspace';
+import { browserTool, BROWSER_TOOL } from './browser';
 import { delegationSchema, DELEGATE_TOOL } from './delegation';
 import { reserveRequest } from './operations';
 import { readJson } from './http';
@@ -100,7 +102,7 @@ export async function fetchBrave(query: string, apiKey: string, signal: AbortSig
   };
 }
 
-export async function fetchDuckDuckGo(query: string, signal: AbortSignal, fetchFn = fetch): Promise<SearchOutput> {
+export async function fetchDuckDuckGo(query: string, signal: AbortSignal, fetchFn = fetch, reserveAttempt?: () => void): Promise<SearchOutput> {
   const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
   const res = await fetchFn(url, { redirect: 'error', signal: AbortSignal.any([signal, AbortSignal.timeout(10000)]) });
   if (!res.ok) throw new Error(`DuckDuckGo lookup returned HTTP ${res.status}`);
@@ -112,6 +114,7 @@ export async function fetchDuckDuckGo(query: string, signal: AbortSignal, fetchF
     if (simplified && simplified.toLowerCase() !== query.toLowerCase()) {
       const fallbackUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(simplified)}&format=json&no_html=1&skip_disambig=1`;
       executedQuery = simplified;
+      reserveAttempt?.(); // Query rewrites are another outbound request.
       const fallbackRes = await fetchFn(fallbackUrl, { redirect: 'error', signal: AbortSignal.any([signal, AbortSignal.timeout(10000)]) });
       attempts.push({ provider: 'duckduckgo', query: simplified, status: fallbackRes.ok ? 'empty' : 'failed', ...(!fallbackRes.ok ? { error: `HTTP ${fallbackRes.status}` } : {}) });
       if (fallbackRes.ok) {
@@ -160,7 +163,7 @@ export async function fetchDuckDuckGo(query: string, signal: AbortSignal, fetchF
   };
 }
 
-export async function executeSearch(query: string, store: Store, signal: AbortSignal, fetchFn = fetch): Promise<SearchOutput> {
+export async function executeSearch(query: string, store: Store, signal: AbortSignal, fetchFn = fetch, reserveAttempt?: () => void): Promise<SearchOutput> {
   const searchSettings = store.get<any>('settings', 'search') || {};
   const activePref = searchSettings.activeProvider || 'auto';
   const tavilyKey = searchKey('tavily');
@@ -173,12 +176,13 @@ export async function executeSearch(query: string, store: Store, signal: AbortSi
     : [z.enum(['tavily', 'brave', 'duckduckgo']).parse(activePref)];
   for (const provider of providersToTry) {
     signal.throwIfAborted();
+    reserveAttempt?.(); // Root reservation covers every provider attempt, including fallback.
     try {
       if (provider !== 'duckduckgo' && !searchKey(provider)) throw new Error(`${provider} API key is not configured`);
       if (provider !== 'duckduckgo') reserveRequest(store, 'search');
       const output = provider === 'tavily' ? await fetchTavily(query, tavilyKey, signal, fetchFn)
         : provider === 'brave' ? await fetchBrave(query, braveKey, signal, fetchFn)
-        : await fetchDuckDuckGo(query, signal, fetchFn);
+        : await fetchDuckDuckGo(query, signal, fetchFn, reserveAttempt);
       signal.throwIfAborted();
       return { ...output, attempts: [...attempts, ...(output.attempts || [{ provider, query: output.executedQuery, status: output.found ? 'results' as const : 'empty' as const }])] };
     } catch (error) {
@@ -208,6 +212,8 @@ const definitions = [
 ] as const;
 export const TOOL_VERSION = '1';
 export const toolCatalog: Tool[] = definitions.map(d => ({ ...d, category: 'Built-in', schema: z.toJSONSchema(d.schema), description: `${d.description} Registry version ${TOOL_VERSION}.` }));
+toolCatalog.push(...workspaceCatalog as Tool[]);
+toolCatalog.push({...browserTool,name:'Browser (swarm only)',category:'Built-in',permission:'READ',requiresApproval:false,description:browserTool.description+' Available in AI Swarm with an owner-approved browser policy.'});
 export function validateTool(agent: Agent, toolId: string, parameters: unknown) {
   const def = definitions.find(d => d.id === toolId);
   if (!def) throw new HttpError(403, 'Tool is disabled or not in the server registry; host scripts are not supported');
@@ -215,7 +221,9 @@ export function validateTool(agent: Agent, toolId: string, parameters: unknown) 
   return { definition: def, parameters: def.schema.parse(parameters) };
 }
 
-export async function executeTool(store: Store, agent: Agent, project: Project, toolId: string, parameters: unknown, callId: string, signal: AbortSignal) {
+export async function executeTool(store: Store, agent: Agent, project: Project, toolId: string, parameters: unknown, callId: string, signal: AbortSignal, reserveSearchAttempt?: () => void) {
+  if (WORKSPACE_TOOL_IDS.includes(toolId as any)) throw new HttpError(403,'Use this tool in an AI Swarm workspace run');
+  if (toolId === BROWSER_TOOL) throw new HttpError(403, 'Browser execution requires an AI Swarm run with an owner-approved browser policy');
   if (toolId === DELEGATE_TOOL) throw new HttpError(403, 'Delegation must use the durable run scheduler');
   const { parameters: args } = validateTool(agent, toolId, parameters);
   signal.throwIfAborted();
@@ -243,7 +251,7 @@ export async function executeTool(store: Store, agent: Agent, project: Project, 
     });
   } else {
     const { query } = searchSchema.parse(args);
-    output = await executeSearch(query, store, signal);
+    output = await executeSearch(query, store, signal, fetch, reserveSearchAttempt);
   }
   const result = { status: (output as SearchOutput)?.error ? 'failed' : 'succeeded', toolId, version: TOOL_VERSION, callId, input: args, output, timestamp: now() };
   store.put('tool-results', callId, result);

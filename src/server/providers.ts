@@ -4,7 +4,7 @@ import type { Agent } from '../types';
 import { HttpError, validateEndpoint } from './security';
 
 export type Message = { role: 'system' | 'user' | 'assistant'; content: string };
-export type ProviderConfig = { provider: string; model: string; endpoint: string; temperature: number; maxTokens: number };
+export type ProviderConfig = { allowFinal?: boolean; provider: string; model: string; endpoint: string; temperature: number; maxTokens: number };
 export type ProviderSettings = Record<string, { defaultModel: string; endpoint: string; enabled: boolean; downloadedModels: string[] }>;
 const defaults: Record<string, string> = {
   ollama: process.env.OLLAMA_ENDPOINT || 'http://127.0.0.1:11434',
@@ -47,10 +47,10 @@ export const decisionSchema = z.discriminatedUnion('action', [
 ]);
 export type Decision = z.infer<typeof decisionSchema>;
 
-export function decisionFormat(tools?: { id: string; schema?: unknown }[]) {
+export function decisionFormat(tools?: { id: string; schema?: unknown }[], allowFinal = true) {
   if (!tools) return z.toJSONSchema(decisionSchema);
   return { anyOf: [
-    z.toJSONSchema(decisionSchema.options[0]), z.toJSONSchema(decisionSchema.options[2]),
+    ...(allowFinal ? [z.toJSONSchema(decisionSchema.options[0])] : []), z.toJSONSchema(decisionSchema.options[2]),
     ...tools.map(tool => ({ type: 'object', properties: { action: { const: 'tool' }, toolId: { const: tool.id }, parameters: tool.schema }, required: ['action', 'toolId', 'parameters'], additionalProperties: false })),
   ] };
 }
@@ -75,7 +75,7 @@ export function setSearchKey(provider: 'tavily' | 'brave', key: string) {
   if (provider === 'brave') process.env.BRAVE_SEARCH_API_KEY = key.trim();
 }
 
-export async function infer(config: ProviderConfig, messages: Message[], signal: AbortSignal, tools?: { id: string; schema?: unknown }[]) {
+async function inferRequest(config: ProviderConfig, messages: Message[], signal: AbortSignal, tools?: { id: string; schema?: unknown }[]) {
   const { provider, endpoint, model } = config;
   if (!Object.hasOwn(defaults, provider)) throw new Error('Provider is unsupported; select a supported model before running');
   validateEndpoint(endpoint, allowedEndpoints(provider));
@@ -92,7 +92,7 @@ export async function infer(config: ProviderConfig, messages: Message[], signal:
     body = { ...body, system: messages.filter(m => m.role === 'system').map(m => m.content).join('\n'), messages: messages.filter(m => m.role !== 'system') };
   } else if (provider === 'ollama') {
     url = `${endpoint}/api/chat`;
-    body = { model, messages, stream: false, format: decisionFormat(tools), options: { temperature: config.temperature, num_predict: config.maxTokens } };
+    body = { model, messages, stream: false, think: false, format: decisionFormat(tools, config.allowFinal), options: { temperature: config.temperature, num_predict: config.maxTokens, num_ctx: 16384 } };
   } else if (key) headers.Authorization = `Bearer ${key}`;
   const started = Date.now();
   const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body), redirect: 'error', signal: AbortSignal.any([signal, AbortSignal.timeout(INFERENCE_TIMEOUT_MS)]) });
@@ -100,14 +100,17 @@ export async function infer(config: ProviderConfig, messages: Message[], signal:
   const data: any = await readJson(response);
   const content = provider === 'claude' ? data.content?.filter((c: any) => c.type === 'text').map((c: any) => c.text).join('\n')
     : provider === 'ollama' ? data.message?.content : data.choices?.[0]?.message?.content;
-  if (typeof content !== 'string' || content.length > 30000) throw new Error('Provider returned missing or oversized output');
-  let decision: Decision;
-  try { decision = decisionSchema.parse(JSON.parse(content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''))); }
-  catch { throw new Error('Provider did not return a valid decision; no work was marked complete'); }
   const rawInput = provider === 'ollama' ? data.prompt_eval_count : data.usage?.input_tokens ?? data.usage?.prompt_tokens;
   const rawOutput = provider === 'ollama' ? data.eval_count : data.usage?.output_tokens ?? data.usage?.completion_tokens;
   const count = (n: unknown) => typeof n === 'number' && Number.isFinite(n) && n >= 0 ? n : null;
-  return { decision, receipt: { provider, model, returnedModel: typeof data.model === 'string' ? data.model : null, responseId: typeof data.id === 'string' ? data.id : null, latencyMs: Date.now() - started, inputTokens: count(rawInput), outputTokens: count(rawOutput), cost: null, inferenceLocation: 'provider-dependent' } };
+  const receipt = { provider, model, returnedModel: typeof data.model === 'string' ? data.model : null, responseId: typeof data.id === 'string' ? data.id : null, latencyMs: Date.now() - started, inputTokens: count(rawInput), outputTokens: count(rawOutput), cost: null, inferenceLocation: 'provider-dependent' };
+  try {
+    if (typeof content !== 'string' || content.length > 30000) throw new Error('Provider returned missing or oversized output');
+    const decision = decisionSchema.parse(JSON.parse(content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')));
+    return { decision, receipt };
+  } catch {
+    throw Object.assign(new Error('Provider did not return a valid decision; no work was marked complete'), { receipt: { ...receipt, status: 'failed' } });
+  }
 }
 
 export async function discover(provider: string, endpoint: string) {
@@ -122,4 +125,28 @@ export async function discover(provider: string, endpoint: string) {
   const models = provider === 'ollama' ? data.models?.map((m: any) => m.name) : data.data?.map((m: any) => m.id);
   if (!Array.isArray(models) || !models.every(m => typeof m === 'string')) throw new Error('Invalid model catalog');
   return models.slice(0, 200);
+}
+
+// Shared by manual runs and swarm nodes. No independent path can bypass the local model ceiling.
+let localActive = 0;
+const localWaiters: Array<() => void> = [];
+export function localInferenceLimit() {
+  const limit = Number(process.env.VAC_OLLAMA_CONCURRENCY || 2);
+  if (!Number.isInteger(limit) || limit < 1 || limit > 4) throw new Error('VAC_OLLAMA_CONCURRENCY must be 1..4');
+  return limit;
+}
+async function acquireLocal(signal: AbortSignal) {
+  signal.throwIfAborted();
+  await new Promise<void>((resolve, reject) => {
+    const start = () => { signal.removeEventListener('abort', abort); localActive++; resolve(); };
+    const abort = () => { const i = localWaiters.indexOf(start); if (i >= 0) localWaiters.splice(i, 1); reject(signal.reason); };
+    if (localActive < localInferenceLimit()) start();
+    else { localWaiters.push(start); signal.addEventListener('abort', abort, { once: true }); }
+  });
+  return () => { localActive--; localWaiters.shift()?.(); };
+}
+export async function infer(config: ProviderConfig, messages: Message[], signal: AbortSignal, tools?: { id: string; schema?: unknown }[]) {
+  const release = config.provider === 'ollama' ? await acquireLocal(signal) : () => {};
+  try { signal.throwIfAborted(); return await inferRequest(config, messages, signal, tools); }
+  finally { release(); }
 }

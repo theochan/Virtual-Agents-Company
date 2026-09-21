@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-21T10:09:52.523Z",
+  "model": "qwen3.5:9b",
+  "durationMs": 35307,
+  "checks": {
+    "completed": true,
+    "twoSpecialists": true,
+    "allSpecialistsCompleted": true,
+    "multiplyEvidence": true,
+    "addEvidence": true,
+    "synthesisEvidence": false,
+    "finalNumbers": true,
+    "noPermanentChildren": true
+  },
+  "passed": false,
+  "outcome": {
+    "status": "completed"
+  },
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "Synthetic evaluation. Operational prompts, node records, paths and identifiers omitted; original evidence retained privately."
+  }
+}

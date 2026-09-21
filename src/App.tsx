@@ -1,3 +1,4 @@
+import { SwarmView } from './components/SwarmView';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Agent, Project, MemoryItem, Artifact, Tool, ApprovalRequest, Task, TaskEvent, ChatMessage, ContextPacket, MemoryScope, LLMConfig, WorkItem, WorkItemStatus } from './types';
 import { Sidebar } from './components/Sidebar';
@@ -29,7 +30,7 @@ export const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   const [settingsSection, setSettingsSection] = useState<'configuration' | 'operations'>('configuration');
-  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs'>('chat');
+  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm'>('chat');
   const [selectedAgentId, setSelectedAgentId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
@@ -140,6 +141,7 @@ export const App: React.FC = () => {
 
       {/* Main Panel Router */}
       <main className="flex-1 flex overflow-hidden">
+        {currentTab === 'swarm' && <SwarmView agents={agents} projects={projects} />}
         {currentTab === 'runs' && <RunReviewView onSelectAgent={(agentId, projectId) => { setSelectedAgentId(agentId); setSelectedProjectId(projectId); setCurrentTab('chat'); }} runs={tasks} approvals={approvals} onDecide={handleDecideApproval} onAction={async (id, action, reason) => { await change(`/api/runs/${id}/${action}`, 'POST', reason ? { reason } : {}); }} />}
         {currentTab === 'chat' && (!selectedAgent || !selectedProject) && <div className="p-8">Create an agent and a project to start a conversation.</div>}
         {currentTab === 'chat' && selectedAgent && selectedProject && (

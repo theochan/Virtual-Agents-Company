@@ -24,8 +24,8 @@ import { handleAvatarError } from '../lib/avatarCatalog';
 interface SidebarProps {
   onSignOut: () => void;
   attentionCount?: number;
-  currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs';
-  onSelectTab: (tab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs') => void;
+  currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm';
+  onSelectTab: (tab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm') => void;
   agents: Agent[];
   selectedAgentId: string;
   onSelectAgent: (agentId: string) => void;
@@ -82,6 +82,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span>Dashboard</span>
         </button>
 
+        <button onClick={() => onSelectTab('swarm')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium ${currentTab === 'swarm' ? 'bg-amber-100 text-amber-900' : 'text-slate-600 hover:bg-slate-50'}`}><Network className="w-4 h-4" /><span>AI Swarm</span></button>
         {/* Agents (Collapsible Section matching Wireframe) */}
         <div>
           <button

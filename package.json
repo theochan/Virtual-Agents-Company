@@ -22,12 +22,16 @@
     "check:publication": "node scripts/publication-check.mjs"
   },
   "dependencies": {
+    "@langchain/core": "1.2.9",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
+    "deepagents": "1.14.0",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "langchain": "1.5.10",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
+    "playwright": "1.63.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "vite": "^6.2.3",

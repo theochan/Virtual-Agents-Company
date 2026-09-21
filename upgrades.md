@@ -1,3 +1,7 @@
+# Current delivery tracking
+
+As of 2026-09-21, Plane project VAC items VAC-1 through VAC-8 track the AI Swarm enhancement. See [swarm-system.md](docs/swarm-system.md) for the source contract. The earlier release observations and backlog below are preserved as historical evidence; their installed-release statements do not describe this new revision.
+
 # Production readiness upgrades
 
 Created: 2026-09-06. Updated: 2026-09-07. Status: verified local release candidate; operational rollout verified; owner-usefulness acceptance remains open. Unchecked items may be partially implemented; consult the dated evidence below.
