@@ -1,5 +1,9 @@
 # Current delivery tracking
 
+2026-09-22 follow-up: [The revised bounded planner passed the live synthetic workflow](docs/reviews/2026-09-22-task-planner.md): all 12 checks, 351.784 seconds, Qwen3.5 9B, one planning call. Prior failures remain preserved. This is one development success; broader VAC-23 qualification and installed deployment remain open.
+
+2026-09-22: [VAC-23 topology follow-up](docs/reviews/2026-09-22-workflow-topology.md) supports safe cross-branch prerequisites with completion-cycle validation. Source and built-runtime checks pass; the fresh autonomous trial still fails planning, so VAC-23 remains open. No deployment or Plane update is claimed.
+
 As of 2026-09-21, Plane project VAC items VAC-1 through VAC-8 track the AI Swarm enhancement. See [swarm-system.md](docs/swarm-system.md) for the source contract. The earlier release observations and backlog below are preserved as historical evidence; their installed-release statements do not describe this new revision.
 
 # Production readiness upgrades

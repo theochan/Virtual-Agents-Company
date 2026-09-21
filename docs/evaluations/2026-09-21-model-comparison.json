@@ -1,0 +1,200 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private workspace paths and full runtime trajectories; originals retained privately."
+  },
+  "models": [
+    "qwen3.5:9b",
+    "qwen3.5:27b"
+  ],
+  "scope": "One fresh complex autonomous trial per model; preliminary comparison, not qualification.",
+  "fixed": {
+    "plannerCalls": 4,
+    "modelContext": 16384,
+    "thinking": false,
+    "temperature": 0,
+    "maxTokensPerCall": 2048,
+    "inferenceTimeoutMs": 300000,
+    "rootMinutes": 20
+  },
+  "sourceFiles": {
+    "src/server/swarm.ts": "4c454464a34f16e7a593575d6ae3c9bcea2478f853569d07fb70c3a8b042b706",
+    "src/server/harness.ts": "506783435cb23bf88a608f0f6c378daebcd36a4dae3722a83a4a05e20a83c177",
+    "src/server/providers.ts": "c6ec7ad08ab8abf2b67b66c9fba36ffc85959c2ad1674ca426cda76f93a6c787",
+    "scripts/evaluate-swarm-workspace.ts": "573d4b2069df6299133e60377f1ff1f6333ecf284781fd4dbfee1b64a5fa2e32",
+    "package-lock.json": "24b907ac1678550c0a57247390e2f48f32620ba34b49576118a416e7ef29ec62"
+  },
+  "baselineLimitation": "9B baseline overlapped the 27B download; elapsed-time comparison is not a clean performance benchmark.",
+  "productionDefaultChanged": false,
+  "runs": [
+    {
+      "model": "qwen3.5:9b",
+      "modelId": "6488c96fa5fa",
+      "quantization": "Q4_K_M",
+      "startedAt": "2026-09-21T15:20:08.159Z",
+      "durationSeconds": 155.88,
+      "passed": false,
+      "status": "failed",
+      "result": "Harness planning limit exhausted (four model calls)",
+      "modelCalls": 4,
+      "spawned": 0,
+      "rejections": [
+        "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Sequence tools must be unique\"\n  }\n]",
+        "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. TeamLead: supervisor cannot have dependsOn; remove them; TeamLead: dependency coordinator_root must be a different sibling, never its parent; parent-child scheduling is implicit; TeamLead: tools exceed parent grant; Compute: dependency TeamLead must be a different sibling, never its parent; parent-child scheduling is implicit; Researcher: tools exceed parent grant; Reviewer: tools exceed parent grant",
+        "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. TeamLead: tools exceed parent grant"
+      ],
+      "inferenceReceipts": [
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:9b",
+          "returnedModel": "qwen3.5:9b",
+          "responseId": null,
+          "latencyMs": 23371,
+          "inputTokens": 1398,
+          "outputTokens": 193,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        },
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:9b",
+          "returnedModel": "qwen3.5:9b",
+          "responseId": null,
+          "latencyMs": 39066,
+          "inputTokens": 1809,
+          "outputTokens": 618,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        },
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:9b",
+          "returnedModel": "qwen3.5:9b",
+          "responseId": null,
+          "latencyMs": 54411,
+          "inputTokens": 1910,
+          "outputTokens": 798,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        },
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:9b",
+          "returnedModel": "qwen3.5:9b",
+          "responseId": null,
+          "latencyMs": 38934,
+          "inputTokens": 1783,
+          "outputTokens": 602,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        }
+      ],
+      "checks": {
+        "completed": false,
+        "contracts": false,
+        "allRegistryTools": false,
+        "recursive": false,
+        "savedAgent": false,
+        "dependency": false,
+        "peerMessage": false,
+        "approvedMemory": false,
+        "browserProfile": false,
+        "exactConnectorWrite": false,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "rawEvidenceSha256": "62951ed564376729b4d7ecdd8538e0dd08b0950281102d00aaf129e81edc77a8"
+    },
+    {
+      "model": "qwen3.5:27b",
+      "modelId": "7653528ba5cb",
+      "quantization": "Q4_K_M",
+      "startedAt": "2026-09-21T15:23:12.477Z",
+      "durationSeconds": 539.033,
+      "passed": false,
+      "status": "failed",
+      "result": "Harness planning limit exhausted (four model calls)",
+      "modelCalls": 4,
+      "spawned": 0,
+      "rejections": [
+        "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. reviewer: dependency researcher must be a different sibling, never its parent; parent-child scheduling is implicit",
+        "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. reviewer: dependency researcher must be a different sibling, never its parent; parent-child scheduling is implicit",
+        "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. reviewer: dependency researcher must be a different sibling, never its parent; parent-child scheduling is implicit"
+      ],
+      "inferenceReceipts": [
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:27b",
+          "returnedModel": "qwen3.5:27b",
+          "responseId": null,
+          "latencyMs": 112281,
+          "inputTokens": 1404,
+          "outputTokens": 290,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        },
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:27b",
+          "returnedModel": "qwen3.5:27b",
+          "responseId": null,
+          "latencyMs": 160402,
+          "inputTokens": 1799,
+          "outputTokens": 541,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        },
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:27b",
+          "returnedModel": "qwen3.5:27b",
+          "responseId": null,
+          "latencyMs": 138381,
+          "inputTokens": 1817,
+          "outputTokens": 533,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        },
+        {
+          "provider": "ollama",
+          "model": "qwen3.5:27b",
+          "returnedModel": "qwen3.5:27b",
+          "responseId": null,
+          "latencyMs": 127699,
+          "inputTokens": 1661,
+          "outputTokens": 523,
+          "cost": null,
+          "inferenceLocation": "provider-dependent",
+          "phase": "harness-planning"
+        }
+      ],
+      "checks": {
+        "completed": false,
+        "contracts": false,
+        "allRegistryTools": false,
+        "recursive": false,
+        "savedAgent": false,
+        "dependency": false,
+        "peerMessage": false,
+        "approvedMemory": false,
+        "browserProfile": false,
+        "exactConnectorWrite": false,
+        "skillVersion": true,
+        "routinePaused": true
+      },
+      "rawEvidenceSha256": "e908493c96ebb12033ede2b2fd15578265b03d4667957c4792ce294d78523cdf"
+    }
+  ],
+  "hardware": {
+    "unifiedMemoryGiB": 24,
+    "observed27bRuntime": "18 GB; 13% CPU / 87% GPU; context 16384"
+  },
+  "conclusion": "Both trials failed before worker execution. The 27B model repeated a sibling-dependency error through both corrections. No default-model promotion. One scenario and one run per model do not establish general model quality; thinking remained disabled."
+}

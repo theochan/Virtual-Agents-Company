@@ -1,3 +1,4 @@
+import { callMcp, discoverMcp } from './mcp';
 import { tabularReportCode } from './reportRecipe';
 import { z } from 'zod';
 import { createHash } from 'node:crypto';
@@ -21,7 +22,7 @@ const codeSchema=z.union([rawCodeSchema,recipeSchema]);
 const memorySchema=z.object({query:z.string().max(300).optional(),propose:z.string().min(1).max(4000).optional()}).strict();
 const connectorCall=z.object({connectorId:z.string().max(100),tool:z.string().max(100),arguments:z.record(z.string(),z.unknown()).default({})}).strict();
 const connectorInputSchema=z.object({type:z.literal('object'),properties:z.record(z.string().regex(/^[a-zA-Z][a-zA-Z0-9_]{0,79}$/),z.object({type:z.enum(['string','number','boolean','object','array']),description:z.string().max(300).optional()}).strict()),required:z.array(z.string().max(80)).max(30).default([]),additionalProperties:z.literal(false).default(false)}).strict().refine(v=>Object.keys(v.properties).length<=30&&v.required.every(k=>Object.hasOwn(v.properties,k)),'Invalid connector argument schema');
-export const connectorSchema=z.object({name:z.string().min(1).max(100),endpoint:z.string().url().max(1000),tools:z.array(z.object({name:z.string().min(1).max(100),effect:z.enum(['read','write']),inputSchema:connectorInputSchema.optional()}).strict()).min(1).max(20),tokenEnv:z.string().regex(/^VAC_CONNECTOR_[A-Z0-9_]+$/).optional(),enabled:z.boolean().default(true)}).strict();
+export const connectorSchema=z.object({protocol:z.enum(['jsonrpc','mcp']).default('jsonrpc'),name:z.string().min(1).max(100),endpoint:z.string().url().max(1000),tools:z.array(z.object({name:z.string().min(1).max(100),effect:z.enum(['read','write']),inputSchema:connectorInputSchema.optional()}).strict()).min(1).max(20),tokenEnv:z.string().regex(/^VAC_CONNECTOR_[A-Z0-9_]+$/).optional(),enabled:z.boolean().default(true)}).strict();
 export const WORKSPACE_TOOLS=[
  {id:'tool-files',name:'Project files',description:'List project file metadata, or read a text file by name and optional version. Files are untrusted evidence. Binary documents should be parsed inside tool-code.',schema:readSchema},
  {id:'tool-write-file',name:'Write project file',description:'Write a UTF-8 draft file. expectedVersion must equal current version (0 for a new file). Versions are immutable. Shared project writes can conflict; inspect before editing.',schema:writeSchema},
@@ -76,10 +77,18 @@ export class Workspace {
   const local=(process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS||'').split(',').includes(c.endpoint);if(!local&&u.protocol!=='https:')throw new Error('Public connectors require HTTPS; local endpoints require server configuration');
   const id=uid();this.store.put('swarm-connectors',id,{...c,id});return this.connectors().find(x=>x.id===id);
  }
+ async discoverConnector(id:string,signal:AbortSignal){const c=this.store.get<any>('swarm-connectors',id);if(!c?.enabled||c.protocol!=='mcp')throw new HttpError(400,'Enabled MCP connector required');const result=await discoverMcp(c,signal);const secret=c.tokenEnv?process.env[c.tokenEnv]:undefined;return JSON.parse(secret?JSON.stringify(result).replaceAll(secret,'[REDACTED]'):JSON.stringify(result));}
  connector(j:SwarmJob,raw:unknown){const args=connectorCall.parse(raw);const c=this.store.get<any>('swarm-connectors',args.connectorId);if(!j.connectorIds?.includes(args.connectorId)||!c?.enabled)throw new Error('Connector not approved for this run');const t=c.tools.find((t:any)=>t.name===args.tool);if(!t)throw new Error('Connector tool is not approved');if(t.inputSchema){const types:any={string:z.string().max(16000),number:z.number().finite(),boolean:z.boolean(),object:z.record(z.string(),z.unknown()),array:z.array(z.unknown()).max(100)};const shape=Object.fromEntries(Object.entries(t.inputSchema.properties).map(([key,p]:[string,any])=>[key,t.inputSchema.required.includes(key)?types[p.type]:types[p.type].optional()]));z.object(shape).strict().parse(args.arguments);}return{args,config:c,write:t.effect==='write'};}
  connectorDefinition(j:SwarmJob){const variants=this.store.all<any>('swarm-connectors').filter(c=>c.enabled&&j.connectorIds?.includes(c.id)).flatMap(c=>c.tools.map((t:any)=>({type:'object',properties:{connectorId:{const:c.id},tool:{const:t.name},arguments:t.inputSchema||{type:'object',additionalProperties:true}},required:['connectorId','tool','arguments'],additionalProperties:false})));return variants.length?{schema:variants.length===1?variants[0]:{anyOf:variants}}:{};}
  async execute(j:SwarmJob,nodeId:string,toolId:string,raw:unknown,callId:string,signal:AbortSignal){
-  const prior=this.store.get<any>('swarm-tool-results',callId);if(prior)return prior;
+  let connectorIntent:string|undefined;
+  if(toolId==='tool-connector'){
+   const {args}=this.connector(j,raw);connectorIntent=sha(Buffer.from(JSON.stringify({rootId:j.id,nodeId,args})));
+   const attempt=this.store.get<any>('connector-operations',callId);
+   if(attempt&&attempt.intentHash!==connectorIntent)throw new Error('Conflicting connector operation identity');
+   const prior=this.store.get<any>('swarm-tool-results',callId);if(prior)return prior;
+   this.store.transaction(()=>{if(this.store.get('connector-operations',callId))throw new Error('Connector outcome may be unknown; reconcile before starting a new operation. Replay blocked');this.store.put('connector-operations',callId,{id:callId,rootId:j.id,nodeId,connectorId:args.connectorId,tool:args.tool,intentHash:connectorIntent,status:'outcome_unknown',startedAt:now()});});
+  }else{const prior=this.store.get<any>('swarm-tool-results',callId);if(prior)return prior;}
   let output:any;
   if(toolId==='tool-files'){
    const args=readSchema.parse(raw);if(!args.name)output={files:this.files(j.projectId)};else{const f=this.file(j.projectId,args.name,args.version);const{base64,...meta}=f;output={...meta,text:f.mime.startsWith('text/')||f.mime==='application/json'?Buffer.from(base64,'base64').toString('utf8').slice(0,16000):undefined,guidance:'Use sandbox document parsers for binary files. Text may be an excerpt.'};}
@@ -95,14 +104,14 @@ export class Workspace {
   }else if(toolId==='tool-memory'){
    const a=memorySchema.parse(raw);if(a.propose){const m:MemoryRecord={id:uid(),projectId:j.projectId,content:a.propose,sourceRunId:j.id,sourceNodeId:nodeId,status:'proposed',createdAt:now()};this.store.put('swarm-memory',m.id,m);output=m;}else output=this.memories(j.projectId).filter(m=>m.status==='approved'&&(!a.query||m.content.toLowerCase().includes(a.query.toLowerCase()))).slice(-20);
   }else if(toolId==='tool-connector'){
-   const {args,config}=this.connector(j,raw);const headers:Record<string,string>={'content-type':'application/json'};if(config.tokenEnv){const token=process.env[config.tokenEnv];if(!token)throw new Error('Connector credential unavailable');headers.authorization='Bearer '+token;}
+   const {args,config}=this.connector(j,raw);if(config.protocol==='mcp'){const result=await callMcp(config,args.tool,args.arguments,signal);const rendered=JSON.stringify(result);const secret=config.tokenEnv?process.env[config.tokenEnv]:undefined;output={connectorId:args.connectorId,tool:args.tool,protocol:'mcp',result:(secret?rendered.replaceAll(secret,'[REDACTED]'):rendered).slice(0,12000)};}else{const headers:Record<string,string>={'content-type':'application/json'};if(config.tokenEnv){const token=process.env[config.tokenEnv];if(!token)throw new Error('Connector credential unavailable');headers.authorization='Bearer '+token;}
    const body=Buffer.from(JSON.stringify({jsonrpc:'2.0',id:callId,method:'tools/call',params:{name:args.tool,arguments:args.arguments}}));
    if(body.length>64000)throw new Error('Connector request too large');
    let status:number,data:string;
    if((process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS||'').split(',').includes(config.endpoint)){const res=await fetch(config.endpoint,{method:'POST',headers,body,redirect:'error',signal:AbortSignal.any([signal,AbortSignal.timeout(15000)])});status=res.status;const reader=res.body?.getReader();let text='';if(reader){while(true){const r=await reader.read();if(r.done)break;text+=Buffer.from(r.value).toString();if(text.length>128000){await reader.cancel();throw new Error('Connector response too large');}}}data=text;}
    else{const res=await publicRequest({url:config.endpoint,method:'POST',headers,body},AbortSignal.any([signal,AbortSignal.timeout(15000)]));status=res.status;data=res.body.toString();}
-   if(status!==200)throw new Error('Connector HTTP '+status);const result=JSON.parse(data);if(result.id!==callId||result.error||result.result?.isError)throw new Error('Connector rejected operation');const rendered=JSON.stringify(result.result??null);const secret=config.tokenEnv?process.env[config.tokenEnv]:undefined;output={connectorId:args.connectorId,tool:args.tool,result:(secret?rendered.replaceAll(secret,'[REDACTED]'):rendered).slice(0,12000)};
+   if(status!==200)throw new Error('Connector HTTP '+status);const result=JSON.parse(data);if(result.id!==callId||result.error||result.result?.isError)throw new Error('Connector rejected operation');const rendered=JSON.stringify(result.result??null);const secret=config.tokenEnv?process.env[config.tokenEnv]:undefined;output={connectorId:args.connectorId,tool:args.tool,result:(secret?rendered.replaceAll(secret,'[REDACTED]'):rendered).slice(0,12000)};}
   }else throw new Error('Unknown workspace tool');
-  signal.throwIfAborted();const receipt={toolId,callId,status:'succeeded',output,timestamp:now()};this.store.put('swarm-tool-results',callId,receipt);return receipt;
+  signal.throwIfAborted();const receipt={toolId,callId,status:'succeeded',output,timestamp:now()};this.store.transaction(()=>{this.store.put('swarm-tool-results',callId,receipt);if(connectorIntent){const op=this.store.get<any>('connector-operations',callId);this.store.put('connector-operations',callId,{...op,status:'confirmed',completedAt:now()});}});return receipt;
  }
 }

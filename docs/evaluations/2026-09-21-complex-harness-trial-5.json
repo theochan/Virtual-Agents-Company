@@ -1,0 +1,20 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Local paths, connector identity and full runtime trajectory; original retained privately."
+  },
+  "mode": "live-harness",
+  "startedAt": "2026-09-21T14:36:02.091Z",
+  "durationSeconds": 139.51,
+  "passed": false,
+  "status": "failed",
+  "modelCalls": 4,
+  "spawned": 0,
+  "result": "Harness planning limit exhausted (four model calls)",
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Sequence tools must be unique\"\n  }\n]",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. sup-teamlead: supervisor cannot have dependsOn; remove them; comp-grandchild: dependency sup-teamlead must be a different sibling, never its parent; parent-child scheduling is implicit; agent-researcher: dependency sup-teamlead must be a different sibling, never its parent; parent-child scheduling is implicit; agent-researcher: tools exceed parent grant; agent-reviewer: tools exceed parent grant",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. sup-teamlead: supervisor cannot have dependsOn; remove them; agent-researcher: dependency sup-teamlead must be a different sibling, never its parent; parent-child scheduling is implicit; agent-reviewer: dependency sup-teamlead must be a different sibling, never its parent; parent-child scheduling is implicit"
+  ],
+  "limitation": "Fifth complex autonomous trial. Original four-call planning allowance, grants and contracts retained. No owner-supplied plan. Narrower earlier success is not complex autonomy qualification."
+}

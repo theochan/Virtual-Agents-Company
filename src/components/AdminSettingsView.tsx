@@ -458,12 +458,12 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleAddLocalModel('ollama', newOllamaModelInput);
                       }}
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-[11px] text-slate-900 outline-none font-mono focus:ring-2 focus:ring-orange-500/20"
+                      className="min-w-0 flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-[11px] text-slate-900 outline-none font-mono focus:ring-2 focus:ring-orange-500/20"
                     />
                     <button
                       type="button"
                       onClick={() => handleAddLocalModel('ollama', newOllamaModelInput)}
-                      className="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-xs"
+                      className="shrink-0 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-xs"
                     >
                       <Plus className="w-3 h-3" />
                       Add
@@ -596,12 +596,12 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleAddLocalModel('huggingface', newHfModelInput);
                       }}
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-[11px] text-slate-900 outline-none font-mono focus:ring-2 focus:ring-amber-500/20"
+                      className="min-w-0 flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-[11px] text-slate-900 outline-none font-mono focus:ring-2 focus:ring-amber-500/20"
                     />
                     <button
                       type="button"
                       onClick={() => handleAddLocalModel('huggingface', newHfModelInput)}
-                      className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-xs"
+                      className="shrink-0 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-xs"
                     >
                       <Plus className="w-3 h-3" />
                       Add
@@ -1101,10 +1101,10 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             </span>
           </div>
 
-          <div className="divide-y divide-slate-100">
+          <div data-testid="coworker-assignments" className="@container divide-y divide-slate-100">
             {agents.map((agent) => (
-              <div key={agent.id} className="py-3 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 min-w-[200px]">
+              <div key={agent.id} data-testid="coworker-assignment-row" className="py-3 grid grid-cols-1 @min-[420px]:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1fr)] items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0 break-words">
                   <img
                     src={agent.avatarUrl}
                     alt={agent.displayName}
@@ -1116,11 +1116,11 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-mono text-slate-500 hidden sm:inline">
+                <div className="contents">
+                  <span data-testid="coworker-department" className="text-[10px] font-mono text-slate-500 min-w-0 break-words">
                     {agent.department}
                   </span>
-                  <div data-testid={`model-assignment-${agent.id}`}>
+                  <div className="min-w-0" data-testid={`model-assignment-${agent.id}`}>
                     {onUpdateAgentLLMConfig && <ModelSelector agent={agent} onUpdateLLMConfig={onUpdateAgentLLMConfig} />}
                   </div>
                 </div>

@@ -1,0 +1,37 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private workspace paths, generated connector identity and full trajectory; raw report retained privately."
+  },
+  "mode": "live-harness",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-21T23:14:00.067Z",
+  "durationSeconds": 146.784,
+  "passed": false,
+  "status": "failed",
+  "modelCalls": 4,
+  "spawned": 0,
+  "result": "Harness planning limit exhausted (four model calls)",
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Sequence tools must be unique\"\n  }\n]",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. [\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Sequence tools must be unique\"\n  }\n]",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. compute_metrics: supervisor cannot have dependsOn; remove them; compute_metrics: tools exceed parent grant; generate_reports: supervisor cannot have dependsOn; remove them; generate_reports: tools exceed parent grant; create_summary_json: tools exceed parent grant; review_evidence: tools exceed parent grant"
+  ],
+  "checks": {
+    "completed": false,
+    "contracts": false,
+    "allRegistryTools": false,
+    "recursive": false,
+    "savedAgent": false,
+    "dependency": false,
+    "peerMessage": false,
+    "approvedMemory": false,
+    "browserProfile": false,
+    "exactConnectorWrite": false,
+    "skillVersion": true,
+    "routinePaused": true
+  },
+  "sourceHash": "f7ecf62643deea466fa9958331a44cdbd63bd86fca8a5e8842e598f737101812",
+  "rawReportSha256": "02a8c13f76ddab0166de7a547aa3fc2f36098db1c77d3927d09f59a7faff1305",
+  "limitation": "One development trial; unchanged objective and four-call allowance. No owner-supplied plan, paid inference, production deployment or successful autonomous qualification."
+}

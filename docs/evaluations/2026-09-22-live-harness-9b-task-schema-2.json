@@ -1,0 +1,70 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, generated identities and full trajectory; raw report retained privately."
+  },
+  "mode": "live-harness",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-21T23:23:43.514Z",
+  "durationSeconds": 112.21,
+  "passed": false,
+  "status": "failed",
+  "budget": {
+    "sandboxRuns": 0,
+    "browserSteps": 0,
+    "browserRequests": 0,
+    "modelCalls": 4,
+    "reservedInputTokens": 43238,
+    "reservedOutputTokens": 8192,
+    "toolCalls": 4,
+    "searchAttempts": 0,
+    "spawned": 0,
+    "deadline": 1790034223514,
+    "reportedInputTokens": 6793,
+    "reportedOutputTokens": 1603,
+    "unknownUsageCalls": 0
+  },
+  "checks": {
+    "completed": false,
+    "contracts": false,
+    "allRegistryTools": false,
+    "recursive": false,
+    "savedAgent": false,
+    "dependency": false,
+    "peerMessage": false,
+    "approvedMemory": false,
+    "browserProfile": false,
+    "exactConnectorWrite": false,
+    "skillVersion": true,
+    "routinePaused": true
+  },
+  "nodes": [
+    {
+      "name": "Coordinator",
+      "status": "failed",
+      "calls": 4
+    }
+  ],
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. coordinator: sequence tools must be unique",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Coordinator sequence must include required tools and remain within grant",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Coordinator sequence must include required tools and remain within grant"
+  ],
+  "rawReportSha256": "ce6f05311d6ef85c626ce9c9448e5be1959b2d234ecc9234b8978d550ac2dd52",
+  "limitation": "Development trial. Original workload, acceptance checks and limits retained. Does not establish broad autonomy or business usefulness.",
+  "failure": "Four-call planning allowance exhausted without a validated workflow.",
+  "limits": {
+    "maxAgents": 7,
+    "concurrency": 2,
+    "maxDepth": 2,
+    "maxModelCalls": 64,
+    "maxCallsPerAgent": 24,
+    "maxInputTokens": 750000,
+    "maxOutputTokens": 100000,
+    "maxTokensPerCall": 2048,
+    "maxToolCalls": 50,
+    "maxSearchAttempts": 4,
+    "maxSandboxRuns": 5,
+    "maxMinutes": 20
+  }
+}

@@ -11,6 +11,7 @@ export interface SwarmBudget {
 }
 export interface SwarmEvent { at: string; type: string; nodeId?: string; detail: string }
 export interface SwarmJob {
+  semanticReview?: import('./server/semanticReview').SemanticReview; semanticReviewer?: import('./server/providers').ProviderConfig; semanticReviewResult?: Record<string, any>;
   harness?: 'native'|'deepagents'; harnessResult?:Record<string,any>;
   id: string; workspaceId: string; projectId: string; coordinatorId: string; objective: string;
   mode: 'manual' | 'dynamic' | 'hybrid'; status: SwarmStatus; createdAt: string; completedAt?: string;
@@ -23,4 +24,4 @@ export interface SwarmNodeView {
   status: SwarmStatus; calls: number; result?: string; receipts: Array<Record<string, any>>;
   promptHash: string; createdAt: string; completedAt?: string;
 }
-export interface SwarmView extends SwarmJob { verification?: Array<Record<string,any>>; approvals?: Array<Record<string,any>>; budget: SwarmBudget; nodes: SwarmNodeView[] }
+export interface SwarmView extends SwarmJob { connectorOperations?: Array<Record<string,any>>; verification?: Array<Record<string,any>>; approvals?: Array<Record<string,any>>; budget: SwarmBudget; nodes: SwarmNodeView[] }

@@ -11,7 +11,7 @@ import type { Agent, Project, MemoryItem, Artifact, WorkItem, ChatMessage } from
 import { MemoryManager } from './src/lib/memory/memoryManager';
 import { Store } from './src/server/store';
 import { acquireWorkspaceLock } from './src/server/workspaceLock';
-import { requestLimit, OperationsLog, reserveRequest } from './src/server/operations';
+import { requestLimit, OperationsLog, reserveRequest, RequestBudgetError } from './src/server/operations';
 import { SearchCredentials } from './src/server/searchCredentials';
 import { HttpError, installSecurity, now, uid, validateEndpoint } from './src/server/security';
 import { allowedEndpoints, defaultSettings, discover, providerKey, setProviderKey, searchKey, type ProviderSettings } from './src/server/providers';
@@ -304,6 +304,7 @@ app.get('/api/projects/:id/routines',route((req,res)=>res.json(routines.list(req
 app.post('/api/swarm-routines',route((req,res)=>res.status(201).json(routines.create(req.body))));
 app.post('/api/swarm-routines/:id/pause',route((req,res)=>res.json(routines.pause(req.params.id))));
 app.get('/api/swarm-connectors',route((_req,res)=>res.json(swarm.workspace.connectors())));
+app.post('/api/swarm-connectors/:id/discover',route(async(req,res)=>res.json(await swarm.workspace.discoverConnector(req.params.id,AbortSignal.timeout(15000)))));
 app.post('/api/swarm-connectors',route((req,res)=>res.status(201).json(swarm.workspace.saveConnector(req.body))));
 app.post('/api/swarm-connectors/:id/disable',route((req,res)=>{const c=store.get<any>('swarm-connectors',req.params.id);if(!c)throw new HttpError(404,'Connector not found');c.enabled=false;store.put('swarm-connectors',c.id,c);res.json({disabled:true});}));
 app.get('/api/projects/:id/browser-profiles',route((req,res)=>res.json(swarm.browserProfiles(req.params.id))));
@@ -458,7 +459,7 @@ app.post('/api/admin/search/test-connection', route(async (req, res) => {
 app.use('/api', (_req, res) => res.status(404).json({ error: 'API route not found' }));
 app.use((error: any, _req: any, res: any, _next: any) => {
   if (error instanceof z.ZodError) return res.status(400).json({ error: 'Invalid request', issues: error.issues.map(i => ({ path: i.path, message: i.message })) });
-  const status = error instanceof HttpError ? error.status : error.type === 'entity.too.large' ? 413 : 500;
+  const status = error instanceof HttpError ? error.status : error instanceof RequestBudgetError ? 429 : error.type === 'entity.too.large' ? 413 : 500;
   log.record('API_FAILURE', { status });
   res.status(status).json({ error: status === 500 ? 'Operation failed; no success was acknowledged. Check server logs.' : error.message });
 });

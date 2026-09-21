@@ -64,3 +64,17 @@ test('saved browser state survives a new session, stays project scoped and rejec
  const b=new SwarmBrowser(async()=>response(),dir);const p={...policy,profileId:'test'};
  try{await b.execute('one',{action:'navigate',url:'https://example.com'},p,signal(),()=>{},'project');await assert.rejects(()=>b.execute('two',{action:'navigate',url:'https://example.com'},p,signal(),()=>{},'project'),/in use/);await b.close('one');const second=await b.execute('two',{action:'navigate',url:'https://example.com'},p,signal(),()=>{},'project');assert.match(second.text,/Session dirty/);const other=await b.execute('other',{action:'navigate',url:'https://example.com'},p,signal(),()=>{},'different');assert.match(other.text,/Session clean/);assert.equal(b.profiles('project').length,1);assert.throws(()=>b.deleteProfile('project','test'),/in use/);await b.close('two');b.deleteProfile('project','test');assert.equal(b.profiles('project').length,0);}finally{await b.closeAll();fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('browser advertises action-specific arguments and rejects the old read-with-url shape before launch',async()=>{
+ const {browserTool}=await import('../src/server/browser');
+ const schema:any=browserTool.schema;
+ const branches=schema.oneOf||schema.anyOf;
+ const read=branches.find((b:any)=>b.properties.action.const==='read');
+ const navigate=branches.find((b:any)=>b.properties.action.const==='navigate');
+ assert.deepEqual(Object.keys(read.properties),['action']);
+ assert.equal(read.additionalProperties,false);
+ assert.ok(navigate.required.includes('url'));
+ const browser=new SwarmBrowser(async()=>{throw new Error('must not dispatch');});
+ await assert.rejects(()=>browser.execute('invalid',{action:'read',url:'https://example.com'},policy,signal(),()=>{throw new Error('must not reserve');}),/Unrecognized key/);
+ assert.equal(browser.size,0);
+});

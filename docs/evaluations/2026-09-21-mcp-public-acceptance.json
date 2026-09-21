@@ -1,0 +1,25 @@
+{
+  "startedAt": "2026-09-21T14:33:00.055Z",
+  "endpoint": "https://mcp.deepwiki.com/mcp",
+  "scope": "Public repository documentation only; no credentials or private project content transmitted.",
+  "passed": true,
+  "server": {
+    "name": "DeepWiki",
+    "version": "2.14.3"
+  },
+  "discoveredTools": [
+    "ask_question",
+    "read_wiki_contents",
+    "read_wiki_structure"
+  ],
+  "call": {
+    "tool": "read_wiki_structure",
+    "repoName": "modelcontextprotocol/typescript-sdk",
+    "isError": false,
+    "resultSha256": "f6b62d50ded5b949bc2eff89817f6671b3848edae54f774dd67d60eaa2c12294"
+  },
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Raw operational trajectories, local paths, identifiers and provider documentation bodies. Original reports retained privately."
+  }
+}

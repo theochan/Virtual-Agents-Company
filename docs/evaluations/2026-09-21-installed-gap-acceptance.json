@@ -1,0 +1,37 @@
+{
+  "startedAt": "2026-09-21T14:38:52.751Z",
+  "completedAt": "2026-09-21T14:41:18.024Z",
+  "sourceHash": "43975615da52bab73fb008443286bf59ff93ad3a532d36b4da65b8f295ef3e95",
+  "searchLimit": 50,
+  "priorProjectsPreserved": true,
+  "priorRunsPreserved": true,
+  "passed": true,
+  "setupCorrection": "First submission rejected before inference: corrected contract kind file_exists to documented exists",
+  "runs": [
+    {
+      "artifact": "correct.txt",
+      "expected": true,
+      "status": "completed",
+      "reviewPassed": true,
+      "model": "qwen3.5:9b",
+      "modelCalls": 3
+    },
+    {
+      "artifact": "incorrect.txt",
+      "expected": false,
+      "status": "blocked",
+      "reviewPassed": false,
+      "model": "qwen3.5:9b",
+      "modelCalls": 3
+    }
+  ],
+  "mcp": {
+    "endpoint": "https://mcp.deepwiki.com/mcp",
+    "tool": "read_wiki_structure",
+    "status": "completed"
+  },
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Raw operational trajectories, local paths, identifiers and provider documentation bodies. Original reports retained privately."
+  }
+}

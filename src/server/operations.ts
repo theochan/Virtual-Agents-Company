@@ -21,6 +21,16 @@ export class OperationsLog {
 }
 
 /** Reserve request attempts before external access; unknown billing is never refunded. */
+export class RequestBudgetError extends Error {
+  constructor(category: 'inference' | 'search', maximum: number) {
+    const guidance = category === 'search' && maximum === 0
+      ? ' Paid search and Test Connection are disabled locally. Set VAC_SEARCH_REQUESTS_PER_DAY to an approved positive limit in .env and restart VAC.'
+      : ' The daily allowance resets at midnight UTC.';
+    super(`${category} daily request budget exhausted (${maximum}); no external request sent.${guidance}`);
+    this.name = 'RequestBudgetError';
+  }
+}
+
 export function requestLimit(category: 'inference' | 'search'): number | null {
   const name = category === 'search' ? 'VAC_SEARCH_REQUESTS_PER_DAY' : 'VAC_INFERENCE_REQUESTS_PER_DAY';
   const raw = process.env[name] ?? (category === 'search' ? '0' : '100');
@@ -35,7 +45,7 @@ export function reserveRequest(store: Store, category: 'inference' | 'search') {
     const day = new Date().toISOString().slice(0, 10);
     const id = `${day}:${category}`;
     const usage = store.get<{ count: number }>('request-budgets', id) || { count: 0 };
-    if (maximum !== null && usage.count >= maximum) throw new Error(`${category} daily request budget exhausted (${maximum}); no external request sent`);
+    if (maximum !== null && usage.count >= maximum) throw new RequestBudgetError(category, maximum);
     store.put('request-budgets', id, { count: usage.count + 1, maximum, day, category });
     return { day, reservedAttempt: usage.count + 1, maximum };
   });

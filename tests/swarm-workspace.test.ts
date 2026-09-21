@@ -63,35 +63,150 @@ test('rich dynamic context retains room for child evidence and typed connectors 
  try{const c=f.engine.workspace.saveConnector({name:'Typed connector',endpoint:'https://gateway.example/tools',tools:[{name:'save',effect:'write',inputSchema:{type:'object',properties:{revenue:{type:'number'},profit:{type:'number'}},required:['revenue','profit'],additionalProperties:false}}]});const contracts=Array.from({length:6},(_,i)=>({name:`file${i}.json`,kind:'json_equals',path:['total'],expected:600}));const r=f.create({objective:'Prepare a source-backed sales report with verified current-run artifacts and bounded collaboration. '.repeat(16),connectorIds:[c.id],contracts,requiredToolIds:['tool-read-project','tool-calculator','tool-memory']});for(let i=0;i<20;i++)f.engine.workspace.write('project',`file${i}.json`,Buffer.from('{"total":600}'),0,'fixture',r.id);const done=await f.finish(r.id);assert.equal(done.status,'completed',done.result);assert.equal(rootCalls,6);assert.ok(done.verification?.every(v=>v.passed));}finally{f.cleanup();}
 });
 
+const plannerTask=(key:string,extra:any={})=>({executor:'worker',key,name:key,instructions:'Complete task with evidence.',agentId:'',supervisors:[],dependsOn:[],toolSequence:[],requiredToolIds:[],...extra});
+
+const plannerSubmission=(tasks:any[],toolSequence:string[]=[])=>({tasks:[{executor:'coordinator',toolSequence},...tasks]});
+
 test('Deep Agents generates and atomically compiles a workflow using the shared budget',async()=>{
- const f=setup(m=>m[0].content.includes('VAC workflow planner')?{action:'tool',toolId:'submit_workflow',parameters:{plan:[{...worker('Leaf'),key:'leaf',parentKey:'',agentId:''}],toolSequence:[]}}:{action:'final',reply:'Done'});
+ const f=setup(m=>m[0].content.includes('VAC workflow planner')?{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],[])}:{action:'final',reply:'Done'});
  try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:[]}).id);assert.equal(r.status,'completed',r.result);assert.equal(r.nodes.length,2);assert.equal(r.budget.modelCalls,3);assert.equal(r.budget.toolCalls,1);assert.equal(r.budget.spawned,1);assert.equal(r.harnessResult?.harness,'deepagents@1.14.0');assert.equal(r.nodes[0].receipts.filter(x=>x.phase==='harness-planning').length,1);assert.throws(()=>f.create({harness:'deepagents',plan:[{...worker('Leaf'),key:'leaf'}]}),/generates its own/);}finally{f.cleanup();}
 });
 
 test('invalid harness plans never create nodes and repeated attempts stop at the planning cap',async()=>{
- const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:{plan:[{...worker('Bad'),key:'bad',parentKey:'',agentId:'',toolIds:['tool-code']}],toolSequence:[]}}));
+ const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('bad',{toolSequence:['tool-code']})],[])}));
  try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:[]}).id);assert.notEqual(r.status,'completed');assert.equal(r.nodes.length,1);assert.equal(r.budget.spawned,0);assert.equal(r.budget.modelCalls,4);assert.equal(f.store.all('swarm-nodes').length,1);assert.match(r.nodes[0].result!,/planning limit/);}finally{f.cleanup();}
 });
 
 test('harness cannot bypass root context budgets or call filesystem and task tools',async()=>{
- for(const toolId of ['execute','task','write_file']){const f=setup(()=>({action:'tool',toolId,parameters:{}}));try{const r=await f.finish(f.create({harness:'deepagents'}).id);assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);assert.equal(r.budget.toolCalls,0);assert.match(r.nodes[0].result!,/unavailable tool|planning authority/);}finally{f.cleanup();}}
+ for(const toolId of ['execute','task','write_file','write_todos']){const f=setup(()=>({action:'tool',toolId,parameters:{}}));try{const r=await f.finish(f.create({harness:'deepagents'}).id);assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);assert.equal(r.budget.toolCalls,0);assert.match(r.nodes[0].result!,/unavailable tool|planning authority/);}finally{f.cleanup();}}
  const f=setup();try{const r=await f.finish(f.create({harness:'deepagents',limits:{maxInputTokens:4096}}).id);assert.equal(r.status,'budget_exhausted');assert.equal(f.calls,0);}finally{f.cleanup();}
 });
 
 test('cancellation during harness inference cannot compile or resurrect a plan',async()=>{
  const f=setup();let release:any,started:any;const entered=new Promise<void>(r=>started=r);
- (f.engine as any).inference=async()=>{started();await new Promise<void>(r=>release=r);return{decision:{action:'tool',toolId:'submit_workflow',parameters:{plan:[{...worker('Leaf'),key:'leaf',parentKey:'',agentId:''}],toolSequence:[]}},receipt:{inputTokens:12,outputTokens:10}};};
+ (f.engine as any).inference=async()=>{started();await new Promise<void>(r=>release=r);return{decision:{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],[])},receipt:{inputTokens:12,outputTokens:10}};};
  try{const r=f.create({harness:'deepagents',allowedToolIds:[]});const ticking=f.engine.tick();await entered;f.engine.cancel(r.id);release();await ticking;const done=f.engine.get(r.id);assert.equal(done.status,'cancelled');assert.equal(done.nodes.length,1);assert.equal(done.budget.spawned,0);assert.equal(done.budget.modelCalls,1);}finally{f.cleanup();}
 });
 
 test('harness corrects aggregate topology feedback without persisting rejected workers',async()=>{
  let planning=0;const f=setup(m=>{
   if(!m[0].content.includes('VAC workflow planner'))return{action:'final',reply:'Done'};
-  planning++;if(planning===1)return{action:'tool',toolId:'write_todos',parameters:{todos:[{content:'Create nested workflow',status:'in_progress'}]}};
-  return{action:'tool',toolId:'submit_workflow',parameters:{plan:[{...worker('Lead'),key:'lead',parentKey:'',agentId:'',dependsOn:planning===2?['leaf']:[]},{...worker('Leaf'),key:'leaf',parentKey:'lead',agentId:'',dependsOn:planning===2?['lead']:[]}],toolSequence:[]}};
- });try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:[],requiredDepth:2}).id);assert.equal(r.status,'completed',r.result);assert.equal(r.nodes.length,3);assert.equal(r.budget.spawned,2);assert.equal(r.budget.toolCalls,3);assert.equal(r.events.filter(e=>e.type==='HARNESS_REJECTED').length,1);assert.match(r.events.find(e=>e.type==='HARNESS_REJECTED')!.detail,/supervisor.*sibling/);assert.equal(f.store.all('swarm-nodes').length,3);}finally{f.cleanup();}
+  planning++;
+  return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf',{supervisors:[{name:'Lead',agentId:''}],dependsOn:planning===1?['supervisor_0']:[]})],[])};
+ });try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:[],requiredDepth:2}).id);assert.equal(r.status,'completed',r.result);assert.equal(r.nodes.length,3);assert.equal(r.budget.spawned,2);assert.equal(r.budget.toolCalls,2);assert.equal(r.events.filter(e=>e.type==='HARNESS_REJECTED').length,1);assert.match(r.events.find(e=>e.type==='HARNESS_REJECTED')!.detail,/task key/);assert.equal(f.store.all('swarm-nodes').length,3);}finally{f.cleanup();}
 });
 
 test('generated root sequences are revalidated before workflow compilation',async()=>{
- const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:{plan:[{...worker('Leaf'),key:'leaf',parentKey:'',agentId:''}],toolSequence:['tool-calculator','tool-calculator']}}));try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator']}).id);assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);assert.equal(r.budget.spawned,0);assert.ok(r.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes('unique')));}finally{f.cleanup();}
+ const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],['tool-calculator','tool-calculator'])}));try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator']}).id);assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);assert.equal(r.budget.spawned,0);assert.ok(r.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes('unique')));}finally{f.cleanup();}
+});
+
+test('independent semantic review is isolated, grounded, budgeted and blocks false acceptance',async()=>{
+ for(const verdict of ['pass','fail','ungrounded']){
+  let isolated=false;
+  const f=setup(m=>{
+   if(m[0].content.startsWith('You are an independent')){isolated=!m.some(x=>x.content.includes('RUN STATE'));return {action:'tool',toolId:'submit_review',parameters:{checks:[{criterion:0,verdict:verdict==='fail'?'fail':'pass',reason:'Compare source total',evidence:[{name:'source.txt',quote:'total 42'},{name:'result.txt',quote:verdict==='ungrounded'?'invented quote':'total 42'}]}]}};}
+   if(!m.some(x=>x.content.includes('UNTRUSTED TOOL')))return{action:'tool',toolId:'tool-write-file',parameters:{name:'result.txt',content:'total 42',expectedVersion:0}};
+   return{action:'final',reply:'Produced total 42'};
+  });
+  try{
+   f.store.put('agents','reviewer',{...f.store.get<any>('agents','manager'),id:'reviewer',displayName:'Independent reviewer',toolIds:[]});
+   f.engine.workspace.write('project','source.txt',Buffer.from('total 42'),0,'owner');
+   const semanticReview={reviewerId:'reviewer',criteria:['Output total matches source'],inputNames:['source.txt'],outputNames:['result.txt']};
+   assert.throws(()=>f.create({semanticReview:{...semanticReview,reviewerId:'manager'}}),/different eligible/);
+   const done=await f.finish(f.create({allowedToolIds:['tool-write-file'],toolSequence:['tool-write-file'],semanticReview}).id);
+   assert.equal(done.status,verdict==='pass'?'completed':'blocked',done.result);assert.equal(isolated,true);assert.equal(done.budget.modelCalls,3);
+   assert.equal(done.semanticReviewResult?.passed,verdict==='pass');assert.ok(done.semanticReviewResult?.packetHash);
+   assert.equal(done.nodes[0].receipts.filter(r=>r.purpose==='independent_review').length,1);
+  }finally{f.cleanup();}
+ }
+});
+
+test('uncertain connector operation is durable across reconstruction and cannot be replayed',async()=>{
+ const http=await import('node:http');let writes=0;
+ const server=http.createServer((_req,res)=>{writes++;res.writeHead(503).end('lost result');});await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
+ const endpoint=`http://127.0.0.1:${(server.address()as any).port}/tools`,previous=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=endpoint;
+ const f=setup();try{
+  const c=f.engine.workspace.saveConnector({name:'write fixture',endpoint,tools:[{name:'save',effect:'write'}]})!;
+  const j=f.create({allowedToolIds:['tool-connector'],connectorIds:[c.id]});const args={connectorId:c.id,tool:'save',arguments:{value:42}};
+  await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',args,'uncertain',new AbortController().signal),/503/);
+  assert.equal(writes,1);assert.equal(f.store.get<any>('connector-operations','uncertain').status,'outcome_unknown');
+  const reopened=new Workspace(f.store);await assert.rejects(reopened.execute(j,'node','tool-connector',args,'uncertain',new AbortController().signal),/Replay blocked/);
+  await assert.rejects(reopened.execute(j,'node','tool-connector',{...args,arguments:{value:99}},'uncertain',new AbortController().signal),/Conflicting/);
+  assert.equal(writes,1);assert.equal(f.engine.get(j.id).connectorOperations?.[0].status,'outcome_unknown');
+ }finally{f.cleanup();process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=previous||'';server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
+});
+
+test('planned dependencies across branches wait for evidence and block after prerequisite failure',async()=>{
+ for(const fail of [false,true]){
+  const seen:string[]=[];
+  const f=setup(m=>{
+   const name=m[0].content.match(/^You are ([^,]+)/)?.[1];seen.push(name);
+   if(name==='Research')return fail?{action:'blocked',reason:'Source unavailable'}:{action:'final',reply:'Source verified'};
+   if(name==='Review')assert.ok(m.some(x=>x.content.startsWith('UNTRUSTED DEPENDENCY')&&x.content.includes('Source verified')));
+   return{action:'final',reply:'Done'};
+  });
+  try{
+   const plan=[{...worker('Lead A'),key:'a'},{...worker('Lead B'),key:'b'},
+    {...worker('Review',['research']),key:'review',parentKey:'b'},
+    {...worker('Research'),key:'research',parentKey:'a'}];
+   const done=await f.finish(f.create({allowedToolIds:[],plan}).id);
+   const reviewer=done.nodes.find(n=>n.name==='Review')!;
+   assert.equal(reviewer.status,fail?'blocked':'completed');
+   if(fail){assert.ok(!seen.includes('Review'));assert.notEqual(done.status,'completed');}
+   else{assert.equal(done.status,'completed',done.result);assert.ok(seen.indexOf('Research')<seen.indexOf('Review'));}
+  }finally{f.cleanup();}
+ }
+});
+
+test('planned completion cycles include implicit supervisor waits and reject atomically',()=>{
+ const f=setup();
+ try{
+  const invalid=[
+   [{...worker('Lead'),key:'lead'},{...worker('Leaf',['lead']),key:'leaf',parentKey:'lead'}],
+   [{...worker('A'),key:'a'},{...worker('B'),key:'b'},
+    {...worker('X',['b']),key:'x',parentKey:'a'},{...worker('Y',['a']),key:'y',parentKey:'b'}],
+   [{...worker('A',['foreign-node-id']),key:'a'}],
+   [{...worker('A',['a']),key:'a'}],
+  ];
+  for(const plan of invalid){assert.throws(()=>f.create({allowedToolIds:[],plan}),/cycle|not a plan key|self dependency/);assert.equal(f.store.all('swarms').length,0);assert.equal(f.store.all('swarm-nodes').length,0);assert.equal(f.store.all('swarm-budgets').length,0);}
+  assert.equal(f.calls,0);
+ }finally{f.cleanup();}
+});
+
+test('harness accepts cross-branch dependencies without expanding inherited grants',async()=>{
+ for(const excess of [false,true]){
+  const f=setup(m=>m[0].content.includes('VAC workflow planner')?{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('research',{supervisors:[{name:'Lead',agentId:''}],toolSequence:excess?['tool-code']:[]}),plannerTask('review',{dependsOn:['research']})],[])}:{action:'final',reply:'Done'});
+  try{const done=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator'],requiredDepth:2}).id);
+   assert.equal(done.status,excess?'failed':'completed',done.result);
+   assert.equal(done.budget.spawned,excess?0:3);
+   if(excess)assert.equal(done.budget.modelCalls,4);else assert.equal(done.events.filter(e=>e.type==='HARNESS_REJECTED').length,0);
+  }finally{f.cleanup();}
+ }
+});
+
+test('compiled supervisor unions remain bounded by saved-profile eligibility and root node allowance',async()=>{
+ for(const mode of ['profile','count']){
+  const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf',{supervisors:[{name:'Lead',agentId:mode==='profile'?'limited':''}],toolSequence:['tool-calculator']})],[])}));
+  try{
+   f.store.put('agents','limited',{...f.store.get<any>('agents','manager'),id:'limited',toolIds:[]});
+   const r=await f.finish(f.create({harness:'deepagents',mode:'hybrid',allowedToolIds:['tool-calculator'],limits:{maxAgents:mode==='count'?2:4}}).id);
+   assert.equal(r.status,'failed');assert.equal(r.budget.spawned,0);assert.equal(f.store.all('swarm-nodes').length,1);
+   assert.ok(r.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes(mode==='count'?'agent allowance':'not eligible')));
+  }finally{f.cleanup();}
+ }
+});
+
+test('coordinator assignment executes root tools personally after child completion',async()=>{
+ let planned=false;
+ const f=setup(m=>{
+  if(!planned){planned=true;return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],['tool-calculator'])};}
+  const state=JSON.parse(m.find(x=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);
+  if(state.nextRequiredTool)return{action:'tool',toolId:'tool-calculator',parameters:{operation:'add',a:2,b:3}};
+  return{action:'final',reply:'Done'};
+ });
+ try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator'],requiredToolIds:['tool-calculator']}).id);
+  assert.equal(r.status,'completed',r.result);assert.equal(r.nodes.length,2);
+  assert.equal(r.nodes[0].receipts.filter(x=>x.toolId==='tool-calculator'&&x.status==='succeeded').length,1);
+  assert.equal(r.nodes[1].receipts.filter(x=>x.toolId).length,0);
+ }finally{f.cleanup();}
 });

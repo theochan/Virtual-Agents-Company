@@ -1,0 +1,75 @@
+{
+  "mode": "live-harness",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-21T23:35:55.105Z",
+  "durationSeconds": 251.165,
+  "passed": false,
+  "limits": {
+    "maxAgents": 7,
+    "concurrency": 2,
+    "maxDepth": 2,
+    "maxModelCalls": 64,
+    "maxCallsPerAgent": 24,
+    "maxInputTokens": 750000,
+    "maxOutputTokens": 100000,
+    "maxTokensPerCall": 2048,
+    "maxToolCalls": 50,
+    "maxSearchAttempts": 4,
+    "maxSandboxRuns": 5,
+    "maxMinutes": 20
+  },
+  "checks": {
+    "completed": false,
+    "contracts": true,
+    "allRegistryTools": false,
+    "recursive": true,
+    "savedAgent": true,
+    "dependency": false,
+    "peerMessage": false,
+    "approvedMemory": false,
+    "browserProfile": true,
+    "exactConnectorWrite": true,
+    "skillVersion": true,
+    "routinePaused": true
+  },
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, generated identities and full trajectory retained privately."
+  },
+  "status": "cancelled",
+  "modelCalls": 12,
+  "spawned": 4,
+  "nodes": [
+    {
+      "name": "Coordinator",
+      "status": "cancelled",
+      "calls": 2
+    },
+    {
+      "name": "TeamLead",
+      "status": "cancelled",
+      "calls": 0
+    },
+    {
+      "name": "Compute Sales Report",
+      "status": "completed",
+      "calls": 2
+    },
+    {
+      "name": "Research Documentation Domain",
+      "status": "completed",
+      "calls": 3
+    },
+    {
+      "name": "Review and Finalize",
+      "status": "blocked",
+      "calls": 5
+    }
+  ],
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Missing tools in executor=coordinator assignment: tool-memory. Put coordinator work in that assignment, not an executor=worker task."
+  ],
+  "rawReportSha256": "f093020c83dea1210278a631429402a4f2dde2e73b2788ba0f1c406177a0a031",
+  "failure": "Reviewer blocked with premature completion claim before peer/evidence steps. Coordinator tools overlapped worker grants.",
+  "limitation": "Development trial, original workload and limits. Successful component execution is not full workflow acceptance."
+}

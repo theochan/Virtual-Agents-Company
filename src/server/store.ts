@@ -17,6 +17,7 @@ export class Store {
     const version = (this.db.prepare('SELECT max(version) AS version FROM migrations').get() as any).version;
     if (version > 2) { this.db.close(); throw new Error('Database schema is newer than this application; restore a compatible release'); }
     this.db.exec(`CREATE INDEX IF NOT EXISTS records_status ON records(kind, json_extract(data,'$.status'));
+      CREATE INDEX IF NOT EXISTS records_root ON records(kind, json_extract(data,'$.rootId'));
       CREATE INDEX IF NOT EXISTS records_conversation ON records(kind, json_extract(data,'$.conversationId'));
       INSERT OR IGNORE INTO migrations VALUES(2);`);
     fs.chmodSync(path.join(directory, 'workspace.sqlite'), 0o600);
@@ -28,7 +29,8 @@ export class Store {
   all<T>(kind: string): T[] {
     return this.db.prepare('SELECT data FROM records WHERE kind=? ORDER BY rowid').all(kind).map((r: any) => JSON.parse(r.data));
   }
-  matching<T>(kind: string, field: 'status' | 'conversationId', values: string[], limit = 10000, descending = false): T[] {
+  matching<T>(kind: string, field: 'status' | 'conversationId' | 'rootId', values: string[], limit = 10000, descending = false): T[] {
+    if (!['status','conversationId','rootId'].includes(field)) throw new Error('Unsupported indexed field');
     if (!values.length) return [];
     return this.db.prepare(`SELECT data FROM records WHERE kind=? AND json_extract(data,'$.${field}') IN (${values.map(() => '?').join(',')}) ORDER BY rowid ${descending ? 'DESC' : 'ASC'} LIMIT ?`)
       .all(kind, ...values, limit).map((r: any) => JSON.parse(r.data));

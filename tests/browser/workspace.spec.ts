@@ -174,3 +174,25 @@ test('Deep Agents planning selection persists generated workflow and budget evid
  await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);await page.getByLabel('Planning engine').selectOption('deepagents');await page.getByLabel('Swarm objective').fill('Delegate calculation of 19 plus 23 and report its evidence.');await page.getByRole('button',{name:'Start swarm',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();
  const runs=await(await request.get('/api/swarms',{headers})).json();const r=runs.find((r:any)=>r.projectId===project.id);expect(r.harness).toBe('deepagents');expect(r.harnessResult.harness).toBe('deepagents@1.14.0');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(4);expect(r.events.some((e:any)=>e.type==='HARNESS_DECISION')).toBe(true);
 });
+
+test('Settings model Add rows stay contained and departments align at constrained widths',async({page})=>{
+ await page.getByRole('button',{name:'Settings',exact:true}).click();
+ for(const width of [1440,900,760,540]){
+  await page.setViewportSize({width,height:1000});
+  for(const placeholder of ['e.g. llama3.2:1b, codellama:7b','e.g. meta-llama/Llama-3.2-1B']){
+   const input=page.getByPlaceholder(placeholder);
+   const bounds=await input.evaluate(el=>{const row=el.parentElement!,button=row.querySelector('button')!;const r=row.getBoundingClientRect(),b=button.getBoundingClientRect(),i=el.getBoundingClientRect();return{left:r.left,right:r.right,buttonLeft:b.left,buttonRight:b.right,inputRight:i.right,inputWidth:i.width};});
+   expect(bounds.buttonRight).toBeLessThanOrEqual(bounds.right+1);expect(bounds.inputRight).toBeLessThanOrEqual(bounds.buttonLeft);expect(bounds.inputWidth).toBeGreaterThan(0);
+  }
+  const rows=await page.getByTestId('coworker-assignment-row').evaluateAll(rows=>rows.slice(0,6).map(row=>{const label=row.querySelector('[data-testid="coworker-department"]')!;const r=row.getBoundingClientRect(),d=label.getBoundingClientRect();return{x:d.x,left:r.left,right:r.right,departmentRight:d.right,visible:d.height>0};}));
+  expect(rows.length).toBe(6);for(const row of rows){expect(row.visible).toBe(true);expect(row.departmentRight).toBeLessThanOrEqual(row.right+1);expect(Math.abs(row.x-rows[0].x)).toBeLessThan(1);}
+ }
+});
+
+test('Swarm exposes independent review policy and MCP discovery without granting tools',async({page})=>{
+ await page.getByRole('button',{name:'AI Swarm',exact:true}).click();
+ await page.getByText('Independent semantic review',{exact:true}).click();
+ await expect(page.getByLabel('Semantic review policy')).toBeVisible();
+ await page.getByText('Approved connector gateway',{exact:true}).click();
+ await expect(page.getByText(/Discovery lists tools; it never grants access automatically/)).toBeVisible();
+});

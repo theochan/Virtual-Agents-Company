@@ -1,0 +1,91 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, generated identities and full trajectory; raw report retained privately."
+  },
+  "mode": "live-harness",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-21T23:20:30.534Z",
+  "durationSeconds": 140.347,
+  "passed": false,
+  "status": "cancelled",
+  "budget": {
+    "sandboxRuns": 1,
+    "browserSteps": 1,
+    "browserRequests": 0,
+    "modelCalls": 9,
+    "reservedInputTokens": 91392,
+    "reservedOutputTokens": 18432,
+    "toolCalls": 7,
+    "searchAttempts": 1,
+    "spawned": 5,
+    "deadline": 1790034030534,
+    "reportedInputTokens": 19582,
+    "reportedOutputTokens": 871,
+    "unknownUsageCalls": 0
+  },
+  "checks": {
+    "completed": false,
+    "contracts": false,
+    "allRegistryTools": false,
+    "recursive": false,
+    "savedAgent": false,
+    "dependency": false,
+    "peerMessage": false,
+    "approvedMemory": false,
+    "browserProfile": false,
+    "exactConnectorWrite": false,
+    "skillVersion": true,
+    "routinePaused": true
+  },
+  "nodes": [
+    {
+      "name": "Coordinator",
+      "status": "cancelled",
+      "calls": 2
+    },
+    {
+      "name": "Team Lead",
+      "status": "completed",
+      "calls": 2
+    },
+    {
+      "name": "TeamLead",
+      "status": "cancelled",
+      "calls": 0
+    },
+    {
+      "name": "Compute Grandchild",
+      "status": "cancelled",
+      "calls": 3
+    },
+    {
+      "name": "Saved Researcher Task",
+      "status": "failed",
+      "calls": 2
+    },
+    {
+      "name": "Reviewer Task",
+      "status": "cancelled",
+      "calls": 0
+    }
+  ],
+  "rejections": [],
+  "rawReportSha256": "b02294bd32a9bb6700c62b142d8685f55a152711a70221152aa68f19deaeebc8",
+  "limitation": "Development trial. Original workload, acceptance checks and limits retained. Does not establish broad autonomy or business usefulness.",
+  "failure": "Browser model schema allowed read with url but runtime rejected it.",
+  "limits": {
+    "maxAgents": 7,
+    "concurrency": 2,
+    "maxDepth": 2,
+    "maxModelCalls": 64,
+    "maxCallsPerAgent": 24,
+    "maxInputTokens": 750000,
+    "maxOutputTokens": 100000,
+    "maxTokensPerCall": 2048,
+    "maxToolCalls": 50,
+    "maxSearchAttempts": 4,
+    "maxSandboxRuns": 5,
+    "maxMinutes": 20
+  }
+}

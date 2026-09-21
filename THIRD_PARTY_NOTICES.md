@@ -40,3 +40,7 @@ package-specific notices; the runtime dependency inventory is in
 `docs/evaluations/2026-09-07-runtime-dependencies.json`. No photo image files are
 redistributed by the portrait catalog; its external links retain the separate
 photo/likeness limitations stated above.
+
+## MCP TypeScript SDK
+
+`@modelcontextprotocol/sdk` 1.30.0, MIT, copyright 2024 Anthropic, PBC. Source: https://github.com/modelcontextprotocol/typescript-sdk/tree/v1.x. The installed package includes its license text. Transitive dependencies retain their own licenses.

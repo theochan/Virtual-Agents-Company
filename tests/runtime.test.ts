@@ -40,7 +40,7 @@ async function freePort() { const server = http.createServer(); await new Promis
 async function start() {
   output = '';
   child = spawn(process.execPath, process.env.VAC_TEST_BUILT ? ['dist/server.cjs'] : ['--import', 'tsx', 'server.ts'], { cwd: process.cwd(), env: {
-    PATH: process.env.PATH, VAC_ALLOW_PAID_INFERENCE: '1', NODE_ENV: 'production', PORT: String(port), VAC_DATA_DIR: directory, VAC_ACCESS_TOKEN: token,
+    PATH: process.env.PATH, VAC_ALLOW_PAID_INFERENCE: '1', VAC_SEARCH_REQUESTS_PER_DAY: '0', NODE_ENV: 'production', PORT: String(port), VAC_DATA_DIR: directory, VAC_ACCESS_TOKEN: token,
     VAC_OPENAI_ENDPOINTS: `http://127.0.0.1:${providerPort}/v1`, OPENAI_API_KEY: 'fixture-not-a-real-provider-key',
   }, stdio: ['ignore', 'pipe', 'pipe'] });
   child.stdout!.on('data', chunk => output += chunk); child.stderr!.on('data', chunk => output += chunk);
@@ -78,6 +78,19 @@ before(async () => {
   assert.equal(result.status, 200);
 });
 after(async () => { await stop(); await new Promise<void>(r => mock.close(() => r())); fs.rmSync(directory, { recursive: true, force: true }); });
+
+test('connection tests report the local search budget block without testing or exposing credentials', async () => {
+  const before = (await api('/ready')).body.requestBudgets;
+  for (const provider of ['tavily', 'brave']) {
+    const result = await api('/admin/search/test-connection', 'POST', { provider, apiKey: 'private-fixture-key' });
+    assert.equal(result.status, 429);
+    assert.match(result.body.error, /no external request sent/);
+    assert.match(result.body.error, /VAC_SEARCH_REQUESTS_PER_DAY/);
+    assert.match(result.body.error, /restart VAC/);
+    assert.doesNotMatch(JSON.stringify(result.body), /private-fixture-key|Check server logs/);
+  }
+  assert.deepEqual((await api('/ready')).body.requestBudgets, before);
+});
 
 test('authentication, host/origin checks, and immutable registry block the reviewed escape paths', async () => {
   assert.equal((await fetch(`http://127.0.0.1:${port}/api/agents`)).status, 401);

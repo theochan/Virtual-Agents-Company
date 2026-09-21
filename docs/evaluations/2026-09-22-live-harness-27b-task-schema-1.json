@@ -1,0 +1,49 @@
+{
+  "mode": "live-harness",
+  "model": "qwen3.5:27b",
+  "startedAt": "2026-09-21T23:25:53.683Z",
+  "durationSeconds": 494.369,
+  "passed": false,
+  "limits": {
+    "maxAgents": 7,
+    "concurrency": 2,
+    "maxDepth": 2,
+    "maxModelCalls": 64,
+    "maxCallsPerAgent": 24,
+    "maxInputTokens": 750000,
+    "maxOutputTokens": 100000,
+    "maxTokensPerCall": 2048,
+    "maxToolCalls": 50,
+    "maxSearchAttempts": 4,
+    "maxSandboxRuns": 5,
+    "maxMinutes": 20
+  },
+  "checks": {
+    "completed": false,
+    "contracts": false,
+    "allRegistryTools": false,
+    "recursive": false,
+    "savedAgent": false,
+    "dependency": false,
+    "peerMessage": false,
+    "approvedMemory": false,
+    "browserProfile": false,
+    "exactConnectorWrite": false,
+    "skillVersion": true,
+    "routinePaused": true
+  },
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths and full trajectory retained privately."
+  },
+  "status": "failed",
+  "modelCalls": 4,
+  "spawned": 0,
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Coordinator sequence must include required tools and remain within grant",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Coordinator sequence must include required tools and remain within grant"
+  ],
+  "rawReportSha256": "74f88725e234bcdde4154d7658015834cff8564e9a1c98668a6a494aad0b5485",
+  "sourceHash": "c37915a29157bdacf2d1f66ca4d6f1bc88400c2fea078cbd67ed29fbbe6d01c3",
+  "limitation": "Development trial, original workload and limits. No validated plan or completed worker."
+}

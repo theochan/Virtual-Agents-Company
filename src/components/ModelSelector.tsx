@@ -35,9 +35,9 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ agent, onUpdateLLM
     } catch (error) { setDiscoveryError(error instanceof Error ? error.message : 'Model discovery failed.'); }
     finally { setLoading(false); }
   };
-  return <details className="relative text-xs" onToggle={e => { if (e.currentTarget.open) void refreshModels(); }}>
-    <summary className="cursor-pointer border rounded-lg p-2 bg-white">Model: {agent.llmConfig.model}</summary>
-    <div className="absolute z-30 top-full left-0 mt-2 w-80 border rounded-xl bg-white shadow-lg p-4 space-y-3">
+  return <details className="relative text-xs min-w-0" onToggle={e => { if (e.currentTarget.open) void refreshModels(); }}>
+    <summary className="cursor-pointer border rounded-lg p-2 bg-white break-words">Model: {agent.llmConfig.model}</summary>
+    <div className="absolute z-30 top-full right-0 mt-2 w-72 max-w-[calc(100vw-3rem)] border rounded-xl bg-white shadow-lg p-4 space-y-3">
       <label className="block">Provider<select className="block border rounded p-2 w-full mt-1" value={provider} onChange={e => { setProvider(e.target.value); setModel(''); void refreshModels(e.target.value); }}>
         <option value="" disabled>Select a supported provider</option><option value="ollama">Ollama</option><option value="anthropic">Anthropic</option><option value="openai">OpenAI</option><option value="huggingface">Hugging Face compatible</option><option value="qwen">Qwen compatible</option>
       </select></label>

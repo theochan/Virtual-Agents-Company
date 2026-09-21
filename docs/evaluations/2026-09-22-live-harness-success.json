@@ -1,0 +1,120 @@
+{
+  "sourceHash": "9a696ad878b53454b8ef1983d5ad5fab7a9f5ffc703fd3918ab5899409e24870",
+  "mode": "live-harness",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-21T23:40:33.728Z",
+  "durationSeconds": 351.784,
+  "passed": true,
+  "limits": {
+    "maxAgents": 7,
+    "concurrency": 2,
+    "maxDepth": 2,
+    "maxModelCalls": 64,
+    "maxCallsPerAgent": 24,
+    "maxInputTokens": 750000,
+    "maxOutputTokens": 100000,
+    "maxTokensPerCall": 2048,
+    "maxToolCalls": 50,
+    "maxSearchAttempts": 4,
+    "maxSandboxRuns": 5,
+    "maxMinutes": 20
+  },
+  "checks": {
+    "completed": true,
+    "contracts": true,
+    "allRegistryTools": true,
+    "recursive": true,
+    "savedAgent": true,
+    "dependency": true,
+    "peerMessage": true,
+    "approvedMemory": true,
+    "browserProfile": true,
+    "exactConnectorWrite": true,
+    "skillVersion": true,
+    "routinePaused": true
+  },
+  "inferenceSettings": {
+    "temperature": 0,
+    "think": false,
+    "numCtx": 16384,
+    "maxTokens": 2048
+  },
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private workspace paths, generated identities and full trajectory retained privately."
+  },
+  "status": "completed",
+  "planningCalls": 1,
+  "modelCalls": 17,
+  "toolCalls": 12,
+  "spawned": 4,
+  "artifactAudit": {
+    "summary": {
+      "revenue": 600,
+      "cost": 360,
+      "profit": 240.0,
+      "rows": 3
+    },
+    "currentRunHashesVerified": true,
+    "allOutputVersions": 1,
+    "ooxmlZipIntegrity": true,
+    "pdfHeaderValid": true,
+    "reviewerInspectedCompute": true,
+    "reviewerMessagedCoordinator": true,
+    "reviewerWaitedForComputeAndResearch": true,
+    "coordinatorCalculation": 240,
+    "connectorWrites": 1
+  },
+  "artifacts": [
+    {
+      "name": "report.docx",
+      "version": 1,
+      "sha256": "48552e320a5e5de4aac0d35efeb834945c421af30cd2257c816a5413d8855ae1",
+      "bytes": 36658,
+      "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "name": "report.pdf",
+      "version": 1,
+      "sha256": "1a6f44c89c21de097b4f0fabb12acae2524f38f087593f9dbe1df9d13f8392b7",
+      "bytes": 1487,
+      "mime": "application/pdf"
+    },
+    {
+      "name": "report.pptx",
+      "version": 1,
+      "sha256": "41bb66ac17ee9394c37e69164ec5b22b9ee579540d5e293caebdc93fa9e27ced",
+      "bytes": 28277,
+      "mime": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "name": "report.xlsx",
+      "version": 1,
+      "sha256": "d2899940d23d386b2cba573b276a16886ab02e0f16795763ea072f1f16c6dc53",
+      "bytes": 4897,
+      "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "name": "summary.json",
+      "version": 1,
+      "sha256": "3a194f7e69b95f0c169af86d45cf94e05c221f866c188e1cd517b168fa9a1cf7",
+      "bytes": 57,
+      "mime": "application/json"
+    },
+    {
+      "name": "review.md",
+      "version": 1,
+      "sha256": "d4458fd088f8a70fd2bd0acb6941fce4d6dff4cc4758bfdef7e5d8e151e80a65",
+      "bytes": 297,
+      "mime": "text/markdown"
+    }
+  ],
+  "rawReportSha256": "46d3675313883c8829b9379f4d508982ebea6cacfac5d2560cb557f9fedad841",
+  "limitations": [
+    "One development success on a fixed synthetic workflow; not an independent holdout or reliability estimate.",
+    "Models selected the plan and tool arguments; document generation used the existing deterministic tabular_report recipe.",
+    "The local fixture approved the exact write and memory proposal, then created and paused a skill routine.",
+    "Binary files passed integrity checks; no visual-layout acceptance is claimed.",
+    "No installed deployment, production default change, commit, push or Plane closure."
+  ]
+}

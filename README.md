@@ -105,7 +105,7 @@ Build the pinned document sandbox once with Docker running:
 docker build -t vac-sandbox:2026-09-21 sandbox
 ```
 
-The default sandbox image matches this tag; configure `VAC_SANDBOX_IMAGE` for a separately reviewed image. There is no host-execution fallback. Routines execute only while VAC is running; this is not an always-on cloud scheduler. Saved browser state is project-scoped and does not import a personal browser or provide human login handoff. The connector gateway is not a complete MCP client.
+The default sandbox image matches this tag; configure `VAC_SANDBOX_IMAGE` for a separately reviewed image. There is no host-execution fallback. Routines execute only while VAC is running; this is not an always-on cloud scheduler. Saved browser state is project-scoped and does not import a personal browser or provide human login handoff. Connectors support legacy JSON-RPC and bounded MCP Streamable HTTP tool sessions; OAuth, stdio and background server-request capabilities are not enabled.
 
 See [the swarm contract](docs/swarm-system.md) and [workspace operator guide](docs/SWARM-WORKSPACE.md) for API contracts, grants, recovery and limits.
 
@@ -119,7 +119,7 @@ In **Settings → Web Search Providers**, enter a Tavily or Brave API key and sa
 
 Saved keys persist in owner-only `data/search-credentials.json` (or the configured data directory), separate from database backups. This is a private plaintext file, not encrypted storage. Saved values override `TAVILY_API_KEY` and `BRAVE_SEARCH_API_KEY`; **Remove key** saves an empty override that survives restart. Protect this file separately if credentials must be recovered. Provider selection is included in database backups. Existing database-stored search keys migrate to the private file at startup; old database pages, WAL files, or previously created backups can still contain those historical keys. Migration is not secure erasure.
 
-**Test Connection** sends one real search request and may consume provider credits. A configured key is not proof of a working subscription. Search snippets are partial evidence: publication dates may be absent, Brave page dates may indicate publication or modification, and neither integration is a live market data feed. The run stores source URLs, bounded snippets, executed queries, and attempted providers. Tavily's generated answer is not treated as source evidence.
+**Test Connection** sends one real search request and may consume provider credits. It shares the daily Tavily/Brave allowance: `VAC_SEARCH_REQUESTS_PER_DAY=0` blocks tests before provider access. To enable them, set an approved positive limit in your private `.env` and restart VAC. A configured key is not proof of a working subscription. Search snippets are partial evidence: publication dates may be absent, Brave page dates may indicate publication or modification, and neither integration is a live market data feed. The run stores source URLs, bounded snippets, executed queries, and attempted providers. Tavily's generated answer is not treated as source evidence.
 
 API contracts: [Tavily Search](https://docs.tavily.com/documentation/api-reference/endpoint/search), [Brave Web Search](https://api-dashboard.search.brave.com/api-reference/web/search/get).
 
@@ -246,13 +246,13 @@ For the current evidence and upstream blocker, see [hardening validation](docs/r
 
 ## Current limitations and next gates
 
-- Single-owner, local-only deployment. Workspace IDs are enforced internally; this is not a supported multi-tenant service.
-- Human evaluation of generated drafts. No claim of autonomous correctness or independently validated business decisions.
-- Swarms support existing, dynamic and hybrid teams. Specialists can spawn recursively within inherited permissions, configured depth and shared root limits. Successful execution alone does not establish business accuracy or an advantage over a single equipped agent.
-- No imported script execution until sandboxing, resource/egress controls and individual tool validation exist.
-- No automatic retry of failed or uncertain operations. Idempotency is provided for run submission and supported internal artifact writes.
-- Polling and JSON records within SQLite suit a small local workspace; large datasets and distributed workers need additional design and testing.
-- No complete legal audit of all vendored assets, or certification that public Git history contains no secrets.
+- Single-owner, local-only deployment. Workspace IDs are enforced internally; this is not a supported multi-tenant service. Tracked by VAC-29–31 and VAC-34.
+- Optional independent semantic review uses a separate saved reviewer, owner-selected text/JSON evidence and a rubric; failed or inconclusive review blocks completion. Human review remains necessary for consequential decisions. VAC-28, VAC-32 and VAC-42 track qualification; no claim of general autonomous correctness.
+- Swarms support existing, dynamic and hybrid teams. Specialists can spawn recursively within inherited permissions, configured depth and shared root limits. Successful execution alone does not establish business accuracy or an advantage over a single equipped agent. Tracked by VAC-23, VAC-32–33 and VAC-42.
+- Arbitrary imported scripts remain disabled. The sandbox exists, but each imported tool still requires individual resource/egress and behavior validation (VAC-37).
+- No automatic retry of failed or uncertain operations. Idempotency covers run submission and supported internal artifact writes. Connector intent records block replay of uncertain calls, including after worker reconstruction; full recovery/reconciliation is tracked by VAC-38.
+- Polling and JSON records within SQLite suit a small local workspace; large datasets and distributed workers need additional design and testing (VAC-39, VAC-31 and VAC-33).
+- No complete legal audit of all vendored assets (VAC-40), or certification that public Git history contains no secrets (VAC-41).
 
 ## License
 
@@ -275,14 +275,19 @@ Results recorded on 2026-09-21; fixture tests and live model quality are differe
 
 | Evaluation | Result |
 |---|---|
-| Backend/integration tests, including real Docker tests | 118 passed, no failures or skips |
-| Browser UI tests | 15 passed |
+| Backend/integration tests, including real Docker tests | 126 passed, no failures or skips |
+| Browser UI tests | 17 passed, including constrained Settings layout regressions |
 | Real Qwen full tool-registry workflow with an owner-supplied plan | Passed all 12 scenario checks in 376.39 seconds |
 | Installed one-shot routine and nested explicit workflow | Passed |
 | Fresh-input Deep Agents-generated report workflow | Passed: generated plan, specialist, current-run documents and independent calculator verification |
-| Four complex Deep Agents autonomous workflow trials | Failed: invalid topology/grants and unsuccessful correction/context handling |
+| Five complex Deep Agents autonomous workflow trials | Failed: invalid topology/grants and unsuccessful correction/context handling |
+| Independent reviewer, fixed synthetic corpus | Revised schema: 12/12 correct decisions; initial failed corpus retained |
+| Installed independent reviewer | Correct artifact accepted; incorrect artifact blocked |
+| Streamable HTTP MCP interoperability | Official SDK and independent fixtures passed; public DeepWiki discovery and call passed in installed runtime |
 | Harness trial with earlier reports already present | Failed; current-run contracts prevented stale files from passing as new output |
 
 The complete scenario uses synthetic sales data and a local connector fixture. It does not prove production business-app integration. The successful smaller harness task does not establish reliable general autonomy. Failed trials remain documented in [the public validation summary](docs/reviews/2026-09-21-swarm-release.md).
 
-**Grok Bot/Kimi Swarm product parity is not achieved.** Outstanding work includes complex autonomous planning, full MCP/native connectors, broad authenticated-app workflows and login handoff, independent semantic review, always-on/distributed execution, enterprise identity and measured long-horizon/large-scale reliability. See [capability research](docs/SWARM-CAPABILITY-RESEARCH.md). Static/manual agents and explicit workflows remain supported.
+On 2026-09-22, the revised bounded planner completed the complex synthetic workflow on Qwen3.5 9B: all 12 checks passed in 351.784 seconds, with one planning call and exactly one fixture connector write. [Evidence and preserved failures](docs/reviews/2026-09-22-task-planner.md). This is one development success, not a general reliability estimate.
+
+**Grok Bot/Kimi Swarm product parity is not achieved.** Outstanding work includes complex autonomous planning, full MCP/native connectors, broad authenticated-app workflows and login handoff, broader semantic-review qualification, always-on/distributed execution, enterprise identity and measured long-horizon/large-scale reliability. See [capability research](docs/SWARM-CAPABILITY-RESEARCH.md) and the [current gap-to-work-item map and repository assessment](docs/research/2026-09-21-gap-closure.md). Static/manual agents and explicit workflows remain supported. See [the gap-closure acceptance report](docs/reviews/2026-09-21-gap-closure.md) for the exact implemented scope and retained failures.
