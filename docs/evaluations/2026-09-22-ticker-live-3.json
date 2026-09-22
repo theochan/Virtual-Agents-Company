@@ -1,0 +1,20 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "6cc1cfc331112340bcfdca5e034c2af510e5235c30c9305c1b6b439179137499",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:04:30.117Z",
+  "durationSeconds": 94.777,
+  "passed": false,
+  "status": "budget_exhausted",
+  "failure": "Harness context envelope exhausted",
+  "planningCalls": 1,
+  "spawned": 0,
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Valuation-Modeler: dependency Price must name a task key"
+  ],
+  "finding": "Correction request exceeded the fixed context envelope after a rejected nine-node plan. Subsequent candidate shortens planning instructions and stores repeated tool counts in planning history. Limits unchanged.",
+  "rawEvidenceSha256": "a68cd94d9a1a90857e6855a9144ea5e1ea47c7397c7df61b36b4544732764e64"
+}

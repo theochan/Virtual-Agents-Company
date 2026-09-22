@@ -22,6 +22,15 @@ test('file versions isolate projects, reject traversal and stale overwrites; con
 test('sandbox output writes versioned files atomically and reuses durable call receipts',async()=>{const f=setup();try{const w=new Workspace(f.store,async()=>({exitCode:0,stdout:'',stderr:'',files:[{name:'new.txt',base64:Buffer.from('new').toString('base64')},{name:'same.txt',base64:Buffer.from('changed').toString('base64')}]}));w.write('project','same.txt',Buffer.from('old'),0,'owner');const j=f.create();await w.execute(j,'node','tool-code',{code:'ignored',inputNames:[]},'code1',new AbortController().signal);assert.equal(w.file('project','same.txt').version,2);assert.equal(w.file('project','new.txt').version,1);assert.deepEqual(await w.execute(j,'node','tool-code',{code:'ignored'},'code1',new AbortController().signal),f.store.get('swarm-tool-results','code1'));}finally{f.cleanup();}});
 test('memory proposals are excluded until approved and carry source provenance',async()=>{const f=setup();try{const w=f.engine.workspace,j=f.create();await w.execute(j,'node','tool-memory',{propose:'Use USD'},'memory1',new AbortController().signal);const read=await w.execute(j,'node','tool-memory',{},'memory2',new AbortController().signal);assert.deepEqual(read.output,[]);w.decideMemory(w.memories('project')[0].id,'approved');const accepted=await w.execute(j,'node','tool-memory',{},'memory3',new AbortController().signal);assert.equal(accepted.output[0].sourceRunId,j.id);}finally{f.cleanup();}});
 const worker=(name:string,dependsOn:string[]=[])=>({name,role:'Analyst',objective:'Work '+name,instructions:'Report your dependency evidence',toolIds:[],acceptanceCriteria:['Report result'],dependsOn});
+test('impossible execution plans are rejected atomically before workers or inference',()=>{
+ const f=setup();try{
+  const step={...worker('Research'),key:'research',toolIds:['tool-calculator'],toolSequence:['tool-calculator','tool-calculator','tool-calculator'],requiredToolIds:[]};
+  assert.throws(()=>f.create({plan:[step],limits:{maxModelCalls:4}}),/cannot fit immutable/);
+  assert.equal(f.store.all('swarms').length,0);assert.equal(f.store.all('swarm-nodes').length,0);assert.equal(f.calls,0);
+  assert.throws(()=>f.create({harness:'deepagents',allowedToolIds:['tool-calculator'],workflowRequirements:{tasks:[{id:'Research',minimumTools:{'tool-calculator':3},dependsOn:[]}],coordinatorMinimumTools:{}},limits:{maxModelCalls:4}}),/cannot fit immutable/);
+  assert.equal(f.store.all('swarms').length,0);assert.equal(f.calls,0);
+ }finally{f.cleanup();}
+});
 test('DAG dependencies wait for completed siblings, deliver evidence once, and reject cycles atomically',async()=>{for(const cycle of [false,true]){const seen:string[]=[];const f=setup(m=>{const root=m[0].content.includes('You are the coordinator.');if(root)return m.some(x=>x.content.startsWith('UNTRUSTED CHILD'))?{action:'final',reply:'Merged'}:{action:'tool',toolId:SPAWN_TOOL,parameters:{workers:[worker('A',cycle?['B']:[]),worker('B',['A'])]}};if(m[0].content.includes('You are B,')){assert.ok(seen.includes('A'));assert.ok(m.some(x=>x.content.startsWith('UNTRUSTED DEPENDENCY')));seen.push('B');}else seen.push('A');return{action:'final',reply:'Evidence'};});try{const r=await f.finish(f.create({allowedToolIds:[]}).id);if(cycle){assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);}else{assert.equal(r.status,'completed');assert.deepEqual(seen,['A','B']);}}finally{f.cleanup();}}});
 test('write connector pauses before any side effect and rejection never executes it',async()=>{const old=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS='http://127.0.0.1:49999/tools';let connector:any;const f=setup(()=>({action:'tool',toolId:'tool-connector',parameters:{connectorId:connector.id,tool:'write',arguments:{value:600}}}));try{connector=f.engine.workspace.saveConnector({name:'Fixture',endpoint:process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS,tools:[{name:'write',effect:'write'}]});const r=await f.finish(f.create({allowedToolIds:['tool-connector'],connectorIds:[connector.id]}).id);assert.equal(r.status,'waiting_approval');assert.equal(r.budget.toolCalls,0);const a=r.approvals![0];f.engine.decideApproval(a.id,'rejected');const done=await f.finish(r.id);assert.equal(done.status,'failed');assert.equal(done.budget.toolCalls,0);assert.throws(()=>f.engine.decideApproval(a.id,'approved'));}finally{if(old===undefined)delete process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;else process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=old;f.cleanup();}});
 test('pinned skill routines survive scheduler recreation, prevent overlap, stop at cap and preserve versions',async()=>{const f=setup();try{let scheduler=new Routines(f.engine);const v1=scheduler.saveSkill({name:'Weekly',template:{...f.input,allowedToolIds:[]}}),v2=scheduler.saveSkill({name:'Weekly',template:{...f.input,objective:'New objective',allowedToolIds:[]}});assert.equal(v2.version,2);const routine=scheduler.create({skillId:v1.id,intervalMinutes:1,maxRuns:2,startsAt:new Date().toISOString()});scheduler.tick();let saved=f.store.get<any>('swarm-routines',routine.id);assert.equal(saved.runs,1);saved.nextAt=0;f.store.put('swarm-routines',saved.id,saved);scheduler=new Routines(f.engine);scheduler.tick();assert.equal(f.store.get<any>('swarm-routines',saved.id).runs,1);await f.finish(saved.lastRunId);scheduler.tick();saved=f.store.get<any>('swarm-routines',saved.id);assert.equal(saved.runs,2);assert.equal(saved.status,'completed');assert.equal(f.engine.get(saved.lastRunId).objective,f.input.objective);scheduler.tick();assert.equal(f.store.all('swarms').length,2);}finally{f.cleanup();}});
@@ -97,7 +106,7 @@ test('harness corrects aggregate topology feedback without persisting rejected w
 });
 
 test('generated root sequences are revalidated before workflow compilation',async()=>{
- const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],['tool-calculator','tool-calculator'])}));try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator']}).id);assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);assert.equal(r.budget.spawned,0);assert.ok(r.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes('unique')));}finally{f.cleanup();}
+ const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],Array(25).fill('tool-calculator'))}));try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator']}).id);assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);assert.equal(r.budget.spawned,0);assert.match(r.nodes[0].result!,/planning limit/);}finally{f.cleanup();}
 });
 
 test('independent semantic review is isolated, grounded, budgeted and blocks false acceptance',async()=>{
@@ -114,9 +123,9 @@ test('independent semantic review is isolated, grounded, budgeted and blocks fal
    const semanticReview={reviewerId:'reviewer',criteria:['Output total matches source'],inputNames:['source.txt'],outputNames:['result.txt']};
    assert.throws(()=>f.create({semanticReview:{...semanticReview,reviewerId:'manager'}}),/different eligible/);
    const done=await f.finish(f.create({allowedToolIds:['tool-write-file'],toolSequence:['tool-write-file'],semanticReview}).id);
-   assert.equal(done.status,verdict==='pass'?'completed':'blocked',done.result);assert.equal(isolated,true);assert.equal(done.budget.modelCalls,3);
+   assert.equal(done.status,verdict==='pass'?'completed':'blocked',done.result);assert.equal(isolated,true);assert.equal(done.budget.modelCalls,verdict==='pass'?4:3);
    assert.equal(done.semanticReviewResult?.passed,verdict==='pass');assert.ok(done.semanticReviewResult?.packetHash);
-   assert.equal(done.nodes[0].receipts.filter(r=>r.purpose==='independent_review').length,1);
+   assert.equal(done.nodes[0].receipts.filter(r=>r.purpose==='independent_review').length,verdict==='pass'?2:1);
   }finally{f.cleanup();}
  }
 });
@@ -209,4 +218,161 @@ test('coordinator assignment executes root tools personally after child completi
   assert.equal(r.nodes[0].receipts.filter(x=>x.toolId==='tool-calculator'&&x.status==='succeeded').length,1);
   assert.equal(r.nodes[1].receipts.filter(x=>x.toolId).length,0);
  }finally{f.cleanup();}
+});
+
+test('autonomous plan repeats file operations and shares calculator grants with personal root evidence',async()=>{
+ const f=setup(m=>{
+  if(m[0].content.includes('VAC workflow planner'))return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('Analyst',{toolSequence:['tool-calculator','tool-write-file','tool-write-file','tool-files','tool-files'],requiredToolIds:['tool-calculator','tool-write-file','tool-files'],instructions:'Compute and write two distinct outputs, then read them.'})],['tool-calculator'])};
+  const state=JSON.parse(m.find((x:any)=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);
+  if(!state.nextRequiredTool)return{action:'final',reply:'Verified'};
+  const i=state.nextSequenceStep;
+  if(m[0].content.includes('You are Analyst,'))assert.ok(state.contracts.some((c:any)=>c.name==='first.json'));
+  const parameters=state.nextRequiredTool==='tool-calculator'?{operation:'add',a:19,b:23}:state.nextRequiredTool==='tool-write-file'?{name:i===1?'first.json':'second.json',content:'{"value":42}',expectedVersion:0}:{name:i===3?'first.json':'second.json'};
+  return{action:'tool',toolId:state.nextRequiredTool,parameters};
+ });
+ try{const done=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-calculator','tool-files','tool-write-file'],requiredToolIds:['tool-calculator'],contracts:[{name:'first.json',kind:'json_equals',path:['value'],expected:42}],limits:{maxCallsPerAgent:12}}).id);
+  assert.equal(done.status,'completed',done.result);
+  const child=done.nodes.find(n=>n.parentId)!;
+  assert.deepEqual(child.receipts.filter(r=>r.toolId).map(r=>r.sequenceStep),[0,1,2,3,4]);
+  assert.equal(done.nodes[0].receipts.filter(r=>r.toolId==='tool-calculator'&&r.status==='succeeded').length,1);
+  for(const name of ['first.json','second.json'])assert.equal(f.engine.workspace.file('project',name).version,1);
+ }finally{f.cleanup();}
+});
+
+test('repeated successful side effect is rejected before a second dispatch',async()=>{
+ const f=setup(()=>({action:'tool',toolId:'tool-memory',parameters:{propose:'Do not duplicate this proposal.'}}));
+ try{const done=await f.finish(f.create({allowedToolIds:['tool-memory'],toolSequence:['tool-memory','tool-memory']}).id);
+ assert.equal(done.status,'failed');assert.match(done.result!,/must not be replayed/);assert.equal(f.engine.workspace.memories('project').length,1);
+ assert.equal(done.nodes[0].receipts.filter(r=>r.status==='succeeded'&&r.toolId==='tool-memory').length,1);
+ }finally{f.cleanup();}
+});
+
+test('failed repeated step cannot be skipped by the prior successful receipt',async()=>{
+ const f=setup(m=>{const state=JSON.parse(m.find((x:any)=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);return{action:'tool',toolId:'tool-files',parameters:{name:state.nextSequenceStep===0?'exists.txt':'missing.txt'}};});
+ try{f.engine.workspace.write('project','exists.txt',Buffer.from('evidence'),0,'owner');const done=await f.finish(f.create({allowedToolIds:['tool-files'],toolSequence:['tool-files','tool-files']}).id);
+ assert.equal(done.status,'failed');const receipts=done.nodes[0].receipts.filter(r=>r.toolId==='tool-files');assert.deepEqual(receipts.map(r=>[r.sequenceStep,r.status]),[[0,'succeeded'],[1,'failed']]);
+ }finally{f.cleanup();}
+});
+
+test('planned browser worker opens separate source pages with separate completion receipts',async()=>{
+ const {SwarmBrowser}=await import('../src/server/browser');const requests:string[]=[];
+ const browser=new SwarmBrowser(async r=>{requests.push(r.url);return{status:200,headers:{'content-type':'text/html'},body:Buffer.from('<h1>'+r.url+'</h1>')};});
+ const f=setup(m=>{const state=JSON.parse(m.find((x:any)=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);return state.nextRequiredTool?{action:'tool',toolId:'tool-browser',parameters:{action:'navigate',url:state.nextSequenceStep===0?'https://example.com/quote':'https://example.com/filing'}}:{action:'final',reply:'Read both sources'};});(f.engine as any).browsers=browser;
+ try{const done=await f.finish(f.create({allowedToolIds:['tool-browser'],toolSequence:['tool-browser','tool-browser']}).id);assert.equal(done.status,'completed',done.result);assert.deepEqual(requests,['https://example.com/quote','https://example.com/filing']);assert.deepEqual(done.nodes[0].receipts.filter(r=>r.toolId==='tool-browser').map(r=>r.sequenceStep),[0,1]);}
+ finally{await browser.closeAll();f.cleanup();}
+});
+
+test('repeated connector steps do not reuse approval or dispatch an already successful write',async()=>{
+ const http=await import('node:http');let writes=0;const server=http.createServer(async(req,res)=>{let body='';for await(const b of req)body+=b;const x=JSON.parse(body);writes++;res.setHeader('content-type','application/json');res.end(JSON.stringify({jsonrpc:'2.0',id:x.id,result:{content:[{type:'text',text:'saved'}]}}));});await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
+ const endpoint=`http://127.0.0.1:${(server.address()as any).port}/tools`,previous=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=endpoint;let connector:any;
+ let calls=0;const f=setup(()=>({action:'tool',toolId:'tool-connector',parameters:++calls===1?{connectorId:connector.id,tool:'save',arguments:{value:42}}:{arguments:{value:42},tool:'save',connectorId:connector.id}}));
+ try{connector=f.engine.workspace.saveConnector({name:'once',endpoint,tools:[{name:'save',effect:'write'}]});let r=await f.finish(f.create({allowedToolIds:['tool-connector'],toolSequence:['tool-connector','tool-connector'],connectorIds:[connector.id]}).id);assert.equal(r.status,'waiting_approval');assert.equal(writes,0);f.engine.decideApproval(r.approvals![0].id,'approved');r=await f.finish(r.id);assert.equal(r.status,'failed');assert.match(r.result!,/must not be replayed/);assert.equal(writes,1);assert.equal(r.approvals!.length,1);assert.equal(r.approvals![0].status,'consumed');}
+ finally{f.cleanup();process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=previous||'';server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
+});
+
+test('interrupted repeated-write sequence cannot replay writes on recovery and explicit resume',async()=>{
+ const f=setup(m=>{const state=JSON.parse(m.find((x:any)=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);return state.nextRequiredTool?{action:'tool',toolId:'tool-write-file',parameters:{name:state.nextSequenceStep===0?'first.txt':'second.txt',content:'evidence',expectedVersion:0}}:{action:'final',reply:'Retained evidence'};});
+ try{const j=f.create({allowedToolIds:['tool-write-file'],toolSequence:['tool-write-file','tool-write-file']});await f.engine.tick();await f.engine.tick();
+  const n=f.store.get<any>('swarm-nodes',j.rootNodeId);assert.equal(n.pending.sequenceStep,1);assert.equal(n.receipts.filter((r:any)=>r.toolId==='tool-write-file'&&r.status==='succeeded').length,1);
+  n.status='working';f.store.put('swarm-nodes',n.id,n);f.engine.recover();assert.equal(f.engine.get(j.id).status,'blocked');f.engine.resume(j.id);await f.finish(j.id);
+  assert.equal(f.engine.workspace.file('project','first.txt').version,1);assert.throws(()=>f.engine.workspace.file('project','second.txt'),/not found/);
+ }finally{f.cleanup();}
+});
+
+test('required dynamic delegation precedes root sequence without consuming its first step',async()=>{
+ let rootCalls=0;const f=setup(m=>{if(!m[0].content.includes('You are the coordinator.'))return{action:'final',reply:'Child done'};rootCalls++;return rootCalls===1?{action:'tool',toolId:SPAWN_TOOL,parameters:{workers:[worker('Child')]}}:rootCalls===2?{action:'tool',toolId:'tool-calculator',parameters:{operation:'add',a:1,b:2}}:{action:'final',reply:'3'};});
+ try{const r=await f.finish(f.create({requiredDepth:1,allowedToolIds:['tool-calculator'],toolSequence:['tool-calculator']}).id);assert.equal(r.status,'completed',r.result);assert.equal(r.nodes[0].receipts.find(r=>r.toolId==='tool-calculator').sequenceStep,0);}finally{f.cleanup();}
+});
+
+test('harness rejects omitted task operations before dispatch and preserves assignment identity',async()=>{
+ let planning=0;const f=setup(m=>{
+  if(m[0].content.includes('VAC workflow planner')){planning++;return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('research',{assignmentId:'Research',name:'Named differently',toolSequence:planning===1?['tool-files']:['tool-files','tool-files']})])};}
+  const state=JSON.parse(m.find((x:any)=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);return state.nextRequiredTool?{action:'tool',toolId:'tool-files',parameters:{}}:{action:'final',reply:'Verified'};
+ });
+ try{const done=await f.finish(f.create({harness:'deepagents',allowedToolIds:['tool-files'],workflowRequirements:{tasks:[{id:'Research',minimumTools:{'tool-files':2},dependsOn:[]}],coordinatorMinimumTools:{}}}).id);assert.equal(done.status,'completed',done.result);assert.equal(done.nodes.length,2);assert.equal(done.nodes[1].assignmentId,'Research');assert.equal(planning,2);assert.equal(done.events.filter(e=>e.type==='HARNESS_REJECTED').length,1);assert.equal(done.nodes[1].receipts.filter(r=>r.toolId==='tool-files').length,2);}finally{f.cleanup();}
+});
+
+test('nine-node research context retains brief and source observations inside unchanged envelope',async()=>{
+ const {browserTool}=await import('../src/server/browser');const f=setup();
+ try{const task=(name:string,key:string,parentKey?:string)=>({...worker(name),key,parentKey,instructions:'Read the assigned brief, search current sources, open the original pages and preserve exact evidence.',toolIds:['tool-files','tool-browser','tool-write-file'],toolSequence:parentKey?['tool-files','tool-browser','tool-browser','tool-write-file']:[]});
+ const plan=[task('Research Lead','research'),...['Price','Fundamentals','Events'].map(x=>task(x+' Research Specialist',x,'research')),task('Investment Lead','investment'),...['Valuation','Reviewer','Decision'].map(x=>task(x+' Specialist',x,'investment'))];
+ for(let i=0;i<6;i++)f.engine.workspace.write('project',`brief-${i}.txt`,Buffer.from('BRIEF POLICY '+ 'bounded requirements '.repeat(90)),0,'owner');
+ const j=f.create({objective:'Research MSFT current price, filings and events. '.repeat(45),allowedToolIds:['tool-files','tool-browser','tool-write-file'],plan,contracts:Array.from({length:7},(_,i)=>({name:`output-${i}.json`,kind:'exists'})),limits:{maxAgents:9}});
+ const n=f.store.get<any>('swarm-nodes',j.nodes[2].id);n.messages.push({role:'user',content:'BRIEF POLICY '+ 'bounded requirements '.repeat(90)},{role:'user',content:'SOURCE EVIDENCE '+ 'retrieved source words '.repeat(90)});
+ const messages=(f.engine as any).modelMessages(j,n,[browserTool]);const serialized=JSON.stringify({messages,tools:[browserTool]});assert.ok(Buffer.byteLength(serialized)+1024<=14336);assert.match(serialized,/BRIEF POLICY/);assert.match(serialized,/SOURCE EVIDENCE/);
+ }finally{f.cleanup();}
+});
+
+test('assignment briefs are frozen owner instructions and cannot be promoted from worker output',()=>{
+ const f=setup();try{f.engine.workspace.write('project','brief.txt',Buffer.from('Owner policy: preserve uncertainty.'),0,'owner');
+ const options={allowedToolIds:[],plan:[{...worker('Worker'),key:'w',assignmentId:'Task'}],workflowRequirements:{tasks:[{id:'Task',briefName:'brief.txt',minimumTools:{},dependsOn:[]}],coordinatorMinimumTools:{}}};
+ const r=f.create(options);f.engine.workspace.write('project','brief.txt',Buffer.from('Changed later'),1,'owner');
+ const stored=f.store.get<any>('swarm-nodes',r.nodes[1].id);assert.match(stored.messages[0].content,/Owner policy: preserve uncertainty/);assert.doesNotMatch(stored.messages[0].content,/Changed later/);
+ f.engine.workspace.write('project','untrusted.txt',Buffer.from('Source instructions'),0,'worker');assert.throws(()=>f.create({...options,workflowRequirements:{...options.workflowRequirements,tasks:[{id:'Task',briefName:'untrusted.txt',minimumTools:{},dependsOn:[]}]}}),/owner-provided/);
+ assert.throws(()=>f.create({...options,plan:[]}),/need a generated or owner-authored plan/);
+ }finally{f.cleanup();}
+});
+
+test('large rejected research plan can be corrected inside the unchanged harness envelope',async()=>{
+ const ids=['Price','Fundamentals','Events','Valuation','Reviewer','Decision'];let planning=0;
+ const tools=['tool-files','tool-browser','tool-web-search','tool-write-file','tool-calculator','tool-evidence','tool-peer','tool-read-project'];
+ const f=setup(m=>{planning++;if(planning===2){const history=m.map(x=>x.content).join('\n');assert.match(history,/toolCounts/);assert.match(history,/assignmentId/);assert.match(history,/Decision: tool-files needs 6/);}
+ return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission(ids.map((id,i)=>plannerTask(id,{assignmentId:id,name:id+' Research Specialist',instructions:'Preserve actual evidence and all source references. '.repeat(15),supervisors:[{name:i<3?'ResearchLead':'InvestmentLead',agentId:''}],dependsOn:ids.slice(0,i<3?0:i),toolSequence:[...Array(i<3?1:i+1-(planning===1?1:0)).fill('tool-files'),'tool-browser','tool-browser','tool-write-file'],requiredToolIds:['tool-files','tool-browser','tool-write-file']})),['tool-files','tool-files'])};});
+ try{const r=f.create({harness:'deepagents',objective:'Research ticker evidence, preserve timestamps and units, review sources, calculate scenarios and disclose unresolved gaps. '.repeat(16),allowedToolIds:tools,requiredToolIds:['tool-files'],requiredDepth:2,limits:{maxAgents:9,maxCallsPerAgent:24,maxModelCalls:96,maxToolCalls:80},contracts:ids.map(id=>({name:id+'.json',kind:'exists'})),workflowRequirements:{tasks:ids.map((id,i)=>({id,minimumTools:{'tool-files':i<3?1:i+1,'tool-browser':2,'tool-write-file':1},dependsOn:ids.slice(0,i<3?0:i)})),coordinatorMinimumTools:{'tool-files':2}}});
+ await f.engine.tick();const done=f.engine.get(r.id);assert.equal(done.status,'waiting_children',done.nodes[0].result);assert.equal(planning,2);assert.equal(done.nodes.length,9);assert.equal(done.events.filter(e=>e.type==='HARNESS_REJECTED').length,1);
+ }finally{f.cleanup();}
+});
+
+test('search context labels and prioritizes approved origins without expanding browser authority',()=>{
+ const f=setup();try{const j=f.create({allowedToolIds:['tool-browser','tool-web-search']});const n=f.store.get<any>('swarm-nodes',j.nodes[0].id);
+ n.messages.push({role:'user',content:'UNTRUSTED TOOL RESULT: '+JSON.stringify({toolId:'tool-web-search',status:'succeeded',output:{found:true,results:[{title:'Unapproved',url:'https://outside.example/quote',snippet:'Original first result'},{title:'Approved',url:'https://example.com/quote',snippet:'Original second result'}]}})});
+ const messages=(f.engine as any).modelMessages(j,n,[]);const observation=messages.find((m:any)=>m.content.startsWith('UNTRUSTED TOOL RESULT: '));const result=JSON.parse(observation.content.slice('UNTRUSTED TOOL RESULT: '.length)).output;
+ assert.equal(result.sources[0].url,'https://example.com/quote');assert.equal(result.sources[0].browserOriginApproved,true);assert.equal(result.sources[1].browserOriginApproved,false);assert.equal(result.sources.length,2);assert.deepEqual(j.browserPolicy.allowedOrigins,['https://example.com']);assert.doesNotMatch(n.messages.at(-1).content,/browserOriginApproved/);
+ }finally{f.cleanup();}
+});
+
+test('research engine supplies discovered URL enum and blocks invented navigation before requests',async()=>{
+ const f=setup();try{let advertised=false;(f.engine as any).inference=async(_p:any,_m:any,_s:any,tools:any[])=>{const schema=tools.find(t=>t.id==='tool-browser').schema;const branch=(schema.oneOf||schema.anyOf).find((b:any)=>b.properties.action.const==='navigate');assert.deepEqual(branch.properties.url.enum,['https://example.com/discovered']);advertised=true;return{decision:{action:'tool',toolId:'tool-browser',parameters:{action:'navigate',url:'https://example.com/invented'}},receipt:{inputTokens:10,outputTokens:10,cost:null}};};
+ const r=f.create({allowedToolIds:['tool-browser'],toolSequence:['tool-browser'],browserPolicy:{allowedOrigins:['https://example.com'],allowActions:false,requireDiscoveredUrls:true}});const n=f.store.get<any>('swarm-nodes',r.rootNodeId);n.receipts.push({toolId:'tool-web-search',status:'succeeded',output:{results:[{url:'https://example.com/discovered'}]}});f.store.put('swarm-nodes',n.id,n);
+ const done=await f.finish(r.id);assert.equal(advertised,true);assert.equal(done.status,'failed');assert.match(done.nodes[0].result!,/exact discovered URL/);assert.equal(done.budget.browserRequests,0);assert.equal(done.nodes[0].receipts.at(-1)?.status,'failed');
+ }finally{f.cleanup();}
+});
+
+test('discovered URL enums remain in actual schemas without duplicate URLs in fixed instructions',async()=>{
+ const {discoveredBrowserTool}=await import('../src/server/browser');const f=setup();
+ try{const urls=Array.from({length:8},(_,i)=>'https://example.com/'+('long-source-path-'.repeat(8))+i);const tool=discoveredBrowserTool(urls);const j=f.create({allowedToolIds:['tool-browser']});const n=f.store.get<any>('swarm-nodes',j.rootNodeId);const messages=(f.engine as any).modelMessages(j,n,[tool]);const state=JSON.parse(messages.find((m:any)=>m.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);
+ assert.doesNotMatch(JSON.stringify(state.availableTools),/long-source-path/);assert.match(JSON.stringify(tool.schema),/long-source-path/);assert.match(JSON.stringify(state.availableTools),/tool schema enum/);assert.ok(Buffer.byteLength(JSON.stringify({messages,tools:[tool]}))+1024<=14336);
+ }finally{f.cleanup();}
+});
+
+test('successful observation is durable even when preparing the next model context fails',async()=>{
+ const f=setup(()=>({action:'tool',toolId:'tool-calculator',parameters:{operation:'add',a:2,b:3}}));
+ try{const original=(f.engine as any).modelMessages.bind(f.engine);let contexts=0;(f.engine as any).modelMessages=(...args:any[])=>{if(++contexts===2)throw new Error('Fixture context preparation failed');return original(...args);};
+ const r=await f.finish(f.create({allowedToolIds:['tool-calculator'],toolSequence:['tool-calculator','tool-calculator']}).id);assert.equal(r.status,'failed');const node=f.store.get<any>('swarm-nodes',r.rootNodeId);assert.ok(node.receipts.some((r:any)=>r.toolId==='tool-calculator'&&r.status==='succeeded'));assert.ok(node.messages.some((m:any)=>m.content.startsWith('UNTRUSTED TOOL RESULT: ')&&m.content.includes('tool-calculator')));assert.equal(node.pending,undefined);
+ }finally{f.cleanup();}
+});
+
+test('a provisional semantic pass cannot survive contradictory confirmation or insufficient confirmation budget',async()=>{
+ for(const outcome of ['contradiction','budget','changed-evidence']){
+  const f=setup(m=>{
+   if(m[0].content.startsWith('You are an independent')){
+    const confirmation=m[0].content.includes('CONSISTENCY CONFIRMATION');
+    if(confirmation&&outcome==='changed-evidence')f.engine.workspace.write('project','result.txt',Buffer.from('135'),1,'producer',f.engine.list()[0].id);
+    return{action:'tool',toolId:'submit_review',parameters:{checks:[{criterion:0,reason:'84+36-15 is 105; report 135 is wrong.',evidence:[{name:'source.txt',quote:'84+36-15=105'},{name:'result.txt',quote:'135'}],verdict:confirmation?'fail':'pass'}]}};
+   }
+   if(!m.some(x=>x.content.includes('UNTRUSTED TOOL')))return{action:'tool',toolId:'tool-write-file',parameters:{name:'result.txt',content:'135',expectedVersion:0}};
+   return{action:'final',reply:'Result prepared'};
+  });
+  try{
+   f.store.put('agents','reviewer',{...f.store.get<any>('agents','manager'),id:'reviewer',toolIds:[]});
+   f.engine.workspace.write('project','source.txt',Buffer.from('84+36-15=105'),0,'owner');
+   const job=f.create({allowedToolIds:['tool-write-file'],semanticReview:{reviewerId:'reviewer',criteria:['Total matches source'],inputNames:['source.txt'],outputNames:['result.txt']},limits:{maxModelCalls:outcome==='budget'?4:8,maxCallsPerAgent:outcome==='budget'?3:8}});
+   const done=await f.finish(job.id);
+   assert.notEqual(done.status,'completed');assert.equal(done.semanticReviewResult?.passed,false);
+   const stages=done.semanticReviewResult?.stages;assert.equal(stages?.[0].validated.passed,true);
+   if(outcome==='contradiction'){assert.equal(done.status,'blocked');assert.equal(stages?.[1].validated.passed,false);assert.equal(done.budget.modelCalls,4);}
+   if(outcome==='budget'){assert.equal(done.status,'budget_exhausted');assert.equal(done.budget.modelCalls,3);assert.equal(stages?.length,1);}
+   if(outcome==='changed-evidence'){assert.equal(done.status,'failed');assert.match(done.nodes[0].result!,/evidence changed/);}
+  }finally{f.cleanup();}
+ }
 });

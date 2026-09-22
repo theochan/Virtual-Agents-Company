@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {Store} from '../src/server/store';import {Workspace} from '../src/server/workspace';
 import {reviewPacket,reviewTool,reviewToolFor,validateReview,semanticReviewSchema} from '../src/server/semanticReview';
@@ -16,7 +17,8 @@ const cases=[
 const declaration={cases,repetitions:2,maximumModelCalls:12,maxFalseAcceptances:0,minTrueAcceptances:5,model:'qwen3.5:9b',temperature:0};
 const report:any={implementationHash:hash(['src/server/semanticReview.ts','src/server/providers.ts'].map(p=>fs.readFileSync(p,'utf8'))),declaration,declarationHash:hash(declaration),startedAt:new Date().toISOString(),results:[],scope:'Small synthetic reviewer corpus, not long-horizon or general factual qualification.'};
 const save=()=>fs.writeFileSync(output,JSON.stringify(report,null,2));save();
-const directory=fs.mkdtempSync(path.join(os.tmpdir(),'vac-semantic-eval-')),store=new Store(directory),workspace=new Workspace(store);
+const budgetStore=new Store(path.resolve('data'));
+const directory=fs.mkdtempSync(path.join(os.tmpdir(),'vac-semantic-eval-')),store=new Store(directory,budgetStore),workspace=new Workspace(store);
 store.put('projects','p',{id:'p',workspaceId:'ws-default',name:'Synthetic review corpus'});
 try{
  for(let repetition=1;repetition<=2;repetition++)for(const c of cases){
@@ -29,4 +31,4 @@ try{
   result.durationMs=Date.now()-start;report.results.push(result);save();console.log(JSON.stringify({id:c.id,repetition,passed:result.review?.passed,correct:result.correct,error:result.error,durationMs:result.durationMs}));
  }
  report.falseAcceptances=report.results.filter((r:any)=>!r.expected&&r.review?.passed).length;report.trueAcceptances=report.results.filter((r:any)=>r.expected&&r.review?.passed).length;report.errors=report.results.filter((r:any)=>r.error).length;report.passed=report.falseAcceptances===0&&report.trueAcceptances>=5&&report.errors===0;report.completedAt=new Date().toISOString();save();if(!report.passed)process.exitCode=1;
-}finally{store.close();}
+}finally{store.close();budgetStore.close();}

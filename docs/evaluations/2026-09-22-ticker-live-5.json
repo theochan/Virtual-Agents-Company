@@ -1,0 +1,39 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "1f7aa73cd43bc382baeef2b868a94b0373c6660765902001b3b8ace38b1443be",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:15:49.710Z",
+  "durationSeconds": 253.153,
+  "passed": false,
+  "status": "cancelled",
+  "planningCalls": 2,
+  "spawned": 8,
+  "failures": [
+    {
+      "name": "Fundamentals Specialist",
+      "reason": "Browser navigation returned HTTP 404"
+    }
+  ],
+  "successfulBrowserUrls": [
+    "https://finance.yahoo.com/quote/MSFT/"
+  ],
+  "orchestration": {
+    "completed": false,
+    "contracts": false,
+    "nineNodes": true,
+    "sixDepthTwo": true,
+    "crossBranchDependencies": true,
+    "repeatedBrowser": false,
+    "repeatedWriter": false,
+    "reviewerReopens": false,
+    "reviewerEvidence": false,
+    "reviewerPeer": false,
+    "coordinatorCalculation": false,
+    "allCurrentArtifacts": false
+  },
+  "finding": "Price opened Yahoo Finance successfully. Fundamentals invented a legacy Microsoft path instead of copying a discovered issuer URL and received HTTP 404. Subsequent candidate explicitly requires exact discovered links; no permissions or caps widened.",
+  "rawEvidenceSha256": "6a4b267900e06faf93db4feec3d59ca7699330f6c883ac86104a4582783641a9"
+}

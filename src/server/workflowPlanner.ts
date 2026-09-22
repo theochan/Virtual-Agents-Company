@@ -3,23 +3,23 @@ import { validateWorkflowTopology } from './workflowTopology';
 
 // The model specifies leaf tasks and supervisor paths. The compiler constructs
 // hierarchy and least-privilege grants; it never invents tasks or tool actions.
-export function workflowPlannerSchema(tools: string[], profiles: string[], maxDepth: number, maxWorkers: number, coordinatorTools: string[] = []) {
-  const workerTools=tools.filter(tool=>!coordinatorTools.includes(tool));
-  const tool = workerTools.length ? z.enum(workerTools as [string, ...string[]]) : z.never();
+export function workflowPlannerSchema(tools: string[], profiles: string[], maxDepth: number, maxWorkers: number, coordinatorTools: string[] = [], assignments: string[] = []) {
+  const tool = tools.length ? z.enum(tools as [string, ...string[]]) : z.never();
   const rootTools=coordinatorTools.length?coordinatorTools:tools;
   const rootTool=rootTools.length?z.enum(rootTools as [string,...string[]]):z.never();
   const profile = z.enum(profiles as [string, ...string[]]);
   return z.object({
     tasks: z.array(z.discriminatedUnion('executor', [
-      z.object({executor:z.literal('coordinator'),toolSequence:z.array(rootTool).min(coordinatorTools.length).max(11)}).strict(),
+      z.object({executor:z.literal('coordinator'),toolSequence:z.array(rootTool).min(coordinatorTools.length).max(24)}).strict(),
       z.object({executor:z.literal('worker'),
+      ...(assignments.length?{assignmentId:z.enum(assignments as [string,...string[]])}:{}),
       key: z.string().regex(/^[a-zA-Z0-9_-]{1,40}$/),
       name: z.string().min(1).max(100),
       instructions: z.string().min(1).max(2000),
       agentId: profile,
       supervisors: z.array(z.object({name:z.string().min(1).max(100),agentId:profile}).strict()).max(maxDepth-1),
       dependsOn: z.array(z.string().min(1).max(40)).max(8),
-      toolSequence: z.array(tool).max(11),
+      toolSequence: z.array(tool).max(24),
       requiredToolIds: z.array(tool).max(11),
     }).strict(),
     ])).min(1).max(maxWorkers+1),
@@ -29,17 +29,13 @@ export function workflowPlannerSchema(tools: string[], profiles: string[], maxDe
 export function compileWorkflowTasks(raw: z.infer<ReturnType<typeof workflowPlannerSchema>>) {
   const plan: any[] = [];
   const supervisors = new Map<string, any>();
-  const unique = (items: string[], label: string) => {
-    if (new Set(items).size !== items.length) throw new Error(label + ': sequence tools must be unique');
-    return items;
-  };
   const coordinators=raw.tasks.filter(task=>task.executor==='coordinator');
   if(coordinators.length>1)throw new Error('Submit exactly one coordinator assignment');
-  const toolSequence=unique(coordinators[0]?.toolSequence||[], 'coordinator');
+  const toolSequence=coordinators[0]?.toolSequence||[];
   const tasks=raw.tasks.filter(task=>task.executor==='worker');
   if(!tasks.length)throw new Error('Workflow needs at least one delegated worker task');
   for (const task of tasks) {
-    const tools = unique(task.toolSequence, task.key);
+    const tools = task.toolSequence;
     if (task.requiredToolIds.some(tool => !tools.includes(tool))) throw new Error(task.key + ': required tools must appear in toolSequence');
     let parentKey: string | undefined;
     const path: string[] = [];
@@ -60,9 +56,9 @@ export function compileWorkflowTasks(raw: z.infer<ReturnType<typeof workflowPlan
       node.toolIds = [...new Set([...node.toolIds, ...tools])];
       parentKey = node.key;
     }
-    plan.push({key:task.key, parentKey, name:task.name, agentId:task.agentId || undefined,
+    plan.push({key:task.key, assignmentId:'assignmentId' in task?task.assignmentId:undefined, parentKey, name:task.name, agentId:task.agentId || undefined,
       role:'Workflow specialist', instructions:task.instructions, objective:task.instructions,
-      toolIds:[...tools], toolSequence:[...tools], requiredToolIds:[...task.requiredToolIds],
+      toolIds:[...new Set(tools)], toolSequence:[...tools], requiredToolIds:[...task.requiredToolIds],
       dependsOn:[...task.dependsOn], acceptanceCriteria:['Complete the assigned task using successful tool evidence.']});
   }
   // References submitted by the model may name task keys only; generated

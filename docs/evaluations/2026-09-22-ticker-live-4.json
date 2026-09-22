@@ -1,0 +1,40 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "be130e22d4add66686866650f5b3276226ecc84d70e067070d7cfa1cf54a792b",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:08:27.537Z",
+  "durationSeconds": 229.428,
+  "passed": false,
+  "status": "cancelled",
+  "planningCalls": 2,
+  "spawned": 8,
+  "failures": [
+    {
+      "name": "Price Specialist",
+      "reason": "Browser origin is not owner-approved"
+    },
+    {
+      "name": "Fundamentals Specialist",
+      "reason": "page.goto: net::ERR_PROXY_CONNECTION_FAILED at https://www.microsoft.com/en-us/investor/financials/default.aspx"
+    }
+  ],
+  "orchestration": {
+    "completed": false,
+    "contracts": false,
+    "nineNodes": true,
+    "sixDepthTwo": true,
+    "crossBranchDependencies": true,
+    "repeatedBrowser": false,
+    "repeatedWriter": false,
+    "reviewerReopens": false,
+    "reviewerEvidence": false,
+    "reviewerPeer": false,
+    "coordinatorCalculation": false,
+    "allCurrentArtifacts": false
+  },
+  "finding": "Planner corrected aggregate omissions in two calls and compiled all nine nodes. Workers searched successfully, then selected an unapproved quote origin and encountered guarded-browser HTTP redirect failure. Subsequent candidate labels origin permissions and follows approved GET redirects explicitly through guarded transport.",
+  "rawEvidenceSha256": "56dfae442a8211b68dd08c965a5855e37b3875e91ed23221573125a1619b2724"
+}

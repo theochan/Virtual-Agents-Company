@@ -1,0 +1,92 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths, internal record IDs and raw operational trajectories."
+  },
+  "date": "2026-09-22",
+  "original_unique_items": 42,
+  "final_unique_items": 46,
+  "new_items": 4,
+  "updated_items": 9,
+  "method": "Complete API inventory, acceptance-scope comparison, sequential writes and independent GET read-back; HTML wrapper normalization allowed",
+  "receipts": [
+    {
+      "operation": "created",
+      "sequence_id": 43,
+      "name": "Implement grounded multimodal input ingestion for swarm tasks",
+      "verified": true
+    },
+    {
+      "operation": "created",
+      "sequence_id": 44,
+      "name": "Render generated artifacts and qualify visual and functional output quality",
+      "verified": true
+    },
+    {
+      "operation": "created",
+      "sequence_id": 45,
+      "name": "Capture demonstrated workflows as reviewed parameterized skills",
+      "verified": true
+    },
+    {
+      "operation": "created",
+      "sequence_id": 46,
+      "name": "Add authenticated event triggers for bounded swarm routines",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 23,
+      "name": "Fix autonomous planning topology and qualify harness autonomy",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 28,
+      "name": "Implement independent semantic review and factual-quality gates",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 39,
+      "name": "Design and qualify large-dataset storage and indexed retrieval",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 42,
+      "name": "Measure swarm advantage and owner-usefulness against a single equipped agent",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 29,
+      "name": "Implement and validate always-on execution and wake recovery",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 27,
+      "name": "Qualify broad authenticated business-app workflows",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 32,
+      "name": "Measure long-horizon autonomous reliability",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 33,
+      "name": "Measure large-scale swarm capacity and reliability",
+      "verified": true
+    },
+    {
+      "operation": "updated",
+      "sequence_id": 20,
+      "name": "Scale and full-product parity qualification",
+      "verified": true
+    }
+  ]
+}

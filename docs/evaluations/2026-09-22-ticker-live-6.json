@@ -1,0 +1,34 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "70771bd3757959ca6a1fbc7325122d7d56c22d3d6db5e2ac41b92b5c1ec6bba5",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:21:55.600Z",
+  "durationSeconds": 254.301,
+  "passed": false,
+  "status": "cancelled",
+  "failures": [
+    {
+      "name": "Fundamentals Specialist",
+      "reason": "Browser navigation returned HTTP 404"
+    }
+  ],
+  "orchestration": {
+    "completed": false,
+    "contracts": false,
+    "nineNodes": true,
+    "sixDepthTwo": true,
+    "crossBranchDependencies": true,
+    "repeatedBrowser": false,
+    "repeatedWriter": false,
+    "reviewerReopens": false,
+    "reviewerEvidence": false,
+    "reviewerPeer": false,
+    "coordinatorCalculation": false,
+    "allCurrentArtifacts": false
+  },
+  "finding": "Explicit navigation instructions did not stop the model inventing the same legacy URL. Subsequent candidate adds owner-selected discovered-URL schema constraints and server dispatch checks. Existing source allowlist and budgets remain unchanged.",
+  "rawEvidenceSha256": "faea7bb851dbe955243ade0231d7cf234d671ced565b6d85c4ded8fc23032e9d"
+}

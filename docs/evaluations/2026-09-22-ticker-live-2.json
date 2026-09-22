@@ -1,0 +1,23 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "bf6e5832ee5212b736a1e291f6342b6d8d099c898370b2daec0c48c6d6e0fab8",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T00:55:03.319Z",
+  "durationSeconds": 235.673,
+  "passed": false,
+  "status": "failed",
+  "failure": "Harness planning limit exhausted (four model calls)",
+  "planningCalls": 4,
+  "spawned": 0,
+  "rejections": [
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Valuation: needs at least 4 separate tool-files steps, got 3. Include the brief read and every input read; keep all calls in this task.",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Reviewer: needs at least 5 separate tool-files steps, got 4. Include the brief read and every input read; keep all calls in this task.",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Decision: needs at least 6 separate tool-files steps, got 5. Include the brief read and every input read; keep all calls in this task.",
+    "WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. Decision: needs at least 6 separate tool-files steps, got 5. Include the brief read and every input read; keep all calls in this task."
+  ],
+  "finding": "Sequential first-error feedback exhausted four planning calls while correcting missing brief/input reads. Aggregate mismatch feedback and assignment-preserving planning history added afterward; no limits increased.",
+  "rawEvidenceSha256": "67583c2ddf60875ab1ef5f9d632ad7957c95606a210f9decac556019db319c8e"
+}

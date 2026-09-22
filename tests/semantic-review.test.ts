@@ -17,3 +17,13 @@ test('review packet refuses stale, binary or oversized evidence rather than sile
  assert.throws(()=>reviewPacket({file:()=>({...source,mime:'application/pdf'})}as any,job,'draft'),/text\/JSON/);
  assert.throws(()=>reviewPacket({file:()=>({...source,base64:Buffer.from('x'.repeat(16000)).toString('base64')})}as any,job,'draft'),/context envelope/);
 });
+
+test('confirmation preserves original evidence and refuses oversized review context',async()=>{
+ const {reviewConfirmationPacket}=await import('../src/server/semanticReview');
+ const packet={files,messages:[{role:'system',content:'You are an independent reviewer.'},{role:'user',content:'original source packet'}]as any,inputBound:10,packetHash:'original'};
+ const verdict=validateReview({checks:[{criterion:0,verdict:'pass',reason:'provisional',evidence:[{name:'source.txt',quote:'42'},{name:'report.txt',quote:'99'}]}]},policy,files);
+ const confirmation=reviewConfirmationPacket(packet,policy,verdict);
+ assert.equal(confirmation.files,files);assert.match(confirmation.messages[0].content,/CONSISTENCY CONFIRMATION/);assert.equal(confirmation.messages[1],packet.messages[1]);assert.notEqual(confirmation.packetHash,packet.packetHash);
+ assert.throws(()=>reviewConfirmationPacket(packet,policy,{...verdict,passed:false}),/Only a provisional/);
+ assert.throws(()=>reviewConfirmationPacket({...packet,messages:[packet.messages[0],{role:'user',content:'x'.repeat(15000)}]},policy,verdict),/context envelope/);
+});

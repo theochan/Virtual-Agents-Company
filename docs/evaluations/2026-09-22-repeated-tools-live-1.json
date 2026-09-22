@@ -1,0 +1,18 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private workspace paths, runtime identifiers and full trajectories."
+  },
+  "scope": "Focused live repeated-tool and shared-grant development trial; not the ticker-research acceptance workflow.",
+  "sourceHash": "2506a1667b1e39afce29863af60dadcc4da23f287a6deea1d4d14fbb048388a7",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-22T00:17:30.197Z",
+  "durationSeconds": 90.029,
+  "passed": false,
+  "status": "failed",
+  "failure": "Harness planning limit exhausted (four model calls)",
+  "planningCalls": 4,
+  "spawned": 0,
+  "finding": "Planner split one Researcher into three workers plus supervisor and coordinator: five nodes against a four-node cap. Four rejected proposals, zero workers executed. Source-URL gate was not reached.",
+  "rawEvidenceSha256": "ea1b631ebbe843688b7e2cb73a8da68cb023d7be2249600a3755cfa8bc55cafb"
+}

@@ -5,7 +5,7 @@ import path from 'node:path';
 /** Single-process repository. Every update is committed before it is acknowledged. */
 export class Store {
   readonly db: DatabaseSync;
-  constructor(readonly directory: string) {
+  constructor(readonly directory: string, readonly requestBudgetStore?: Store) {
     fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
     fs.chmodSync(directory, 0o700);
     this.db = new DatabaseSync(path.join(directory, 'workspace.sqlite'), { timeout: 5000 });

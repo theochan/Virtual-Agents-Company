@@ -1,0 +1,34 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "c4014b90c1a03397499e304b32a82257f672495b571728c4d58ed7513cfbf7ba",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:29:06.891Z",
+  "durationSeconds": 212.86,
+  "passed": false,
+  "status": "cancelled",
+  "failures": [
+    {
+      "name": "Fundamentals Specialist",
+      "reason": "Context cannot fit evidence (fixed 12616 bytes, 2 observations); inspect retained results"
+    }
+  ],
+  "orchestration": {
+    "completed": false,
+    "contracts": false,
+    "nineNodes": true,
+    "sixDepthTwo": true,
+    "crossBranchDependencies": true,
+    "repeatedBrowser": false,
+    "repeatedWriter": false,
+    "reviewerReopens": false,
+    "reviewerEvidence": false,
+    "reviewerPeer": false,
+    "coordinatorCalculation": false,
+    "allCurrentArtifacts": false
+  },
+  "finding": "Discovered URL constraints duplicated URL enums in the fixed instruction summary and actual tool schema, exhausting the unchanged context envelope. Subsequent candidate retains enums in actual schemas and replaces only the redundant summary with a pointer.",
+  "rawEvidenceSha256": "485a75bf9b292884a9ac1df2601b52280b201ffadfd2097151501c1bdffdaf71"
+}

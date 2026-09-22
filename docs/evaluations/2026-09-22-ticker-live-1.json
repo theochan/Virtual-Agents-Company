@@ -1,0 +1,46 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, IDs, search text and raw trajectories."
+  },
+  "sourceHash": "3a4faac5f711821e37852c600077f1b2bc36f41a088dfb960f5a811713c8f9f1",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T00:43:53.043Z",
+  "durationSeconds": 159.977,
+  "passed": false,
+  "status": "cancelled",
+  "budget": {
+    "sandboxRuns": 0,
+    "browserSteps": 0,
+    "browserRequests": 0,
+    "modelCalls": 5,
+    "reservedInputTokens": 57762,
+    "reservedOutputTokens": 10240,
+    "toolCalls": 5,
+    "searchAttempts": 2,
+    "spawned": 8,
+    "deadline": 1790039033054,
+    "reportedInputTokens": 12333,
+    "reportedOutputTokens": 1596,
+    "unknownUsageCalls": 0
+  },
+  "findings": [
+    "Nine-node plan accepted in one call, but omitted reviewer peer messaging and some required input reads.",
+    "Price and Fundamentals retrieved search results, then stopped at the unchanged context envelope because static prompt/schema content left insufficient room for evidence.",
+    "No recommendation or output artifact produced.",
+    "Original evaluator used display names to identify roles; subsequent evaluator binds to explicit immutable assignment IDs instead."
+  ],
+  "nodeFailures": [
+    {
+      "name": "Price Research Specialist",
+      "status": "budget_exhausted",
+      "reason": "Context cannot fit evidence (fixed 12445 bytes, 2 observations); inspect retained results"
+    },
+    {
+      "name": "Fundamentals Research Specialist",
+      "status": "budget_exhausted",
+      "reason": "Context cannot fit evidence (fixed 12507 bytes, 2 observations); inspect retained results"
+    }
+  ],
+  "rawEvidenceSha256": "71ca573419c182ec53f033a4af2ec375acf1655892a1396b05b46d77d35cb21c"
+}

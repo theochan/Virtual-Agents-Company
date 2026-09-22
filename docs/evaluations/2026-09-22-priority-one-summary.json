@@ -1,0 +1,186 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths, internal record IDs and raw operational trajectories."
+  },
+  "date": "2026-09-22",
+  "scope": "Priority 1 source implementation and bounded local evaluation; no deployment or qualification closure",
+  "initialPilot": {
+    "sourceHash": "c1614859ecf3ddeb6aed593fdc19468706ef179fd4bb5d93a0187cf803646e29",
+    "manifestSha256": "9273028121ebca850928efebff7aa3aebc99e9c6fa33dee221ef68fec03cc61d",
+    "rawEvidenceSha256": "38260d0ba1732c1821f1778a04831698c9202a6142dffea25f0910235b224a6f",
+    "sourceArchiveSha256": "59c490e47b59dcc5f5e24e1f2269db030fae4d7ea28287d3116fe66cbb72b895",
+    "reviewer": {
+      "falseAcceptances": 1,
+      "trueAcceptances": 4,
+      "errors": 0,
+      "passed": false
+    },
+    "reviewerCases": [
+      {
+        "id": "million-scale-correct",
+        "expected": true,
+        "accepted": true,
+        "correct": true
+      },
+      {
+        "id": "million-scale-wrong",
+        "expected": false,
+        "accepted": false,
+        "correct": true
+      },
+      {
+        "id": "estimated-date-correct",
+        "expected": true,
+        "accepted": true,
+        "correct": true
+      },
+      {
+        "id": "estimated-date-wrong",
+        "expected": false,
+        "accepted": false,
+        "correct": true
+      },
+      {
+        "id": "credit-net-correct",
+        "expected": true,
+        "accepted": true,
+        "correct": true
+      },
+      {
+        "id": "credit-net-wrong",
+        "expected": false,
+        "accepted": true,
+        "correct": false
+      },
+      {
+        "id": "superseded-correct",
+        "expected": true,
+        "accepted": true,
+        "correct": true
+      },
+      {
+        "id": "injected-superseded-wrong",
+        "expected": false,
+        "accepted": false,
+        "correct": true
+      }
+    ],
+    "arms": [
+      {
+        "arm": "single",
+        "passed": false,
+        "checks": {
+          "completed": false,
+          "currentArtifact": true,
+          "exactContent": false,
+          "semanticAccepted": false,
+          "topology": true,
+          "calculatorEvidence": true
+        },
+        "durationMs": 83758,
+        "modelCalls": 8,
+        "toolCalls": 6,
+        "reportedInputTokens": 13807,
+        "reportedOutputTokens": 629,
+        "artifact": {
+          "sha256": "2385c432390c41e6670e1d3aeced348720ad415767d3cf26048a43255c80ce04",
+          "content": {
+            "currency": "USD",
+            "unit": "cents",
+            "northNet": 18000,
+            "southNet": 14000,
+            "totalNet": 32000,
+            "duplicateIds": [
+              "N2"
+            ]
+          }
+        }
+      },
+      {
+        "arm": "swarm",
+        "passed": false,
+        "checks": {
+          "completed": false,
+          "currentArtifact": true,
+          "exactContent": false,
+          "semanticAccepted": false,
+          "topology": true,
+          "calculatorEvidence": true
+        },
+        "durationMs": 134416,
+        "modelCalls": 11,
+        "toolCalls": 7,
+        "reportedInputTokens": 16506,
+        "reportedOutputTokens": 1155,
+        "artifact": {
+          "sha256": "c03cd77c6463c12bf40aaf6b55245ebe09a8c750532c9dfa4ccd128598df5342",
+          "content": {
+            "currency": "USD",
+            "unit": "cents",
+            "northNet": 10700,
+            "southNet": 8550,
+            "totalNet": 19250,
+            "duplicateIds": [
+              "N2"
+            ]
+          }
+        }
+      }
+    ],
+    "comparison": {
+      "pairedTasks": 1,
+      "armsPassed": 0,
+      "advantage": "NOT_ESTABLISHED",
+      "reason": "One fixed-order synthetic task cannot establish general usefulness or causal speedup; no measured owner correction time. These results determine what to qualify next.",
+      "scopeConfounders": "Same inputs/model/tools/root budgets; execution strategy differs. Swarm includes planner overhead and two specialists. Local Ollama scheduling/caching and fixed order affect timings. Golden answers were checked only after execution, not exposed as runtime contracts."
+    },
+    "providerCalls": 27
+  },
+  "knownFailureRegression": {
+    "passed": true,
+    "sourceHash": "5fa3c8125620df4b999aba34af6d6cbc662808141615ebd3fb7c5c5d14f722d4",
+    "rawEvidenceSha256": "6c5707d71c5da615206d1f6b1a6c14ffc29ce17f35af09b501b911f50574c2d4",
+    "providerCalls": 3,
+    "scope": "Known-failure regression after a failed frozen pilot. Wrong case replays its original passing assessment and invokes live confirmation; correct control invokes live assessment and confirmation. Not a holdout or a repeated full workflow.",
+    "cases": [
+      {
+        "id": "credit-net-wrong",
+        "accepted": false,
+        "correct": true
+      },
+      {
+        "id": "credit-net-correct",
+        "accepted": true,
+        "correct": true
+      }
+    ]
+  },
+  "budgetAfter": {
+    "day": "2026-09-22",
+    "used": 92,
+    "maximum": 100,
+    "remaining": 8
+  },
+  "finalBuild": "f271b7f97c672f3bda581f1b2c8745b2b40272155530db77b38fca16d40f9012",
+  "verification": {
+    "sourceTests": {
+      "passed": 181,
+      "failed": 0,
+      "skipped": 0
+    },
+    "builtTests": {
+      "passed": 181,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "remaining": [
+    "Full research trial needs at least 57 calls; 8 remain in unchanged UTC allowance.",
+    "Three frozen-candidate full-task repetitions and separate independent holdout remain unproven.",
+    "Both paired task outputs were wrong; no measured swarm advantage.",
+    "Broader human-adjudicated semantic acceptance and numerical source coverage remain open."
+  ]
+}

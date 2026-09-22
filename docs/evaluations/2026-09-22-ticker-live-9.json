@@ -1,0 +1,40 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "e6d9248d1659e3374303c57448de41f8d2611c35348893217c8b53e351ea2da8",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:46:28.952Z",
+  "durationSeconds": 294.808,
+  "passed": false,
+  "status": "cancelled",
+  "failures": [
+    {
+      "name": "Price Specialist",
+      "reason": "page.goto: net::ERR_FAILED at https://finance.yahoo.com/quote/MSFT/"
+    }
+  ],
+  "successfulBrowserUrls": [
+    "https://finance.yahoo.com/quote/MSFT/",
+    "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+    "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast"
+  ],
+  "browserRequests": 100,
+  "orchestration": {
+    "completed": false,
+    "contracts": false,
+    "nineNodes": true,
+    "sixDepthTwo": true,
+    "crossBranchDependencies": true,
+    "repeatedBrowser": false,
+    "repeatedWriter": false,
+    "reviewerReopens": false,
+    "reviewerEvidence": false,
+    "reviewerPeer": false,
+    "coordinatorCalculation": false,
+    "allCurrentArtifacts": false
+  },
+  "finding": "Diagnostic progressed past the old context failure; Yahoo and Microsoft Q3/Q4 pages rendered. Browser requests reached 100 and Price failed with a masked budget error. The diagnostic was cancelled to preserve daily model allowance. Subsequent candidate preserves budget exceptions and adds opt-in document-only rendering. No complete research packet was produced.",
+  "rawEvidenceSha256": "a6a7fbf82493afb62720d3ab7d89a214e7aef16a2ea8563730ba245b2e95e3d2"
+}

@@ -1,0 +1,43 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private paths, identifiers and raw trajectories."
+  },
+  "sourceHash": "b7c2152444b39d48222e545428b453ede88e9975582d54fa6350f9a0cda89aa0",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:37:49.812Z",
+  "durationSeconds": 240.805,
+  "passed": false,
+  "status": "cancelled",
+  "failures": [
+    {
+      "name": "Price Specialist",
+      "reason": "Context cannot fit evidence (fixed 12631 bytes, 3 observations); inspect retained results"
+    },
+    {
+      "name": "Fundamentals Specialist",
+      "reason": "Context cannot fit evidence (fixed 12637 bytes, 3 observations); inspect retained results"
+    }
+  ],
+  "successfulBrowserUrls": [
+    "https://finance.yahoo.com/quote/MSFT/",
+    "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q3/press-release-webcast"
+  ],
+  "browserRequests": 100,
+  "orchestration": {
+    "completed": false,
+    "contracts": false,
+    "nineNodes": true,
+    "sixDepthTwo": true,
+    "crossBranchDependencies": true,
+    "repeatedBrowser": false,
+    "repeatedWriter": false,
+    "reviewerReopens": false,
+    "reviewerEvidence": false,
+    "reviewerPeer": false,
+    "coordinatorCalculation": false,
+    "allCurrentArtifacts": false
+  },
+  "finding": "Both research workers opened correct sources, then the next context preparation exceeded the fixed envelope. Subsequent candidate removes irrelevant fixed state and persists observations before context preparation.",
+  "rawEvidenceSha256": "e029051599b54b3f5164b8fe3e9a611220aa016244e46a9c73fb900a68cae484"
+}

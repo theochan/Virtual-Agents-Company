@@ -1,5 +1,9 @@
 # Current delivery tracking
 
+2026-09-22 research follow-up: [MSFT workflow fixes and trial evidence](docs/reviews/2026-09-22-ticker-research.md). Typed acceptance requirements, frozen owner briefs, compact planning/evidence context, focused browser reads and deterministic research gates implemented. Final local candidate passes 175 source, 19 built-runtime and 17 UI tests. Document-only live browsing rendered three original sources in three requests. Full-trial preflight blocks correctly: 38 daily model requests remain versus a minimum of 57. Full live research acceptance remains open; failed attempts are preserved. VAC-23 remains High / In Progress.
+
+2026-09-22: VAC-23 updated in Plane, High / In Progress. [Core fixes implemented and focused live trial passed](docs/reviews/2026-09-22-repeated-tools.md): bounded repeated tool steps, durable per-step evidence, shared coordinator/worker tool grants and artifact contracts visible to writers. Nine live checks passed in 172.895 seconds; 149 source and 19 built-runtime tests passed. Earlier failed attempts remain preserved. [Ticker-research acceptance plan](docs/test-plans/ticker-research-workflow.md) defines the next live workload and negative cases; no live research success is claimed.
+
 2026-09-22 follow-up: [The revised bounded planner passed the live synthetic workflow](docs/reviews/2026-09-22-task-planner.md): all 12 checks, 351.784 seconds, Qwen3.5 9B, one planning call. Prior failures remain preserved. This is one development success; broader VAC-23 qualification and installed deployment remain open.
 
 2026-09-22: [VAC-23 topology follow-up](docs/reviews/2026-09-22-workflow-topology.md) supports safe cross-branch prerequisites with completion-cycle validation. Source and built-runtime checks pass; the fresh autonomous trial still fails planning, so VAC-23 remains open. No deployment or Plane update is claimed.

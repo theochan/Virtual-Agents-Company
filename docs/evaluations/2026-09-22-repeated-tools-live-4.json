@@ -1,0 +1,103 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private workspace paths, runtime identifiers and full trajectories."
+  },
+  "scope": "Focused live repeated-tool and shared-grant development trial; not the ticker-research acceptance workflow.",
+  "sourceHash": "cb402f2b6461e8a56c2184389c18195efb4d1f1e0fdbb2fb23711b9b5ef109cd",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-22T00:25:03.652Z",
+  "durationSeconds": 172.895,
+  "passed": true,
+  "status": "completed",
+  "checks": {
+    "completed": true,
+    "contracts": true,
+    "depth": true,
+    "twoBrowserSteps": true,
+    "twoWrites": true,
+    "sourceUrls": true,
+    "workerCalculation": true,
+    "coordinatorCalculation": true,
+    "artifacts": true
+  },
+  "modelCalls": 10,
+  "toolCalls": 7,
+  "planningCalls": 1,
+  "nodes": [
+    {
+      "name": "Coordinator",
+      "depth": 0,
+      "status": "completed",
+      "sequence": [
+        "tool-calculator"
+      ],
+      "toolReceipts": [
+        {
+          "toolId": "tool-calculator",
+          "sequenceStep": 0,
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "name": "ResearchLead",
+      "depth": 1,
+      "status": "completed",
+      "sequence": [],
+      "toolReceipts": []
+    },
+    {
+      "name": "Researcher",
+      "depth": 2,
+      "status": "completed",
+      "sequence": [
+        "tool-browser",
+        "tool-browser",
+        "tool-calculator",
+        "tool-write-file",
+        "tool-write-file"
+      ],
+      "toolReceipts": [
+        {
+          "toolId": "tool-browser",
+          "sequenceStep": 0,
+          "status": "succeeded"
+        },
+        {
+          "toolId": "tool-browser",
+          "sequenceStep": 1,
+          "status": "succeeded"
+        },
+        {
+          "toolId": "tool-calculator",
+          "sequenceStep": 2,
+          "status": "succeeded"
+        },
+        {
+          "toolId": "tool-write-file",
+          "sequenceStep": 3,
+          "status": "succeeded"
+        },
+        {
+          "toolId": "tool-write-file",
+          "sequenceStep": 4,
+          "status": "succeeded"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "sources.json",
+      "sha256": "c5c0f659b2b3fcc205bb446104ac1289571445e9607ad7665043530d1bf8e91b",
+      "version": 1
+    },
+    {
+      "name": "memo.md",
+      "sha256": "9a31a73706caedf46ce4e96b0b53f6a2670ddbc28a9ee311053f393f5588a308",
+      "version": 1
+    }
+  ],
+  "rawEvidenceSha256": "3b29d93a9e3902c6a2e0e0f91989c751fdc7e49afecfed732b4ed4cc22cbe92e"
+}

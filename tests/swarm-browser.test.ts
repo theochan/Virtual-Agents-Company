@@ -71,10 +71,55 @@ test('browser advertises action-specific arguments and rejects the old read-with
  const branches=schema.oneOf||schema.anyOf;
  const read=branches.find((b:any)=>b.properties.action.const==='read');
  const navigate=branches.find((b:any)=>b.properties.action.const==='navigate');
- assert.deepEqual(Object.keys(read.properties),['action']);
+ assert.deepEqual(Object.keys(read.properties),['action','focus','offset']);
  assert.equal(read.additionalProperties,false);
  assert.ok(navigate.required.includes('url'));
  const browser=new SwarmBrowser(async()=>{throw new Error('must not dispatch');});
  await assert.rejects(()=>browser.execute('invalid',{action:'read',url:'https://example.com'},policy,signal(),()=>{throw new Error('must not reserve');}),/Unrecognized key/);
  assert.equal(browser.size,0);
+});
+
+test('bounded browser excerpts can locate later evidence without inventing omitted content',async()=>{
+ const long='<nav>Unrelated navigation</nav><main><h1>Report</h1><p>'+('Early section words '.repeat(1200))+'</p><h2>Cash flow table</h2><p>Operating cash flow 300 million</p></main>';
+ const browser=new SwarmBrowser(async()=>response(long));
+ try{const first=await browser.execute('focus',{action:'navigate',url:'https://example.com'},policy,signal(),()=>{});assert.equal(first.truncated,true);assert.doesNotMatch(first.text,/Unrelated navigation|Operating cash flow/);
+ const later=await browser.execute('focus',{action:'read',focus:'Cash flow table'},policy,signal(),()=>{});assert.equal(later.focusFound,true);assert.ok(later.offset>9000);assert.match(later.text,/Operating cash flow 300 million/);assert.ok(later.text.length<=9000);
+ const missing=await browser.execute('focus',{action:'read',focus:'Absent evidence'},policy,signal(),()=>{});assert.equal(missing.focusFound,false);assert.doesNotMatch(missing.text,/Absent evidence/);
+ await assert.rejects(()=>browser.execute('focus',{action:'read',offset:-1},policy,signal(),()=>{}));
+ }finally{await browser.closeAll();}
+});
+
+test('approved navigation redirects stay on guarded transport with final URL provenance',async()=>{
+ const sent:string[]=[];let reservations=0;const browser=new SwarmBrowser(async r=>{sent.push(r.url);return r.url.endsWith('/start')?{status:302,headers:{location:'/final'},body:Buffer.alloc(0)}:response('<h1>Final guarded document</h1>');});
+ try{const page=await browser.execute('redirect',{action:'navigate',url:'https://example.com/start'},policy,signal(),()=>reservations++);assert.equal(page.url,'https://example.com/final');assert.match(page.text,/Final guarded document/);assert.deepEqual(sent,['https://example.com/start','https://example.com/final']);assert.equal(reservations,2);}finally{await browser.closeAll();}
+});
+
+test('redirect chains cannot evade destination checks or request and hop limits',async()=>{
+ for(const mode of ['origin','budget','loop']){let calls=0,reserved=0;const browser=new SwarmBrowser(async()=>{calls++;return{status:302,headers:{location:mode==='origin'?'https://other.example/':'/again'},body:Buffer.alloc(0)};});
+ try{await assert.rejects(()=>browser.execute(mode,{action:'navigate',url:'https://example.com'},policy,signal(),()=>{if(mode==='budget'&&++reserved>1)throw new Error('network cap');}));assert.equal(browser.size,0);assert.equal(calls,mode==='loop'?9:1);}finally{await browser.closeAll();}}
+});
+
+test('research navigation schema and dispatch reject invented URLs before network use',async()=>{
+ const {discoveredBrowserUrls,discoveredBrowserTool}=await import('../src/server/browser');
+ const strict={...policy,requireDiscoveredUrls:true};
+ const urls=discoveredBrowserUrls([{receipts:[{toolId:'tool-web-search',status:'succeeded',output:{results:[{url:'https://example.com/discovered'},{url:'https://outside.example/denied'}]}},{toolId:'tool-browser',status:'succeeded',output:{url:'https://example.com/report',elements:[{href:'/filing'}]}},{toolId:'tool-web-search',status:'failed',output:{results:[{url:'https://example.com/failed'}]}}]}],strict);
+ assert.deepEqual(urls,['https://example.com/report','https://example.com/discovered','https://example.com/filing']);
+ const schema:any=discoveredBrowserTool(urls).schema;assert.deepEqual((schema.oneOf||schema.anyOf).find((b:any)=>b.properties.action.const==='navigate').properties.url.enum,urls);
+ const empty:any=discoveredBrowserTool([]).schema;assert.equal((empty.oneOf||empty.anyOf).some((b:any)=>b.properties.action.const==='navigate'),false);
+ let requests=0;const browser=new SwarmBrowser(async()=>{requests++;return response();});
+ try{await assert.rejects(()=>browser.execute('invented',{action:'navigate',url:'https://example.com/invented'},strict,signal(),()=>{},undefined,urls),/exact discovered URL/);assert.equal(requests,0);assert.equal(browser.size,0);
+ const page=await browser.execute('discovered',{action:'navigate',url:urls[0]},strict,signal(),()=>{},undefined,urls);assert.equal(page.url,urls[0]);assert.ok(requests>0);
+ }finally{await browser.closeAll();}
+});
+
+test('document-only research preserves document text without executing scripts or spending requests on assets',async()=>{
+ const sent:string[]=[];const browser=new SwarmBrowser(async r=>{sent.push(r.url);return response('<link rel="stylesheet" href="/asset.css"><h1>Original evidence</h1><script src="/asset.js"></script><script>document.querySelector("h1").innerText="Changed by script";fetch("/extra")</script>');});const p={...policy,documentOnly:true};
+ try{const page=await browser.execute('doc',{action:'navigate',url:'https://example.com'},p,signal(),()=>{});assert.match(page.text,/Original evidence/);assert.doesNotMatch(page.text,/Changed by script/);assert.deepEqual(sent,['https://example.com/']);
+ await assert.rejects(()=>browser.execute('doc',{action:'read'},policy,signal(),()=>{}),/rendering mode/);await assert.rejects(()=>browser.execute('other',{action:'navigate',url:'https://example.com'},{...p,allowActions:true},signal(),()=>{}),/does not permit/);
+ }finally{await browser.closeAll();}
+});
+
+test('browser preserves the original request budget exception instead of a generic navigation error',async()=>{
+ const failure=new Error('Original shared request cap');const browser=new SwarmBrowser(async()=>response());
+ try{await assert.rejects(()=>browser.execute('cap',{action:'navigate',url:'https://example.com'},policy,signal(),()=>{throw failure;}),error=>error===failure);assert.equal(browser.size,0);}finally{await browser.closeAll();}
 });

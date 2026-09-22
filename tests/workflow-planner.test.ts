@@ -28,10 +28,10 @@ test('task compiler rejects ambiguous profiles, duplicate keys, cycles and inven
  assert.throws(()=>compile([task('a',{supervisors:[{name:'Lead',agentId:''}]}),task('b',{supervisors:[{name:'Lead',agentId:'saved'}]})]),/Conflicting/);
  assert.throws(()=>compile([task('supervisor_0',{supervisors:[{name:'Lead',agentId:''}]})]),/unique/);
 });
-test('task compiler rejects grant expansion, repeated steps and missing required evidence',()=>{
+test('task compiler rejects grant expansion and missing required evidence',()=>{
  assert.throws(()=>compile([task('a',{toolSequence:['tool-connector']})]));
- assert.throws(()=>compile([task('a',{toolSequence:['tool-code','tool-code']})]),/unique/);
- assert.throws(()=>compile([task('a')],['tool-code','tool-code']),/unique/);
+ assert.deepEqual(compile([task('a',{toolSequence:['tool-code','tool-code']})]).plan[0].toolSequence,['tool-code','tool-code']);
+ assert.deepEqual(compile([task('a')],['tool-code','tool-code']).toolSequence,['tool-code','tool-code']);
  assert.throws(()=>compile([task('a',{requiredToolIds:['tool-code']})]),/required tools/);
  assert.throws(()=>compile([task('a',{toolIds:['tool-code']})]));
  const manual=workflowPlannerSchema([],['saved'],1,1);
@@ -59,11 +59,26 @@ test('coordinator assignment binds to the existing root and cannot create duplic
  assert.throws(()=>schema.parse({tasks:[{executor:'coordinator',toolSequence:[],agentId:'saved'},task('a')]}));
 });
 
-test('bounded planner reserves mandatory coordinator tools and restricts root to its declared set',()=>{
+test('planner shares tool types without removing coordinator evidence requirements',()=>{
  const scoped=workflowPlannerSchema(['tool-code','tool-files','tool-connector'],[''],2,5,['tool-connector']);
- assert.throws(()=>scoped.parse({tasks:[task('a',{toolSequence:['tool-connector']})]}));
+ assert.ok(scoped.parse({tasks:[task('a',{toolSequence:['tool-connector']})]}));
  assert.throws(()=>scoped.parse({tasks:[{executor:'coordinator',toolSequence:['tool-code']},task('a')]}));
  assert.throws(()=>scoped.parse({tasks:[{executor:'coordinator',toolSequence:[]},task('a')]}));
  const result=compileWorkflowTasks(scoped.parse({tasks:[{executor:'coordinator',toolSequence:['tool-connector']},task('a',{toolSequence:['tool-code']})]}));
  assert.deepEqual(result.toolSequence,['tool-connector']);assert.deepEqual(result.plan[0].toolIds,['tool-code']);
+});
+
+
+test('repeated operations have unique grants and bounded sequences',()=>{
+ const repeated=Array(24).fill('tool-code');
+ const {plan}=compile([task('a',{toolSequence:repeated})]);
+ assert.equal(plan[0].toolSequence.length,24);assert.deepEqual(plan[0].toolIds,['tool-code']);
+ assert.throws(()=>compile([task('a',{toolSequence:[...repeated,'tool-code']})]));
+});
+
+test('required assignments preserve explicit identity independently of display names',()=>{
+ const scoped=workflowPlannerSchema(['tool-files','tool-peer'],[''],2,3,[],['Research','Review']);
+ const result=compileWorkflowTasks(scoped.parse({tasks:[{executor:'coordinator',toolSequence:[]},task('a',{assignmentId:'Research',name:'Research Specialist',toolSequence:['tool-files','tool-files']}),task('b',{assignmentId:'Review',dependsOn:['a'],toolSequence:['tool-peer']})]}));
+ assert.equal(result.plan[0].assignmentId,'Research');assert.equal(result.plan[1].assignmentId,'Review');
+ assert.throws(()=>scoped.parse({tasks:[task('bad',{assignmentId:'Invented'})]}));
 });

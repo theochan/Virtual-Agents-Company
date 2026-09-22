@@ -1,0 +1,30 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths, internal record IDs and raw operational trajectories."
+  },
+  "receipts": [
+    {
+      "workItem": "VAC-23",
+      "verified": true,
+      "status": "In Progress"
+    },
+    {
+      "workItem": "VAC-28",
+      "verified": true,
+      "status": "In Progress"
+    },
+    {
+      "workItem": "VAC-42",
+      "verified": true,
+      "status": "In Progress"
+    },
+    {
+      "workItem": "VAC-20",
+      "verified": true,
+      "status": "Todo"
+    }
+  ],
+  "newItems": 0,
+  "closedItems": 0
+}

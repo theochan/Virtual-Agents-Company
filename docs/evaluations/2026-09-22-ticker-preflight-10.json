@@ -1,0 +1,21 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths, internal record IDs and raw operational trajectories."
+  },
+  "sourceHash": "5a24fbced46197133b31e8840010abeaa2da6e53e52b40c05908f0ce85cc3dba",
+  "model": "qwen3.5:9b",
+  "cutoff": "2026-09-22T01:54:03.307Z",
+  "status": "not_started",
+  "passed": false,
+  "budgetAdmission": {
+    "day": "2026-09-22",
+    "used": 62,
+    "maximum": 100,
+    "remaining": 38,
+    "minimumModelCalls": 57,
+    "lowerBoundOnly": true
+  },
+  "executionFailure": "Insufficient daily inference allowance for even the minimum full workflow; no model or search requests sent.",
+  "rawEvidenceSha256": "fcd1012d08c3a1fe2be5bb030b2a239f5a95a61ba9df8dc17e16ef889ab8b70d"
+}

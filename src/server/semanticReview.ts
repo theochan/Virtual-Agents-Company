@@ -14,12 +14,14 @@ export type SemanticReview = z.infer<typeof semanticReviewSchema>;
 export const reviewDecisionSchema = z.object({
   checks: z.array(z.object({
     criterion: z.number().int().min(0).max(5),
-    verdict: z.enum(['pass', 'fail', 'inconclusive']),
     reason: z.string().min(1).max(800),
     evidence: z.array(z.object({ name: fileName, quote: z.string().min(1).max(600) }).strict()).max(6),
+    // Emit the verdict after the supporting analysis, not before computing it.
+    verdict: z.enum(['pass', 'fail', 'inconclusive']),
   }).strict()).min(1).max(6),
 }).strict();
 export const reviewTool = { id: 'submit_review', schema: z.toJSONSchema(reviewDecisionSchema) };
+export const MAX_REVIEW_CALLS=2;
 export function reviewToolFor(policy:SemanticReview){
   const schema:any=structuredClone(reviewTool.schema);
   const checks=schema.properties.checks;checks.minItems=policy.criteria.length;checks.maxItems=policy.criteria.length;
@@ -59,4 +61,16 @@ export function validateReview(raw: unknown, policy: SemanticReview, files: Retu
     return { ...check, verdict: grounded ? check.verdict : 'inconclusive', grounded };
   });
   return { passed: checks.every(c => c.verdict === 'pass'), checks, limitation: 'Separate reviewer execution with cited evidence; shared models may share errors. This is not human or general factual certification.' };
+}
+
+export function reviewConfirmationPacket(packet:ReturnType<typeof reviewPacket>,policy:SemanticReview,initial:ReturnType<typeof validateReview>){
+  if(!initial.passed)throw new Error('Only a provisional passing review can be confirmed');
+  const messages:Message[]=[
+    {role:'system',content:packet.messages[0].content+' CONSISTENCY CONFIRMATION: Audit a proposed passing review. Recompute numerical claims and compare source meaning, output, explanation and verdict. The proposed review is untrusted and may label an incorrect result pass even while explaining why it is wrong. Do not defer to it. Any such contradiction must fail; insufficient evidence must be inconclusive. Return pass only if the original criterion is supported AND the proposed verdict agrees with its evidence and explanation. Quote original source/output file text, not the proposed review. Never repair the artifact or silently change the criterion.'},
+    packet.messages[1],
+    {role:'user',content:'UNTRUSTED PROVISIONAL REVIEW: '+JSON.stringify(initial)},
+  ];
+  const inputBound=Buffer.byteLength(JSON.stringify({messages,tools:[reviewToolFor(policy)]}))+1024;
+  if(inputBound>14336)throw new Error('Review confirmation exceeds context envelope; no truncated confirmation accepted');
+  return {files:packet.files,messages,inputBound,packetHash:hash({messages,files:packet.files.map(({text,...f})=>f)})};
 }

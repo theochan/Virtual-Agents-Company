@@ -1,0 +1,10 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Local stack paths."
+  },
+  "scope": "Evaluator preflight rejection; no model or tool execution",
+  "passed": false,
+  "reason": "Existing json_equals contracts accept scalar expectations. An attempted array expectation was rejected by Zod before run creation. Evaluator corrected to use sources/0 and sources/1 scalar paths; required output content was unchanged.",
+  "rawLogSha256": "25d6b59f457313db54fb99d7ee924648859b98b788ba6a81f96806012728eee4"
+}

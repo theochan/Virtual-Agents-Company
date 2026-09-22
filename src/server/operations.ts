@@ -34,12 +34,19 @@ export class RequestBudgetError extends Error {
 export function requestLimit(category: 'inference' | 'search'): number | null {
   const name = category === 'search' ? 'VAC_SEARCH_REQUESTS_PER_DAY' : 'VAC_INFERENCE_REQUESTS_PER_DAY';
   const raw = process.env[name] ?? (category === 'search' ? '0' : '100');
-  if (category === 'search' && raw === 'unlimited') return null;
+  if (raw === 'unlimited') return null;
   const maximum = Number(raw);
-  if (!Number.isSafeInteger(maximum) || maximum < 0 || maximum > 10000) throw new Error(`Invalid ${name}: expected integer 0..10000`);
+  if (!Number.isSafeInteger(maximum) || maximum < 0 || maximum > 10000) throw new Error(`Invalid ${name}: expected unlimited or integer 0..10000`);
   return maximum;
 }
+export function remainingRequestBudget(store:Store,category:'inference'|'search'){
+  store=store.requestBudgetStore||store;
+  const maximum=requestLimit(category),day=new Date().toISOString().slice(0,10);
+  const used=store.get<{count:number}>('request-budgets',`${day}:${category}`)?.count||0;
+  return {day,used,maximum,remaining:maximum===null?null:Math.max(0,maximum-used)};
+}
 export function reserveRequest(store: Store, category: 'inference' | 'search') {
+  store = store.requestBudgetStore || store;
   const maximum = requestLimit(category);
   return store.transaction(() => {
     const day = new Date().toISOString().slice(0, 10);

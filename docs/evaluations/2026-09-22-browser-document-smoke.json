@@ -1,0 +1,38 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths, internal record IDs and raw operational trajectories."
+  },
+  "scope": "Document-only browser smoke; no model requests, no research recommendation, not supplied to autonomous trial",
+  "results": [
+    {
+      "url": "https://finance.yahoo.com/quote/MSFT/",
+      "title": "Microsoft Corporation (MSFT) Stock Price, News, Quote & History - Yahoo Finance",
+      "chars": 9000,
+      "textSha256": "adc614b5eaf4af583bef8a9aec9aabd175ef2fed665fda1182acbbc4aed22bfe",
+      "requests": 1,
+      "retrievedAt": "2026-09-22T01:53:39.079Z",
+      "outcome": "rendered"
+    },
+    {
+      "url": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q3/press-release-webcast",
+      "title": "FY26 Q3 - Press Releases - Investor Relations - Microsoft",
+      "chars": 9000,
+      "textSha256": "6363d4f851615ec2e862abc4a3a32f00d672d128fcc112a021da917cd5a7e479",
+      "requests": 1,
+      "retrievedAt": "2026-09-22T01:53:39.647Z",
+      "outcome": "rendered"
+    },
+    {
+      "url": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+      "title": "FY26 Q4 - Press Releases - Investor Relations - Microsoft",
+      "chars": 9000,
+      "textSha256": "85005d1d5afb7e203a58ebd5b45b982a072f48c94152532cd76b4cac91f2800c",
+      "requests": 1,
+      "retrievedAt": "2026-09-22T01:53:40.232Z",
+      "outcome": "rendered"
+    }
+  ],
+  "requests": 3,
+  "rawEvidenceSha256": "845a1d44b8fe5a1a531fd10e292b338b1439ee420939aac878d899e693c27021"
+}

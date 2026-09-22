@@ -5,10 +5,40 @@ import os from 'node:os';
 import path from 'node:path';
 import { Store } from '../src/server/store';
 import { RunEngine } from '../src/server/runs';
-import { OperationsLog, reserveRequest } from '../src/server/operations';
+import { OperationsLog, reserveRequest, remainingRequestBudget } from '../src/server/operations';
 import { acquireWorkspaceLock } from '../src/server/workspaceLock';
 
 function temporary() { const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'vac-ops-')); return { directory, store: new Store(directory) }; }
+test('unlimited inference preserves usage across restart and permits calls beyond the old daily cap', () => {
+  const { directory, store } = temporary();
+  const previous = process.env.VAC_INFERENCE_REQUESTS_PER_DAY;
+  process.env.VAC_INFERENCE_REQUESTS_PER_DAY = 'unlimited';
+  let closed = false;
+  try {
+    const day = new Date().toISOString().slice(0, 10);
+    store.put('request-budgets', `${day}:inference`, { count: 10000 });
+    assert.equal(reserveRequest(store, 'inference').reservedAttempt, 10001);
+    store.close(); closed = true;
+    const restored = new Store(directory);
+    try {
+      assert.deepEqual(remainingRequestBudget(restored, 'inference'), { day, used: 10001, maximum: null, remaining: null });
+      assert.equal(reserveRequest(restored, 'inference').reservedAttempt, 10002);
+      process.env.VAC_INFERENCE_REQUESTS_PER_DAY = '100';
+      assert.throws(() => reserveRequest(restored, 'inference'), /exhausted/);
+    } finally { restored.close(); }
+  } finally {
+    if (!closed) store.close();
+    fs.rmSync(directory, { recursive: true, force: true });
+    if (previous === undefined) delete process.env.VAC_INFERENCE_REQUESTS_PER_DAY;
+    else process.env.VAC_INFERENCE_REQUESTS_PER_DAY = previous;
+  }
+});
+test('isolated evaluations cannot reset the owner inference allowance by changing trial directories',()=>{
+ const owner=temporary(),a=temporary(),b=temporary();a.store.close();b.store.close();
+ const first=new Store(a.directory,owner.store),second=new Store(b.directory,owner.store),previous=process.env.VAC_INFERENCE_REQUESTS_PER_DAY;process.env.VAC_INFERENCE_REQUESTS_PER_DAY='2';
+ try{reserveRequest(first,'inference');reserveRequest(second,'inference');assert.equal(remainingRequestBudget(first,'inference').remaining,0);assert.throws(()=>reserveRequest(second,'inference'),/exhausted/);assert.equal(owner.store.all('request-budgets').length,1);assert.equal(first.all('request-budgets').length,0);assert.equal(second.all('request-budgets').length,0);}
+ finally{first.close();second.close();owner.store.close();for(const x of [owner,a,b])fs.rmSync(x.directory,{recursive:true,force:true});if(previous===undefined)delete process.env.VAC_INFERENCE_REQUESTS_PER_DAY;else process.env.VAC_INFERENCE_REQUESTS_PER_DAY=previous;}
+});
 test('workspace lock rejects duplicate workers and safely recognizes PID reuse', () => {
   const { directory, store } = temporary();
   try {

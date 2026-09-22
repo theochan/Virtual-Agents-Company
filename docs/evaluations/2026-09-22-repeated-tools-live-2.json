@@ -1,0 +1,27 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private workspace paths, runtime identifiers and full trajectories."
+  },
+  "scope": "Focused live repeated-tool and shared-grant development trial; not the ticker-research acceptance workflow.",
+  "sourceHash": "8817355410c8e8a6636ebd858f346306fa39b20d2bed3d97e99c42abba886be7",
+  "model": "qwen3.5:9b",
+  "startedAt": "2026-09-22T00:20:08.540Z",
+  "durationSeconds": 177.668,
+  "passed": false,
+  "status": "completed",
+  "checks": {
+    "completed": true,
+    "contracts": true,
+    "depth": true,
+    "twoBrowserSteps": true,
+    "twoWrites": true,
+    "workerCalculation": true,
+    "coordinatorCalculation": true,
+    "artifacts": true,
+    "sourceUrls": false
+  },
+  "planningCalls": 1,
+  "finding": "Execution completed but acceptance failed: sources.json used urls instead of required sources and normalized example.com with a trailing slash. Repeated browser and file operations and independent root/worker calculations succeeded. Evaluator enforced the original schema requirement; this is not a successful trial.",
+  "rawEvidenceSha256": "d1d8159822917f718655f690a1bec3363278cab22f7220dc910e3b1659b5709e"
+}
