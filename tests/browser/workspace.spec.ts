@@ -196,3 +196,24 @@ test('Swarm exposes independent review policy and MCP discovery without granting
  await page.getByText('Approved connector gateway',{exact:true}).click();
  await expect(page.getByText(/Discovery lists tools; it never grants access automatically/)).toBeVisible();
 });
+
+test('connector recovery checks remote evidence before explicit owner repeat authorization',async({page,request})=>{
+ const headers={Authorization:`Bearer ${token}`};
+ const manager=await(await request.post('/api/agents',{headers,data:{displayName:'RecoveryCoordinator',autonomyLevel:3,toolIds:['tool-connector'],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();
+ const project=await(await request.post('/api/projects',{headers,data:{name:'Recovery UI project',members:[]}})).json();
+ const connector=await(await request.post('/api/swarm-connectors',{headers,data:{name:'Recovery gateway',endpoint:'http://127.0.0.1:3328/connector',tools:[{name:'save',effect:'write',reconciliation:{statusTool:'status',operationKeyArgument:'operationKey'}},{name:'status',effect:'read'}]}})).json();
+ const response=await request.post('/api/swarms',{headers:{...headers,'Idempotency-Key':'recovery-ui-fixture'},data:{coordinatorId:manager.id,projectId:project.id,objective:'RECOVERY_UI write value once',mode:'dynamic',allowedToolIds:['tool-connector'],connectorIds:[connector.id],limits:{maxAgents:1}}});expect(response.status()).toBe(202);
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);
+ await page.getByRole('button',{name:'Allow this action once'}).click();
+ const recovery=page.getByRole('region',{name:'Connector recovery'});await expect(recovery).toBeVisible();
+ await expect(recovery.getByRole('button',{name:'Authorize one repeat'})).toHaveCount(0);
+ await recovery.getByRole('button',{name:'Check remote status'}).click();
+ await expect(recovery.getByText('save · reconciled not applied')).toBeVisible();await recovery.getByRole('button',{name:'Authorize one repeat'}).click();
+ await expect(recovery.getByText(/Repeat authorized/)).toBeVisible();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await expect(page.getByText(/Repeat authorized/)).toBeVisible();
+ const run=await(await request.get(`/api/swarms/${(await response.json()).id}`,{headers})).json();expect(run.connectorOperations[0].retryAuthorizedBy).toBe('owner');expect(run.budget.toolCalls).toBe(1);
+ expect((await request.post(`/api/connector-operations/${run.connectorOperations[0].id}/authorize-repeat`,{headers:{Origin:'http://127.0.0.1:3327'}})).status()).toBe(401);
+ const second=await request.post('/api/swarms',{headers:{...headers,'Idempotency-Key':'recovery-ui-replacement'},data:{coordinatorId:manager.id,projectId:project.id,objective:'RECOVERY_UI write value once',mode:'dynamic',allowedToolIds:['tool-connector'],connectorIds:[connector.id],limits:{maxAgents:1}}});expect(second.status()).toBe(202);const secondRun=await second.json();
+ await page.getByRole('button',{name:'Allow this action once'}).click();await expect(page.getByText('Recovery write completed once.',{exact:true})).toBeVisible();
+ const completed=await(await request.get(`/api/swarms/${secondRun.id}`,{headers})).json();expect(completed.status).toBe('completed');expect(completed.connectorOperations[0].status).toBe('confirmed');expect(completed.budget.toolCalls).toBe(1);
+ const original=await(await request.get(`/api/swarms/${run.id}`,{headers})).json();expect(original.connectorOperations[0].status).toBe('retry_consumed');expect(original.budget.toolCalls).toBe(1);
+});

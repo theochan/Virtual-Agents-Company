@@ -1,0 +1,31 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths and internal IDs."
+  },
+  "receipts": [
+    {
+      "workItem": "VAC-38",
+      "verified": true,
+      "status": "Done",
+      "priorityPreserved": true
+    },
+    {
+      "workItem": "VAC-41",
+      "verified": true,
+      "status": "Done",
+      "priorityPreserved": true
+    },
+    {
+      "workItem": "VAC-20",
+      "verified": true,
+      "status": "Todo",
+      "priorityPreserved": true
+    }
+  ],
+  "newItems": 0,
+  "closedItems": [
+    "VAC-41",
+    "VAC-38"
+  ]
+}

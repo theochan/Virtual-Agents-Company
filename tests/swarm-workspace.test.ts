@@ -376,3 +376,129 @@ test('a provisional semantic pass cannot survive contradictory confirmation or i
   }finally{f.cleanup();}
  }
 });
+
+test('owner-pinned reconciliation contract gates completion and supports deterministic file reads',async()=>{
+ for(const wrong of [false,true]){
+  let ledger:any;
+  const f=setup(m=>{
+   if(!m.some(x=>x.content.includes('UNTRUSTED TOOL')))return {action:'tool',toolId:'tool-write-file',parameters:{name:'result.json',content:JSON.stringify(wrong?{...ledger,rows:ledger.rows.slice(2)}:ledger),expectedVersion:0}};
+   return {action:'final',reply:'Reconciled'};
+  });
+  try{
+   const data={records:[{id:'a',entity:'North',currency:'USD',unit:'minor',type:'invoice',amount:100},{id:'b',entity:'North',currency:'USD',unit:'minor',type:'credit',amount:100},{id:'c',entity:'North',currency:'USD',unit:'minor',type:'invoice',amount:50}]};
+   const file=f.engine.workspace.write('project','source.json',Buffer.from(JSON.stringify(data)),0,'owner');
+   const contract={name:'result.json',kind:'reconciliation',sources:[{name:file.name,version:file.version,sha256:file.sha256}]};
+   const j=f.create({allowedToolIds:['tool-files','tool-write-file'],contracts:[contract]});
+   const receipt=await f.engine.workspace.execute(j,'fixture','tool-files',{reconcileContract:'result.json'},'ledger-'+wrong,new AbortController().signal);ledger=receipt.output;
+   // A later source version cannot silently replace the owner's frozen source.
+   f.engine.workspace.write('project','source.json',Buffer.from(JSON.stringify({records:[]})),1,'owner');
+   const done=await f.finish(j.id);assert.equal(done.status,wrong?'blocked':'completed',done.result);assert.equal(done.verification?.[0].passed,!wrong);
+   assert.equal(ledger.totals[0].amount,50);
+  }finally{f.cleanup();}
+ }
+});
+
+test('reconciliation rejects invalid sources atomically and stale or overlapping specialist partitions',async()=>{
+ const f=setup();try{
+  const data=Buffer.from(JSON.stringify({records:[{id:'a',entity:'North',currency:'USD',unit:'minor',type:'invoice',amount:100}]}));
+  const source=f.engine.workspace.write('project','input.json',data,0,'owner');
+  const contract={name:'result.json',kind:'reconciliation' as const,path:[],minBytes:1,sources:[{name:source.name,version:1,sha256:source.sha256}],partitions:['part.json']};
+  assert.throws(()=>f.create({contracts:[{...contract,sources:[{...contract.sources[0],sha256:'0'.repeat(64)}]}]}),/pinned/);
+  assert.equal(f.store.all('swarms').length,0);
+  const j=f.create({contracts:[contract]});const ledger=f.engine.workspace.accounting('project',contract);
+  f.engine.workspace.write('project','result.json',Buffer.from(JSON.stringify(ledger)),0,'worker',j.id);
+  f.engine.workspace.write('project','part.json',Buffer.from(JSON.stringify({rows:ledger.rows})),0,'worker','old-run');
+  assert.equal(f.engine.workspace.contracts(j)[0].passed,false);
+  f.engine.workspace.write('project','part.json',Buffer.from(JSON.stringify({rows:[...ledger.rows,...ledger.rows]})),1,'worker',j.id);
+  assert.equal(f.engine.workspace.contracts(j)[0].passed,false);
+  f.engine.workspace.write('project','part.json',Buffer.from(JSON.stringify({rows:ledger.rows})),2,'worker',j.id);
+  assert.equal(f.engine.workspace.contracts(j)[0].passed,true);
+ }finally{f.cleanup();}
+});
+
+test('lost connector writes require final remote evidence and owner authorization before one equivalent repeat',async()=>{
+ const http=await import('node:http');let sends=0,statusChecks=0,status='applied',final=true,wrongIdentity=false,failStatus=false;
+ const server=http.createServer(async(req,res)=>{let text='';for await(const b of req)text+=b;const request=JSON.parse(text),args=request.params.arguments;
+  if(request.params.name==='save'){sends++;assert.equal(typeof args.operationKey,'string');if(sends===1){res.destroy();return;}res.end(JSON.stringify({jsonrpc:'2.0',id:request.id,result:{saved:true}}));}
+  else{statusChecks++;if(failStatus){res.writeHead(503).end();return;}res.end(JSON.stringify({jsonrpc:'2.0',id:request.id,result:{operationKey:wrongIdentity?'wrong':args.operationKey,status,final}}));}
+ });await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
+ const endpoint=`http://127.0.0.1:${(server.address()as any).port}/tools`,old=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=endpoint;
+ const f=setup();try{
+  const c=f.engine.workspace.saveConnector({name:'recoverable',endpoint,tools:[{name:'save',effect:'write',reconciliation:{statusTool:'status',operationKeyArgument:'operationKey'}},{name:'status',effect:'read'}]})!;
+  const j=f.create({allowedToolIds:['tool-connector'],connectorIds:[c.id]});const args={connectorId:c.id,tool:'save',arguments:{value:42,nested:{b:2,a:1}}};
+  await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',args,'lost',new AbortController().signal));assert.equal(sends,1);
+  const workspace=new Workspace(f.store);
+  await assert.rejects(workspace.execute(j,'node','tool-connector',{...args,arguments:{nested:{a:1,b:2},value:42}},'new-id',new AbortController().signal),/Equivalent uncertain/);assert.equal(sends,1);
+  await assert.rejects(workspace.reconcileOperation('lost',new AbortController().signal),/Stop the run/);
+  f.engine.cancel(j.id);
+  status='not_applied';final=false;await workspace.reconcileOperation('lost',new AbortController().signal);assert.throws(()=>workspace.authorizeOperationRepeat('lost'),/Fresh final/);
+  final=true;wrongIdentity=true;await assert.rejects(workspace.reconcileOperation('lost',new AbortController().signal),/failed/);wrongIdentity=false;
+  await workspace.reconcileOperation('lost',new AbortController().signal);
+  await assert.rejects(workspace.execute(j,'node','tool-connector',args,'not-authorized',new AbortController().signal),/Owner must authorize/);
+  workspace.authorizeOperationRepeat('lost');failStatus=true;await assert.rejects(workspace.reconcileOperation('lost',new AbortController().signal),/failed/);assert.throws(()=>workspace.authorizeOperationRepeat('lost'),/Fresh final/);failStatus=false;
+  await workspace.reconcileOperation('lost',new AbortController().signal);workspace.authorizeOperationRepeat('lost');
+  const done=await workspace.execute(j,'replacement','tool-connector',args,'replacement',new AbortController().signal);assert.equal(done.status,'succeeded');assert.equal(sends,2);
+  await workspace.execute(j,'replacement','tool-connector',args,'replacement',new AbortController().signal);assert.equal(sends,2);
+  assert.equal(f.store.get<any>('connector-operations','lost').status,'retry_consumed');assert.equal(f.store.get<any>('connector-operations','replacement').status,'confirmed');
+  assert.equal(f.store.all('connector-reconciliation').length,statusChecks);
+ }finally{f.cleanup();process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=old||'';server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
+});
+
+test('provider-applied outcomes, stale checks, configuration drift and legacy uncertainty cannot authorize replay',async()=>{
+ const http=await import('node:http');let mode='applied',sends=0;
+ const server=http.createServer(async(req,res)=>{let text='';for await(const b of req)text+=b;const q=JSON.parse(text);if(q.params.name==='save'){sends++;res.writeHead(503).end();return;}res.end(JSON.stringify({id:q.id,result:{operationKey:q.params.arguments.operationKey,status:mode,final:true}}));});await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
+ const endpoint=`http://127.0.0.1:${(server.address()as any).port}/tools`,old=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=endpoint;const f=setup();try{
+  const c=f.engine.workspace.saveConnector({name:'recoverable',endpoint,tools:[{name:'save',effect:'write',reconciliation:{statusTool:'status',operationKeyArgument:'operationKey'}},{name:'status',effect:'read'}]})!;
+  const j=f.create({allowedToolIds:['tool-connector'],connectorIds:[c.id]});const a={connectorId:c.id,tool:'save',arguments:{value:1}};
+  await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',a,'applied',new AbortController().signal));f.engine.cancel(j.id);
+  assert.equal((await f.engine.workspace.reconcileOperation('applied',new AbortController().signal)).status,'reconciled_applied');assert.throws(()=>f.engine.workspace.authorizeOperationRepeat('applied'));
+  await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',a,'duplicate',new AbortController().signal),/Equivalent/);assert.equal(sends,1);
+  const b={...a,arguments:{value:2}};await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',b,'stale',new AbortController().signal));mode='not_applied';await f.engine.workspace.reconcileOperation('stale',new AbortController().signal);f.engine.workspace.authorizeOperationRepeat('stale');
+  const op=f.store.get<any>('connector-operations','stale');f.store.put('connector-operations','stale',{...op,reconciledAt:new Date(0).toISOString()});await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',b,'stale-repeat',new AbortController().signal),/stale/);
+  const config=f.store.get<any>('swarm-connectors',c.id);f.store.put('swarm-connectors',c.id,{...config,endpoint:endpoint+'/changed'});await assert.rejects(f.engine.workspace.reconcileOperation('stale',new AbortController().signal),/configuration changed/);f.store.put('swarm-connectors',c.id,config);
+  f.store.put('connector-operations','legacy',{id:'legacy',connectorId:c.id,tool:'save',status:'outcome_unknown'});await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',{...a,arguments:{value:3}},'legacy-repeat',new AbortController().signal),/Legacy/);
+  assert.equal(sends,2);
+ }finally{f.cleanup();process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=old||'';server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
+});
+
+test('process death after remote apply preserves intent and usage and cannot duplicate the write',async()=>{
+ const http=await import('node:http'),{spawn}=await import('node:child_process');let child:any,sends=0;const applied=new Set<string>();
+ const server=http.createServer(async(req,res)=>{let text='';for await(const b of req)text+=b;const q=JSON.parse(text),key=q.params.arguments.operationKey;
+  if(q.params.name==='save'){sends++;applied.add(key);child.kill('SIGKILL');res.destroy();}
+  else res.end(JSON.stringify({id:q.id,result:{operationKey:key,status:applied.has(key)?'applied':'not_applied',final:true}}));
+ });await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));const endpoint=`http://127.0.0.1:${(server.address()as any).port}/tools`,old=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=endpoint;
+ const f=setup();try{
+  const c=f.engine.workspace.saveConnector({name:'crash fixture',endpoint,tools:[{name:'save',effect:'write',reconciliation:{statusTool:'status',operationKeyArgument:'operationKey'}},{name:'status',effect:'read'}]})!;
+  const j=f.create({allowedToolIds:['tool-connector'],connectorIds:[c.id]});const args={connectorId:c.id,tool:'save',arguments:{value:1}};
+  const script=`import {Store} from './src/server/store.ts';import {Workspace} from './src/server/workspace.ts';const s=new Store(process.env.FIXTURE_DIR);const j=s.get('swarms',process.env.FIXTURE_RUN);const b=s.get('swarm-budgets',j.id);s.put('swarm-budgets',j.id,{...b,toolCalls:b.toolCalls+1});await new Workspace(s).execute(j,'node','tool-connector',JSON.parse(process.env.FIXTURE_ARGS),'crash-call',new AbortController().signal);`;
+  child=spawn(process.execPath,['--import','tsx','--input-type=module','-e',script],{cwd:process.cwd(),env:{...process.env,FIXTURE_DIR:f.store.directory,FIXTURE_RUN:j.id,FIXTURE_ARGS:JSON.stringify(args)},stdio:'ignore'});
+  await new Promise<void>((resolve,reject)=>{const timer=setTimeout(()=>{child.kill('SIGKILL');reject(new Error('Crash fixture timed out'));},10000);child.once('exit',(_code:any,signal:any)=>{clearTimeout(timer);try{assert.equal(signal,'SIGKILL');resolve();}catch(e){reject(e);}});child.once('error',reject);});
+  assert.equal(sends,1);assert.equal(f.store.get<any>('connector-operations','crash-call').status,'outcome_unknown');assert.equal(f.store.get<any>('swarm-budgets',j.id).toolCalls,1);
+  f.engine.cancel(j.id);const restarted=new Workspace(f.store);
+  assert.equal((await restarted.reconcileOperation('crash-call',new AbortController().signal)).status,'reconciled_applied');
+  await assert.rejects(restarted.execute(j,'new-node','tool-connector',args,'new-call',new AbortController().signal),/Equivalent/);assert.equal(sends,1);assert.equal(f.store.get<any>('swarm-budgets',j.id).toolCalls,1);
+ }finally{child?.kill('SIGKILL');f.cleanup();process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=old||'';server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
+});
+
+test('cancelled connector after remote application retains uncertainty and blocks a new operation ID',async()=>{
+ const http=await import('node:http');const controller=new AbortController();let sends=0;
+ const server=http.createServer(async(req,res)=>{for await(const _ of req){}sends++;controller.abort();res.end(JSON.stringify({id:'cancelled-call',result:{saved:true}}));});await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
+ const endpoint=`http://127.0.0.1:${(server.address()as any).port}/tools`,old=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=endpoint;const f=setup();try{
+  const c=f.engine.workspace.saveConnector({name:'cancel fixture',endpoint,tools:[{name:'save',effect:'write'}]})!;const j=f.create({allowedToolIds:['tool-connector'],connectorIds:[c.id]}),args={connectorId:c.id,tool:'save',arguments:{value:1}};
+  await assert.rejects(f.engine.workspace.execute(j,'node','tool-connector',args,'cancelled-call',controller.signal));assert.equal(sends,1);assert.equal(f.store.get<any>('connector-operations','cancelled-call').status,'outcome_unknown');
+  await assert.rejects(new Workspace(f.store).execute(j,'node','tool-connector',args,'another-call',new AbortController().signal),/Equivalent uncertain/);assert.equal(sends,1);
+  f.engine.cancel(j.id);await assert.rejects(f.engine.workspace.reconcileOperation('cancelled-call',new AbortController().signal),/No supported/);
+ }finally{f.cleanup();process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=old||'';server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
+});
+
+test('large accounting results fail before the model observation can truncate a ledger',async()=>{
+ const f=setup();try{
+  const records=Array.from({length:50},(_,i)=>({id:'record-'+i,entity:'North',currency:'USD',unit:'minor',type:'invoice',amount:1}));const file=f.engine.workspace.write('project','large.json',Buffer.from(JSON.stringify({records})),0,'owner');
+  const j=f.create({allowedToolIds:['tool-files'],contracts:[{name:'result.json',kind:'reconciliation',sources:[{name:file.name,version:file.version,sha256:file.sha256}]}]});
+  await assert.rejects(f.engine.workspace.execute(j,'node','tool-files',{reconcileContract:'result.json'},'large-ledger',new AbortController().signal),/context envelope/);assert.equal(f.store.get('swarm-tool-results','large-ledger'),undefined);
+ }finally{f.cleanup();}
+});
+
+test('connector tool names cannot ambiguously declare the same operation read and write',()=>{
+ const f=setup();try{assert.throws(()=>f.engine.workspace.saveConnector({name:'ambiguous',endpoint:'https://example.com/tools',tools:[{name:'save',effect:'read'},{name:'save',effect:'write'}]}),/unique/);assert.equal(f.store.all('swarm-connectors').length,0);}finally{f.cleanup();}
+});

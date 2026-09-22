@@ -161,6 +161,7 @@ export class SwarmEngine {
         if(file.source!=='owner'||file.runId||!file.mime.startsWith('text/')||Buffer.byteLength(text)>4000)throw new HttpError(400,'Workflow briefs must be owner-provided text, at most 4000 bytes');
         workflowBriefs[task.id]={name:task.briefName,sha256:file.sha256,text};
       }
+      for(const contract of input.contracts)if(contract.kind==='reconciliation')this.workspace.accounting(input.projectId,contract);
       const id = uid(), rootNodeId = uid();
       const j: SwarmJob = { ...input, workflowBriefs, semanticReviewer, id, workspaceId: project.workspaceId, rootNodeId, nodeIds: [rootNodeId], status: 'queued', createdAt: now(), events: [] };
       this.store.put('swarms',id,j);

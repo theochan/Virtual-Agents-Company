@@ -1,0 +1,34 @@
+{
+  "receipts": [
+    {
+      "workItem": "VAC-23",
+      "verified": true,
+      "statePreserved": true,
+      "priorityPreserved": true
+    },
+    {
+      "workItem": "VAC-28",
+      "verified": true,
+      "statePreserved": true,
+      "priorityPreserved": true
+    },
+    {
+      "workItem": "VAC-42",
+      "verified": true,
+      "statePreserved": true,
+      "priorityPreserved": true
+    },
+    {
+      "workItem": "VAC-20",
+      "verified": true,
+      "statePreserved": true,
+      "priorityPreserved": true
+    }
+  ],
+  "newItems": 0,
+  "closedItems": 0,
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Credentials, private paths and internal record IDs."
+  }
+}
