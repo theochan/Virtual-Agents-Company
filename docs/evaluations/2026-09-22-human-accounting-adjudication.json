@@ -1,0 +1,48 @@
+{
+  "schema": "vac.human-packet-adjudication/v1",
+  "status": "HUMAN_LABELS_RECORDED",
+  "reviewer": "Theo (owner)",
+  "provenance": "User explicitly identified themselves as reviewer and supplied these judgments in this task. The latest complete submission supersedes the earlier incomplete message. Human authorship is user-reported, not independently authenticated.",
+  "packet": {
+    "path": "docs/test-plans/blinded-accounting-review.md",
+    "sha256": "4a1d5bba040ebed49e452e3e8274ca5293e3e811d6679b1e8be72f030133be75",
+    "authorship": "developer-authored",
+    "independentlyAuthoredHoldout": false
+  },
+  "judgments": [
+    {
+      "caseId": "01",
+      "verdict": "supported",
+      "reason": "The report accurately calculates the net payable by subtracting the credit note from the invoice amount (EUR 142.80 - EUR 12.80 = EUR 130.00) and correctly accounts for the invoice copy without double-counting it."
+    },
+    {
+      "caseId": "02",
+      "verdict": "unsupported",
+      "reason": "The report incorrectly identifies the shipment date as 9 December. The signed amendment dated 4 December explicitly replaced the earlier proposed date and confirmed the shipment for 12 December."
+    },
+    {
+      "caseId": "03",
+      "verdict": "unsupported",
+      "reason": "The report incorrectly adds USD and SGD amounts together (USD 48 + SGD 62 = 110) without converting them to a common currency. Because the file contains no exchange rate or conversion instructions, these different currencies cannot be directly combined into a single sum."
+    },
+    {
+      "caseId": "04",
+      "verdict": "supported",
+      "reason": "The report accurately converts 8,450 USD cents into USD 84.50 and correctly follows the instruction to exclude the unapproved draft."
+    },
+    {
+      "caseId": "05",
+      "verdict": "unsupported",
+      "reason": "The source states that the two copies disagree and there is no confirmation or reconciliation available, making it impossible to establish a definitive \"confirmed\" balance of USD 79.00 just by arbitrarily choosing the higher amount."
+    },
+    {
+      "caseId": "06",
+      "verdict": "supported",
+      "reason": "The source explicitly states that the currency code, unit scale, and currency name are unavailable, which directly supports the report's conclusion that neither a named currency nor a major-unit amount can be determined from the provided evidence."
+    }
+  ],
+  "reviewMinutes": null,
+  "reviewTimeStatus": "UNKNOWN",
+  "scope": "Human labeling of this six-case packet only. No model evaluation was performed against these labels in this step. No reviewer qualification, swarm advantage, or VAC-23/28/42 closure follows.",
+  "nextStep": "Await separately authored fresh cases before freezing and consuming an unseen evaluation."
+}

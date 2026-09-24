@@ -1,0 +1,813 @@
+{
+  "campaigns": [
+    {
+      "candidate": 1,
+      "status": "finished",
+      "sourceHash": "18dc942cfc244df467fa6b492fe16b1ea56d2eac7361039d6ed585b940ed7192",
+      "manifestHash": "5b11d1e8e78f17553ad39cb6467885eb16b03b5ec8358a47fa6349c2c3716bb5",
+      "rawReportHash": "ec48b9b0c057c30934b003958ed6dbe6f958f685abf1895fece248b6568fd093",
+      "sourceSnapshotHash": "5b996d7d8528b17841f750bd04a95b9843ad894c6062ace7ab62da38e98ca09d",
+      "model": {
+        "name": "qwen3.5:9b",
+        "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+      },
+      "calls": 65,
+      "startedAt": "2026-09-22T04:48:27.279Z",
+      "completedAt": "2026-09-22T05:01:39.700Z",
+      "summary": {
+        "arms": [
+          {
+            "arm": "single",
+            "attempts": 3,
+            "passed": 0,
+            "calls": 15,
+            "durationMs": 200549
+          },
+          {
+            "arm": "planned",
+            "attempts": 3,
+            "passed": 0,
+            "calls": 18,
+            "durationMs": 160568
+          },
+          {
+            "arm": "autonomous",
+            "attempts": 3,
+            "passed": 0,
+            "calls": 23,
+            "durationMs": 301339
+          }
+        ],
+        "reviewer": {
+          "falseAcceptances": 0,
+          "trueAcceptances": 3,
+          "errors": 0
+        },
+        "advantage": "NOT_QUALIFIED",
+        "independentAdjudication": "PENDING",
+        "humanCorrectionTime": "NOT_MEASURED"
+      },
+      "arms": [
+        {
+          "task": "csv-cross-file",
+          "arm": "single",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 60019,
+          "modelCalls": 5,
+          "toolCalls": 3,
+          "reportedInputTokens": 8644,
+          "reportedOutputTokens": 360,
+          "artifactHash": "15b96a9295b6521c60c244057a0753c0464d44f25661f4c4ac85b81e0d05bf22"
+        },
+        {
+          "task": "csv-cross-file",
+          "arm": "planned",
+          "passed": false,
+          "status": "partial",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 50422,
+          "modelCalls": 6,
+          "toolCalls": 3,
+          "reportedInputTokens": 8627,
+          "reportedOutputTokens": 213,
+          "artifactHash": "15b96a9295b6521c60c244057a0753c0464d44f25661f4c4ac85b81e0d05bf22"
+        },
+        {
+          "task": "csv-cross-file",
+          "arm": "autonomous",
+          "passed": false,
+          "status": "partial",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 75658,
+          "modelCalls": 7,
+          "toolCalls": 3,
+          "reportedInputTokens": 10722,
+          "reportedOutputTokens": 479,
+          "artifactHash": "15b96a9295b6521c60c244057a0753c0464d44f25661f4c4ac85b81e0d05bf22"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "planned",
+          "passed": false,
+          "status": "partial",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 51528,
+          "modelCalls": 6,
+          "toolCalls": 3,
+          "reportedInputTokens": 8747,
+          "reportedOutputTokens": 208,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "autonomous",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 113628,
+          "modelCalls": 8,
+          "toolCalls": 3,
+          "reportedInputTokens": 12789,
+          "reportedOutputTokens": 961,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "single",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 66617,
+          "modelCalls": 5,
+          "toolCalls": 3,
+          "reportedInputTokens": 8625,
+          "reportedOutputTokens": 530,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "text-two-suppliers",
+          "arm": "autonomous",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 112053,
+          "modelCalls": 8,
+          "toolCalls": 3,
+          "reportedInputTokens": 13148,
+          "reportedOutputTokens": 908,
+          "artifactHash": "bc5997e1a5ab7b020b483d9d2b1d2d12a3bdd04b8406495481adf68d31b6ee56"
+        },
+        {
+          "task": "text-two-suppliers",
+          "arm": "single",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 73913,
+          "modelCalls": 5,
+          "toolCalls": 3,
+          "reportedInputTokens": 9010,
+          "reportedOutputTokens": 623,
+          "artifactHash": "bc5997e1a5ab7b020b483d9d2b1d2d12a3bdd04b8406495481adf68d31b6ee56"
+        },
+        {
+          "task": "text-two-suppliers",
+          "arm": "planned",
+          "passed": false,
+          "status": "partial",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 58618,
+          "modelCalls": 6,
+          "toolCalls": 3,
+          "reportedInputTokens": 9021,
+          "reportedOutputTokens": 349,
+          "artifactHash": "bc5997e1a5ab7b020b483d9d2b1d2d12a3bdd04b8406495481adf68d31b6ee56"
+        }
+      ],
+      "reviewer": [
+        {
+          "id": "duplicate-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 37889
+        },
+        {
+          "id": "duplicate-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 19816
+        },
+        {
+          "id": "currency-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 22775
+        },
+        {
+          "id": "currency-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 14428
+        },
+        {
+          "id": "date-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 23388
+        },
+        {
+          "id": "date-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 11324
+        }
+      ]
+    },
+    {
+      "candidate": 2,
+      "status": "finished",
+      "sourceHash": "5e68fb2c33a7cc7197a226bb542b873b551b2b1b5aeec1ebec8b318af57c13b3",
+      "manifestHash": "aae0eaeb92dd7b3029435361242a6b8a95e76a9fe3c17a5d5c3d266319c31b62",
+      "rawReportHash": "cb008591b06709e2c4a16cce1f920dc99bf1a3da2acf6359b86cef11aa901981",
+      "sourceSnapshotHash": "599b1bff5560d3869aeabaaaadddb7e0c19ecc29ae1279e15c9cf1bbd3914297",
+      "model": {
+        "name": "qwen3.5:9b",
+        "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+      },
+      "calls": 77,
+      "startedAt": "2026-09-22T05:03:00.415Z",
+      "completedAt": "2026-09-22T05:23:13.736Z",
+      "summary": {
+        "arms": [
+          {
+            "arm": "single",
+            "attempts": 3,
+            "passed": 3,
+            "calls": 18,
+            "durationMs": 329723
+          },
+          {
+            "arm": "planned",
+            "attempts": 3,
+            "passed": 2,
+            "calls": 23,
+            "durationMs": 353310
+          },
+          {
+            "arm": "autonomous",
+            "attempts": 3,
+            "passed": 3,
+            "calls": 27,
+            "durationMs": 381510
+          }
+        ],
+        "reviewer": {
+          "falseAcceptances": 0,
+          "trueAcceptances": 3,
+          "errors": 0
+        },
+        "advantage": "NOT_QUALIFIED",
+        "independentAdjudication": "PENDING",
+        "humanCorrectionTime": "NOT_MEASURED"
+      },
+      "arms": [
+        {
+          "task": "csv-cross-file",
+          "arm": "single",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 111935,
+          "modelCalls": 6,
+          "toolCalls": 3,
+          "reportedInputTokens": 12025,
+          "reportedOutputTokens": 999,
+          "artifactHash": "15b96a9295b6521c60c244057a0753c0464d44f25661f4c4ac85b81e0d05bf22"
+        },
+        {
+          "task": "csv-cross-file",
+          "arm": "planned",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 129074,
+          "modelCalls": 8,
+          "toolCalls": 3,
+          "reportedInputTokens": 13929,
+          "reportedOutputTokens": 1105,
+          "artifactHash": "15b96a9295b6521c60c244057a0753c0464d44f25661f4c4ac85b81e0d05bf22"
+        },
+        {
+          "task": "csv-cross-file",
+          "arm": "autonomous",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 126265,
+          "modelCalls": 9,
+          "toolCalls": 3,
+          "reportedInputTokens": 15430,
+          "reportedOutputTokens": 926,
+          "artifactHash": "15b96a9295b6521c60c244057a0753c0464d44f25661f4c4ac85b81e0d05bf22"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "planned",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 85658,
+          "modelCalls": 7,
+          "toolCalls": 3,
+          "reportedInputTokens": 11039,
+          "reportedOutputTokens": 611,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "autonomous",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 121446,
+          "modelCalls": 9,
+          "toolCalls": 3,
+          "reportedInputTokens": 15266,
+          "reportedOutputTokens": 843,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "single",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 115703,
+          "modelCalls": 6,
+          "toolCalls": 3,
+          "reportedInputTokens": 11907,
+          "reportedOutputTokens": 1072,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "text-two-suppliers",
+          "arm": "autonomous",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 133799,
+          "modelCalls": 9,
+          "toolCalls": 3,
+          "reportedInputTokens": 16261,
+          "reportedOutputTokens": 973,
+          "artifactHash": "bc5997e1a5ab7b020b483d9d2b1d2d12a3bdd04b8406495481adf68d31b6ee56"
+        },
+        {
+          "task": "text-two-suppliers",
+          "arm": "single",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 102085,
+          "modelCalls": 6,
+          "toolCalls": 3,
+          "reportedInputTokens": 12578,
+          "reportedOutputTokens": 772,
+          "artifactHash": "bc5997e1a5ab7b020b483d9d2b1d2d12a3bdd04b8406495481adf68d31b6ee56"
+        },
+        {
+          "task": "text-two-suppliers",
+          "arm": "planned",
+          "passed": true,
+          "status": "completed",
+          "checks": {
+            "completed": true,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": true,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 138578,
+          "modelCalls": 8,
+          "toolCalls": 3,
+          "reportedInputTokens": 14756,
+          "reportedOutputTokens": 1219,
+          "artifactHash": "bc5997e1a5ab7b020b483d9d2b1d2d12a3bdd04b8406495481adf68d31b6ee56"
+        }
+      ],
+      "reviewer": [
+        {
+          "id": "duplicate-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 38329
+        },
+        {
+          "id": "duplicate-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 22388
+        },
+        {
+          "id": "currency-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 27811
+        },
+        {
+          "id": "currency-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 14855
+        },
+        {
+          "id": "date-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 30018
+        },
+        {
+          "id": "date-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 14931
+        }
+      ]
+    },
+    {
+      "candidate": 3,
+      "status": "finished",
+      "sourceHash": "ea2061e2dedbda789b4bb7e119a3b1474eacc94379d4fe2697b562c7c98a2a3f",
+      "manifestHash": "c6d46399f3b43ee342818c55ba4c2458505e08e27f545ffb57854f5f385f814b",
+      "rawReportHash": "90f2d2f8f7721140f4f63fa20bdcd7b23f5159111bf6fbfe534e3072d23217d5",
+      "sourceSnapshotHash": "109cf4b95cfd71c7019b0c5eb9299777d5337d5b2d21b631914b58da6c6b8a18",
+      "model": {
+        "name": "qwen3.5:9b",
+        "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+      },
+      "calls": 29,
+      "startedAt": "2026-09-22T05:24:13.049Z",
+      "completedAt": "2026-09-22T05:31:38.797Z",
+      "summary": {
+        "arms": [
+          {
+            "arm": "single",
+            "attempts": 1,
+            "passed": 0,
+            "calls": 5,
+            "durationMs": 72071
+          },
+          {
+            "arm": "planned",
+            "attempts": 1,
+            "passed": 0,
+            "calls": 7,
+            "durationMs": 102525
+          },
+          {
+            "arm": "autonomous",
+            "attempts": 1,
+            "passed": 0,
+            "calls": 8,
+            "durationMs": 117421
+          }
+        ],
+        "reviewer": {
+          "falseAcceptances": 0,
+          "trueAcceptances": 3,
+          "errors": 0
+        },
+        "advantage": "NOT_QUALIFIED",
+        "independentAdjudication": "PENDING",
+        "humanCorrectionTime": "NOT_MEASURED"
+      },
+      "arms": [
+        {
+          "task": "labeled-signed",
+          "arm": "planned",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 102525,
+          "modelCalls": 7,
+          "toolCalls": 3,
+          "reportedInputTokens": 11096,
+          "reportedOutputTokens": 833,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "autonomous",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 117421,
+          "modelCalls": 8,
+          "toolCalls": 3,
+          "reportedInputTokens": 12686,
+          "reportedOutputTokens": 994,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        },
+        {
+          "task": "labeled-signed",
+          "arm": "single",
+          "passed": false,
+          "status": "blocked",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          },
+          "error": null,
+          "durationMs": 72071,
+          "modelCalls": 5,
+          "toolCalls": 3,
+          "reportedInputTokens": 9069,
+          "reportedOutputTokens": 581,
+          "artifactHash": "325794a71585ec7b8fa25fd3dfebaeae4af9275036be7c6cb92997f25ebf7963"
+        }
+      ],
+      "reviewer": [
+        {
+          "id": "duplicate-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 38717
+        },
+        {
+          "id": "duplicate-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 22742
+        },
+        {
+          "id": "currency-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 31354
+        },
+        {
+          "id": "currency-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 13929
+        },
+        {
+          "id": "date-supported",
+          "expected": true,
+          "accepted": true,
+          "correct": true,
+          "error": null,
+          "durationMs": 30764
+        },
+        {
+          "id": "date-unsupported",
+          "expected": false,
+          "accepted": false,
+          "correct": true,
+          "error": null,
+          "durationMs": 15965
+        }
+      ]
+    }
+  ],
+  "scope": "One accounting task family; three formats; developer-authored cases. Candidates 2 and 3 are development regressions on exposed cases; candidate 3 tests only the previously failed condition. No broad qualification or owner-effort measurement.",
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private store paths, file IDs and raw trajectories; retained locally with hashes."
+  }
+}

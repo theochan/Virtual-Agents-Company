@@ -1,0 +1,237 @@
+{
+  "scope": "Preserved failed campaigns; no claim of advantage",
+  "campaigns": [
+    {
+      "campaign": "2026-09-23-e2e-repaired-v1",
+      "manifestSha256": "bb4dfe8ca39a37f1755509651a14618e5b0d3464bf1e0e02b59b62b2d55a5a79",
+      "rawResultsSha256": "967df81d4e8012808b74e463e9f8e77f276269b7c97db60a5f32aab5a2773cac",
+      "calls": 16,
+      "summary": {
+        "arms": [
+          {
+            "arm": "single",
+            "attempts": 1,
+            "passed": 0,
+            "calls": 3,
+            "durationMs": 53248
+          },
+          {
+            "arm": "planned",
+            "attempts": 1,
+            "passed": 0,
+            "calls": 7,
+            "durationMs": 104017
+          },
+          {
+            "arm": "autonomous",
+            "attempts": 1,
+            "passed": 0,
+            "calls": 6,
+            "durationMs": 98456
+          }
+        ],
+        "advantage": "NOT_QUALIFIED",
+        "independentAdjudication": "PENDING",
+        "humanCorrectionTime": "NOT_MEASURED"
+      },
+      "failures": [
+        {
+          "task": "mixed-unit-two-supplier",
+          "arm": "single",
+          "result": "Contract-bound accounting output requires reconcileContract materialization; raw content is prohibited",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "schema": false,
+            "totals": false,
+            "rows": false,
+            "duplicates": false,
+            "contract": false,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          }
+        },
+        {
+          "task": "mixed-unit-two-supplier",
+          "arm": "planned",
+          "result": "Review confirmation exceeds context envelope; no truncated confirmation accepted",
+          "checks": {
+            "completed": false,
+            "currentArtifact": true,
+            "schema": true,
+            "totals": true,
+            "rows": true,
+            "duplicates": true,
+            "contract": true,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          }
+        },
+        {
+          "task": "mixed-unit-two-supplier",
+          "arm": "autonomous",
+          "result": "Contract-bound accounting output requires reconcileContract materialization; raw content is prohibited",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "schema": false,
+            "totals": false,
+            "rows": false,
+            "duplicates": false,
+            "contract": false,
+            "reads": true,
+            "semantic": false,
+            "topology": true
+          }
+        }
+      ]
+    },
+    {
+      "campaign": "2026-09-23-change-log-comparison-v1",
+      "manifestSha256": "2c6b9b4fe7a9078fa1dab2002940d8a53a08bc123d35464b8e6edb0976dce987",
+      "rawResultsSha256": "508734ce407e66eef1e0541c0da96e9c55f506e91c445a8f1e429fd9f50ad884",
+      "calls": 44,
+      "summary": [
+        {
+          "arm": "single",
+          "passed": 0,
+          "total": 3,
+          "medianMs": 44243,
+          "medianCalls": 3,
+          "medianTokens": 6819,
+          "advantage": "BASELINE"
+        },
+        {
+          "arm": "planned",
+          "passed": 0,
+          "total": 3,
+          "medianMs": 80250,
+          "medianCalls": 5,
+          "medianTokens": 11067,
+          "advantage": "NOT_DEMONSTRATED"
+        },
+        {
+          "arm": "autonomous",
+          "passed": 0,
+          "total": 3,
+          "medianMs": 101168,
+          "medianCalls": 6,
+          "medianTokens": 12266,
+          "advantage": "NOT_DEMONSTRATED"
+        }
+      ],
+      "failures": [
+        {
+          "task": "release-1",
+          "arm": "single",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-1",
+          "arm": "planned",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-1",
+          "arm": "autonomous",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-2",
+          "arm": "planned",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-2",
+          "arm": "autonomous",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-2",
+          "arm": "single",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-3",
+          "arm": "autonomous",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-3",
+          "arm": "single",
+          "result": "File version changed; read it before overwriting",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        },
+        {
+          "task": "release-3",
+          "arm": "planned",
+          "result": "Repeated identical tool operation stopped",
+          "checks": {
+            "completed": false,
+            "currentArtifact": false,
+            "sourceTruth": false,
+            "allSourceReads": true,
+            "topology": true
+          }
+        }
+      ]
+    }
+  ]
+}

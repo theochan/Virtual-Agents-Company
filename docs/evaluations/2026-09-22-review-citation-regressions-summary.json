@@ -1,0 +1,278 @@
+{
+  "status": "PROTOCOL_FIXED_SEMANTIC_ACCEPTANCE_FAILED",
+  "scope": "Three separately frozen development candidates on six exposed, owner-adjudicated, Codex-authored cases. No unseen qualification; no within-campaign retries.",
+  "campaigns": [
+    {
+      "candidate": 1,
+      "model": {
+        "name": "qwen3.5:9b",
+        "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+      },
+      "manifestPath": "data/evaluations/2026-09-22-review-citation-regression-v1.json",
+      "manifestHash": "883fa168f8d6763c692ee7adde303f3c2ade91a2d8b54fc4d679cf9951cc20b0",
+      "resultsPath": "data/evaluations/2026-09-22-review-citation-regression-v1-results.json",
+      "resultsHash": "cdfa596651db9ba652f452a5748891ccca1c1d0c265bbae87961a8e7003317e2",
+      "startedAt": "2026-09-22T10:47:56.434Z",
+      "completedAt": "2026-09-22T10:49:19.616Z",
+      "calls": 6,
+      "summary": {
+        "total": 6,
+        "falseAcceptances": 0,
+        "trueAcceptances": 0,
+        "errors": 6,
+        "passed": false
+      },
+      "reportedInputTokens": 4353,
+      "reportedOutputTokens": 981,
+      "trials": [
+        {
+          "id": "F01",
+          "expected": true,
+          "accepted": null,
+          "error": "No structured review",
+          "durationMs": 12380,
+          "verdicts": [
+            null
+          ]
+        },
+        {
+          "id": "F02",
+          "expected": false,
+          "accepted": null,
+          "error": "No structured review",
+          "durationMs": 18119,
+          "verdicts": [
+            null
+          ]
+        },
+        {
+          "id": "F03",
+          "expected": true,
+          "accepted": null,
+          "error": "No structured review",
+          "durationMs": 9226,
+          "verdicts": [
+            null
+          ]
+        },
+        {
+          "id": "F04",
+          "expected": false,
+          "accepted": null,
+          "error": "No structured review",
+          "durationMs": 11521,
+          "verdicts": [
+            null
+          ]
+        },
+        {
+          "id": "F05",
+          "expected": false,
+          "accepted": null,
+          "error": "No structured review",
+          "durationMs": 11749,
+          "verdicts": [
+            null
+          ]
+        },
+        {
+          "id": "F06",
+          "expected": true,
+          "accepted": null,
+          "error": "No structured review",
+          "durationMs": 20117,
+          "verdicts": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "candidate": 2,
+      "model": {
+        "name": "qwen3.5:9b",
+        "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+      },
+      "manifestPath": "data/evaluations/2026-09-22-review-citation-regression-v2.json",
+      "manifestHash": "7c994a644d0282ce7d1d330b366ecb3cc3706728dcac90718a81c2ae6d35ca5d",
+      "resultsPath": "data/evaluations/2026-09-22-review-citation-regression-v2-results.json",
+      "resultsHash": "c1acf0a53e2cbd6dd05dec2644dcbe59b07e83bf68d4ecba9313d9a34a968842",
+      "startedAt": "2026-09-22T10:51:11.516Z",
+      "completedAt": "2026-09-22T10:53:44.777Z",
+      "calls": 8,
+      "summary": {
+        "total": 6,
+        "falseAcceptances": 0,
+        "trueAcceptances": 1,
+        "errors": 0,
+        "passed": false
+      },
+      "reportedInputTokens": 6587,
+      "reportedOutputTokens": 2366,
+      "trials": [
+        {
+          "id": "F01",
+          "expected": true,
+          "accepted": false,
+          "error": null,
+          "durationMs": 23846,
+          "verdicts": [
+            "inconclusive"
+          ]
+        },
+        {
+          "id": "F02",
+          "expected": false,
+          "accepted": false,
+          "error": null,
+          "durationMs": 18918,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F03",
+          "expected": true,
+          "accepted": true,
+          "error": null,
+          "durationMs": 34873,
+          "verdicts": [
+            "pass",
+            "pass"
+          ]
+        },
+        {
+          "id": "F04",
+          "expected": false,
+          "accepted": false,
+          "error": null,
+          "durationMs": 15967,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F05",
+          "expected": false,
+          "accepted": false,
+          "error": null,
+          "durationMs": 16023,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F06",
+          "expected": true,
+          "accepted": false,
+          "error": null,
+          "durationMs": 43536,
+          "verdicts": [
+            "pass",
+            "fail"
+          ]
+        }
+      ]
+    },
+    {
+      "candidate": 3,
+      "model": {
+        "name": "qwen3.5:9b",
+        "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+      },
+      "manifestPath": "data/evaluations/2026-09-22-review-citation-regression-v3.json",
+      "manifestHash": "fd21d7d4bb79013934589d6afd3d9fd89e1454207d2b9b24f7bf27db319d8312",
+      "resultsPath": "data/evaluations/2026-09-22-review-citation-regression-v3-results.json",
+      "resultsHash": "aec6ed888742672bfe3080374fefa2af49cf3e5dba3eff7724b916b50f8659ca",
+      "startedAt": "2026-09-22T10:54:28.202Z",
+      "completedAt": "2026-09-22T10:57:20.484Z",
+      "calls": 8,
+      "summary": {
+        "total": 6,
+        "falseAcceptances": 0,
+        "trueAcceptances": 2,
+        "errors": 0,
+        "passed": false
+      },
+      "reportedInputTokens": 7112,
+      "reportedOutputTokens": 2362,
+      "trials": [
+        {
+          "id": "F01",
+          "expected": true,
+          "accepted": false,
+          "error": null,
+          "durationMs": 24862,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F02",
+          "expected": false,
+          "accepted": false,
+          "error": null,
+          "durationMs": 23620,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F03",
+          "expected": true,
+          "accepted": true,
+          "error": null,
+          "durationMs": 40024,
+          "verdicts": [
+            "pass",
+            "pass"
+          ]
+        },
+        {
+          "id": "F04",
+          "expected": false,
+          "accepted": false,
+          "error": null,
+          "durationMs": 18790,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F05",
+          "expected": false,
+          "accepted": false,
+          "error": null,
+          "durationMs": 21190,
+          "verdicts": [
+            "fail"
+          ]
+        },
+        {
+          "id": "F06",
+          "expected": true,
+          "accepted": true,
+          "error": null,
+          "durationMs": 43657,
+          "verdicts": [
+            "pass",
+            "pass"
+          ]
+        }
+      ]
+    }
+  ],
+  "totalCalls": 22,
+  "originalFailedEvidenceUnchanged": true,
+  "finalSourceHashesVerified": true,
+  "validation": {
+    "focusedTestsPassed": 11,
+    "workflowTestsPassed": 54,
+    "workflowTestsSkipped": 3,
+    "typescript": "Passed with archived data excluded; normal project check remains affected by historical archived driver imports."
+  },
+  "deployment": "NOT_DEPLOYED",
+  "qualification": "NOT_QUALIFIED",
+  "remainingFailure": "F01: final candidate computes the correct amount but requires displayed intermediate workings despite instructions and owner label.",
+  "nextStep": "Keep the strict reviewer gate. Separate result-correctness and required-process-evidence rubrics in future tasks, with owner-adjudicated cases that distinguish them; preserve this failed outcome. Do not overwrite labels, retry these manifests, or claim unseen success."
+}

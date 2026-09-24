@@ -1,0 +1,14 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "No private Plane identifiers are included."
+  },
+  "date": "2026-09-24",
+  "workItem": "VAC-40",
+  "acceptanceCommentVerified": true,
+  "state": "Done",
+  "legalBoundary": "Engineering inventory and redistribution gate; not legal advice or legal certification.",
+  "deployment": false,
+  "commit": false,
+  "push": false
+}

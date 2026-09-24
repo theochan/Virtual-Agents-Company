@@ -1,0 +1,20 @@
+{
+  "startedAt": "2026-09-22T04:12:07.916Z",
+  "endpoint": "https://mcp.deepwiki.com/mcp",
+  "scope": "Read-only public repository documentation; no private content or credentials transmitted.",
+  "passed": true,
+  "server": {
+    "name": "DeepWiki",
+    "version": "2.14.3"
+  },
+  "tools": [
+    "ask_wiki_question",
+    "read_wiki_contents",
+    "read_wiki_structure"
+  ],
+  "resultSha256": "e72d38e266509e4d6af6d167e83f3ec2de644b05d5455dfbfeba9e649bddadb3",
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Provider documentation body; no secrets used."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "vac.developer-review-answer-key/v1",
+  "packet": "docs/test-plans/fresh-review-packet-02.md",
+  "author": "Codex",
+  "authorship": "AI developer-authored at Theo's request",
+  "humanAdjudication": "PENDING",
+  "candidateInferencePerformed": false,
+  "independentlyHumanAuthored": false,
+  "priorExposure": "Author has seen the earlier six-case packet and project evaluation rules. These new cases were not submitted to the candidate reviewer during preparation. They are not an externally held-out corpus.",
+  "judgments": [
+    {"caseId": "F01", "verdict": "supported", "reason": "Discounted parts are EUR 216.00. Adding labour gives EUR 376.00; 5% tax is EUR 18.80. EUR 394.80 less the EUR 100.00 deposit leaves EUR 294.80."},
+    {"caseId": "F02", "verdict": "unsupported", "reason": "The pre-tax amount is USD 216.00 / 1.08 = USD 200.00, so included tax is USD 16.00. Applying 8% to the inclusive total uses the wrong base."},
+    {"caseId": "F03", "verdict": "supported", "reason": "The rule uses portal receipt at 17:02 UTC, two minutes after the 17:00 deadline. The earlier click does not determine receipt timeliness."},
+    {"caseId": "F04", "verdict": "unsupported", "reason": "The conditional proposal required written seller confirmation by 15 November. The complete record has none, so the condition was not met and the signed 20 November date remains effective under the supplied clause."},
+    {"caseId": "F05", "verdict": "unsupported", "reason": "USD 250.00 converts to SGD 340.00. Subtracting the SGD 4.00 fee leaves SGD 336.00. The report treats a SGD fee as if it were deducted in USD before conversion."},
+    {"caseId": "F06", "verdict": "supported", "reason": "Each container has 2.50 - 0.15 = 2.35 kg of contents. Twelve containers therefore contain 28.20 kg."}
+  ],
+  "useRestriction": "Do not include this answer key or its reasons in candidate model prompts. These are proposed developer labels, not owner judgments."
+}

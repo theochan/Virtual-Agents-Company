@@ -1,0 +1,21 @@
+{
+  "method": "Separate Python CSV/labeled-field parser and Decimal arithmetic; developer-authored oracle, not human adjudication",
+  "totals": [
+    [
+      "Juniper",
+      "EUR",
+      9100
+    ],
+    [
+      "Maple",
+      "GBP",
+      21475
+    ]
+  ],
+  "rows": 4,
+  "duplicates": 1,
+  "inputHashes": {
+    "register.csv": "38d86ebed8895c9ee4d94717636c65d5a512027cd1980b2886e47995ced33e50",
+    "supplement.txt": "c5d64c1ad2a80fb4413a4d2ffc8dc977cddb2caacafe5f197e264df4cd755e18"
+  }
+}

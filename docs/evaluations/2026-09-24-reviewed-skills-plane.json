@@ -1,0 +1,15 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "No private Plane identifiers are included."
+  },
+  "date": "2026-09-24",
+  "workItem": "VAC-45",
+  "acceptanceCommentVerified": true,
+  "state": "Done",
+  "scope": "completed-run capture and reviewed parameterized replay",
+  "humanBrowserDemonstrations": "remain assigned to VAC-26",
+  "deployment": false,
+  "commit": false,
+  "push": false
+}

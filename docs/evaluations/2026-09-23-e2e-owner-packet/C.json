@@ -1,0 +1,56 @@
+{
+  "contract": "ledger.json",
+  "version": 0,
+  "sources": [
+    {
+      "name": "register.csv",
+      "sha256": "38d86ebed8895c9ee4d94717636c65d5a512027cd1980b2886e47995ced33e50",
+      "rows": [
+        {
+          "id": "M41",
+          "entity": "Maple",
+          "currency": "GBP",
+          "unit": "major",
+          "type": "invoice",
+          "amount": 214.75
+        },
+        {
+          "id": "J52",
+          "entity": "Juniper",
+          "currency": "EUR",
+          "unit": "major",
+          "type": "invoice",
+          "amount": 89.60
+        }
+      ]
+    },
+    {
+      "name": "supplement.txt",
+      "sha256": "c5d64c1ad2a80fb4413a4d2ffc8dc977cddb2caacafe5f197e264df4cd755e18",
+      "rows": [
+        {
+          "id": "M41",
+          "entity": "Maple",
+          "currency": "GBP",
+          "unit": "minor",
+          "type": "invoice",
+          "amount": 21475
+        },
+        {
+          "id": "J53",
+          "entity": "Juniper",
+          "currency": "EUR",
+          "unit": "minor",
+          "type": "credit",
+          "amount": -140
+        }
+      ]
+    }
+  ],
+  "reconciliation_notes": [
+    "Row M41 (Maple, GBP) exists in both sources with different units (major vs minor) and amounts. Preserved as distinct records per source bytes.",
+    "Row J52 (Juniper, EUR) exists only in register.csv.",
+    "Row J53 (Juniper, EUR) exists only in supplement.txt.",
+    "Currencies remain separate; credits reverse signed amount logic applied to type field where applicable."
+  ]
+}

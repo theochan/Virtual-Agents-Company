@@ -1,0 +1,84 @@
+{
+  "status": "finished",
+  "startedAt": "2026-09-22T05:35:05.292Z",
+  "completedAt": "2026-09-22T05:39:04.213Z",
+  "sourceHash": "3f29390d382ceca4d11c722104e82a3c67f4b3bde7a3836db173dd1f9be90ce0",
+  "models": [
+    {
+      "name": "qwen3.5:9b",
+      "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7",
+      "size": 6594474711
+    },
+    {
+      "name": "qwen3.5:27b",
+      "digest": "7653528ba5cba4dd8e19da24aaddc7f4d0b5ecd93571c0825dfd4137958ec06e",
+      "size": 17420432728
+    }
+  ],
+  "calls": 4,
+  "summary": [
+    {
+      "model": "qwen3.5:9b",
+      "correct": 0,
+      "total": 2,
+      "falseAcceptances": 0,
+      "errors": 1,
+      "durationMs": 58770
+    },
+    {
+      "model": "qwen3.5:27b",
+      "correct": 0,
+      "total": 2,
+      "falseAcceptances": 0,
+      "errors": 2,
+      "durationMs": 180028
+    }
+  ],
+  "manifestSha256": "ab12055ca8959ebf672b592ab5a3b345af3302da7c3f48f92d72db3cc6c52918",
+  "rawReportSha256": "58e6c9f2ce46e4720a81be67ac0f0c7b0db6254a881910cb456bf72cc29aaf6c",
+  "limits": {
+    "maximumCalls": 8,
+    "temperature": 0,
+    "maxTokens": 1536,
+    "timeoutMs": 90000
+  },
+  "scope": "Two known-development packets, one correct and one deliberately incorrect. Same evidence, schemas, tokens and timeout for both already-installed local models. Sequential requests; model-loading latency included. No independent holdout, repeated reliability estimate or default-model change.",
+  "trials": [
+    {
+      "case": "original-correct-ledger",
+      "model": "qwen3.5:9b",
+      "expected": true,
+      "packetHash": "f1fae0ba2b2f99bfab2c27076b9c00517340ab9fc1b0732fd9b4d57f02fd9efd",
+      "accepted": false,
+      "correct": false,
+      "durationMs": 23111
+    },
+    {
+      "case": "original-correct-ledger",
+      "model": "qwen3.5:27b",
+      "expected": true,
+      "packetHash": "f1fae0ba2b2f99bfab2c27076b9c00517340ab9fc1b0732fd9b4d57f02fd9efd",
+      "correct": false,
+      "durationMs": 90015,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "case": "wrong-credit-ledger",
+      "model": "qwen3.5:27b",
+      "expected": false,
+      "packetHash": "7125c1e4f3f658350dea268193818ea73a41c17df1947a7dd168d8fc30dc1441",
+      "correct": false,
+      "durationMs": 90013,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "case": "wrong-credit-ledger",
+      "model": "qwen3.5:9b",
+      "expected": false,
+      "packetHash": "7125c1e4f3f658350dea268193818ea73a41c17df1947a7dd168d8fc30dc1441",
+      "correct": false,
+      "durationMs": 35659,
+      "error": "No structured review"
+    }
+  ]
+}

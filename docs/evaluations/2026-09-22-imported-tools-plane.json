@@ -1,0 +1,24 @@
+{
+  "receipts": [
+    {
+      "workItem": "VAC-37",
+      "verified": true,
+      "closed": true,
+      "priorityPreserved": true,
+      "parentPreserved": true
+    },
+    {
+      "workItem": "VAC-20",
+      "verified": true,
+      "closed": false,
+      "priorityPreserved": true,
+      "parentPreserved": true
+    }
+  ],
+  "closedItems": 1,
+  "newItems": 0,
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private identifiers and credentials; existing item text retained in Plane."
+  }
+}

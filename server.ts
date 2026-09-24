@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { Routines } from './src/server/routines';
+import { SemanticAdjudication } from './src/server/semanticAdjudication';
 import { fileName } from './src/server/workspace';
 import { delegationEnabled, TREE_LIMITS } from './src/server/delegation';
 import express from 'express';
@@ -299,7 +300,12 @@ app.get('/api/projects/:id/files/download',route((req,res)=>{const f=swarm.works
 app.get('/api/projects/:id/swarm-memory',route((req,res)=>res.json(swarm.workspace.memories(req.params.id))));
 app.post('/api/swarm-memory/:id/decision',route((req,res)=>res.json(swarm.workspace.decideMemory(req.params.id,z.enum(['approved','rejected']).parse(req.body.decision)))));
 app.get('/api/projects/:id/skills',route((req,res)=>res.json(routines.skills(req.params.id))));
+app.get('/api/projects/:id/skill-drafts',route((req,res)=>res.json(routines.drafts(req.params.id))));
 app.post('/api/swarm-skills',route((req,res)=>res.status(201).json(routines.saveSkill(req.body))));
+app.post('/api/swarm-skill-drafts',route((req,res)=>res.status(201).json(routines.capture(req.body))));
+app.post('/api/swarm-skill-drafts/:id/review',route((req,res)=>res.status(201).json(routines.reviewDraft(req.params.id,req.body))));
+app.post('/api/swarm-skills/:id/replay',route((req,res)=>res.status(202).json(routines.replay(req.params.id,req.body,key(req)))));
+app.post('/api/swarm-skills/:id/rollback',route((req,res)=>res.status(201).json(routines.rollback(req.params.id,req.body))));
 app.get('/api/projects/:id/routines',route((req,res)=>res.json(routines.list(req.params.id))));
 app.post('/api/swarm-routines',route((req,res)=>res.status(201).json(routines.create(req.body))));
 app.post('/api/swarm-routines/:id/pause',route((req,res)=>res.json(routines.pause(req.params.id))));
@@ -316,6 +322,8 @@ app.get('/api/swarms/config' , (_req, res) => res.json({ defaults: swarmLimitsSc
 app.get('/api/swarms', route((_req, res) => res.json(swarm.list())));
 app.post('/api/swarms', route((req, res) => res.status(202).json(swarm.create(req.body, key(req)))));
 app.get('/api/swarms/:id', route((req, res) => res.json(swarm.get(req.params.id))));
+app.get('/api/swarms/:id/owner-review', route((req, res) => res.json(new SemanticAdjudication(store, swarm.workspace).context(req.params.id))));
+app.post('/api/swarms/:id/owner-review', route((req, res) => res.status(201).json(new SemanticAdjudication(store, swarm.workspace).record(req.params.id, req.body))));
 app.post('/api/swarms/:id/cancel', route((req, res) => res.json(swarm.cancel(req.params.id))));
 app.post('/api/swarms/:id/resume', route((req, res) => res.json(swarm.resume(req.params.id))));
 app.post('/api/orchestrate/run', route((req, res) => {

@@ -4,7 +4,7 @@ import type { Agent } from '../types';
 import { HttpError, validateEndpoint } from './security';
 
 export type Message = { role: 'system' | 'user' | 'assistant'; content: string };
-export type ProviderConfig = { allowFinal?: boolean; provider: string; model: string; endpoint: string; temperature: number; maxTokens: number };
+export type ProviderConfig = { allowFinal?: boolean; requiredTool?: string; provider: string; model: string; endpoint: string; temperature: number; maxTokens: number };
 export type ProviderSettings = Record<string, { defaultModel: string; endpoint: string; enabled: boolean; downloadedModels: string[] }>;
 const defaults: Record<string, string> = {
   ollama: process.env.OLLAMA_ENDPOINT || 'http://127.0.0.1:11434',
@@ -47,7 +47,9 @@ export const decisionSchema = z.discriminatedUnion('action', [
 ]);
 export type Decision = z.infer<typeof decisionSchema>;
 
-export function decisionFormat(tools?: { id: string; schema?: unknown }[], allowFinal = true) {
+export function decisionFormat(tools?: { id: string; schema?: unknown }[], allowFinal = true, requiredTool?: string) {
+  if (requiredTool && !tools?.some(t => t.id === requiredTool)) throw new Error('Required tool is not available');
+  if (requiredTool) return { anyOf: tools!.filter(t => t.id === requiredTool).map(tool => ({ type: 'object', properties: { action: { const: 'tool' }, toolId: { const: tool.id }, parameters: tool.schema }, required: ['action', 'toolId', 'parameters'], additionalProperties: false })) };
   if (!tools) return z.toJSONSchema(decisionSchema);
   return { anyOf: [
     ...(allowFinal ? [z.toJSONSchema(decisionSchema.options[0])] : []), z.toJSONSchema(decisionSchema.options[2]),
@@ -77,6 +79,7 @@ export function setSearchKey(provider: 'tavily' | 'brave', key: string) {
 
 async function inferRequest(config: ProviderConfig, messages: Message[], signal: AbortSignal, tools?: { id: string; schema?: unknown }[]) {
   const { provider, endpoint, model } = config;
+  const format = decisionFormat(tools, config.allowFinal, config.requiredTool);
   if (!Object.hasOwn(defaults, provider)) throw new Error('Provider is unsupported; select a supported model before running');
   validateEndpoint(endpoint, allowedEndpoints(provider));
   const key = providerKey(provider);
@@ -92,7 +95,7 @@ async function inferRequest(config: ProviderConfig, messages: Message[], signal:
     body = { ...body, system: messages.filter(m => m.role === 'system').map(m => m.content).join('\n'), messages: messages.filter(m => m.role !== 'system') };
   } else if (provider === 'ollama') {
     url = `${endpoint}/api/chat`;
-    body = { model, messages, stream: false, think: false, format: decisionFormat(tools, config.allowFinal), options: { temperature: config.temperature, num_predict: config.maxTokens, num_ctx: 16384 } };
+    body = { model, messages, stream: false, think: false, format, options: { temperature: config.temperature, num_predict: config.maxTokens, num_ctx: 16384 } };
   } else if (key) headers.Authorization = `Bearer ${key}`;
   const started = Date.now();
   const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body), redirect: 'error', signal: AbortSignal.any([signal, AbortSignal.timeout(INFERENCE_TIMEOUT_MS)]) });
@@ -107,6 +110,7 @@ async function inferRequest(config: ProviderConfig, messages: Message[], signal:
   try {
     if (typeof content !== 'string' || content.length > 30000) throw new Error('Provider returned missing or oversized output');
     const decision = decisionSchema.parse(JSON.parse(content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')));
+    if (config.requiredTool && (decision.action !== 'tool' || decision.toolId !== config.requiredTool)) throw new Error('Required structured tool response missing');
     return { decision, receipt };
   } catch {
     throw Object.assign(new Error('Provider did not return a valid decision; no work was marked complete'), { receipt: { ...receipt, status: 'failed' } });

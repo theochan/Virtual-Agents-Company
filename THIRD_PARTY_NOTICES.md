@@ -35,9 +35,14 @@ not license documents processed by it. No operator-supplied books, generated
 skills or runtime data are included by this publication.
 
 This provenance review does not certify execution safety or grant rights beyond
-the included notices. Imported scripts remain disabled. Dependencies retain
+the included notices. Imported scripts remain disabled except the individually
+qualified `meeting-cost-v1` adapter. Its unchanged source and complete vendor MIT
+notice are bundled in `src/server/importedMeetingCost.json` and the server build.
+Dependencies retain
 package-specific notices; the runtime dependency inventory is in
-`docs/evaluations/2026-09-07-runtime-dependencies.json`. No photo image files are
+`docs/evaluations/2026-09-24-license-inventory.json`, including exact locked
+versions, SPDX declarations, direct-package notice hashes and redistribution classes.
+The release gate fails on inventory drift or an unknown license. No photo image files are
 redistributed by the portrait catalog; its external links retain the separate
 photo/likeness limitations stated above.
 

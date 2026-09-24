@@ -1,0 +1,167 @@
+{
+  "status": "END_TO_END_ACCEPTANCE_FAILED",
+  "scope": "One fresh synthetic structured-accounting task, one attempt per mode in fixed S/P/A order. Identical inputs and acceptance rules. Author-visible ground truth; not independent holdout, general extraction or demonstrated swarm advantage. Human correction time and monetary cost unmeasured.",
+  "model": {
+    "name": "qwen3.5:9b",
+    "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+  },
+  "manifestPath": "data/evaluations/2026-09-23-e2e-accounting-v1.json",
+  "manifestHash": "6e0769c9e9b3e424a826e882c830d4400f2f8fe7c8f0b804a97c273316d4e65c",
+  "rawResultsPath": "data/evaluations/2026-09-23-e2e-accounting-v1-results.json",
+  "rawResultsHash": "809a054dd5ad66d84b0ba3cb2ec109c500c65f71ef0bc330f9e086b88d2cfd1c",
+  "startedAt": "2026-09-23T09:56:12.095Z",
+  "completedAt": "2026-09-23T10:01:33.067Z",
+  "calls": 19,
+  "maximumCalls": 42,
+  "acceptedArms": 0,
+  "attemptedArms": 3,
+  "sourceHashUnchanged": true,
+  "sharedLedgerDelta": 19,
+  "arms": [
+    {
+      "arm": "planned",
+      "status": "blocked",
+      "accepted": false,
+      "calls": 7,
+      "durationMs": 116173,
+      "artifactSha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "checks": {
+        "completed": false,
+        "currentArtifact": true,
+        "totals": true,
+        "rows": true,
+        "duplicates": true,
+        "contract": true,
+        "reads": true,
+        "semantic": false,
+        "topology": true
+      },
+      "evaluatorError": null,
+      "contractVerification": [
+        {
+          "name": "ledger.json",
+          "kind": "reconciliation",
+          "path": [],
+          "sources": [
+            {
+              "name": "register.csv",
+              "version": 1,
+              "sha256": "38d86ebed8895c9ee4d94717636c65d5a512027cd1980b2886e47995ced33e50"
+            },
+            {
+              "name": "supplement.txt",
+              "version": 1,
+              "sha256": "c5d64c1ad2a80fb4413a4d2ffc8dc977cddb2caacafe5f197e264df4cd755e18"
+            }
+          ],
+          "sourceFormat": "text-records-v1",
+          "minBytes": 1,
+          "passed": true,
+          "fileId": "1ddeed9a-e646-4ac6-a4d6-f5ff5d49ab98",
+          "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+          "reason": "Verified current-run artifact"
+        }
+      ],
+      "semanticStatus": "not_accepted",
+      "semanticReasons": [
+        "The report claims reconciliation of register.csv and supplement.txt with duplicate handling for ID M41. Evidence e_87548d260ef1655e85352c6d (register.csv) shows row 2: 'M41,Maple,GBP,major,invoice,214.75'. Evidence e_a52b16b1c2a5bfeb10b1a87d (ledger.json) correctly maps this to signedAmount 21475 (minor unit conversion implied by 'major'->'minor' or direct storage). However, the report states 'credits reverse their signed amount... negative credit adds to payable'. In supplement.txt (e_815f7cbd79ef54af804f12ab), J53 is a credit with Amount: -140. The ledger output (e_00696e8cac0c845ad5e2c469) shows signedAmount: 140 for J53. If 'negative credit adds to payable', the signed amount in the ledger should reflect the reversal logic. The source says Amount: -140 (credit). Reversing a negative (-"
+      ],
+      "runResult": "Ledger reconciliation complete. Source files register.csv and supplement.txt have been inspected, reconciled for duplicates (ID M41 found in both), and credits applied. The final artifact ledger.json has been materialized with all source rows preserved and field evidence intact. No further actions required.\n\n[Independent semantic review did not accept this output. Inspect the review findings.]",
+      "humanCorrectionMinutes": null
+    },
+    {
+      "arm": "single",
+      "status": "blocked",
+      "accepted": false,
+      "calls": 5,
+      "durationMs": 75447,
+      "artifactSha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "checks": {
+        "completed": false,
+        "currentArtifact": true,
+        "totals": true,
+        "rows": true,
+        "duplicates": true,
+        "contract": true,
+        "reads": true,
+        "semantic": false,
+        "topology": true
+      },
+      "evaluatorError": null,
+      "contractVerification": [
+        {
+          "name": "ledger.json",
+          "kind": "reconciliation",
+          "path": [],
+          "sources": [
+            {
+              "name": "register.csv",
+              "version": 1,
+              "sha256": "38d86ebed8895c9ee4d94717636c65d5a512027cd1980b2886e47995ced33e50"
+            },
+            {
+              "name": "supplement.txt",
+              "version": 1,
+              "sha256": "c5d64c1ad2a80fb4413a4d2ffc8dc977cddb2caacafe5f197e264df4cd755e18"
+            }
+          ],
+          "sourceFormat": "text-records-v1",
+          "minBytes": 1,
+          "passed": true,
+          "fileId": "e640fbbb-4f56-42f8-911c-755486e8d91a",
+          "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+          "reason": "Verified current-run artifact"
+        }
+      ],
+      "semanticStatus": "not_accepted",
+      "semanticReasons": [
+        "The report claims ledger totals and duplicate decisions are verified against original inputs. However, the evidence in register.csv (e_87548d260ef1655e85352c6d) shows row 2 as 'M41,Maple,GBP,major,invoice,214.75' while supplement.txt (e_815f7cbd79ef54af804f12ab) shows a duplicate M41 with amount '21475'. The output ledger.json (e_97a2e5764edff03b486da0dd) lists the first M41 with signedAmount 21475 and the second as a duplicate with signedAmount 0. This contradicts the source where register.csv explicitly states '214.75'. The report fails to reconcile the unit conversion or value discrepancy between '214.75' in CSV and '21475' in TXT, leading to an unsupported claim of correct totals."
+      ],
+      "runResult": "Ledger reconciliation complete. Source files register.csv and supplement.txt were read, reconciled against the owner-declared contract, and materialized into ledger.json (version 1). All source rows preserved; credits reversed; currencies separated. No missing evidence or failed subtasks reported.\n\n[Independent semantic review did not accept this output. Inspect the review findings.]",
+      "humanCorrectionMinutes": null
+    },
+    {
+      "arm": "autonomous",
+      "status": "blocked",
+      "accepted": false,
+      "calls": 7,
+      "durationMs": 129242,
+      "artifactSha256": "b5366635f6784135f8b64e6cb04c94ad2dcb534107eea75177f35aa49e6093ee",
+      "checks": null,
+      "evaluatorError": "Cannot read properties of undefined (reading 'map')",
+      "contractVerification": [
+        {
+          "name": "ledger.json",
+          "kind": "reconciliation",
+          "path": [],
+          "sources": [
+            {
+              "name": "register.csv",
+              "version": 1,
+              "sha256": "38d86ebed8895c9ee4d94717636c65d5a512027cd1980b2886e47995ced33e50"
+            },
+            {
+              "name": "supplement.txt",
+              "version": 1,
+              "sha256": "c5d64c1ad2a80fb4413a4d2ffc8dc977cddb2caacafe5f197e264df4cd755e18"
+            }
+          ],
+          "sourceFormat": "text-records-v1",
+          "minBytes": 1,
+          "passed": false,
+          "reason": "Required artifact unavailable or invalid"
+        }
+      ],
+      "semanticStatus": "NOT_RUN",
+      "semanticReasons": [],
+      "runResult": "Evidence conflict detected: register.csv (Row M41) lists Unit='major' and Amount=214.75, while supplement.txt (ID M41) lists Unit='minor' and Amount=21475. The reconciliation contract requires preserving all source rows and field evidence without guessing or retyping. Since the units ('major' vs 'minor') and amounts differ significantly between sources for the same ID, a deterministic ledger cannot be materialized without explicit owner resolution of this discrepancy. Tool-write-file was executed but produced an artifact based on conflicting inputs; per instructions to never invent values or guess rows when evidence is unsupported, I must block further processing until the conflict is resolved.",
+      "humanCorrectionMinutes": null
+    }
+  ],
+  "ownerReview": "PENDING",
+  "artifactComparison": "Single and planned artifact bytes are identical. Autonomous artifact is missing required rows/totals and failed the runtime reconciliation contract.",
+  "evaluationLimitation": "Autonomous postprocessing threw when reading missing content.totals.map. Raw evidence preserved. Runtime status and contract failure independently establish nonacceptance; incomplete harness checks were not silently filled in.",
+  "advantage": "NOT_DEMONSTRATED",
+  "humanCorrectionTime": "NOT_MEASURED",
+  "deployment": "NOT_DEPLOYED"
+}

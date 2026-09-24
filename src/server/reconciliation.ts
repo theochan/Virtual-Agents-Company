@@ -12,7 +12,9 @@ export const accountingRecordSchema = z.object({
 export const accountingSourceSchema = z.object({ records: z.array(accountingRecordSchema).min(1).max(1000) }).strict();
 export interface AccountingSource { name: string; version: number; sha256: string; text: string }
 const referenceSchema = z.object({ name: z.string().min(1).max(160), version: z.number().int().positive(), sha256: z.string().regex(/^[a-f0-9]{64}$/), row: z.number().int().positive() }).strict();
-const ledgerRowSchema = accountingRecordSchema.extend({ source: referenceSchema, disposition: z.enum(['include','duplicate']), duplicateOf: referenceSchema.optional(), signedAmount: z.number().int().safe() }).strict();
+export const fieldEvidenceSchema=z.object({line:z.number().int().positive(),start:z.number().int().nonnegative(),end:z.number().int().positive(),quote:z.string().min(1).max(1000)}).strict();
+export const recordEvidenceSchema=z.object({id:fieldEvidenceSchema,entity:fieldEvidenceSchema,currency:fieldEvidenceSchema,unit:fieldEvidenceSchema,type:fieldEvidenceSchema,amount:fieldEvidenceSchema}).strict();
+const ledgerRowSchema = accountingRecordSchema.extend({ source: referenceSchema, evidence:recordEvidenceSchema.optional(), disposition: z.enum(['include','duplicate']), duplicateOf: referenceSchema.optional(), signedAmount: z.number().int().safe() }).strict();
 const totalSchema = z.object({ entity: label, currency: z.string().regex(/^[A-Z]{3}$/), unit: z.literal('minor'), amount: z.number().int().safe() }).strict();
 export const reconciliationResultSchema = z.object({ rows: z.array(ledgerRowSchema).min(1).max(1000), totals: z.array(totalSchema).min(1).max(1000) }).strict();
 export type ReconciliationResult = z.infer<typeof reconciliationResultSchema>;
@@ -20,22 +22,25 @@ const key = (v: unknown) => JSON.stringify(v);
 const refKey = (v: z.infer<typeof referenceSchema>) => key([v.name,v.version,v.sha256,v.row]);
 const totalKey = (v: z.infer<typeof totalSchema>) => key([v.entity,v.currency,v.unit]);
 
-export function reconcileSources(sources: AccountingSource[]): ReconciliationResult {
+export type DecodedRecord={record:z.infer<typeof accountingRecordSchema>;row:number;evidence?:z.infer<typeof recordEvidenceSchema>};
+export function reconcileSources(sources: AccountingSource[],decode?:(text:string)=>DecodedRecord[]): ReconciliationResult {
   if (!sources.length || sources.length > 20 || new Set(sources.map(s=>s.name)).size !== sources.length) throw new Error('Unique accounting sources required');
   if (sources.reduce((sum,s)=>sum+Buffer.byteLength(s.text),0)>256000) throw new Error('Accounting source envelope exceeded');
   const rows: ReconciliationResult['rows'] = [], identities = new Map<string, ReconciliationResult['rows'][number]>();
   const totals = new Map<string,{entity:string;currency:string;unit:'minor';amount:bigint}>();
   for (const source of [...sources].sort((a,b)=>a.name<b.name?-1:a.name>b.name?1:0)) {
     if (createHash('sha256').update(source.text).digest('hex') !== source.sha256) throw new Error('Accounting source hash mismatch');
-    const records = accountingSourceSchema.parse(JSON.parse(source.text)).records;
-    for (const [index, record] of records.entries()) {
+    const records = decode?decode(source.text):accountingSourceSchema.parse(JSON.parse(source.text)).records.map((record,index)=>({record,row:index+1}));
+    if(!records.length)throw new Error('Empty accounting source');
+    for (const decoded of records as DecodedRecord[]) {
+      const record=accountingRecordSchema.parse(decoded.record);
       if (rows.length>=1000) throw new Error('Accounting row envelope exceeded');
-      const ref = referenceSchema.parse({name:source.name,version:source.version,sha256:source.sha256,row:index+1});
+      const ref = referenceSchema.parse({name:source.name,version:source.version,sha256:source.sha256,row:decoded.row});
       // Identity is entity + record ID, so changed currency/type/amount conflicts.
       const identity = key([record.entity,record.id]), previous = identities.get(identity);
       if (previous && ['currency','unit','type','amount'].some(field=>previous[field]!==record[field])) throw new Error('Conflicting duplicate accounting identity');
       const signedAmount = record.type==='credit' ? -record.amount : record.amount;
-      const row: ReconciliationResult['rows'][number] = {...record,source:ref,disposition:previous?'duplicate':'include',...(previous?{duplicateOf:previous.source}:{}),signedAmount:previous?0:signedAmount};
+      const row: ReconciliationResult['rows'][number] = {...record,source:ref,...(decoded.evidence?{evidence:recordEvidenceSchema.parse(decoded.evidence)}:{}),disposition:previous?'duplicate':'include',...(previous?{duplicateOf:previous.source}:{}),signedAmount:previous?0:signedAmount};
       rows.push(row);
       if (!previous) {
         identities.set(identity,row);

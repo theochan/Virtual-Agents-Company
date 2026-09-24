@@ -1,0 +1,44 @@
+{
+  "kind": "AI_VERIFICATION_NOT_HUMAN_ADJUDICATION",
+  "verifier": "Codex plus separate Python assertions",
+  "outputs": [
+    {
+      "label": "A",
+      "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "checks": {
+        "schema": true,
+        "totals": true,
+        "rowAccounting": true,
+        "originalSourceSpans": true
+      },
+      "artifactVerdict": "acceptable",
+      "requiredCorrection": null
+    },
+    {
+      "label": "B",
+      "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "checks": {
+        "schema": true,
+        "totals": true,
+        "rowAccounting": true,
+        "originalSourceSpans": true
+      },
+      "artifactVerdict": "acceptable",
+      "requiredCorrection": null
+    },
+    {
+      "label": "C",
+      "sha256": "b5366635f6784135f8b64e6cb04c94ad2dcb534107eea75177f35aa49e6093ee",
+      "checks": {
+        "schema": false
+      },
+      "artifactVerdict": "unusable",
+      "requiredCorrection": "Materialize the declared ledger with all normalized source rows and per-supplier/currency totals; do not substitute source-copy JSON."
+    }
+  ],
+  "deterministicCheckSeconds": 0.0010476660000000027,
+  "humanReviewMinutes": null,
+  "humanCorrectionMinutes": null,
+  "requestedUserWork": "NONE",
+  "scope": "Artifact correctness only. Original failed workflow verdicts remain unchanged."
+}

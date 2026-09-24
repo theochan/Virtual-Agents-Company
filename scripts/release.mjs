@@ -9,7 +9,8 @@ for (const asset of build.assets) {
   if (value !== asset.sha256) throw new Error(`Built asset drift: ${asset.path}`);
 }
 fs.mkdirSync(destination, { mode: 0o700 });
-// Runtime allowlist: no working data, env files, vendored scripts, or Git history.
+// Runtime allowlist: no working data, env files, loose vendored scripts, or Git history.
+// The qualified imported adapter bundles one reviewed source and its MIT notice.
 for (const file of ['dist', 'package.json', 'package-lock.json', 'LICENSE', 'NOTICE', 'THIRD_PARTY_NOTICES.md']) fs.cpSync(file, path.join(destination, file), { recursive: true });
 fs.mkdirSync(path.join(destination, 'scripts'));
 for (const file of ['backup.mjs', 'backup-policy.mjs', 'supervise.mjs']) fs.copyFileSync(`scripts/${file}`, path.join(destination, 'scripts', file));

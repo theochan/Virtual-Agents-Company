@@ -19,7 +19,11 @@
     "release": "node scripts/release.mjs",
     "backup:policy": "node scripts/backup-policy.mjs",
     "test:soak": "node scripts/soak.mjs",
-    "check:publication": "node scripts/publication-check.mjs"
+    "check:publication": "node scripts/publication-check.mjs",
+    "publication:evidence-inventory": "node scripts/publication-evidence-inventory.mjs --write",
+    "check:publication-evidence": "node scripts/publication-evidence-inventory.mjs",
+    "license:inventory": "node scripts/license-audit.mjs --write",
+    "check:licenses": "node scripts/license-audit.mjs"
   },
   "dependencies": {
     "@langchain/core": "1.2.9",

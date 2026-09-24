@@ -160,9 +160,9 @@ test('persistent workspace uploads and downloads files and saves capped routine 
  const bytes=Buffer.from('product,revenue\nA,600\n');await page.getByLabel('Upload project file').setInputFiles({name:'sales-ui.csv',mimeType:'text/csv',buffer:bytes});
  const link=page.getByRole('link',{name:'sales-ui.csv',exact:true});await expect(link).toBeVisible();const download=await request.get((await link.getAttribute('href'))!,{headers});expect(download.headers()['content-disposition']).toContain('attachment');expect(await download.body()).toEqual(bytes);
  const conflict=await request.post(`/api/projects/${project.id}/files`,{headers,data:{name:'sales-ui.csv',base64:bytes.toString('base64'),expectedVersion:0}});expect(conflict.status()).toBe(409);
- await page.getByText('Reusable skills and scheduled routines',{exact:true}).click();await page.getByLabel('Skill name').fill('UI saved workflow');await page.getByRole('button',{name:'Save selected run as skill'}).click();await expect(page.getByLabel('Routine skill').locator('option')).toContainText(['Choose pinned skill version','UI saved workflow']);
+ await page.getByText('Reviewed skills and scheduled routines',{exact:true}).click();await page.getByLabel('Skill name').fill('UI saved workflow');await page.getByRole('button',{name:'Capture completed run for review'}).click();await page.getByRole('button',{name:'Inspect and review'}).click();await page.getByLabel('Skill review reason').fill('Owner reviewed the retained grants and declared objective.');await page.getByRole('button',{name:'Approve immutable skill'}).click();await expect(page.getByLabel('Routine skill').locator('option')).toContainText(['Choose pinned skill version','UI saved workflow']);
  const skills=await(await request.get(`/api/projects/${project.id}/skills`,{headers})).json();expect(skills.at(-1).version).toBe(1);
- const create=await request.post('/api/swarm-routines',{headers,data:{skillId:skills.at(-1).id,intervalMinutes:60,maxRuns:1,startsAt:new Date(Date.now()+3600000).toISOString()}});expect(create.status()).toBe(201);const routine=await create.json();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await page.getByText('Reusable skills and scheduled routines',{exact:true}).click();await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.getByText(/UI saved workflow · paused/)).toBeVisible();expect((await(await request.get(`/api/projects/${project.id}/routines`,{headers})).json()).find((r:any)=>r.id===routine.id).status).toBe('paused');
+ const create=await request.post('/api/swarm-routines',{headers,data:{skillId:skills.at(-1).id,parameters:{objective:skills.at(-1).template.objective},intervalMinutes:60,maxRuns:1,startsAt:new Date(Date.now()+3600000).toISOString()}});expect(create.status()).toBe(201);const routine=await create.json();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await page.getByText('Reviewed skills and scheduled routines',{exact:true}).click();await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.getByText(/UI saved workflow · paused/)).toBeVisible();expect((await(await request.get(`/api/projects/${project.id}/routines`,{headers})).json()).find((r:any)=>r.id===routine.id).status).toBe('paused');
 });
 
 test('repeatable plan UI compiles a worker before inference and retains its evidence contract',async({page,request})=>{
@@ -195,6 +195,58 @@ test('Swarm exposes independent review policy and MCP discovery without granting
  await expect(page.getByLabel('Semantic review policy')).toBeVisible();
  await page.getByText('Approved connector gateway',{exact:true}).click();
  await expect(page.getByText(/Discovery lists tools; it never grants access automatically/)).toBeVisible();
+});
+
+test('owner semantic assessment preserves exact evidence, machine failure and append-only judgments', async ({ page, request }) => {
+ const headers = { Authorization: `Bearer ${token}` };
+ const agent = { autonomyLevel: 3, toolIds: ['tool-write-file'], llmConfig: { provider: 'ollama', model: 'fixture', localEndpoint: 'http://127.0.0.1:3328', temperature: 0, maxTokens: 1024 } };
+ const manager = await (await request.post('/api/agents', { headers, data: { ...agent, displayName: 'OwnerReviewProducer' } })).json();
+ const reviewer = await (await request.post('/api/agents', { headers, data: { ...agent, displayName: 'OwnerReviewReviewer' } })).json();
+ const project = await (await request.post('/api/projects', { headers, data: { name: 'Owner assessment fixture', members: [] } })).json();
+ expect((await request.post(`/api/projects/${project.id}/files`, { headers, data: { name: 'source.txt', base64: Buffer.from('Total: 42.').toString('base64'), expectedVersion: 0 } })).status()).toBe(201);
+ const response = await request.post('/api/swarms', { headers: { ...headers, 'Idempotency-Key': 'owner-review-fixture' }, data: { coordinatorId: manager.id, projectId: project.id, objective: 'OWNER_REVIEW_UI write the report', mode: 'dynamic', allowedToolIds: ['tool-write-file'], toolSequence: ['tool-write-file'], semanticReview: { reviewerId: reviewer.id, criteria: ['Output total matches source'], inputNames: ['source.txt'], outputNames: ['report.txt'] }, limits: { maxAgents: 1 } } });
+ expect(response.status()).toBe(202); const run = await response.json();
+ await page.reload(); await page.getByRole('button', { name: 'AI Swarm', exact: true }).click(); await page.getByLabel('Swarm project').selectOption(project.id);
+ const section = page.getByRole('region', { name: 'Owner semantic review' }); await expect(section).toBeVisible();
+ await section.getByRole('button', { name: 'Inspect review evidence' }).click();
+ await section.getByText('input: source.txt · version 1', { exact: true }).click();
+ await section.getByText('output: report.txt · version 1', { exact: true }).click();
+ await expect(section.getByText('Total: 42.', { exact: true })).toBeVisible(); await expect(section.getByText('Total: 99.', { exact: true })).toBeVisible();
+ await section.getByLabel('Judgment 1').selectOption('fail');
+ await section.getByLabel('Evidence and reasoning 1').fill('The source total is 42; the report incorrectly says 99.');
+ await section.getByRole('button', { name: 'Record owner assessment' }).click(); await expect(section.getByRole('status')).toHaveText('Owner assessment saved.');
+ await expect(section.getByText(/Owner: fail/)).toBeVisible();
+ const first = await (await request.get(`/api/swarms/${run.id}/owner-review`, { headers })).json();
+ expect(first.history).toHaveLength(1); expect(first.history[0].actor).toBe('owner');
+ expect((await request.post(`/api/swarms/${run.id}/owner-review`, { headers: { Origin: 'http://127.0.0.1:3327' }, data: { revision: first.revision, checks: [] } })).status()).toBe(401);
+ await section.getByLabel('Judgment 1').selectOption('inconclusive');
+ await section.getByLabel('Evidence and reasoning 1').fill('Further source investigation is required by the owner.');
+ await section.getByRole('button', { name: 'Record owner assessment' }).click(); await expect(section.getByText(/Owner: inconclusive/)).toBeVisible();
+ const after = await (await request.get(`/api/swarms/${run.id}`, { headers })).json(); expect(after.status).toBe('blocked'); expect(after.semanticReviewResult.passed).toBe(false);
+ const history = await (await request.get(`/api/swarms/${run.id}/owner-review`, { headers })).json(); expect(history.history).toHaveLength(2); expect(history.history[1].previousId).toBe(history.history[0].id);
+ await page.reload(); await page.getByRole('button', { name: 'AI Swarm', exact: true }).click(); await section.getByRole('button', { name: 'Inspect review evidence' }).click();
+ await expect(section.getByText(/Owner: fail/)).toBeVisible(); await expect(section.getByText(/Owner: inconclusive/)).toBeVisible();
+});
+
+test('completed swarm is captured, reviewed and replayed as a parameterized immutable skill', async ({ page, request }) => {
+ const headers = { Authorization: `Bearer ${token}` };
+ const manager = await (await request.post('/api/agents', { headers, data: { displayName: 'SkillCaptureCoordinator', autonomyLevel: 3, toolIds: [], llmConfig: { provider: 'ollama', model: 'fixture', localEndpoint: 'http://127.0.0.1:3328', temperature: 0, maxTokens: 1024 } } })).json();
+ const project = await (await request.post('/api/projects', { headers, data: { name: 'Reviewed skill fixture', members: [] } })).json();
+ const started = await request.post('/api/swarms', { headers: { ...headers, 'Idempotency-Key': 'reviewed-skill-source' }, data: { coordinatorId: manager.id, projectId: project.id, objective: 'SKILL_CAPTURE_UI Prepare the first reviewed fixture.', mode: 'dynamic', allowedToolIds: [] } });
+ expect(started.status()).toBe(202); const source = await started.json();
+ await expect.poll(async () => (await (await request.get(`/api/swarms/${source.id}`, { headers })).json()).status).toBe('completed');
+ await page.reload(); await page.getByRole('button', { name: 'AI Swarm', exact: true }).click(); await page.getByLabel('Swarm project').selectOption(project.id);
+ await page.getByText('Reviewed skills and scheduled routines').click();
+ await page.getByLabel('Skill name').fill('Reviewed fixture skill'); await page.getByRole('button', { name: 'Capture completed run for review' }).click();
+ await expect(page.getByText(/Reviewed fixture skill · draft/)).toBeVisible(); await page.getByRole('button', { name: 'Inspect and review' }).click();
+ await expect(page.getByLabel('Reviewed skill template')).toContainText('Prepare the first reviewed fixture.');
+ await expect(page.getByLabel('Reviewed skill parameters')).toContainText('objective');
+ await page.getByLabel('Skill review reason').fill('Owner checked the frozen grants, steps and declared objective input.');
+ await page.getByRole('button', { name: 'Approve immutable skill' }).click();
+ await expect(page.getByLabel('Routine skill')).toContainText('Reviewed fixture skill v1'); await page.getByLabel('Routine skill').selectOption({ label: 'Reviewed fixture skill v1' });
+ await page.getByLabel('Skill parameters').fill('{"objective":"SKILL_CAPTURE_UI Prepare the changed reviewed fixture."}'); await page.getByRole('button', { name: 'Run reviewed skill now' }).click();
+ await expect(page.getByRole('heading', { name: 'SKILL_CAPTURE_UI Prepare the changed reviewed fixture.', exact: true })).toBeVisible();
+ const skills = await (await request.get(`/api/projects/${project.id}/skills`, { headers })).json(); expect(skills).toHaveLength(1); expect(skills[0].review.sourceRunId).toBe(source.id);
 });
 
 test('connector recovery checks remote evidence before explicit owner repeat authorization',async({page,request})=>{

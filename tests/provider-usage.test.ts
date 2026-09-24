@@ -1,6 +1,23 @@
 import { test } from 'node:test';import assert from 'node:assert/strict';
 import { infer, localInferenceLimit } from '../src/server/providers';
 const config={provider:'ollama',model:'fixture',endpoint:'http://127.0.0.1:11434',temperature:0,maxTokens:128};
+test('required review tool constrains provider format and rejects alternative actions without retry',async()=>{
+ const original=globalThis.fetch;let calls=0;let next:any={action:'blocked',reason:'No citations'};
+ const tools=[{id:'submit_review',schema:{type:'object'}},{id:'other',schema:{type:'object'}}];
+ try{
+ globalThis.fetch=(async(_url:any,init:any)=>{calls++;const body=JSON.parse(init.body);
+ assert.deepEqual(body.format.anyOf.map((x:any)=>[x.properties.action.const,x.properties.toolId.const]),[['tool','submit_review']]);
+ return new Response(JSON.stringify({message:{content:JSON.stringify(next)},prompt_eval_count:2,eval_count:3}));}) as any;
+ for(const decision of [{action:'blocked',reason:'No citations'},{action:'final',reply:'pass'},{action:'tool',toolId:'other',parameters:{}}]){
+ next=decision;await assert.rejects(()=>infer({...config,requiredTool:'submit_review'},[],new AbortController().signal,tools),(e:any)=>e.receipt.status==='failed');
+ }
+ assert.equal(calls,3);
+ next={action:'tool',toolId:'submit_review',parameters:{checks:[{verdict:'inconclusive'}]}};
+ assert.deepEqual((await infer({...config,requiredTool:'submit_review'},[],new AbortController().signal,tools)).decision,next);
+ await assert.rejects(()=>infer({...config,requiredTool:'missing'},[],new AbortController().signal,tools),/Required tool is not available/);
+ assert.equal(calls,4);
+ }finally{globalThis.fetch=original;}
+});
 test('malformed provider decision retains reported usage and model identity',async()=>{
  const original=globalThis.fetch;
  try{globalThis.fetch=(async()=>new Response(JSON.stringify({model:'fixture',message:{content:'invalid JSON'},prompt_eval_count:21,eval_count:17}))) as any;

@@ -3,6 +3,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 const run = (bin, args) => execFileSync(bin, args, { stdio: 'inherit' });
+run('node', ['scripts/license-audit.mjs']);
+run('node', ['scripts/imported-tool-inventory.mjs', '--check']);
 run('node_modules/.bin/vite', ['build']);
 run('node_modules/.bin/esbuild', ['server.ts', '--bundle', '--platform=node', '--format=cjs', '--packages=external', '--sourcemap', '--outfile=dist/server.cjs']);
 const hash = data => crypto.createHash('sha256').update(data).digest('hex');

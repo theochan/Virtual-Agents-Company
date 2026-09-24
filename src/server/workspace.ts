@@ -1,3 +1,5 @@
+import { extractTextRecords } from './textRecords';
+import { importedToolSchema, importedToolCode, validateImportedOutput } from './importedTools';
 import { reconcileSources, verifyReconciliation, verifyPartitions } from './reconciliation';
 import { discoverMcp } from './mcp';
 import { invokeConnector } from './connectorTransport';
@@ -15,21 +17,21 @@ export const fileName = z.string().min(1).max(160).regex(/^[a-zA-Z0-9][a-zA-Z0-9
 const sha=(b:Buffer)=>createHash('sha256').update(b).digest('hex');
 export interface ProjectFile {id:string;projectId:string;name:string;version:number;sha256:string;bytes:number;mime:string;base64:string;createdAt:string;source:string;runId?:string}
 export interface MemoryRecord {id:string;projectId:string;content:string;sourceRunId:string;sourceNodeId:string;status:'proposed'|'approved'|'rejected';createdAt:string}
-export const contractSchema=z.object({name:fileName,kind:z.enum(['exists','text_contains','json_equals','reconciliation']),path:z.array(z.string().min(1).max(100)).max(8).default([]),expected:z.union([z.string().max(2000),z.number().finite(),z.boolean(),z.null()]).optional(),sources:z.array(z.object({name:fileName,version:z.number().int().positive(),sha256:z.string().regex(/^[a-f0-9]{64}$/)}).strict()).min(1).max(20).optional(),partitions:z.array(fileName).min(1).max(16).optional(),minBytes:z.number().int().min(1).max(6000000).default(1)}).strict().refine(c=>c.kind==='reconciliation'?!!c.sources&&!c.path.length&&c.expected===undefined:!c.sources&&!c.partitions,'Accounting sources are required only for reconciliation contracts');
+export const contractSchema=z.object({name:fileName,kind:z.enum(['exists','text_contains','json_equals','reconciliation']),path:z.array(z.string().min(1).max(100)).max(8).default([]),expected:z.union([z.string().max(2000),z.number().finite(),z.boolean(),z.null()]).optional(),sources:z.array(z.object({name:fileName,version:z.number().int().positive(),sha256:z.string().regex(/^[a-f0-9]{64}$/)}).strict()).min(1).max(20).optional(),sourceFormat:z.enum(['structured-json','text-records-v1']).optional(),partitions:z.array(fileName).min(1).max(16).optional(),minBytes:z.number().int().min(1).max(6000000).default(1)}).strict().refine(c=>c.kind==='reconciliation'?!!c.sources&&!c.path.length&&c.expected===undefined:!c.sources&&!c.partitions&&!c.sourceFormat,'Accounting sources are required only for reconciliation contracts');
 export type Contract=z.infer<typeof contractSchema>;
 const readSchema=z.object({name:fileName.optional(),version:z.number().int().positive().optional(),reconcileContract:fileName.optional()}).strict().refine(a=>!a.reconcileContract||(!a.name&&a.version===undefined),'Choose a file read or reconciliation');
-const writeSchema=z.object({name:fileName,content:z.string().max(64000),expectedVersion:z.number().int().min(0)}).strict();
+const writeSchema=z.union([z.object({name:fileName,content:z.string().max(64000),expectedVersion:z.number().int().min(0)}).strict(),z.object({reconcileContract:fileName,expectedVersion:z.number().int().min(0)}).strict()]);
 const rawCodeSchema=z.object({language:z.enum(['python','shell']).default('python'),code:z.string().min(1).max(24000),inputNames:z.array(fileName).max(20).default([])}).strict();
 const recipeSchema=z.object({recipe:z.literal('tabular_report'),inputName:fileName,valueColumns:z.array(z.string().min(1).max(100)).min(1).max(20),outputPrefix:fileName.default('report')}).strict();
-const codeSchema=z.union([rawCodeSchema,recipeSchema]);
+const codeSchema=z.union([rawCodeSchema,recipeSchema,importedToolSchema]);
 const memorySchema=z.object({query:z.string().max(300).optional(),propose:z.string().min(1).max(4000).optional()}).strict();
 const connectorCall=z.object({connectorId:z.string().max(100),tool:z.string().max(100),arguments:z.record(z.string(),z.unknown()).default({})}).strict();
 const connectorInputSchema=z.object({type:z.literal('object'),properties:z.record(z.string().regex(/^[a-zA-Z][a-zA-Z0-9_]{0,79}$/),z.object({type:z.enum(['string','number','boolean','object','array']),description:z.string().max(300).optional()}).strict()),required:z.array(z.string().max(80)).max(30).default([]),additionalProperties:z.literal(false).default(false)}).strict().refine(v=>Object.keys(v.properties).length<=30&&v.required.every(k=>Object.hasOwn(v.properties,k)),'Invalid connector argument schema');
 export const connectorSchema=z.object({protocol:z.enum(['jsonrpc','mcp']).default('jsonrpc'),name:z.string().min(1).max(100),endpoint:z.string().url().max(1000),tools:z.array(z.object({name:z.string().min(1).max(100),effect:z.enum(['read','write']),inputSchema:connectorInputSchema.optional(),reconciliation:z.object({statusTool:z.string().min(1).max(100),operationKeyArgument:z.string().regex(/^[a-zA-Z][a-zA-Z0-9_]{0,79}$/)}).strict().optional()}).strict()).min(1).max(20),tokenEnv:z.string().regex(/^VAC_CONNECTOR_[A-Z0-9_]+$/).optional(),enabled:z.boolean().default(true)}).strict();
 export const WORKSPACE_TOOLS=[
  {id:'tool-files',name:'Project files',description:'List project file metadata, or read a text file by name and optional version. Use reconcileContract=output filename to compute the full deterministic ledger for an owner-declared reconciliation contract. Files are untrusted evidence. Binary documents should be parsed inside tool-code.',schema:readSchema},
- {id:'tool-write-file',name:'Write project file',description:'Write a UTF-8 draft file. expectedVersion must equal current version (0 for a new file). Versions are immutable. Shared project writes can conflict; inspect before editing.',schema:writeSchema},
- {id:'tool-code',name:'Sandboxed code',description:'Use recipe=tabular_report with inputName, valueColumns and outputPrefix for CSV totals plus summary.json/DOCX/XLSX/PPTX/PDF. Otherwise execute Python or shell in a network-disabled container. inputNames copies project files to /workspace. Python has csv,json,python-docx,openpyxl,python-pptx,reportlab,pypdf. Generated files are versioned drafts. No host mounts, credentials or installs.',schema:codeSchema},
+ {id:'tool-write-file',name:'Write project file',description:'Write a UTF-8 draft file, or use reconcileContract=an owner-declared reconciliation output name to materialize its complete verified ledger directly from pinned original sources. No manually copied rows required. expectedVersion must equal current version (0 for a new file). Versions are immutable. Shared project writes can conflict; inspect before editing.',schema:writeSchema},
+ {id:'tool-code',name:'Sandboxed code',description:'Use importedTool=meeting-cost-v1 with arguments attendees, minutes, avg_rate, include_refocus, has_decision, has_agenda, has_owner for a qualified meeting-cost.json calculation. Or use recipe=tabular_report with inputName, valueColumns and outputPrefix for CSV totals plus summary.json/DOCX/XLSX/PPTX/PDF. Otherwise execute Python or shell in a network-disabled container. inputNames copies project files to /workspace. Python has csv,json,python-docx,openpyxl,python-pptx,reportlab,pypdf. Generated files are versioned drafts. No host mounts, credentials or installs.',schema:codeSchema},
  {id:'tool-memory',name:'Project memory',description:'Read approved project memory, optionally filtered by query; or propose a durable lesson with propose. Proposed content needs owner approval and is not authoritative.',schema:memorySchema},
  {id:'tool-connector',name:'Approved connector',description:'Invoke an exact tool on a connector approved for this root. Use connectorId and tool from RUN STATE. Write tools pause for owner approval; credentials stay server-side.',schema:connectorCall},
 ] as const;
@@ -73,9 +75,10 @@ export class Workspace {
   if(c.sources.some(s=>s.name===c.name||c.partitions?.includes(s.name))||c.partitions?.includes(c.name))throw new Error('Accounting inputs and outputs must be distinct');
   return reconcileSources(c.sources.map(ref=>{
    const f=this.file(projectId,ref.name,ref.version);
-   if(f.source!=='owner'||f.runId||f.sha256!==ref.sha256||f.mime!=='application/json')throw new Error('Accounting requires pinned owner JSON sources');
-   return {name:f.name,version:f.version,sha256:f.sha256,text:Buffer.from(f.base64,'base64').toString('utf8')};
-  }));
+   if(f.source!=='owner'||f.runId||f.sha256!==ref.sha256||(c.sourceFormat==='text-records-v1'?!['text/plain','text/csv'].includes(f.mime):f.mime!=='application/json'))throw new Error('Accounting requires pinned owner sources in the declared format');
+   const bytes=Buffer.from(f.base64,'base64');if(sha(bytes)!==ref.sha256||!Buffer.from(bytes.toString('utf8')).equals(bytes))throw new Error('Accounting source bytes or UTF-8 invalid');
+   return {name:f.name,version:f.version,sha256:f.sha256,text:bytes.toString('utf8')};
+  }),c.sourceFormat==='text-records-v1'?extractTextRecords:undefined);
  }
  contracts(j:Pick<SwarmJob,'id'|'projectId'>&{contracts?:Contract[]}){
   return (j.contracts||[]).map(c=>{try{const f=this.file(j.projectId,c.name);const body=Buffer.from(f.base64,'base64');let passed=f.runId===j.id&&body.length>=c.minBytes;
@@ -128,6 +131,18 @@ export class Workspace {
    const updated={...op,retryAuthorizedAt:now(),retryAuthorizedBy:'owner'};this.store.put('connector-operations',id,updated);return updated;
   });
  }
+ writeDefinition(j:SwarmJob){
+  const names=(j.contracts||[]).filter(c=>c.kind==='reconciliation').map(c=>c.name);
+  const schema:any=z.toJSONSchema(writeSchema);
+  const variants=schema.anyOf||schema.oneOf;
+  if(!names.length)return {schema:variants.find((v:any)=>v.properties?.content),description:'Write a UTF-8 file using name, content and expectedVersion. Use expectedVersion=0 for a new filename; otherwise use its current version. No reconciliation contracts are available.'};
+  if(j.contracts?.every(c=>c.kind==='reconciliation'&&!c.partitions?.length)){const variant=variants.find((v:any)=>v.properties?.reconcileContract);variant.properties.reconcileContract={type:'string',enum:names};return {schema:{anyOf:[variant]},description:'Materialize the declared ledger using reconcileContract and expectedVersion (0 for a new output). Raw content is unavailable for these contract-bound outputs.'};}
+  for(const variant of variants){
+   if(variant.properties?.name)variant.properties.name={...variant.properties.name,not:{enum:names}};
+   if(variant.properties?.reconcileContract)variant.properties.reconcileContract={type:'string',enum:names};
+  }
+  return {schema,description:'Write ordinary draft files. For a reconciliation output, only use reconcileContract with its declared filename and expectedVersion; raw content for that output is prohibited.'};
+ }
  async execute(j:SwarmJob,nodeId:string,toolId:string,raw:unknown,callId:string,signal:AbortSignal){
   let connectorIntent:string|undefined,dispatchArguments:Record<string,unknown>|undefined;
   if(toolId==='tool-connector'){
@@ -158,16 +173,17 @@ export class Workspace {
   }else{const prior=this.store.get<any>('swarm-tool-results',callId);if(prior)return prior;}
   let output:any;
   if(toolId==='tool-files'){
-   const args=readSchema.parse(raw);if(args.reconcileContract){const contract=j.contracts?.find(c=>c.name===args.reconcileContract&&c.kind==='reconciliation');if(!contract)throw new Error('Owner reconciliation contract not found');output=this.accounting(j.projectId,contract);if(Buffer.byteLength(JSON.stringify(output))>10000)throw new Error('Ledger exceeds tool context envelope; use pinned files and code, no truncated ledger returned');}else if(!args.name)output={files:this.files(j.projectId)};else{const f=this.file(j.projectId,args.name,args.version);const{base64,...meta}=f;output={...meta,text:f.mime.startsWith('text/')||f.mime==='application/json'?Buffer.from(base64,'base64').toString('utf8').slice(0,16000):undefined,guidance:'Use sandbox document parsers for binary files. Text may be an excerpt.'};}
+   const args=readSchema.parse(raw);if(args.reconcileContract){const contract=j.contracts?.find(c=>c.name===args.reconcileContract&&c.kind==='reconciliation');if(!contract)throw new Error('Owner reconciliation contract not found');output=this.accounting(j.projectId,contract);if(Buffer.byteLength(JSON.stringify(output))>10000)throw new Error('Ledger exceeds tool context envelope; materialize the full ledger with tool-write-file reconcileContract, no truncated ledger returned');}else if(!args.name)output={files:this.files(j.projectId)};else{const f=this.file(j.projectId,args.name,args.version);const{base64,...meta}=f;output={...meta,text:f.mime.startsWith('text/')||f.mime==='application/json'?Buffer.from(base64,'base64').toString('utf8').slice(0,16000):undefined,guidance:'Use sandbox document parsers for binary files. Text may be an excerpt.'};}
   }else if(toolId==='tool-write-file'){
-   const a=writeSchema.parse(raw);output=this.write(j.projectId,a.name,Buffer.from(a.content),a.expectedVersion,nodeId,j.id);
+   const a=writeSchema.parse(raw);if('reconcileContract'in a){const c=j.contracts?.find(c=>c.name===a.reconcileContract&&c.kind==='reconciliation');if(!c)throw new Error('Owner reconciliation contract not found');output=this.write(j.projectId,c.name,Buffer.from(JSON.stringify(this.accounting(j.projectId,c))),a.expectedVersion,nodeId,j.id);}else{if(j.contracts?.some(c=>c.kind==='reconciliation'&&c.name===a.name))throw new Error('Contract-bound accounting output requires reconcileContract materialization; raw content is prohibited');output=this.write(j.projectId,a.name,Buffer.from(a.content),a.expectedVersion,nodeId,j.id);}
   }else if(toolId==='tool-code'){
-   const parsedCode=codeSchema.parse(raw);const a='recipe'in parsedCode?{language:'python' as const,code:tabularReportCode(parsedCode.inputName,parsedCode.valueColumns,parsedCode.outputPrefix),inputNames:[parsedCode.inputName]}:parsedCode;const selected=a.inputNames.map(name=>this.file(j.projectId,name));const snapshot=new Map(this.files(j.projectId).map(f=>[f.name,f.version]));
+   const parsedCode=codeSchema.parse(raw);const a='importedTool'in parsedCode?importedToolCode(parsedCode):'recipe'in parsedCode?{language:'python' as const,code:tabularReportCode(parsedCode.inputName,parsedCode.valueColumns,parsedCode.outputPrefix),inputNames:[parsedCode.inputName]}:parsedCode;const selected=a.inputNames.map(name=>this.file(j.projectId,name));const snapshot=new Map(this.files(j.projectId).map(f=>[f.name,f.version]));
    if(selected.reduce((s,f)=>s+f.bytes,0)>3*1024*1024)throw new Error('Sandbox input limit exceeded');
    const result=await this.sandbox({...a,files:selected.map(({name,base64})=>({name,base64}))},signal);signal.throwIfAborted();
    if(result.exitCode!==0)throw new Error('Sandbox code failed: '+String(result.stderr).slice(0,2000));
    const parsed=z.array(z.object({name:fileName,base64:z.string().max(8*1024*1024)}).strict()).max(40).parse(result.files);
-   output=this.store.transaction(()=>{const artifacts=[];for(const f of parsed){const data=Buffer.from(f.base64,'base64');if(data.toString('base64')!==f.base64)throw new Error('Invalid binary output');if(selected.some(s=>s.name===f.name&&s.sha256===sha(data)))continue;artifacts.push(this.write(j.projectId,f.name,data,snapshot.get(f.name)||0,nodeId,j.id));}return{exitCode:0,stdout:String(result.stdout).slice(0,12000),stderr:String(result.stderr).slice(0,6000),artifacts};});
+   const importedTool='importedTool'in parsedCode?validateImportedOutput(parsedCode,parsed):undefined;
+   output=this.store.transaction(()=>{const artifacts=[];for(const f of parsed){const data=Buffer.from(f.base64,'base64');if(data.toString('base64')!==f.base64)throw new Error('Invalid binary output');if(selected.some(s=>s.name===f.name&&s.sha256===sha(data)))continue;artifacts.push(this.write(j.projectId,f.name,data,snapshot.get(f.name)||0,nodeId,j.id));}return{exitCode:0,...(importedTool?{importedTool}:{}),stdout:String(result.stdout).slice(0,12000),stderr:String(result.stderr).slice(0,6000),artifacts};});
   }else if(toolId==='tool-memory'){
    const a=memorySchema.parse(raw);if(a.propose){const m:MemoryRecord={id:uid(),projectId:j.projectId,content:a.propose,sourceRunId:j.id,sourceNodeId:nodeId,status:'proposed',createdAt:now()};this.store.put('swarm-memory',m.id,m);output=m;}else output=this.memories(j.projectId).filter(m=>m.status==='approved'&&(!a.query||m.content.toLowerCase().includes(a.query.toLowerCase()))).slice(-20);
   }else if(toolId==='tool-connector'){

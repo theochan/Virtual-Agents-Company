@@ -1,0 +1,154 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "Exact-hash admission list for frozen synthetic evaluation artifacts. No real customer data, credentials, private paths or production provider payloads are included."
+  },
+  "date": "2026-09-24",
+  "policy": "Listed artifacts are immutable synthetic evidence. Any byte change requires explicit regeneration and publication review.",
+  "artifacts": [
+    {
+      "path": "docs/evaluations/2026-09-22-fresh-review-02-summary.json",
+      "sha256": "88a7148b620a44fd69738d7361fdffb0df320fa7e2f66b9b59ca1c70a8fc083b",
+      "bytes": 5851,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-22-fresh-review-answer-key.json",
+      "sha256": "b5d93ca01a959695df226420b4279a8ab5c3ca5c15374c4c7f13a3a927dc4244",
+      "bytes": 1962,
+      "classification": "synthetic-adjudication-record"
+    },
+    {
+      "path": "docs/evaluations/2026-09-22-fresh-review-human-adjudication.json",
+      "sha256": "47ee688fbda399e3459f63520a82b3dfcf0e1e3e555644d43fbd9978945d03b5",
+      "bytes": 3715,
+      "classification": "synthetic-adjudication-record"
+    },
+    {
+      "path": "docs/evaluations/2026-09-22-fresh-review-preparation.json",
+      "sha256": "a5e2987dfdbea930633605ed07ea41fab6e1b8fb14d56f93bd625e51d17f3696",
+      "bytes": 6735,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-22-human-accounting-adjudication.json",
+      "sha256": "d6ccd4a90020405d2d9fd6c257582779d11464d9c9ac37726c2e3058f0acbbbf",
+      "bytes": 2807,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-22-review-citation-regressions-summary.json",
+      "sha256": "3de674f55231457f3adcd7b43c31a1aa7136bf1019d7403be2868eadfca4388a",
+      "bytes": 7815,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-22-reviewer-models-summary.json",
+      "sha256": "fb84787d32c7a414c13174ea1afe742fec116fd2fc5ab27296f6f5dd7bf33c0f",
+      "bytes": 2630,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-advantage-prior-failures.json",
+      "sha256": "d752998a194f75167291795f3b6c0e7612c7227a48ce25f27387a71c95da8d4c",
+      "bytes": 6908,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-change-log-frozen-confirmation.json",
+      "sha256": "685538d759c218ce72f900aef70742b0c51433ccc39162c5e866defd18e48ce7",
+      "bytes": 1449,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-change-log-v2-summary.json",
+      "sha256": "92d8cab7762a7ac1efbd69a1dba0da290bd6e5ae3309f14f9ade8af09ef6f7e7",
+      "bytes": 6988,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-change-log-v3-summary.json",
+      "sha256": "3eb17b6c7d49acbc7fbb7e26bf77126ca7bf0e8cb135d5bc512cb7db1a2911c2",
+      "bytes": 7772,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-accounting-summary.json",
+      "sha256": "03e9106d10427bf27057042974496763d913109504e431d9b74511352f429f53",
+      "bytes": 8816,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-ai-verification.json",
+      "sha256": "5854d062601316ba06974ba63dce831693d8e75ed50dce011e47c1b296b994ab",
+      "bytes": 1402,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-oracle.json",
+      "sha256": "21c25e4b65822daa6685c18045e70a4469e9bd95818968e198c8666c63678f7d",
+      "bytes": 491,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-owner-mapping.json",
+      "sha256": "1a4b0649782bc0e94965be3a1154639d173fd38bc989f7811b6b3c850c80f6f6",
+      "bytes": 714,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-owner-packet/A.json",
+      "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "bytes": 2712,
+      "classification": "synthetic-source-packet"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-owner-packet/B.json",
+      "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "bytes": 2712,
+      "classification": "synthetic-source-packet"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-owner-packet/C.json",
+      "sha256": "b5366635f6784135f8b64e6cb04c94ad2dcb534107eea75177f35aa49e6093ee",
+      "bytes": 1520,
+      "classification": "synthetic-source-packet"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-e2e-preparation.json",
+      "sha256": "2229b90a4efa29632256f4af5b9d0caaaba484b89d866d0b743c98a36cb7469f",
+      "bytes": 7005,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-rubric-review-03-summary.json",
+      "sha256": "5dae39ca2371a99f1b5da2a5f6aff1cb79614a3e47f033d0529994fcb53b8c8e",
+      "bytes": 3662,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-rubric-review-answer-key.json",
+      "sha256": "99f7e57107f514168bbb16e1c15e5110a40c6f59e13e515ea92d9cf75ac7b4c3",
+      "bytes": 1493,
+      "classification": "synthetic-adjudication-record"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-rubric-review-human-adjudication.json",
+      "sha256": "53cd9d540a16dd8cb0c91afbb18bc1a44cf99683da559db60a1454a4bc2d6b96",
+      "bytes": 3325,
+      "classification": "synthetic-adjudication-record"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-rubric-review-preparation.json",
+      "sha256": "de3a682c58d85a896df22ddfb11d35166ea71f1038a9d0d91211715a1b23c444",
+      "bytes": 11505,
+      "classification": "synthetic-evaluation-summary"
+    },
+    {
+      "path": "docs/evaluations/2026-09-23-swarm-advantage-evidence.json",
+      "sha256": "1b402b29eae538d031d05be6b4488082200cc4ded33769fa133c242269138578",
+      "bytes": 154738,
+      "classification": "synthetic-evaluation-evidence"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "vac.human-packet-adjudication/v1",
+  "recordedAt": "2026-09-23T09:47:58.353914+00:00",
+  "status": "HUMAN_LABELS_RECORDED",
+  "reviewer": "Theo (owner)",
+  "provenance": "Owner supplied judgments in this task. First entry lacks a heading and is mapped to G01 by order and its ribbon source content. Reasons preserved as supplied.",
+  "packet": {
+    "path": "docs/test-plans/fresh-review-packet-03.md",
+    "sha256": "35e4f7ea2c4bb832d5a1ccc2ab854e03daff74b7bd3025bf20d2dc0cf99c9587",
+    "authorship": "Codex developer-authored",
+    "independentlyAuthoredHoldout": false
+  },
+  "judgments": [
+    {
+      "caseId": "G01",
+      "verdict": "supported",
+      "reason": "The report provides the correct final result of 94.00 m. By subtracting the 0.25 m consumed from the 12.00 m length of each roll, the usable length per roll is 11.75 m. Multiplying 11.75 m by the 8 rolls yields exactly 94.00 m. Because the criterion explicitly asks for a \"result-only\" format, the lack of displayed calculations perfectly satisfies the requirement."
+    },
+    {
+      "caseId": "G02",
+      "verdict": "unsupported",
+      "reason": "The criterion strictly requires the report to show both the final result and the explicit workings (the calculation of the usable length per roll and its multiplication by eight). While the final result (94.00 m) is mathematically correct, the report fails to display the mandatory step-by-step arithmetic, rendering it non-compliant with the criterion."
+    },
+    {
+      "caseId": "G03",
+      "verdict": "supported",
+      "reason": "The report successfully displays the correct step-by-step workings and final result with the appropriate gram units. It accurately calculates the subtotal for the 18 g components (24 × 18 g = 432 g) and the 7 g components (24 × 7 g = 168 g), and then correctly sums them to reach the precise final mass of 600 g, perfectly satisfying the criterion."
+    },
+    {
+      "caseId": "G04",
+      "verdict": "unsupported",
+      "reason": "The criterion requires the displayed arithmetic and subtotals to be correct. The report fails this because it contains incorrect mathematical workings: 24 × 18 equals 432 (not 422), and 24 × 7 equals 168 (not 178). Although the flawed subtotals happen to add up to the correct final mass of 600 g, the intermediate arithmetic is incorrect."
+    },
+    {
+      "caseId": "G05",
+      "verdict": "supported",
+      "reason": "The report accurately states the mean score as 3.2 points per response. Calculating the total score (18 × 4 = 72 points; 12 × 2 = 24 points; 72 + 24 = 96 total points) and dividing by the 30 total responses yields exactly 3.2. As a result-only criterion, the report successfully provides the correct number without unnecessary workings."
+    },
+    {
+      "caseId": "G06",
+      "verdict": "unsupported",
+      "reason": "The report incorrectly states the mean score as 3.0 points. Using the provided source data, the true total score is 96 points (18 respondents × 4 points + 12 respondents × 2 points). Dividing 96 by 30 responses gives a correct mean of 3.2 points, meaning the reported figure is mathematically inaccurate."
+    }
+  ],
+  "reviewMinutes": null,
+  "scope": "Owner adjudication of six developer-authored correlated rubric cases; model evaluation is separate."
+}

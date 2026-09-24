@@ -1,0 +1,42 @@
+{
+  "receipts": [
+    {
+      "workItem": "VAC-23",
+      "verified": true,
+      "closed": false,
+      "statePreserved": true,
+      "priorityPreserved": true,
+      "parentPreserved": true
+    },
+    {
+      "workItem": "VAC-28",
+      "verified": true,
+      "closed": false,
+      "statePreserved": true,
+      "priorityPreserved": true,
+      "parentPreserved": true
+    },
+    {
+      "workItem": "VAC-42",
+      "verified": true,
+      "closed": false,
+      "statePreserved": true,
+      "priorityPreserved": true,
+      "parentPreserved": true
+    },
+    {
+      "workItem": "VAC-20",
+      "verified": true,
+      "closed": false,
+      "statePreserved": true,
+      "priorityPreserved": true,
+      "parentPreserved": true
+    }
+  ],
+  "newItems": 0,
+  "closedItems": 0,
+  "publication": {
+    "kind": "sanitized-summary",
+    "omitted": "Private identifiers, credentials and original private descriptions"
+  }
+}

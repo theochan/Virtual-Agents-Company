@@ -26,6 +26,9 @@ const provider = http.createServer(async (req, res) => {
     ? { action: 'tool', toolId: 'tool-doc-gen', parameters: { title: 'Browser draft', content: 'A draft from the browser fixture.' } }
     : { action: 'final', reply: 'Browser fixture draft is ready for review.' };
   if(isSwarm&&body.messages.some(m=>m.content.includes('RECOVERY_UI'))){const state=JSON.parse(body.messages.find(m=>m.content.startsWith('RUN STATE (server supplied): ')).content.slice('RUN STATE (server supplied): '.length));decision=observed?{action:'final',reply:'Recovery write completed once.'}:{action:'tool',toolId:'tool-connector',parameters:{connectorId:state.connectors[0].id,tool:'save',arguments:{value:42}}};}
+  if(isSwarm&&body.messages.some(m=>m.content.includes('OWNER_REVIEW_UI')))decision=observed?{action:'final',reply:'Owner review fixture report is ready.'}:{action:'tool',toolId:'tool-write-file',parameters:{name:'report.txt',content:'Total: 99.',expectedVersion:0}};
+  if(isSwarm&&body.messages.some(m=>m.content.includes('SKILL_CAPTURE_UI')))decision={action:'final',reply:'Reviewed skill fixture completed.'};
+  if(system.includes('You are an independent read-only reviewer'))decision={action:'tool',toolId:'submit_review',parameters:{checks:[{criterion:0,reason:'Source total 42 differs from report total 99.',evidence:[{name:'source.txt',quote:'Total: 42.'},{name:'report.txt',quote:'Total: 99.'}],verdict:'fail'}]}};
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({ message: { content: JSON.stringify(decision) }, prompt_eval_count: 10, eval_count: 10, choices: [{ message: { content: JSON.stringify(decision) } }], usage: { prompt_tokens: 10, completion_tokens: 10 } }));
 });

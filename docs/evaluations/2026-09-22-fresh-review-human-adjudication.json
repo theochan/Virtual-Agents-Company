@@ -1,0 +1,47 @@
+{
+  "schema": "vac.human-packet-adjudication/v1",
+  "recordedAt": "2026-09-22T10:30:02.201803+00:00",
+  "status": "HUMAN_LABELS_RECORDED",
+  "reviewer": "Theo (owner)",
+  "provenance": "Owner judgments supplied in this task; Markdown multiplication escapes normalized. Independent human authorship is not claimed.",
+  "packet": {
+    "path": "docs/test-plans/fresh-review-packet-02.md",
+    "sha256": "4fe25e8878f963322ff0cfaf118d4c6f47a57a3a95c20ebef920ca089307173d",
+    "authorship": "Codex developer-authored",
+    "independentlyAuthoredHoldout": false
+  },
+  "judgments": [
+    {
+      "caseId": "F01",
+      "verdict": "supported",
+      "reason": "First, we calculate the discount on the parts: 10% of EUR 240.00 is EUR 24.00, leaving EUR 216.00 for parts. We add the labor cost (EUR 160.00) to find the combined pre-tax base, which is EUR 376.00. Next, we apply the 5% tax to EUR 376.00, which yields EUR 18.80. The post-tax total is therefore EUR 394.80. Finally, deducting the EUR 100.00 deposit leaves a remaining payable amount of exactly EUR 294.80. The report correctly follows these steps and matches this calculation."
+    },
+    {
+      "caseId": "F02",
+      "verdict": "unsupported",
+      "reason": "To find the tax amount in an inclusive-tax total, we must isolate the pre-tax price. Let P be the price before tax. Since total = P * 1.08, the pre-tax price is USD 216.00 / 1.08 = USD 200.00. The actual included tax is 8% of USD 200.00, which equals USD 16.00. The report incorrectly calculates the tax by applying the 8% rate to the post-tax total instead of the pre-tax base (USD 216.00 * 0.08 = USD 17.28)."
+    },
+    {
+      "caseId": "F03",
+      "verdict": "supported",
+      "reason": "The published rule explicitly defines timeliness based on the portal receipt time, which was 17:02 UTC, and provides no grace period. The deadline was 17:00 UTC. 17:02 minus 17:00 equals a two-minute delay. Because the rule strictly uses the receipt time rather than the submit time (16:58), the report correctly determines that the application was late."
+    },
+    {
+      "caseId": "F04",
+      "verdict": "unsupported",
+      "reason": "The proposed amendment to move delivery to 25 November was explicitly conditional upon the seller providing written confirmation by 17:00 on 15 November. Because the record states there is no seller confirmation, the condition was not met. According to the explicitly stated change-control clause, conditional proposals do not amend the contract until conditions are met. Therefore, the date remains 20 November, and the report is incorrect in stating the email supersedes the contract."
+    },
+    {
+      "caseId": "F05",
+      "verdict": "unsupported",
+      "reason": "The correct order of operations given by the source is to convert the currency first, then deduct the fee from the converted amount. Converting USD 250.00 at SGD 1.36 yields SGD 340.00 (250 * 1.36). Deducting the fixed fee of SGD 4.00 from SGD 340.00 leaves a final receipt of SGD 336.00. The report incorrectly deducts the fee from the USD amount before applying the conversion rate."
+    },
+    {
+      "caseId": "F06",
+      "verdict": "supported",
+      "reason": "First, we convert the empty container mass to kilograms for consistency: 150 g = 0.15 kg. We subtract this from the gross mass of one container (2.50 kg - 0.15 kg) to find the net contents mass per container, which is 2.35 kg. Multiplying 2.35 kg by the 12 containers gives a total contents mass of exactly 28.20 kg. The report accurately reflects this calculation."
+    }
+  ],
+  "reviewMinutes": null,
+  "scope": "Owner adjudication of six developer-authored cases; model performance must be measured separately."
+}

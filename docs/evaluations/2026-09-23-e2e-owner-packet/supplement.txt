@@ -1,0 +1,13 @@
+ID: M41
+Entity: Maple
+Currency: GBP
+Unit: minor
+Type: invoice
+Amount: 21475
+
+ID: J53
+Entity: Juniper
+Currency: EUR
+Unit: minor
+Type: credit
+Amount: -140

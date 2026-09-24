@@ -1,0 +1,47 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "Repository and release metadata only. The disposable release path and local runtime details are omitted."
+  },
+  "date": "2026-09-24",
+  "workItem": "VAC-40",
+  "candidateStatus": "closed",
+  "plane": {
+    "workItem": "VAC-40",
+    "acceptanceCommentVerified": true,
+    "state": "Done",
+    "closedAtLocalDate": "2026-09-24"
+  },
+  "inventory": {
+    "lockedPackageEntries": 376,
+    "pinnedVendorFiles": 5417,
+    "vendorLicenseTexts": 10,
+    "remoteOnlyPortraitIds": 40,
+    "unknownLicenses": 0,
+    "restrictedMaterials": 0
+  },
+  "releaseBoundary": {
+    "requiredNoticeAndLockFiles": "passed",
+    "looseVendorTreeExcluded": "passed",
+    "qualifiedAdapterSourceAndMitNoticeBundled": "passed",
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "validation": {
+    "licenseGate": "passed",
+    "publicationInventory": "passed",
+    "typescript": "passed",
+    "sourceTests": { "passed": 215, "failed": 0, "skipped": 6 },
+    "productionBundleTests": { "passed": 215, "failed": 0, "skipped": 6 },
+    "build": "passed-with-existing-chunk-size-advisory",
+    "disposableRelease": "passed",
+    "whitespace": "passed"
+  },
+  "sourceHashes": {
+    "scripts/license-audit.mjs": "2d48ba616d952b109f41bf6a72d3305113b4a24c3c749a85c77d913efbddcad5",
+    "docs/evaluations/2026-09-24-license-inventory.json": "16a2c579cedaa117cfd6a7451cd6fb40547b0acca2e4833b8b3f810105d4238f",
+    "THIRD_PARTY_NOTICES.md": "43cde8a51efa8660865e802fcc6be31f7713fc7e5dbf7f2cbdb58e21348fca82"
+  },
+  "legalBoundary": "Engineering inventory and redistribution gate; not legal advice or legal certification."
+}

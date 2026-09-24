@@ -34,6 +34,46 @@ test('impossible execution plans are rejected atomically before workers or infer
 test('DAG dependencies wait for completed siblings, deliver evidence once, and reject cycles atomically',async()=>{for(const cycle of [false,true]){const seen:string[]=[];const f=setup(m=>{const root=m[0].content.includes('You are the coordinator.');if(root)return m.some(x=>x.content.startsWith('UNTRUSTED CHILD'))?{action:'final',reply:'Merged'}:{action:'tool',toolId:SPAWN_TOOL,parameters:{workers:[worker('A',cycle?['B']:[]),worker('B',['A'])]}};if(m[0].content.includes('You are B,')){assert.ok(seen.includes('A'));assert.ok(m.some(x=>x.content.startsWith('UNTRUSTED DEPENDENCY')));seen.push('B');}else seen.push('A');return{action:'final',reply:'Evidence'};});try{const r=await f.finish(f.create({allowedToolIds:[]}).id);if(cycle){assert.equal(r.status,'failed');assert.equal(r.nodes.length,1);}else{assert.equal(r.status,'completed');assert.deepEqual(seen,['A','B']);}}finally{f.cleanup();}}});
 test('write connector pauses before any side effect and rejection never executes it',async()=>{const old=process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS='http://127.0.0.1:49999/tools';let connector:any;const f=setup(()=>({action:'tool',toolId:'tool-connector',parameters:{connectorId:connector.id,tool:'write',arguments:{value:600}}}));try{connector=f.engine.workspace.saveConnector({name:'Fixture',endpoint:process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS,tools:[{name:'write',effect:'write'}]});const r=await f.finish(f.create({allowedToolIds:['tool-connector'],connectorIds:[connector.id]}).id);assert.equal(r.status,'waiting_approval');assert.equal(r.budget.toolCalls,0);const a=r.approvals![0];f.engine.decideApproval(a.id,'rejected');const done=await f.finish(r.id);assert.equal(done.status,'failed');assert.equal(done.budget.toolCalls,0);assert.throws(()=>f.engine.decideApproval(a.id,'approved'));}finally{if(old===undefined)delete process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS;else process.env.VAC_CONNECTOR_LOCAL_ENDPOINTS=old;f.cleanup();}});
 test('pinned skill routines survive scheduler recreation, prevent overlap, stop at cap and preserve versions',async()=>{const f=setup();try{let scheduler=new Routines(f.engine);const v1=scheduler.saveSkill({name:'Weekly',template:{...f.input,allowedToolIds:[]}}),v2=scheduler.saveSkill({name:'Weekly',template:{...f.input,objective:'New objective',allowedToolIds:[]}});assert.equal(v2.version,2);const routine=scheduler.create({skillId:v1.id,intervalMinutes:1,maxRuns:2,startsAt:new Date().toISOString()});scheduler.tick();let saved=f.store.get<any>('swarm-routines',routine.id);assert.equal(saved.runs,1);saved.nextAt=0;f.store.put('swarm-routines',saved.id,saved);scheduler=new Routines(f.engine);scheduler.tick();assert.equal(f.store.get<any>('swarm-routines',saved.id).runs,1);await f.finish(saved.lastRunId);scheduler.tick();saved=f.store.get<any>('swarm-routines',saved.id);assert.equal(saved.runs,2);assert.equal(saved.status,'completed');assert.equal(f.engine.get(saved.lastRunId).objective,f.input.objective);scheduler.tick();assert.equal(f.store.all('swarms').length,2);}finally{f.cleanup();}});
+
+test('reviewed trace capture replays two distinct workflows on changed inputs and fails closed on missing inputs',async()=>{
+ const f=setup(()=>({action:'final',reply:'Bearer incidental-output-must-not-be-captured'}));
+ try{
+  const routines=new Routines(f.engine),sources=[
+   await f.finish(f.create({allowedToolIds:[]}).id),
+   await f.finish(f.create({allowedToolIds:[],plan:[{...worker('Reader'),key:'reader'}]}).id),
+  ];
+  for(const [workflowIndex,source] of sources.entries()){
+   assert.equal(source.status,'completed');
+   const draft=routines.capture({runId:source.id,name:`Reviewed workflow ${workflowIndex+1}`});
+   assert.equal(draft.status,'draft');assert.ok(draft.traceDigest);assert.equal(draft.redactionPaths.length,0);
+   assert.doesNotMatch(JSON.stringify(draft),/incidental-output/);
+   const approved:any=routines.reviewDraft(draft.id,{decision:'approved',reason:'Owner verified steps, boundaries and declared input.'});
+   assert.equal(approved.skill.review.sourceRunId,source.id);assert.equal(approved.skill.parameters[0].path,'objective');
+   assert.throws(()=>routines.replay(approved.skill.id,{},`missing-${workflowIndex}-input`),/missing: objective/);
+   assert.throws(()=>routines.replay(approved.skill.id,{objective:'valid',toolIds:'expand'},`extra-${workflowIndex}-input`),/unexpected: toolIds/);
+   for(let caseIndex=0;caseIndex<3;caseIndex++){
+    const objective=`Changed workflow ${workflowIndex+1} input ${caseIndex+1}`;
+    const replay=routines.replay(approved.skill.id,{objective},`reviewed-${workflowIndex}-${caseIndex}`);
+    assert.equal(replay.objective,objective);assert.deepEqual(replay.allowedToolIds,[]);
+    const done=await f.finish(replay.id);assert.equal(done.status,'completed',done.result);
+   }
+  }
+ }finally{f.cleanup();}
+});
+
+test('skill capture redacts secrets, requires reviewed replacement, reports version diff and rolls back immutably',async()=>{
+ const f=setup();try{
+  const routines=new Routines(f.engine),source=await f.finish(f.create({objective:'Prepare report with api_key=supersecretvalue123',allowedToolIds:[]}).id);
+  const draft=routines.capture({runId:source.id,name:'Redacted workflow'});assert.deepEqual(draft.redactionPaths,['objective']);assert.match(draft.template.objective,/REDACTED/);
+  assert.throws(()=>routines.reviewDraft(draft.id,{decision:'approved',reason:'Approve without replacement'}),/Replace all redacted/);
+  const safe={...draft.template,objective:'Prepare the report for the declared account.'};
+  const first:any=routines.reviewDraft(draft.id,{decision:'approved',template:safe,reason:'Owner replaced secret-bearing text.'});assert.equal(first.skill.version,1);
+  const second:any=routines.saveSkill({name:first.skill.name,template:{...safe,objective:'Prepare the revised report.'},parameters:first.skill.parameters});
+  assert.equal(second.version,2);assert.deepEqual(second.diff.changedPaths,['objective']);
+  const rolled:any=routines.rollback(second.id,{toVersion:1,reason:'Owner rejected the revised wording.'});
+  assert.equal(rolled.version,3);assert.equal(rolled.template.objective,safe.objective);assert.equal(rolled.review.rollbackTarget,1);assert.equal(routines.skills('project').length,3);
+ }finally{f.cleanup();}
+});
 test('real sandbox generates documents and denies network, host filesystem and secrets',{skip:process.env.VAC_TEST_SANDBOX!=='1'},async()=>{
  const r=await runSandbox({language:'python',inputNames:[],files:[],code:`import os,json,socket\nfrom docx import Document\nfrom openpyxl import Workbook\nfrom pptx import Presentation\nfrom reportlab.pdfgen import canvas\nassert not os.path.exists('/Users/theo')\nassert 'VAC_ACCESS_TOKEN' not in os.environ\ntry:\n socket.create_connection(('1.1.1.1',443),timeout=1)\n raise AssertionError('network available')\nexcept OSError: pass\nd=Document();d.add_paragraph('Revenue 600');d.save('report.docx')\nw=Workbook();w.active.append(['Revenue',600]);w.save('report.xlsx')\np=Presentation();p.slides.add_slide(p.slide_layouts[0]).shapes.title.text='Revenue 600';p.save('report.pptx')\nc=canvas.Canvas('report.pdf');c.drawString(72,700,'Revenue 600');c.save()\nopen('summary.json','w').write(json.dumps({'total':600}))\nprint('isolation and documents passed')`},new AbortController().signal);assert.equal(r.exitCode,0,r.stderr);assert.equal(r.files.length,5);assert.match(r.stdout,/passed/);
 });
@@ -381,7 +421,7 @@ test('owner-pinned reconciliation contract gates completion and supports determi
  for(const wrong of [false,true]){
   let ledger:any;
   const f=setup(m=>{
-   if(!m.some(x=>x.content.includes('UNTRUSTED TOOL')))return {action:'tool',toolId:'tool-write-file',parameters:{name:'result.json',content:JSON.stringify(wrong?{...ledger,rows:ledger.rows.slice(2)}:ledger),expectedVersion:0}};
+   if(!m.some(x=>x.content.includes('UNTRUSTED TOOL')))return {action:'tool',toolId:'tool-write-file',parameters:wrong?{name:'result.json',content:JSON.stringify({...ledger,rows:ledger.rows.slice(2)}),expectedVersion:0}:{reconcileContract:'result.json',expectedVersion:0}};
    return {action:'final',reply:'Reconciled'};
   });
   try{
@@ -392,7 +432,7 @@ test('owner-pinned reconciliation contract gates completion and supports determi
    const receipt=await f.engine.workspace.execute(j,'fixture','tool-files',{reconcileContract:'result.json'},'ledger-'+wrong,new AbortController().signal);ledger=receipt.output;
    // A later source version cannot silently replace the owner's frozen source.
    f.engine.workspace.write('project','source.json',Buffer.from(JSON.stringify({records:[]})),1,'owner');
-   const done=await f.finish(j.id);assert.equal(done.status,wrong?'blocked':'completed',done.result);assert.equal(done.verification?.[0].passed,!wrong);
+   const done=await f.finish(j.id);assert.equal(done.status,wrong?'failed':'completed',done.result);assert.equal(done.verification?.[0].passed,!wrong);
    assert.equal(ledger.totals[0].amount,50);
   }finally{f.cleanup();}
  }
@@ -502,3 +542,38 @@ test('large accounting results fail before the model observation can truncate a 
 test('connector tool names cannot ambiguously declare the same operation read and write',()=>{
  const f=setup();try{assert.throws(()=>f.engine.workspace.saveConnector({name:'ambiguous',endpoint:'https://example.com/tools',tools:[{name:'save',effect:'read'},{name:'save',effect:'write'}]}),/unique/);assert.equal(f.store.all('swarm-connectors').length,0);}finally{f.cleanup();}
 });
+
+test('imported adapter uses root sandbox grants and allowance',{skip:process.env.VAC_TEST_SANDBOX!=='1'},async()=>{
+ const f=setup(()=>({action:'tool',toolId:'tool-code',parameters:{importedTool:'meeting-cost-v1',arguments:{attendees:2,minutes:30,avg_rate:60,include_refocus:false,has_decision:true,has_agenda:true,has_owner:true}}}));
+ try{
+  const j=f.create({allowedToolIds:['tool-code'],limits:{maxSandboxRuns:1}});
+  const r=await f.finish(j.id);
+  assert.notEqual(r.status,'completed');
+  assert.equal(f.store.get<any>('swarm-budgets',j.id).sandboxRuns,1);
+  const files=f.engine.workspace.files('project');assert.equal(files.length,1);assert.equal(files[0].version,1);
+  assert.equal(JSON.parse(Buffer.from(f.engine.workspace.file('project','meeting-cost.json').base64,'base64').toString()).total_cost,60);
+ }finally{f.cleanup();}
+});
+
+test('read-only specialist context separates its assignment from coordinator duties',async()=>{
+ let inspected=false;
+ const f=setup(m=>{
+  const state=JSON.parse(m.find((x:any)=>x.content.startsWith('RUN STATE')).content.split('RUN STATE (server supplied): ')[1]);
+  if(state.depth===1){inspected=true;assert.equal(state.ownerObjective,undefined);assert.equal(state.requiredDepth,0);assert.match(state.completionScope,/own assigned task/);
+   if(!state.completedTools.includes('tool-files'))return{action:'tool',toolId:'tool-files',parameters:{name:'input.txt'}};
+  }
+  return{action:'final',reply:'Assigned work completed'};
+ });
+ try{
+  f.engine.workspace.write('project','input.txt',Buffer.from('original source'),0,'owner');
+  const run=f.create({objective:'The coordinator must wait for both readers and produce the final artifact.',allowedToolIds:['tool-files'],requiredDepth:1,plan:[{key:'reader',name:'Reader',role:'Read source',instructions:'Read input.txt then return findings.',objective:'Read only input.txt.',toolIds:['tool-files'],requiredToolIds:['tool-files'],toolSequence:['tool-files'],acceptanceCriteria:['Read original source.']}]});
+  const result=await f.finish(run.id);assert.equal(result.status,'completed',result.result);assert.equal(inspected,true);
+  const root=result.nodes.find(n=>!n.parentId)!;const child=result.nodes.find(n=>n.parentId)!;
+  const evidence=JSON.parse(f.store.get<any>('swarm-nodes',root.id).messages.find((m:any)=>m.content.startsWith('UNTRUSTED CHILD RESULT: '))!.content.slice('UNTRUSTED CHILD RESULT: '.length));
+  const file=evidence.receipts.find((r:any)=>r.toolId==='tool-files').output;
+  assert.equal(file.text,undefined);assert.equal(file.textOmittedFromParent,true);assert.equal(file.name,'input.txt');
+  assert.equal(child.receipts.find(r=>r.toolId==='tool-files')!.output.text,'original source');
+ }finally{f.cleanup();}
+});
+
+ test('ordinary file writer does not advertise unavailable accounting materialization',()=>{const f=setup();try{const j=f.create({contracts:[{name:'result.json',kind:'exists'}]});const definition:any=f.engine.workspace.writeDefinition(j);assert.ok(definition.schema.properties.content);assert.equal(definition.schema.properties.reconcileContract,undefined);assert.ok(definition.schema.required.includes('expectedVersion'));}finally{f.cleanup();}});

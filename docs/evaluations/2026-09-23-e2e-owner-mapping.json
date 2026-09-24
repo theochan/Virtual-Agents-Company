@@ -1,0 +1,23 @@
+{
+  "scope": "Neutral display labels assigned after execution; no claim of complete blinding",
+  "outputs": [
+    {
+      "label": "A",
+      "arm": "planned",
+      "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "sourceRun": "2a039e66-e815-440d-948b-7164f25d2b41"
+    },
+    {
+      "label": "B",
+      "arm": "single",
+      "sha256": "cd7f470e84d8d0ca4a608eb3f547c6cb292af458f1729ef1737e58b384664670",
+      "sourceRun": "c89d6f59-9248-4fbb-9bdc-f948ce65c800"
+    },
+    {
+      "label": "C",
+      "arm": "autonomous",
+      "sha256": "b5366635f6784135f8b64e6cb04c94ad2dcb534107eea75177f35aa49e6093ee",
+      "sourceRun": "98cc4d63-2057-4d9d-ab22-ca5afa1e4a31"
+    }
+  ]
+}

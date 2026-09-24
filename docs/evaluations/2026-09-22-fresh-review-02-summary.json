@@ -1,0 +1,175 @@
+{
+  "status": "FAILED_ACCEPTANCE",
+  "scope": "Six Codex-authored, owner-adjudicated cases; first candidate exposure in this campaign. Not independently authored holdout or broad qualification. New harness frozen after authoring, candidate source verified unchanged since preparation. No retries or tuning.",
+  "model": {
+    "name": "qwen3.5:9b",
+    "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+  },
+  "manifestPath": "data/evaluations/2026-09-22-fresh-review-02.json",
+  "manifestSha256": "04db55ca45442a7d9688331834190c28ac312da43d383d87751d55f85bb7cfed",
+  "rawResultsPath": "data/evaluations/2026-09-22-fresh-review-02-results.json",
+  "rawResultsSha256": "413209b4340a2d23ecf93cde83a51575b4a2e5d7298f95c016ceee474a4ce9b9",
+  "humanJudgmentsPath": "docs/evaluations/2026-09-22-fresh-review-human-adjudication.json",
+  "startedAt": "2026-09-22T10:32:07.866Z",
+  "completedAt": "2026-09-22T10:35:23.985Z",
+  "durationSeconds": 196.119,
+  "calls": 9,
+  "maximumCalls": 12,
+  "summary": {
+    "total": 6,
+    "falseAcceptances": 0,
+    "trueAcceptances": 3,
+    "errors": 1,
+    "passed": false
+  },
+  "reportedInputTokens": 6944,
+  "reportedOutputTokens": 2560,
+  "reviewMinutes": null,
+  "monetaryCost": null,
+  "retries": 0,
+  "trials": [
+    {
+      "id": "F01",
+      "humanLabel": "supported",
+      "outcome": "accepted",
+      "correct": true,
+      "error": null,
+      "durationMs": 57997,
+      "packetHash": "667e45751c2d46e40f8ce4d638b3245b0df18737f5bd577d3324546d509be1cc",
+      "stages": [
+        {
+          "stage": "assessment",
+          "status": "validated",
+          "verdicts": [
+            "pass"
+          ]
+        },
+        {
+          "stage": "confirmation",
+          "status": "validated",
+          "verdicts": [
+            "pass"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "humanLabel": "unsupported",
+      "outcome": "rejected",
+      "correct": true,
+      "error": null,
+      "durationMs": 20781,
+      "packetHash": "e9aef72171be39664344b20d70884b5a01c8d18db5d0f4b8b5ead359f9b5b413",
+      "stages": [
+        {
+          "stage": "assessment",
+          "status": "validated",
+          "verdicts": [
+            "fail"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "humanLabel": "supported",
+      "outcome": "accepted",
+      "correct": true,
+      "error": null,
+      "durationMs": 42749,
+      "packetHash": "19d0abc7b379976b68280204f01e6616cade9f485ad8ddaabef3a7b2872929fb",
+      "stages": [
+        {
+          "stage": "assessment",
+          "status": "validated",
+          "verdicts": [
+            "pass"
+          ]
+        },
+        {
+          "stage": "confirmation",
+          "status": "validated",
+          "verdicts": [
+            "pass"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "humanLabel": "unsupported",
+      "outcome": "protocol_error",
+      "correct": false,
+      "error": "No structured review",
+      "durationMs": 12587,
+      "packetHash": "199f45cbab6bb0619db2405cba0b00e7a60a518da72ab620a9a60cded79f045f",
+      "stages": [
+        {
+          "stage": "assessment",
+          "status": "received",
+          "verdicts": []
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "humanLabel": "unsupported",
+      "outcome": "rejected",
+      "correct": true,
+      "error": null,
+      "durationMs": 19433,
+      "packetHash": "409f6616792b2eb89fe93846181c46a9dd20fcb2692bfe4938957849b3a27d52",
+      "stages": [
+        {
+          "stage": "assessment",
+          "status": "validated",
+          "verdicts": [
+            "fail"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "humanLabel": "supported",
+      "outcome": "accepted",
+      "correct": true,
+      "error": null,
+      "durationMs": 42469,
+      "packetHash": "f769fbe388a64541fe9dc4deade31f14960596e6b098406185191c41930deb9b",
+      "stages": [
+        {
+          "stage": "assessment",
+          "status": "validated",
+          "verdicts": [
+            "pass"
+          ]
+        },
+        {
+          "stage": "confirmation",
+          "status": "validated",
+          "verdicts": [
+            "pass"
+          ]
+        }
+      ]
+    }
+  ],
+  "failureAnalysis": {
+    "case": "F04",
+    "observedDecision": {
+      "action": "blocked",
+      "reason": "No valid evidence references found in output. The output file 'report.txt' contains only one chunk (e_6bcd1eb38d383cbe8d9908d4) which makes a claim without citing the input source 'source.txt'. Per instructions, every check MUST cite evidence references from the supplied catalog by pairing an ORIGINAL INPUT reference with an OUTPUT reference. Since no such pairing exists in the provided output text, I cannot verify if the draft's conclusion aligns with the source's explicit change-control requirements. The instruction to 'Return inconclusive if evidence is insufficient' applies here as the required citation format is missing from the output content itself."
+    },
+    "interpretation": "The model treated the reviewer evidence-reference requirement as a requirement for embedded citations in the report text, then emitted blocked instead of submit_review. This is not a valid semantic rejection."
+  },
+  "checks": {
+    "sourceHashesUnchanged": true,
+    "artifactHashesUnchanged": true,
+    "ledgerDeltaMatchesCalls": true,
+    "semanticReviewTests": "4 passed",
+    "typescript": "Passed with archived data excluded; normal npm run lint fails on four pre-existing relative imports in data/evaluations/2026-09-22-reviewer-models-v1-driver.ts"
+  },
+  "nextStep": "Preserve this run; clarify citation responsibility in a separate candidate, verify protocol behavior on exposed-case regressions, then use another fresh owner-adjudicated batch. Do not reclassify this batch as unseen after tuning."
+}

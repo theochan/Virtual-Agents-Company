@@ -1,0 +1,51 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "Acceptance counts and source hashes only; no runtime payloads, credentials or private identifiers."
+  },
+  "date": "2026-09-24",
+  "workItem": "VAC-45",
+  "candidateStatus": "closed",
+  "plane": {
+    "workItem": "VAC-45",
+    "acceptanceCommentVerified": true,
+    "state": "Done",
+    "closedAtLocalDate": "2026-09-24"
+  },
+  "acceptance": {
+    "distinctCapturedWorkflows": 2,
+    "changedInputReplaysPerWorkflow": 3,
+    "successfulChangedInputReplays": 6,
+    "missingInputNegativeCases": 2,
+    "secretRedactionAndReplacement": "passed",
+    "incidentalOutputExcludedFromTrace": "passed",
+    "authorityParameterization": "rejected",
+    "ownerDraftReview": "passed-in-built-browser",
+    "versionDiff": "passed",
+    "immutableRollback": "passed",
+    "existingApprovalBoundaryRegression": "passed"
+  },
+  "validation": {
+    "typescript": "passed",
+    "sourceTests": { "passed": 215, "failed": 0, "skipped": 6 },
+    "productionBundleTests": { "passed": 215, "failed": 0, "skipped": 6 },
+    "browserTests": { "passed": 20, "failed": 0 },
+    "build": "passed-with-existing-chunk-size-advisory",
+    "publicationInventory": "passed",
+    "whitespace": "passed"
+  },
+  "scope": {
+    "captureSource": "completed VAC swarm runs",
+    "humanBrowserDemonstrations": "not implemented; remains dependent on VAC-26",
+    "permissions": "tools, connectors, limits, browser origins and approval boundaries remain frozen",
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "sourceHashes": {
+    "src/server/routines.ts": "e5ff4929e140f4145eb2c6d2fc786796b4672fc709661cb7a76ebc6d15bf44cc",
+    "src/components/SwarmWorkspace.tsx": "e6e58f15c0c6bc5154513a5e301f5cec6bc304c3a7d28ef2634f4ae743b2b188",
+    "tests/swarm-workspace.test.ts": "035b5c326e2ece1166897f0493826b2cf0a87639a98c197e8c5f8dbe393be87b",
+    "tests/browser/workspace.spec.ts": "4ea2d88d43fee04c1a1c5391ebe07f304b738ca6c5c51603f95f5749908c6554"
+  }
+}

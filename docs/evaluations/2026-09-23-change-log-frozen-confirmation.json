@@ -1,0 +1,31 @@
+{
+  "scope": "Development and prospective fresh-value confirmation fixed before development outcomes",
+  "sourceHash": "fb0e6a0361abbd37938cdf2633bcf232b9df59dc394a9da43f5d8cbd7b30041e",
+  "model": {
+    "name": "qwen3.5:9b",
+    "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+  },
+  "manifests": [
+    {
+      "path": "data/evaluations/2026-09-23-change-log-comparison-v4.json",
+      "sha256": "76fac76bd8e530100374c539dc29d86d09f4e6840972dcdffa8e20b5863e4991",
+      "createdAt": "2026-09-23T11:13:11.082Z",
+      "declarationHash": "ba602a1fc17c8376238219788af3f6f8216c04888c932ef2b3347340d8362f26"
+    },
+    {
+      "path": "data/evaluations/2026-09-23-change-log-confirmation-v1.json",
+      "sha256": "70da2adff23ef87f1a2c0b2719d75e2aa0f4361f65df38827752b27ff57f10f3",
+      "createdAt": "2026-09-23T11:13:29.963Z",
+      "declarationHash": "2e3679b9fb9b8b847c48e15e0014d1912ce9ea09c17a53e37b0471836dc576f3"
+    }
+  ],
+  "sameLimits": true,
+  "sameAdvantageRule": true,
+  "externalOracle": "Source regex independently verifies every expected ID, date, capacity and exact quote before inference. Expected answers excluded from model prompts and contracts.",
+  "limitations": [
+    "Same template family; three correlated cases per arm",
+    "Automated checks are not human adjudication",
+    "Single-agent context-management limitations remain",
+    "Planned success does not establish autonomous success"
+  ]
+}

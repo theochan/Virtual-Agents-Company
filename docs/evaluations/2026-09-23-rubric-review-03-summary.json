@@ -1,0 +1,116 @@
+{
+  "status": "BOUNDED_RUBRIC_BATCH_PASSED",
+  "scope": "Six Codex-authored rubric challenges, human labels required. Candidate and driver hash-pinned before case authoring. Correlated paired cases measure rubric distinction, not independent sample size or general qualification. One fixed campaign, no retries or tuning.",
+  "model": {
+    "name": "qwen3.5:9b",
+    "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7"
+  },
+  "humanAdjudicationPath": "docs/evaluations/2026-09-23-rubric-review-human-adjudication.json",
+  "manifestPath": "data/evaluations/2026-09-23-rubric-review-03.json",
+  "manifestSha256": "275d1f926a0f60bbad2eb4cbf15443d8ad1119e146b63d00a6a2554246af573c",
+  "rawResultsPath": "data/evaluations/2026-09-23-rubric-review-03-results.json",
+  "rawResultsSha256": "7f973cf012a4950e31fd94673d55cd388ceb2746e35b6e3f8bf8aa6fb29f1d0f",
+  "startedAt": "2026-09-23T09:48:19.258Z",
+  "completedAt": "2026-09-23T09:51:13.994Z",
+  "durationSeconds": 174.736,
+  "calls": 9,
+  "maximumCalls": 12,
+  "retries": 0,
+  "summary": {
+    "total": 6,
+    "falseAcceptances": 0,
+    "trueAcceptances": 3,
+    "errors": 0,
+    "passed": true
+  },
+  "reportedInputTokens": 8131,
+  "reportedOutputTokens": 2239,
+  "reviewMinutes": null,
+  "monetaryCost": null,
+  "trials": [
+    {
+      "id": "G01",
+      "humanLabel": "supported",
+      "accepted": true,
+      "correct": true,
+      "durationMs": 44849,
+      "packetHash": "ac09a762c7a2d3cab044cea3584b86e637084ca728869b24f2a32328a4b72ea7",
+      "stageVerdicts": [
+        "pass",
+        "pass"
+      ]
+    },
+    {
+      "id": "G02",
+      "humanLabel": "unsupported",
+      "accepted": false,
+      "correct": true,
+      "durationMs": 18581,
+      "packetHash": "13788195077d71961ba0d213d7b76c64d631b792f8c483f25069fbb9c33db413",
+      "stageVerdicts": [
+        "fail"
+      ]
+    },
+    {
+      "id": "G03",
+      "humanLabel": "supported",
+      "accepted": true,
+      "correct": true,
+      "durationMs": 34599,
+      "packetHash": "0581aa629590607d9d3f4d9d5a52608447876103dc9db9787b5e9f475e67bf34",
+      "stageVerdicts": [
+        "pass",
+        "pass"
+      ]
+    },
+    {
+      "id": "G04",
+      "humanLabel": "unsupported",
+      "accepted": false,
+      "correct": true,
+      "durationMs": 21487,
+      "packetHash": "d75f1b88d26fd548e433172e62da8201a03a9f13f5e9db33d401c8bef9425ebd",
+      "stageVerdicts": [
+        "fail"
+      ]
+    },
+    {
+      "id": "G05",
+      "humanLabel": "supported",
+      "accepted": true,
+      "correct": true,
+      "durationMs": 37278,
+      "packetHash": "5eb96d22744070f8b036f931ffe4e6ab44a01302b4056a25abd35ad846c02195",
+      "stageVerdicts": [
+        "pass",
+        "pass"
+      ]
+    },
+    {
+      "id": "G06",
+      "humanLabel": "unsupported",
+      "accepted": false,
+      "correct": true,
+      "durationMs": 17813,
+      "packetHash": "3e17b1950a468d3093371cbe8acc0cc4a3cf5bf5eab35f2d94ec9a20aa373f18",
+      "stageVerdicts": [
+        "fail"
+      ]
+    }
+  ],
+  "verification": {
+    "preAuthoringSourceAndDriverUnchanged": true,
+    "packetAndKeyUnchanged": true,
+    "humanLabelsBoundToPacket": true,
+    "executionManifestUnchanged": true,
+    "allEvidenceGrounded": true,
+    "sharedLedgerDelta": 9
+  },
+  "limitations": [
+    "Six correlated cases, three source scenarios, one fixed attempt each.",
+    "Codex-authored and owner-adjudicated; not independently human-authored.",
+    "Explicit rubrics differ from the previously failed F01 criterion; this does not reverse that failure.",
+    "General reviewer qualification and end-to-end workflow usefulness remain open."
+  ],
+  "deployment": "NOT_DEPLOYED"
+}

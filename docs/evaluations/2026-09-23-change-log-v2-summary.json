@@ -1,0 +1,155 @@
+{
+  "campaign": "2026-09-23-change-log-comparison-v2",
+  "scope": "Failed development campaign retained before context repair; no advantage demonstrated",
+  "calls": 51,
+  "summary": [
+    {
+      "arm": "single",
+      "passed": 0,
+      "total": 3,
+      "medianMs": 64494,
+      "medianCalls": 4,
+      "medianTokens": 9932,
+      "advantage": "BASELINE"
+    },
+    {
+      "arm": "planned",
+      "passed": 1,
+      "total": 3,
+      "medianMs": 102594,
+      "medianCalls": 6,
+      "medianTokens": 14532,
+      "advantage": "NOT_DEMONSTRATED"
+    },
+    {
+      "arm": "autonomous",
+      "passed": 0,
+      "total": 3,
+      "medianMs": 125619,
+      "medianCalls": 7,
+      "medianTokens": 15696,
+      "advantage": "NOT_DEMONSTRATED"
+    }
+  ],
+  "manifestSha256": "f31a93e37aac56d42b1b734e3332889c66cfc9056c71373dba51941b2a599702",
+  "resultsSha256": "0465177a7d66fce895eab7e1a438ed09a79f9aacb8b8603c291944db451f1112",
+  "trials": [
+    {
+      "task": "release-1",
+      "arm": "single",
+      "passed": false,
+      "checks": {
+        "completed": false,
+        "currentArtifact": false,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "File version changed; read it before overwriting"
+    },
+    {
+      "task": "release-1",
+      "arm": "planned",
+      "passed": false,
+      "checks": {
+        "completed": true,
+        "currentArtifact": true,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "result.json has been created with the latest APPROVED entries for both projects:\n\n- Harbor (source: harbor.txt): Entry H1-21, Launch 2027-02-10, Capacity 122 seats.\n- Summit (source: summit.txt): Entry S1-21, Launch 2027-02-14, Capacity 129 seats.\n\nThe file contains the exact quotes ending at 'seats.' as required."
+    },
+    {
+      "task": "release-1",
+      "arm": "autonomous",
+      "passed": false,
+      "checks": {
+        "completed": true,
+        "currentArtifact": true,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "result.json has been created with the following decisions:\n\n1. Project: Harbor\n   - Latest Approved Entry: H1-03\n   - Launch Date: 2027-02-10\n   - Capacity: 86 seats\n   - Source File: harbor.txt\n   - Quote: \"Entry H1-03: APPROVED. Launch 2027-02-10; capacity 86 seats. Planning note: operations considered staffing, customer notices, venue access, training slots and support coverage for this revision. These notes describe the proposal and do not change the recorded approval status.\"\n\n2. Project: Summit\n   - Latest Approved Entry: S1-03\n   - Launch Date: 2027-02-14\n   - Capacity: 93 seats\n   - Source File: summit.txt\n   - Quote: \"Entry S1-03: APPROVED. Launch 2027-02-14; capacity 93 seats. Planning note: operations considered staffing, customer notices, venue access, training slots and support coverage for this revision. These notes describe the proposal and do not change the recorded approval status.\"\n\nNote: Entries marked PROPOSED, REJECTED, or WITHDRAWN were ignored as per instructions. The quote ends immediately after 'seats.' excluding Planning note text."
+    },
+    {
+      "task": "release-2",
+      "arm": "planned",
+      "passed": false,
+      "checks": {
+        "completed": true,
+        "currentArtifact": true,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "Both readers have completed their tasks. Reader 0 extracted the latest APPROVED entry for 'Harbor' (Entry H2-21, Launch 2027-03-11, capacity 133). Reader 1 extracted the latest APPROVED entry for 'Summit' (Entry S2-21, Launch 2027-03-15, capacity 140). The result.json file has been written with these decisions. Task complete."
+    },
+    {
+      "task": "release-2",
+      "arm": "autonomous",
+      "passed": false,
+      "checks": {
+        "completed": false,
+        "currentArtifact": false,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "File version changed; read it before overwriting"
+    },
+    {
+      "task": "release-2",
+      "arm": "single",
+      "passed": false,
+      "checks": {
+        "completed": false,
+        "currentArtifact": false,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "File version changed; read it before overwriting"
+    },
+    {
+      "task": "release-3",
+      "arm": "autonomous",
+      "passed": false,
+      "checks": {
+        "completed": true,
+        "currentArtifact": true,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "I have synthesized the results from both child readers (HarborReader and SummitReader) into result.json.\n\n**Harbor Project:**\n- Source: harbor.txt\n- Latest APPROVED Entry: H3-03\n- Launch Date: 2027-04-12\n- Capacity: 108 seats\n- Quote: \"Entry H3-03: APPROVED. Launch 2027-04-12; capacity 108 seats. Planning note: operations considered staffing, customer notices, venue access, training slots and support coverage for this revision. These notes describe the proposal and do not change the recorded approval status.\"\n\n**Summit Project:**\n- Source: summit.txt\n- Latest APPROVED Entry: S3-03 (Entries S3-04 through S3-07 are REJECTED, PROPOSED, or WITHDRAWN)\n- Launch Date: 2027-04-16\n- Capacity: 115 seats\n- Quote: \"Entry S3-03: APPROVED. Launch 2027-04-16; capacity 115 seats. Planning note: operations considered staffing, customer notices, venue access, training slots and support coverage for this revision. These notes describe the proposal and do not change the recorded approval status.\"\n\nThe file result.json has been written with these exact decisions."
+    },
+    {
+      "task": "release-3",
+      "arm": "single",
+      "passed": false,
+      "checks": {
+        "completed": false,
+        "currentArtifact": false,
+        "sourceTruth": false,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "File version changed; read it before overwriting"
+    },
+    {
+      "task": "release-3",
+      "arm": "planned",
+      "passed": true,
+      "checks": {
+        "completed": true,
+        "currentArtifact": true,
+        "sourceTruth": true,
+        "allSourceReads": true,
+        "topology": true
+      },
+      "result": "I have combined the decisions from Reader 0 (Harbor) and Reader 1 (Summit). \n\nFor Harbor, the latest APPROVED entry is H3-03 with launch 2027-04-12 and capacity 108 seats.\nFor Summit, the latest APPROVED entry is S3-03 with launch 2027-04-16 and capacity 115 seats. (Note: Subsequent entries S3-04 through S3-08 are REJECTED, PROPOSED, or WITHDRAWN and do not replace the approved status of S3-03).\n\nThe result.json file has been written with these exact facts extracted from the source files."
+    }
+  ]
+}
