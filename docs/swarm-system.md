@@ -6,10 +6,11 @@ Source enhancement dated 2026-09-21. Plane VAC-1 through VAC-20 track the staged
 
 1. Run Ollama with an installed model. On the 24 GB M4 Mac mini, the selected model is `qwen3.5:9b` (Q4_K_M, approximately 6.6 GB of model files). Model weights alone are not peak RAM requirements. Agent fan-out and Chromium sessions add memory and latency.
 2. Configure an existing coordinator in Team with Ollama and access level 3 or 4. Assign it to the selected project if that project restricts membership.
-3. Open **AI Swarm**. Select a project and coordinator; write a deliverable with explicit constraints.
-4. Choose **Existing agents only**, **Temporary specialists**, or **Existing agents + temporary specialists**. Existing agents must be assigned to the project, use Ollama and possess the requested tools. They do not need to report to the coordinator; that is a separate legacy delegation restriction.
-5. Select the run's pre-approved tools and resource limits. Starting the run authorizes those grants for this root only. A coordinator's personal tools and its run-scoped delegable grant are separate.
-6. Inspect the actual execution tree, specialist instructions, tool/model receipts, reported versus reserved tokens, and final deliverable. Stop cancels the entire root and all live descendants.
+3. Open **AI Swarm**, select a project, describe the outcome and optionally attach source files. No team topology, tool checklist, planner, raw JSON or resource-limit input appears in the launch flow.
+4. Start work. VAC selects a project-eligible Ollama coordinator, uses the bounded workflow planner, chooses a hybrid team and gives the planner the policy-eligible local capability registry. The coordinator and planner choose the working tool subset for the task; the user does not predict it.
+5. Follow the plain-language team progress and deliverable. Technical receipts and budgets remain available on demand, while consequential actions interrupt the flow only for exact just-in-time approval. Stop cancels the entire root and all live descendants.
+
+This is task-first orchestration, not weaker authority or an unrestricted host agent. Coordinator eligibility, capability ceilings and resource limits remain enforced by the API. Search remains subject to provider allowance and may consume credits. Browser origins, connectors and interactive external actions are not silently admitted; interactive actions still pause for exact owner approval.
 
 Manual agent creation, ordinary chat, saved profiles, project records, artifacts, memory and exact-operation write approvals continue to work. The old `VAC_ENABLE_DELEGATION` switch controls only legacy direct-subordinate delegation; it is not required for the AI Swarm screen.
 

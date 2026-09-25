@@ -1,0 +1,19 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "No private Plane identifiers are included."
+  },
+  "date": "2026-09-25",
+  "workItem": "VAC-48",
+  "title": "Revamp AI Swarm as an outcome-first autonomous composer",
+  "descriptionReadBackVerified": true,
+  "acceptanceCommentVerified": true,
+  "state": "Done",
+  "priority": "High",
+  "scope": "Outcome-first AI Swarm launch with automatic team, planning path and working tool selection under VAC-20",
+  "duplicateOrOverlapAudit": "passed against the 47 pre-existing VAC work items",
+  "parent": "VAC-20",
+  "deployment": false,
+  "commit": false,
+  "push": false
+}

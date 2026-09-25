@@ -116,20 +116,29 @@ test('local model dropdown lists both models regardless of current selection and
  await page.getByRole('button',{name:'Settings',exact:true}).click();await expect(page.getByText('Default Local Model',{exact:true})).toHaveCount(0);const row=page.getByTestId(`model-assignment-${agent.id}`);await expect(row.locator('summary')).toHaveText('Model: qwen2.5:7b');await row.locator('summary').click();await expect(row.getByRole('combobox',{name:'Model ID',exact:true})).toHaveValue('qwen2.5:7b');await row.getByRole('combobox',{name:'Model ID',exact:true}).selectOption(gemma);await row.getByRole('button',{name:'Save model',exact:true}).click();await expect.poll(async()=>{const agents=await(await request.get('/api/agents',{headers})).json();return agents.find((a:any)=>a.id===agent.id).llmConfig;}).toMatchObject({model:gemma,provider:'ollama'});await page.getByText('ModelChooser',{exact:true}).first().click();await expect(page.locator('summary').filter({hasText:'Model:'})).toHaveText(`Model: ${gemma}`);
 });
 
+test('AI Swarm outcome composer hides orchestration inputs and delegates planning and tool choice',async({page,request},testInfo)=>{
+ const headers={Authorization:`Bearer ${token}`};
+ const project=await(await request.post('/api/projects',{headers,data:{name:'Automatic swarm project',members:[]}})).json();
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);
+ for(const label of ['Swarm coordinator','Team composition','Planning engine','Browser origins','Workflow plan'])await expect(page.getByLabel(label)).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'Open Expert controls',exact:true})).toHaveCount(0);const automatic=page.getByRole('region',{name:'Automatic orchestration'});await expect(automatic).toContainText('VAC chooses the team, tools, and approach automatically');
+ await page.setViewportSize({width:540,height:900});const bounds=await automatic.evaluate(el=>{const form=el.closest('form')!.getBoundingClientRect(),card=el.getBoundingClientRect();return{formLeft:form.left,formRight:form.right,left:card.left,right:card.right};});expect(bounds.left).toBeGreaterThanOrEqual(bounds.formLeft-1);expect(bounds.right).toBeLessThanOrEqual(bounds.formRight+1);
+ await page.setViewportSize({width:1440,height:1024});await page.getByLabel('Swarm objective').fill('Calculate 19 plus 23 with two independent specialists.');await page.screenshot({path:testInfo.outputPath('outcome-composer.png'),fullPage:true});await page.locator('form').screenshot({path:testInfo.outputPath('outcome-composer-focused.png')});await page.getByRole('button',{name:'Start work',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible({timeout:20000});
+ const runs=await(await request.get('/api/swarms',{headers})).json();const run=runs.find((r:any)=>r.projectId===project.id);expect(run.mode).toBe('hybrid');expect(run.harness).toBe('deepagents');expect(run.allowedToolIds).toEqual(['tool-read-project','tool-calculator','tool-web-search','tool-browser','tool-files','tool-write-file','tool-code','tool-memory','tool-peer','tool-evidence']);expect(run.requiredToolIds).toEqual([]);expect(run.connectorIds).toEqual([]);expect(run.browserPolicy).toEqual({allowedOrigins:[],allowActions:false,requireDiscoveredUrls:true,documentOnly:true});expect(run.harnessResult.harness).toBe('deepagents@1.14.0');
+});
+
 test('AI Swarm UI submits dynamic work, renders actual specialists and survives reload',async({page,request},testInfo)=>{
  const headers={Authorization:`Bearer ${token}`};
  const manager=await(await request.post('/api/agents',{headers,data:{displayName:'SwarmCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();
- const project=await(await request.post('/api/projects',{headers,data:{name:'Swarm browser project',members:[]}})).json();
- await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();
- await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);
- await page.getByLabel('Team composition').selectOption('dynamic');
+ const project=await(await request.post('/api/projects',{headers,data:{name:'Swarm browser project',members:[{projectId:'pending',agentId:manager.id,role:'lead',permissions:'lead'}]}})).json();
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);
  await page.getByLabel('Swarm objective').fill('Calculate 19 plus 23 with two independent specialists.');
- await page.getByRole('button',{name:'Start swarm',exact:true}).click();
+ await page.getByRole('button',{name:'Start work',exact:true}).click();
  await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible({timeout:20000});
- await expect(page.getByText('Temporary specialist',{exact:true})).toHaveCount(2);
- await expect(page.getByText('Execution tree',{exact:true})).toBeVisible();
+ await expect(page.getByText('Specialist',{exact:true})).toHaveCount(1);
+ await expect(page.getByText('Team progress',{exact:true})).toBeVisible();
  const swarms=await(await request.get('/api/swarms',{headers})).json();const r=swarms.find((r:any)=>r.coordinatorId===manager.id);
- expect(r.status).toBe('completed');expect(r.nodes).toHaveLength(3);expect(r.budget.modelCalls).toBe(6);expect(r.nodes[1].receipts.some((x:any)=>x.toolId==='tool-calculator')).toBe(true);
+ expect(r.status).toBe('completed');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(4);expect(r.nodes[1].receipts.some((x:any)=>x.toolId==='tool-calculator')).toBe(true);
  const permanent=await(await request.get('/api/agents',{headers})).json();expect(permanent.some((a:any)=>a.id===r.nodes[1].id)).toBe(false);
  await page.setViewportSize({width:1600,height:1100});await page.getByRole('main',{name:'AI Swarm workspace'}).evaluate(el=>el.scrollTop=0);
  await page.screenshot({path:testInfo.outputPath('swarm-completed.png'),fullPage:true});
@@ -141,37 +150,32 @@ test('recursive swarm UI saves browser permissions and renders depth-two evidenc
  const headers={Authorization:`Bearer ${token}`};
  const manager=await(await request.post('/api/agents',{headers,data:{displayName:'NestedCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();
  const project=await(await request.post('/api/projects',{headers,data:{name:'Nested UI project',members:[]}})).json();
- await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();
- await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);
- await page.getByLabel('Swarm objective').fill('RECURSIVE_UI verify nested delegation');
- await page.getByLabel('Browser automation',{exact:true}).check();await page.getByLabel('Browser origins').fill('https://example.com');
- await page.getByRole('button',{name:'Show resource limits'}).click();await page.getByLabel('maxDepth',{exact:true}).fill('2');
- await page.getByRole('button',{name:'Start swarm',exact:true}).click();
+ const config=await(await request.get('/api/swarms/config',{headers})).json();
+ await request.post('/api/swarms',{headers:{...headers,'Idempotency-Key':crypto.randomUUID()},data:{harness:'native',coordinatorId:manager.id,projectId:project.id,objective:'RECURSIVE_UI verify nested delegation',mode:'dynamic',allowedToolIds:['tool-browser','tool-calculator'],requiredToolIds:[],requiredDepth:0,toolSequence:[],plan:[],contracts:[],connectorIds:[],browserPolicy:{allowedOrigins:['https://example.com'],allowActions:false},limits:{...config.defaults,maxDepth:2}}});
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);
  await expect(page.getByText('Nested UI evidence: 42.',{exact:true})).toBeVisible({timeout:20000});
  const runs=await(await request.get('/api/swarms',{headers})).json();const run=runs.find((r:any)=>r.coordinatorId===manager.id);
  expect(run.status).toBe('completed');expect(run.nodes.map((n:any)=>n.depth)).toEqual([0,1,2]);expect(run.browserPolicy).toEqual({allowedOrigins:['https://example.com'],allowActions:false});
- await page.getByRole('button').filter({hasText:'NestedLeaf'}).click();await expect(page.getByText(/Depth 2/)).toBeVisible();
+ await page.getByRole('button').filter({hasText:'NestedLeaf'}).click();await expect(page.getByText('Technical evidence',{exact:true})).toBeVisible();
  await page.screenshot({path:testInfo.outputPath('nested-swarm.png'),fullPage:true});
 });
 
-test('persistent workspace uploads and downloads files and saves capped routine templates',async({page,request})=>{
+test('outcome composer attaches project files without exposing workspace administration',async({page,request})=>{
  const headers={Authorization:`Bearer ${token}`};const projects=await(await request.get('/api/projects',{headers})).json();const runs=await(await request.get('/api/swarms',{headers})).json();const project=projects.find((p:any)=>p.id===runs[0].projectId);
  await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);
- const bytes=Buffer.from('product,revenue\nA,600\n');await page.getByLabel('Upload project file').setInputFiles({name:'sales-ui.csv',mimeType:'text/csv',buffer:bytes});
- const link=page.getByRole('link',{name:'sales-ui.csv',exact:true});await expect(link).toBeVisible();const download=await request.get((await link.getAttribute('href'))!,{headers});expect(download.headers()['content-disposition']).toContain('attachment');expect(await download.body()).toEqual(bytes);
+ const bytes=Buffer.from('product,revenue\nA,600\n');await page.getByLabel('Attach files').setInputFiles({name:'sales-ui.csv',mimeType:'text/csv',buffer:bytes});await expect(page.getByRole('region',{name:'Attached files'})).toContainText('sales-ui.csv');
+ const download=await request.get(`/api/projects/${project.id}/files/download?name=sales-ui.csv&version=1`,{headers});expect(download.headers()['content-disposition']).toContain('attachment');expect(await download.body()).toEqual(bytes);
  const conflict=await request.post(`/api/projects/${project.id}/files`,{headers,data:{name:'sales-ui.csv',base64:bytes.toString('base64'),expectedVersion:0}});expect(conflict.status()).toBe(409);
- await page.getByText('Reviewed skills and scheduled routines',{exact:true}).click();await page.getByLabel('Skill name').fill('UI saved workflow');await page.getByRole('button',{name:'Capture completed run for review'}).click();await page.getByRole('button',{name:'Inspect and review'}).click();await page.getByLabel('Skill review reason').fill('Owner reviewed the retained grants and declared objective.');await page.getByRole('button',{name:'Approve immutable skill'}).click();await expect(page.getByLabel('Routine skill').locator('option')).toContainText(['Choose pinned skill version','UI saved workflow']);
- const skills=await(await request.get(`/api/projects/${project.id}/skills`,{headers})).json();expect(skills.at(-1).version).toBe(1);
- const create=await request.post('/api/swarm-routines',{headers,data:{skillId:skills.at(-1).id,parameters:{objective:skills.at(-1).template.objective},intervalMinutes:60,maxRuns:1,startsAt:new Date(Date.now()+3600000).toISOString()}});expect(create.status()).toBe(201);const routine=await create.json();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await page.getByText('Reviewed skills and scheduled routines',{exact:true}).click();await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.getByText(/UI saved workflow · paused/)).toBeVisible();expect((await(await request.get(`/api/projects/${project.id}/routines`,{headers})).json()).find((r:any)=>r.id===routine.id).status).toBe('paused');
+ await expect(page.getByText('Project workspace',{exact:true})).toHaveCount(0);await expect(page.getByText('Reviewed skills and scheduled routines',{exact:true})).toHaveCount(0);
 });
 
-test('repeatable plan UI compiles a worker before inference and retains its evidence contract',async({page,request})=>{
- const headers={Authorization:`Bearer ${token}`};const manager=await(await request.post('/api/agents',{headers,data:{displayName:'PlanCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();const project=await(await request.post('/api/projects',{headers,data:{name:'Planned UI project',members:[]}})).json();await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);await page.getByText('Repeatable workflow plan (optional)',{exact:true}).click();await page.getByLabel('Workflow plan').fill(JSON.stringify([{key:'compute',name:'Planned calculator',role:'Calculator',instructions:'Use calculator',objective:'Calculate 19 plus 23',toolIds:['tool-calculator'],requiredToolIds:['tool-calculator'],acceptanceCriteria:['42']} ]));await page.getByLabel('Swarm objective').fill('Verify the planned calculator result');await page.getByRole('button',{name:'Start swarm',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();const runs=await(await request.get('/api/swarms',{headers})).json();const r=runs.find((r:any)=>r.projectId===project.id);expect(r.status).toBe('completed');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(3);expect(r.events.some((e:any)=>e.type==='PLAN_COMPILED')).toBe(true);expect(r.nodes[1].requiredToolIds).toEqual(['tool-calculator']);
+test('repeatable plan API remains supported while the outcome UI stays free of plan controls',async({page,request})=>{
+ const headers={Authorization:`Bearer ${token}`};const manager=await(await request.post('/api/agents',{headers,data:{displayName:'PlanCoordinator',autonomyLevel:3,toolIds:[],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();const project=await(await request.post('/api/projects',{headers,data:{name:'Planned UI project',members:[]}})).json();const config=await(await request.get('/api/swarms/config',{headers})).json();await request.post('/api/swarms',{headers:{...headers,'Idempotency-Key':crypto.randomUUID()},data:{harness:'native',coordinatorId:manager.id,projectId:project.id,objective:'Verify the planned calculator result',mode:'dynamic',allowedToolIds:['tool-calculator'],requiredToolIds:[],requiredDepth:0,toolSequence:[],plan:[{key:'compute',name:'Planned calculator',role:'Calculator',instructions:'Use calculator',objective:'Calculate 19 plus 23',toolIds:['tool-calculator'],requiredToolIds:['tool-calculator'],toolSequence:[],dependsOn:[],acceptanceCriteria:['42']}],contracts:[],connectorIds:[],browserPolicy:{allowedOrigins:[],allowActions:false},limits:config.defaults}});await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await expect(page.getByLabel('Workflow plan')).toHaveCount(0);await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();const runs=await(await request.get('/api/swarms',{headers})).json();const r=runs.find((r:any)=>r.projectId===project.id);expect(r.status).toBe('completed');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(3);expect(r.events.some((e:any)=>e.type==='PLAN_COMPILED')).toBe(true);expect(r.nodes[1].requiredToolIds).toEqual(['tool-calculator']);
 });
 
 test('Deep Agents planning selection persists generated workflow and budget evidence',async({page,request})=>{
- const headers={Authorization:`Bearer ${token}`};const manager=await(await request.post('/api/agents',{headers,data:{displayName:'HarnessCoordinator',autonomyLevel:3,toolIds:['tool-calculator'],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();const project=await(await request.post('/api/projects',{headers,data:{name:'Harness UI project',members:[]}})).json();
- await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm coordinator').selectOption(manager.id);await page.getByLabel('Swarm project').selectOption(project.id);await page.getByLabel('Planning engine').selectOption('deepagents');await page.getByLabel('Swarm objective').fill('Delegate calculation of 19 plus 23 and report its evidence.');await page.getByRole('button',{name:'Start swarm',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();
+ const headers={Authorization:`Bearer ${token}`};const manager=await(await request.post('/api/agents',{headers,data:{displayName:'HarnessCoordinator',autonomyLevel:3,toolIds:['tool-calculator'],llmConfig:{provider:'ollama',model:'fixture',localEndpoint:'http://127.0.0.1:3328',temperature:0,maxTokens:1024}}})).json();const project=await(await request.post('/api/projects',{headers,data:{name:'Harness UI project',members:[{projectId:'pending',agentId:manager.id,role:'lead',permissions:'lead'}]}})).json();
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await expect(page.getByLabel('Planning engine')).toHaveCount(0);await page.getByLabel('Swarm objective').fill('Delegate calculation of 19 plus 23 and report its evidence.');await page.getByRole('button',{name:'Start work',exact:true}).click();await expect(page.getByText('Swarm verified: both specialists calculated 42.',{exact:true})).toBeVisible();
  const runs=await(await request.get('/api/swarms',{headers})).json();const r=runs.find((r:any)=>r.projectId===project.id);expect(r.harness).toBe('deepagents');expect(r.harnessResult.harness).toBe('deepagents@1.14.0');expect(r.nodes).toHaveLength(2);expect(r.budget.modelCalls).toBe(4);expect(r.events.some((e:any)=>e.type==='HARNESS_DECISION')).toBe(true);
 });
 
@@ -189,12 +193,9 @@ test('Settings model Add rows stay contained and departments align at constraine
  }
 });
 
-test('Swarm exposes independent review policy and MCP discovery without granting tools',async({page})=>{
+test('Swarm launch does not expose review, connector, tool or planner administration',async({page})=>{
  await page.getByRole('button',{name:'AI Swarm',exact:true}).click();
- await page.getByText('Independent semantic review',{exact:true}).click();
- await expect(page.getByLabel('Semantic review policy')).toBeVisible();
- await page.getByText('Approved connector gateway',{exact:true}).click();
- await expect(page.getByText(/Discovery lists tools; it never grants access automatically/)).toBeVisible();
+ await expect(page.getByLabel('Semantic review policy')).toHaveCount(0);await expect(page.getByText('Approved connector gateway',{exact:true})).toHaveCount(0);await expect(page.getByText('Tools this swarm may use',{exact:true})).toHaveCount(0);await expect(page.getByLabel('Planning engine')).toHaveCount(0);await expect(page.getByRole('region',{name:'Automatic orchestration'})).toContainText('ask for permission only when needed');
 });
 
 test('owner semantic assessment preserves exact evidence, machine failure and append-only judgments', async ({ page, request }) => {
@@ -235,17 +236,10 @@ test('completed swarm is captured, reviewed and replayed as a parameterized immu
  const started = await request.post('/api/swarms', { headers: { ...headers, 'Idempotency-Key': 'reviewed-skill-source' }, data: { coordinatorId: manager.id, projectId: project.id, objective: 'SKILL_CAPTURE_UI Prepare the first reviewed fixture.', mode: 'dynamic', allowedToolIds: [] } });
  expect(started.status()).toBe(202); const source = await started.json();
  await expect.poll(async () => (await (await request.get(`/api/swarms/${source.id}`, { headers })).json()).status).toBe('completed');
- await page.reload(); await page.getByRole('button', { name: 'AI Swarm', exact: true }).click(); await page.getByLabel('Swarm project').selectOption(project.id);
- await page.getByText('Reviewed skills and scheduled routines').click();
- await page.getByLabel('Skill name').fill('Reviewed fixture skill'); await page.getByRole('button', { name: 'Capture completed run for review' }).click();
- await expect(page.getByText(/Reviewed fixture skill · draft/)).toBeVisible(); await page.getByRole('button', { name: 'Inspect and review' }).click();
- await expect(page.getByLabel('Reviewed skill template')).toContainText('Prepare the first reviewed fixture.');
- await expect(page.getByLabel('Reviewed skill parameters')).toContainText('objective');
- await page.getByLabel('Skill review reason').fill('Owner checked the frozen grants, steps and declared objective input.');
- await page.getByRole('button', { name: 'Approve immutable skill' }).click();
- await expect(page.getByLabel('Routine skill')).toContainText('Reviewed fixture skill v1'); await page.getByLabel('Routine skill').selectOption({ label: 'Reviewed fixture skill v1' });
- await page.getByLabel('Skill parameters').fill('{"objective":"SKILL_CAPTURE_UI Prepare the changed reviewed fixture."}'); await page.getByRole('button', { name: 'Run reviewed skill now' }).click();
- await expect(page.getByRole('heading', { name: 'SKILL_CAPTURE_UI Prepare the changed reviewed fixture.', exact: true })).toBeVisible();
+ const captured=await request.post('/api/swarm-skill-drafts',{headers,data:{name:'Reviewed fixture skill',runId:source.id}});expect(captured.status()).toBe(201);const draft=await captured.json();expect(draft.template.objective).toContain('Prepare the first reviewed fixture.');expect(draft.parameters[0].path).toBe('objective');
+ const reviewed=await request.post(`/api/swarm-skill-drafts/${draft.id}/review`,{headers,data:{decision:'approved',reason:'Owner checked the frozen grants, steps and declared objective input.'}});expect(reviewed.status()).toBe(201);const skill=(await reviewed.json()).skill;
+ const replayed=await request.post(`/api/swarm-skills/${skill.id}/replay`,{headers:{...headers,'Idempotency-Key':crypto.randomUUID()},data:{objective:'SKILL_CAPTURE_UI Prepare the changed reviewed fixture.'}});expect(replayed.status()).toBe(202);const replay=await replayed.json();await expect.poll(async()=>(await(await request.get(`/api/swarms/${replay.id}`,{headers})).json()).status).toBe('completed');
+ await page.reload();await page.getByRole('button',{name:'AI Swarm',exact:true}).click();await page.getByLabel('Swarm project').selectOption(project.id);await expect(page.getByRole('heading',{name:'SKILL_CAPTURE_UI Prepare the changed reviewed fixture.',exact:true})).toBeVisible();
  const skills = await (await request.get(`/api/projects/${project.id}/skills`, { headers })).json(); expect(skills).toHaveLength(1); expect(skills[0].review.sourceRunId).toBe(source.id);
 });
 

@@ -1,0 +1,64 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "No runtime payloads, credentials or private identifiers are included."
+  },
+  "date": "2026-09-25",
+  "workItem": "VAC-48",
+  "candidateStatus": "closed",
+  "acceptance": {
+    "requiredTaskSpecificInputs": ["objective"],
+    "rememberedContext": ["project"],
+    "optionalInputs": ["attachments"],
+    "orchestrationInputsExposed": [],
+    "automaticCoordinatorEligibility": "project eligible, local Ollama, autonomy at least 3",
+    "planningPath": "deepagents@1.14.0",
+    "plannerSelectsTeamTopologyAndWorkingToolSubset": true,
+    "policyCapabilityCeiling": [
+      "tool-read-project",
+      "tool-calculator",
+      "tool-web-search",
+      "tool-files",
+      "tool-write-file",
+      "tool-code",
+      "tool-memory",
+      "tool-peer",
+      "tool-evidence"
+    ],
+    "automaticBrowserSessions": false,
+    "automaticConnectors": false,
+    "automaticInteractiveExternalActions": false,
+    "justInTimeConsequentialApproval": true,
+    "constrainedViewportPixels": 540,
+    "submittedPolicyAssertions": "passed",
+    "visualQa": "passed"
+  },
+  "validation": {
+    "typescript": "passed",
+    "sourceTests": { "passed": 217, "failed": 0, "skipped": 6 },
+    "productionBundleTests": { "passed": 217, "failed": 0, "skipped": 6 },
+    "browserTests": { "passed": 21, "failed": 0, "skipped": 0 },
+    "focusedVisualBrowserTest": { "passed": 1, "failed": 0 },
+    "build": "passed",
+    "licenseGate": "passed"
+  },
+  "scope": {
+    "parent": "VAC-20",
+    "overlapExcluded": ["VAC-23", "VAC-28", "VAC-42", "VAC-34"],
+    "competitorParity": "not claimed",
+    "autonomyClaim": "planner autonomy inside a server-enforced capability ceiling",
+    "deployment": true,
+    "installedRelease": "7f4c99f0db9d",
+    "installedReady": "runtime-ready",
+    "commit": false,
+    "push": false
+  },
+  "sourceHashes": {
+    "src/components/SwarmView.tsx": "8a024ee52fe9527288849b6713fe857dac5c750e25f7e67f0c1a3b9d215548e8",
+    "tests/browser/workspace.spec.ts": "a395ab2e67c6aa1d73571ab48ae662a1cb82ff77fa7b598241c98f2f479734f8",
+    "README.md": "868ed84a59a8f8873a9193120d685b02918ff356eedecde337d54c2703671879",
+    "docs/swarm-system.md": "e56b8b7319a7b2469b27cafba951a3b4d6ce15775da74880ae97c3ff5d67e328"
+  },
+  "buildSourceHash": "7f4c99f0db9d680d2decc3100b7bfdd38b30c249f7c57cf412788348e426d912",
+  "installedEvidence": "2026-09-25-swarm-outcome-composer-installed.json"
+}
