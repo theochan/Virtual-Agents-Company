@@ -58,23 +58,25 @@ Start with a short draft request, then equip `tool-calculator`, set access level
 ## AI Swarm
 
 1. Install and start Ollama, then download a suitable model. The tested local configuration is `qwen3.5:9b` on a 24 GB M4 Mac mini.
-2. Configure the coordinator with that Ollama model and access level 3 or 4 in Team.
-3. Open **AI Swarm**, choose a project and existing, temporary or hybrid team composition.
-4. Select a planning engine, enter the objective, grant tools and set root limits. Add deliverable contracts when correctness can be checked mechanically.
-5. Inspect the execution tree, approvals, artifacts and receipts. **Stop entire swarm** cancels active descendants.
+2. Configure at least one project-eligible coordinator with that Ollama model and access level 3 or 4 in Team.
+3. Open **AI Swarm**, choose the project, describe the outcome, optionally attach source files and press **Start work**. The project choice is remembered; the outcome is the only required task-specific input.
+4. VAC selects an eligible coordinator and asks the bounded workflow planner to choose the team, task split and working tool subset. The planner receives the policy-eligible local capability registry; users do not preconfigure tools or a planning engine.
+5. Follow **Team progress**, respond only to just-in-time approval requests and inspect technical evidence only when needed. **Stop work** cancels active descendants.
 
-Team composition and planning are separate choices:
+The Outcome Composer removes orchestration internals from the user flow; it does not remove the authority boundary. The server still validates coordinator eligibility, immutable capability ceilings and every resource limit. Browser origins, connectors and interactive external actions are not silently granted. Search remains subject to configured provider allowances and can consume credits; consequential actions continue to require exact approval.
+
+Team composition and planning remain supported execution concepts and API controls, not launch-form questions:
 
 | Choice | Behavior |
 |---|---|
 | Existing agents | Dispatch eligible manually created profiles |
 | Temporary specialists | Create run-scoped profiles with inherited model and tool grants |
 | Hybrid | Combine existing and temporary profiles |
-| Native planning, default | Agents decide steps and may spawn bounded descendants during execution |
+| Native planning | Agents decide steps and may spawn bounded descendants during execution |
 | Explicit workflow | Owner supplies workers, hierarchy, dependencies and optional ordered tool steps |
 | Deep Agents, experimental | The harness generates a workflow; VAC validates and executes it |
 
-[Deep Agents JS](https://github.com/langchain-ai/deepagentsjs) is pinned to **1.14.0**. In this integration it can record one todo list and submit/correct a workflow, with at most four actual planning calls charged to the same root budgets. It cannot independently invoke filesystem, shell, browser or subagent tools. Leave the explicit workflow plan `[]` and coordinator sequence empty when selecting it. Accepted plans become bounded VAC workers; failed plans do not create workers. Native remains the default because full-workflow autonomous qualification has not passed. See [the harness architecture](docs/HARNESS-ARCHITECTURE.md).
+[Deep Agents JS](https://github.com/langchain-ai/deepagentsjs) is pinned to **1.14.0**. In this integration it can record one todo list and submit/correct a workflow, with at most four actual planning calls charged to the same root budgets. It cannot independently invoke filesystem, shell, browser or subagent tools. The Outcome Composer invokes this bounded planner automatically; accepted plans become bounded VAC workers and failed plans create no workers. This does not establish full-workflow autonomous qualification. See [the harness architecture](docs/HARNESS-ARCHITECTURE.md).
 
 Default envelope: nine total agents, two concurrent workers, forty model calls, maximum delegation depth three and a thirty-minute lifetime. Server bounds cap agents, depth, calls, input/output reservations, tool/search/browser/sandbox use and elapsed time. Temporary agents do not clutter the permanent Team. More agents do not create more local compute. Swarms use Ollama only; web search can still consume paid credits.
 
@@ -292,7 +294,5 @@ Results recorded on 2026-09-21; fixture tests and live model quality are differe
 The complete scenario uses synthetic sales data and a local connector fixture. It does not prove production business-app integration. The successful smaller harness task does not establish reliable general autonomy. Failed trials remain documented in [the public validation summary](docs/reviews/2026-09-21-swarm-release.md).
 
 On 2026-09-22, the revised bounded planner completed the complex synthetic workflow on Qwen3.5 9B: all 12 checks passed in 351.784 seconds, with one planning call and exactly one fixture connector write. [Evidence and preserved failures](docs/reviews/2026-09-22-task-planner.md). This is one development success, not a general reliability estimate.
-
-**Grok Bot/Kimi Swarm product parity is not achieved.** Outstanding work includes complex autonomous planning, native business-app connectors, unsupported MCP transports/authentication, broad authenticated-app workflows and login handoff, broader semantic-review qualification, always-on/distributed execution, enterprise identity and measured long-horizon/large-scale reliability. See [capability research](docs/SWARM-CAPABILITY-RESEARCH.md) and the [current gap-to-work-item map and repository assessment](docs/research/2026-09-21-gap-closure.md). Static/manual agents and explicit workflows remain supported. See [the gap-closure acceptance report](docs/reviews/2026-09-21-gap-closure.md) for the exact implemented scope and retained failures.
 
 The [22 September high-priority review](docs/reviews/2026-09-22-high-priority-closure.md) qualifies the bounded MCP HTTP profile through session expiry and fresh-session tests, fixes catalog/capability enforcement, and adds an append-only owner semantic-assessment interface. Independent semantic qualification and overall parity remain open. These latest changes have source/build acceptance only until separately deployed.
