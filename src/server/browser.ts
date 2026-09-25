@@ -29,12 +29,13 @@ export const browserActionSchema = z.discriminatedUnion('action', [
 export const browserTool = { id: BROWSER_TOOL, name: 'Isolated browser', schema: z.toJSONSchema(browserActionSchema), description: 'navigate opens an exact source URL; copy discovered links, never invent paths. It returns page text. read refreshes an already open page and accepts NO url. navigate/read accept focus to locate a relevant text section; read also accepts offset. Check focusFound, offset and truncated; excerpts are not full pages. Use navigate for a new URL. Use CSS selectors from returned page elements. Read mode click follows links only. fill/select/press and interactive clicks require owner-enabled actions. No arbitrary scripts, downloads, uploads, popups, private network or cookies from other agents. Every operation and network request consumes shared limits.' };
 /** Only current-run successful receipts supply navigation candidates; claims are not authority. */
 export function discoveredBrowserUrls(nodes:Array<{receipts:Array<Record<string,any>>}>,policy:BrowserPolicy){
- const urls=new Set<string>();const add=(raw:unknown,base?:string)=>{try{if(typeof raw==='string')urls.add(checkedUrl(new URL(raw,base).href,policy).href);}catch{}};
+ const urls=new Set<string>();const add=(raw:unknown,base?:string)=>{try{if(typeof raw==='string'){const parsed=new URL(raw,base);if(policy.documentOnly&&/\.pdf$/i.test(parsed.pathname))return;const value=parsed.href;urls.add(checkedUrl(value,policy.requireDiscoveredUrls&&!policy.allowedOrigins.length?undefined:policy).href);}}catch{}};
+ const attempted=new Set(nodes.flatMap(n=>n.receipts.filter(r=>r.toolId===BROWSER_TOOL).map(r=>r.input?.action==='navigate'?r.input.url:r.status==='succeeded'?r.output?.url:undefined).map(raw=>{try{return typeof raw==='string'?checkedUrl(raw,policy.requireDiscoveredUrls&&!policy.allowedOrigins.length?undefined:policy).href:'';}catch{return'';}})).filter(Boolean));
  const receipts=nodes.flatMap(n=>n.receipts.filter(r=>r.status==='succeeded'));
  for(const r of receipts)if(r.toolId===BROWSER_TOOL)add(r.output?.url);
  for(const r of receipts)if(r.toolId==='tool-web-search')for(const result of r.output?.results||[])add(result.url);
  for(const r of receipts)if(r.toolId===BROWSER_TOOL)for(const element of r.output?.elements||[])if(element.href)add(element.href,r.output?.url);
- return [...urls];
+ return [...urls].filter(url=>!attempted.has(url));
 }
 export function discoveredBrowserTool(urls:string[],allowActions=false){
  const schema:any=structuredClone(browserTool.schema);

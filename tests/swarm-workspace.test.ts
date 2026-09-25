@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {Store} from '../src/server/store';
 import {Workspace,runSandbox} from '../src/server/workspace';
-import {SwarmEngine,SWARM_TOOL_IDS,SPAWN_TOOL} from '../src/server/swarm';
+import {SwarmEngine,SWARM_TOOL_IDS,SPAWN_TOOL,marketResearchSymbols,researchQueryMatchesObjective,researchSourceMatchesObjective} from '../src/server/swarm';
 import {Routines} from '../src/server/routines';
 import {INITIAL_AGENTS} from '../src/data/initialData';
 import {defaultSettings} from '../src/server/providers';
@@ -125,6 +125,68 @@ test('Deep Agents generates and atomically compiles a workflow using the shared 
  try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:[]}).id);assert.equal(r.status,'completed',r.result);assert.equal(r.nodes.length,2);assert.equal(r.budget.modelCalls,3);assert.equal(r.budget.toolCalls,1);assert.equal(r.budget.spawned,1);assert.equal(r.harnessResult?.harness,'deepagents@1.14.0');assert.equal(r.nodes[0].receipts.filter(x=>x.phase==='harness-planning').length,1);assert.throws(()=>f.create({harness:'deepagents',plan:[{...worker('Leaf'),key:'leaf'}]}),/generates its own/);}finally{f.cleanup();}
 });
 
+test('market research accepts strict discovered-source browsing and rejects generic or snippet-only worker plans',()=>{
+ const f=setup();try{
+  const task=(key:string,instructions:string,toolSequence=['tool-web-search','tool-browser'])=>({...worker(key),key,instructions,objective:instructions,toolIds:[...new Set(toolSequence)],requiredToolIds:[...new Set(toolSequence)],toolSequence});
+  const base={objective:'BKNG share price earnings valuation rebound research',allowedToolIds:['tool-web-search','tool-browser'],browserPolicy:{allowedOrigins:[],allowActions:false,requireDiscoveredUrls:true,documentOnly:true}};
+  const plan=[task('price','Verify current price, split history, and dated news drivers.'),task('earnings','Open issuer earnings and regulatory financial evidence.'),task('valuation','Assess valuation, downside risks, and conditional rebound cases.')];
+  const run=f.create({...base,plan});assert.equal(run.nodes.length,4);assert.equal(run.browserPolicy.requireDiscoveredUrls,true);
+  assert.throws(()=>f.create({...base,plan:plan.map((p,i)=>({...p,key:'duplicate'+i,instructions:'Generic BKNG research',objective:'Generic BKNG research'}))}),/duplicates the specialist brief/);
+  assert.throws(()=>f.create({...base,plan:plan.map(p=>({...p,toolIds:['tool-web-search'],requiredToolIds:['tool-web-search'],toolSequence:['tool-web-search']}))}),/must search, then open/);
+ }finally{f.cleanup();}
+});
+
+test('harness advertises only executable saved profiles and their usable tool grants',async()=>{
+ let plannerPrompt='';
+ const f=setup(m=>{if(m[0].content.includes('VAC workflow planner')){plannerPrompt=m[0].content;return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf')],[])}}return{action:'final',reply:'Done'};});
+ try{
+  const manager=f.store.get<any>('agents','manager');
+  f.store.put('agents','eligible',{...manager,id:'eligible',displayName:'Eligible',autonomyLevel:3,toolIds:['tool-calculator','tool-browser']});
+  f.store.put('agents','ineligible',{...manager,id:'ineligible',displayName:'Ineligible',autonomyLevel:2,toolIds:['tool-calculator']});
+  const r=await f.finish(f.create({harness:'deepagents',mode:'hybrid',allowedToolIds:['tool-calculator']}).id);
+  assert.equal(r.status,'completed',r.result);
+  assert.ok(plannerPrompt.includes('\\"agentId\\":\\"eligible\\"'));
+  assert.ok(!plannerPrompt.includes('\\"agentId\\":\\"ineligible\\"'));
+ assert.doesNotMatch(plannerPrompt,/tool-browser/);
+ }finally{f.cleanup();}
+});
+
+test('hybrid harness converts an unusable saved profile choice into a bounded temporary specialist',async()=>{
+ const f=setup(m=>m[0].content.includes('VAC workflow planner')?{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf',{agentId:'existing',toolSequence:['tool-browser'],requiredToolIds:['tool-browser']})],[])}:{action:'blocked',reason:'not reached'});
+ try{
+  const manager=f.store.get<any>('agents','manager');f.store.put('agents','existing',{...manager,id:'existing',displayName:'Saved without browser',toolIds:[]});
+  const created=f.create({harness:'deepagents',mode:'hybrid',allowedToolIds:['tool-browser']});await f.engine.tick();const planned=f.engine.get(created.id);
+  assert.equal(planned.status,'waiting_children');assert.equal(planned.nodes.length,2);assert.equal(planned.nodes[1].sourceAgentId,undefined);assert.deepEqual(planned.nodes[1].toolIds,['tool-browser']);
+ }finally{f.cleanup();}
+});
+
+test('market research harness removes redundant coordinator browsing while retaining specialist source work',async()=>{
+ const researchTask=(key:string,instructions:string)=>plannerTask(key,{instructions,agentId:'',toolSequence:['tool-web-search','tool-browser'],requiredToolIds:['tool-web-search','tool-browser']});
+ const f=setup(m=>m[0].content.includes('VAC workflow planner')?{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([researchTask('price','Verify dated price and news drivers.'),researchTask('earnings','Verify issuer earnings and filings.'),researchTask('valuation','Verify valuation and rebound risks.')],['tool-web-search','tool-browser'])}:{action:'blocked',reason:'not reached'});
+ try{const created=f.create({harness:'deepagents',mode:'hybrid',objective:'BKNG share price earnings valuation rebound research',allowedToolIds:['tool-web-search','tool-browser'],browserPolicy:{allowedOrigins:[],allowActions:false,requireDiscoveredUrls:true,documentOnly:true}});await f.engine.tick();const planned=f.engine.get(created.id);assert.equal(planned.status,'waiting_children');assert.deepEqual(planned.nodes[0].toolSequence,[]);assert.ok(planned.nodes.slice(1).filter(n=>!planned.nodes.some(c=>c.parentId===n.id)).every(n=>JSON.stringify(n.toolSequence)===JSON.stringify(['tool-web-search','tool-browser'])));}finally{f.cleanup();}
+});
+
+test('market research harness rejects redundant downstream workers before execution',async()=>{
+ const researchTask=(key:string,instructions:string,extra:any={})=>plannerTask(key,{instructions,agentId:'',toolSequence:['tool-web-search','tool-browser'],requiredToolIds:['tool-web-search','tool-browser'],...extra});
+ let planning=0;
+ const f=setup(m=>{
+  if(!m[0].content.includes('VAC workflow planner'))return{action:'final',reply:'Done'};
+  planning++;
+  const core=[researchTask('price','Verify dated BKNG price and news drivers.'),researchTask('earnings','Verify BKNG issuer earnings and filings.'),researchTask('valuation','Verify BKNG valuation and rebound risks.')];
+  return{action:'tool',toolId:'submit_workflow',parameters:plannerSubmission(planning===1?[...core,researchTask('write','Write the BKNG report.',{dependsOn:['price','earnings','valuation']})]:core,[])};
+ });
+ try{const created=f.create({harness:'deepagents',mode:'hybrid',objective:'BKNG share price earnings valuation rebound research',allowedToolIds:['tool-web-search','tool-browser'],browserPolicy:{allowedOrigins:[],allowActions:false,requireDiscoveredUrls:true,documentOnly:true}});await f.engine.tick();const planned=f.engine.get(created.id);assert.equal(planning,2);assert.equal(planned.status,'waiting_children');assert.equal(planned.nodes.length,4);assert.ok(planned.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes('exactly three independent specialist workers')));}finally{f.cleanup();}
+});
+
+test('market research rejects off-topic ticker queries and opened pages',()=>{
+ const objective='BKNG share price has been dropping from peak; analyze earnings and predict a rebound.';
+ assert.deepEqual(marketResearchSymbols(objective),['BKNG']);
+ assert.equal(researchQueryMatchesObjective(objective,'valuation metrics rebound risk factors stock market analysis 2024'),false);
+ assert.equal(researchQueryMatchesObjective(objective,'BKNG valuation multiples and rebound catalysts 2026'),true);
+ assert.equal(researchSourceMatchesObjective(objective,{url:'https://example.com/lulu',title:'Lululemon outlook',text:'Unrelated retailer'}),false);
+ assert.equal(researchSourceMatchesObjective(objective,{url:'https://stockanalysis.com/stocks/bkng/transcripts/',title:'Booking Holdings transcripts'}),true);
+});
+
 test('invalid harness plans never create nodes and repeated attempts stop at the planning cap',async()=>{
  const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('bad',{toolSequence:['tool-code']})],[])}));
  try{const r=await f.finish(f.create({harness:'deepagents',allowedToolIds:[]}).id);assert.notEqual(r.status,'completed');assert.equal(r.nodes.length,1);assert.equal(r.budget.spawned,0);assert.equal(r.budget.modelCalls,4);assert.equal(f.store.all('swarm-nodes').length,1);assert.match(r.nodes[0].result!,/planning limit/);}finally{f.cleanup();}
@@ -242,9 +304,9 @@ test('compiled supervisor unions remain bounded by saved-profile eligibility and
   const f=setup(()=>({action:'tool',toolId:'submit_workflow',parameters:plannerSubmission([plannerTask('leaf',{supervisors:[{name:'Lead',agentId:mode==='profile'?'limited':''}],toolSequence:['tool-calculator']})],[])}));
   try{
    f.store.put('agents','limited',{...f.store.get<any>('agents','manager'),id:'limited',toolIds:[]});
-   const r=await f.finish(f.create({harness:'deepagents',mode:'hybrid',allowedToolIds:['tool-calculator'],limits:{maxAgents:mode==='count'?2:4}}).id);
-   assert.equal(r.status,'failed');assert.equal(r.budget.spawned,0);assert.equal(f.store.all('swarm-nodes').length,1);
-   assert.ok(r.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes(mode==='count'?'agent allowance':'not eligible')));
+   const created=f.create({harness:'deepagents',mode:'hybrid',allowedToolIds:['tool-calculator'],limits:{maxAgents:mode==='count'?2:4}});
+   if(mode==='profile'){await f.engine.tick();const r=f.engine.get(created.id);assert.equal(r.status,'waiting_children');assert.equal(r.budget.spawned,2);assert.ok(r.nodes.slice(1).every(n=>n.sourceAgentId===undefined));}
+   else{const r=await f.finish(created.id);assert.equal(r.status,'failed');assert.equal(r.budget.spawned,0);assert.equal(f.store.all('swarm-nodes').length,1);assert.ok(r.events.some(e=>e.type==='HARNESS_REJECTED'&&e.detail.includes('agent allowance')));}
   }finally{f.cleanup();}
  }
 });

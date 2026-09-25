@@ -103,13 +103,26 @@ test('research navigation schema and dispatch reject invented URLs before networ
  const {discoveredBrowserUrls,discoveredBrowserTool}=await import('../src/server/browser');
  const strict={...policy,requireDiscoveredUrls:true};
  const urls=discoveredBrowserUrls([{receipts:[{toolId:'tool-web-search',status:'succeeded',output:{results:[{url:'https://example.com/discovered'},{url:'https://outside.example/denied'}]}},{toolId:'tool-browser',status:'succeeded',output:{url:'https://example.com/report',elements:[{href:'/filing'}]}},{toolId:'tool-web-search',status:'failed',output:{results:[{url:'https://example.com/failed'}]}}]}],strict);
- assert.deepEqual(urls,['https://example.com/report','https://example.com/discovered','https://example.com/filing']);
+ assert.deepEqual(urls,['https://example.com/discovered','https://example.com/filing']);
  const schema:any=discoveredBrowserTool(urls).schema;assert.deepEqual((schema.oneOf||schema.anyOf).find((b:any)=>b.properties.action.const==='navigate').properties.url.enum,urls);
  const empty:any=discoveredBrowserTool([]).schema;assert.equal((empty.oneOf||empty.anyOf).some((b:any)=>b.properties.action.const==='navigate'),false);
  let requests=0;const browser=new SwarmBrowser(async()=>{requests++;return response();});
  try{await assert.rejects(()=>browser.execute('invented',{action:'navigate',url:'https://example.com/invented'},strict,signal(),()=>{},undefined,urls),/exact discovered URL/);assert.equal(requests,0);assert.equal(browser.size,0);
  const page=await browser.execute('discovered',{action:'navigate',url:urls[0]},strict,signal(),()=>{},undefined,urls);assert.equal(page.url,urls[0]);assert.ok(requests>0);
  }finally{await browser.closeAll();}
+});
+test('strict document research derives authority only from current-run discovered URLs when no origins were predeclared',async()=>{
+ const {discoveredBrowserUrls}=await import('../src/server/browser');
+ const strict={allowedOrigins:[],allowActions:false,requireDiscoveredUrls:true,documentOnly:true};
+ const urls=discoveredBrowserUrls([{receipts:[{toolId:'tool-web-search',status:'succeeded',output:{results:[{url:'https://research.example/blocked'},{url:'https://research.example/report'},{url:'https://research.example/filing.pdf'}]}},{toolId:'tool-browser',status:'failed',input:{action:'navigate',url:'https://research.example/blocked'},error:'HTTP 403'}]}],strict);
+ assert.deepEqual(urls,['https://research.example/report']);
+});
+
+test('strict research does not offer an already opened page as a new source',async()=>{
+ const {discoveredBrowserUrls}=await import('../src/server/browser');
+ const strict={allowedOrigins:[],allowActions:false,requireDiscoveredUrls:true,documentOnly:true};
+ const urls=discoveredBrowserUrls([{receipts:[{toolId:'tool-web-search',status:'succeeded',output:{results:[{url:'https://research.example/report'},{url:'https://research.example/second'}]}},{toolId:'tool-browser',status:'succeeded',input:{action:'navigate',url:'https://research.example/report'},output:{url:'https://research.example/report',elements:[]}}]}],strict);
+ assert.deepEqual(urls,['https://research.example/second']);
 });
 
 test('document-only research preserves document text without executing scripts or spending requests on assets',async()=>{

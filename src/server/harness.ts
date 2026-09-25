@@ -42,8 +42,13 @@ export async function planWithHarness(options:{
   let accepted:any;let calls=0;
   const model=new GuardedModel(async(messages,tools)=>{
     options.signal.throwIfAborted();
-    if(++calls>4)throw new Error('Harness planning limit exhausted (four model calls)');
-    return options.infer(messages,tools);
+    while(true){
+      if(++calls>4)throw new Error('Harness planning limit exhausted (four model calls)');
+      try{return await options.infer(messages,tools);}catch(error){
+        if(calls>=4||!(error instanceof Error)||!error.message.includes('Provider did not return a valid decision'))throw error;
+        options.feedback?.('PLANNER RESPONSE REJECTED. The provider returned malformed structured output; retrying within the unchanged four-call planning allowance.');
+      }
+    }
   },[],()=>!!accepted);
   const submit=tool((plan:any)=>{
     options.signal.throwIfAborted();try{options.validate(plan);}catch(e){const message='WORKFLOW REJECTED. Correct the plan and call submit_workflow next; do not update todos. '+(e instanceof Error?e.message:'Invalid plan');options.feedback?.(message);return message;}accepted=plan;
