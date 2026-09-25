@@ -1,0 +1,46 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "No runtime payloads, credentials or private identifiers are included."
+  },
+  "date": "2026-09-25",
+  "workItem": "VAC-47",
+  "candidateStatus": "closed",
+  "acceptance": {
+    "retrieval": "SQLite FTS5 relevance search plus bounded indexed recency",
+    "maximumReturnedRecords": 20,
+    "pagination": "explicit limit and offset",
+    "projectIsolation": "passed",
+    "historyScanDisabledCorpusSize": 2500,
+    "historyScanRequired": false,
+    "immutableRunAndNodeProvenance": "passed",
+    "historicalNotCurrentLabel": "passed",
+    "conflictingSubjectWithholding": "passed",
+    "ownerApprovedSupersession": "passed",
+    "repeatReviewRejection": "passed"
+  },
+  "validation": {
+    "typescript": "passed",
+    "sourceTests": { "passed": 217, "failed": 0, "skipped": 6 },
+    "productionBundleTests": { "passed": 217, "failed": 0, "skipped": 6 },
+    "build": "passed-with-existing-chunk-size-advisory",
+    "licenseGate": "passed",
+    "publicationEvidence": "passed",
+    "whitespace": "passed"
+  },
+  "scope": {
+    "parent": "VAC-39",
+    "parentClosed": false,
+    "largeDatasetMigration": "not claimed",
+    "distributedRetrieval": "not claimed",
+    "longHorizonRelevance": "not claimed",
+    "deployment": false,
+    "commit": false,
+    "push": false
+  },
+  "sourceHashes": {
+    "src/server/store.ts": "876c932a028806d7e21037236a68ecbfc56b08561cc4a740786ddf83717e9a13",
+    "src/server/workspace.ts": "57e51852586d5e3e093f39b2cb2a9b42b291addb024a3e5e5ababed5f7325c75",
+    "tests/swarm-workspace.test.ts": "789f4e8a72360bea9534b96c49ca25db26bc985f47f6416cb47589efe0a8446a"
+  }
+}

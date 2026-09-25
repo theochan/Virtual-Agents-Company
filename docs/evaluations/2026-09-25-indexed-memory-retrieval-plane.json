@@ -1,0 +1,15 @@
+{
+  "publication": {
+    "kind": "sanitized-summary",
+    "note": "No private Plane identifiers are included."
+  },
+  "date": "2026-09-25",
+  "workItem": "VAC-47",
+  "acceptanceCommentVerified": true,
+  "state": "Done",
+  "scope": "bounded local indexed project-memory retrieval under VAC-39",
+  "parentState": "Todo",
+  "deployment": false,
+  "commit": false,
+  "push": false
+}
