@@ -1,6 +1,6 @@
 {
   "publication": {
-    "kind": "sanitized-installed-evidence",
+    "kind": "sanitized-summary",
     "note": "No credentials, private runtime paths, prompts, or payloads are included."
   },
   "date": "2026-09-25",
