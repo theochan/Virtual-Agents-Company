@@ -17,15 +17,16 @@ import {
   Sparkles,
   ShieldCheck,
   Wrench,
-  Bot
+  Bot,
+  BellRing
 } from 'lucide-react';
 import { handleAvatarError } from '../lib/avatarCatalog';
 
 interface SidebarProps {
   onSignOut: () => void;
   attentionCount?: number;
-  currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm';
-  onSelectTab: (tab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm') => void;
+  currentTab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm' | 'skills' | 'attention';
+  onSelectTab: (tab: 'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm' | 'skills' | 'attention') => void;
   agents: Agent[];
   selectedAgentId: string;
   onSelectAgent: (agentId: string) => void;
@@ -234,8 +235,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span>Reports</span>
         </button>
 
+        <button aria-label="Attention inbox" onClick={() => onSelectTab('attention')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition ${currentTab === 'attention' ? 'bg-amber-100 text-amber-950 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
+          <BellRing className="w-4 h-4 text-slate-500" /><span>Attention</span>{attentionCount > 0 && <span aria-label={`${attentionCount} unread attention items`} className="ml-auto rounded-full bg-amber-100 px-2 text-amber-900">{attentionCount}</span>}
+        </button>
         <button aria-label="Audit" onClick={() => onSelectTab('runs')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition ${currentTab === 'runs' ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
-          <Clock className="w-4 h-4 text-slate-500" /><span>Audit</span>{attentionCount > 0 && <span aria-label={`${attentionCount} pending approvals`} className="ml-auto rounded-full bg-amber-100 px-2 text-amber-900">{attentionCount}</span>}
+          <Clock className="w-4 h-4 text-slate-500" /><span>Audit</span>
         </button>
         {/* Tools & Security */}
         <button
@@ -248,6 +252,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <ShieldCheck className="w-4 h-4 text-slate-500" />
           <span>Tools</span>
+        </button>
+        <button onClick={() => onSelectTab('skills')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition ${currentTab === 'skills' ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
+          <Wrench className="w-4 h-4 text-slate-500" /><span>Skills</span>
         </button>
         <button onClick={() => onSelectTab('settings')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition ${currentTab === 'settings' ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
           <Settings className="w-4 h-4 text-slate-500" /><span>Settings</span>

@@ -22,6 +22,39 @@ test('sign-out returns to the locked workspace and readiness UI displays runtime
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Unlock your workspace' })).toBeVisible();
 });
+test('first-run diagnostics expose real capability checks and the manual rollback contract', async ({ page }) => {
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.getByRole('button', { name: 'Operations', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'First-run capability diagnostics' })).toBeVisible();
+  await expect(page.getByText('Node.js runtime', { exact: true })).toBeVisible();
+  await expect(page.getByText('Chromium runtime', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Safe update contract' })).toBeVisible();
+  await expect(page.getByText('6. Rollback', { exact: true })).toBeVisible();
+});
+test('skill catalog displays verified bytes and records documentation-only decisions', async ({ page }) => {
+  await page.getByRole('button', { name: 'Skills', exact: true }).click();
+  await page.getByPlaceholder('Search skills').fill('Agent Launcher Orchestrator');
+  await page.getByRole('button', { name: /Agent Launcher Orchestrator/ }).click();
+  await expect(page.getByText(/SHA-256 [a-f0-9]{64}/)).toBeVisible();
+  await page.getByText('Reviewed document bytes', { exact: true }).click();
+  await expect(page.getByText(/Agent Launcher Orchestrator/, { exact: false }).last()).toBeVisible();
+  await page.getByPlaceholder('Explain why this documentation should be discoverable or retired.').fill('Browser owner reviewed this documentation for discovery only.');
+  await page.getByRole('button', { name: 'Enable docs', exact: true }).click();
+  await expect(page.getByText('v1 enabled', { exact: true })).toBeVisible();
+  await expect(page.getByText('Executable content: disabled', { exact: true })).toBeVisible();
+});
+test('attention inbox resolves approvals at their source and preserves the run', async ({ page, request }) => {
+  const headers = { Authorization: `Bearer ${token}` };
+  const agent = await (await request.post('/api/agents', { headers, data: { displayName: 'AttentionAgent', autonomyLevel: 3, toolIds: ['tool-doc-gen'], llmConfig: { provider: 'openai', model: 'fixture', localEndpoint: 'http://127.0.0.1:3328/v1', temperature: 0, maxTokens: 128 } } })).json();
+  const project = await (await request.post('/api/projects', { headers, data: { name: 'Attention project', members: [] } })).json();
+  const submitted = await (await request.post('/api/chat/agent', { headers: { ...headers, 'Idempotency-Key': crypto.randomUUID() }, data: { agentId: agent.id, projectId: project.id, userMessage: 'SAVE_DOCUMENT' } })).json();
+  await expect.poll(async () => (await (await request.get(`/api/runs/${submitted.run.id}`, { headers })).json()).status).toBe('waiting');
+  await page.reload(); await page.getByRole('button', { name: 'Attention inbox', exact: true }).click();
+  const item = page.locator('article').filter({ hasText: 'Save a draft artifact for Attention project' });
+  await expect(item).toBeVisible(); await item.getByRole('button', { name: 'Approve Operation approval required' }).click();
+  await expect.poll(async () => (await (await request.get(`/api/runs/${submitted.run.id}`, { headers })).json()).status).toBe('completed');
+  await expect(item).toHaveCount(0);
+});
 test('search keys can be saved, read back after reload and removed without disclosing them', async ({ page }) => {
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await page.getByLabel('Tavily API Key', { exact: true }).fill('browser-test-key-only');

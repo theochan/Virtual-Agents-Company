@@ -7,7 +7,8 @@ const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'vac-browser-'));
 let connectorWrites=0;
 const provider = http.createServer(async (req, res) => {
   let raw = ''; for await (const chunk of req) raw += chunk;
-  const body = JSON.parse(raw);
+  if (req.url === '/api/tags' && req.method === 'GET') { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify({ models: [{ name: 'fixture' }] })); return; }
+  const body = raw ? JSON.parse(raw) : {};
   if(req.url==='/connector'){const args=body.params.arguments;res.setHeader('Content-Type','application/json');if(body.params.name==='save'){connectorWrites++;if(connectorWrites===1){res.writeHead(503).end();return;}res.end(JSON.stringify({id:body.id,result:{saved:true}}));return;}res.end(JSON.stringify({id:body.id,result:{operationKey:args.operationKey,status:'not_applied',final:true}}));return;}
   const instruction = body.messages.findLast(m => m.role === 'user' && !m.content.startsWith('UNTRUSTED TOOL'))?.content || '';
   if (instruction.includes('PROVIDER_FAIL')) { res.writeHead(503).end(); return; }

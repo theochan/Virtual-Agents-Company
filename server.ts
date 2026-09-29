@@ -20,6 +20,11 @@ import { SwarmEngine, SWARM_TOOL_IDS, swarmLimitsSchema, swarmCommunicationCatal
 import { localInferenceLimit } from './src/server/providers';
 import { RunEngine, type Run, type Approval } from './src/server/runs';
 import { toolCatalog, fetchTavily, fetchBrave } from './src/server/tools';
+import { RepositoryWorkspaceManager } from './src/server/repositories';
+import { TerminalAgentManager } from './src/server/terminalAgents';
+import { SkillCatalog } from './src/server/skillCatalog';
+import { SetupDiagnostics } from './src/server/setupDiagnostics';
+import { AttentionInbox } from './src/server/attention';
 
 const directory = path.resolve(process.env.VAC_DATA_DIR || 'data');
 const port = z.coerce.number().int().min(1).max(65535).parse(process.env.PORT || '3001');
@@ -36,6 +41,11 @@ const settings = (): ProviderSettings => {
 const engine = new RunEngine(store, settings);
 const swarm = new SwarmEngine(store, settings);
 const routines = new Routines(swarm);
+const repositories = new RepositoryWorkspaceManager(store);
+const terminalAgents = new TerminalAgentManager(store,repositories);
+const skillCatalog = new SkillCatalog(store,workspaceId);
+const setupDiagnostics = new SetupDiagnostics(settings);
+const attention = new AttentionInbox(store,workspaceId);
 const registry=[...toolCatalog,...swarmCommunicationCatalog];
 localInferenceLimit();
 const log = new OperationsLog(directory);
@@ -295,6 +305,31 @@ app.get('/api/chat/messages', route((req, res) => {
 }));
 app.post('/api/chat/agent', route((req, res) => res.status(202).json({ run: engine.create(req.body, key(req)) })));
 app.get('/api/projects/:id/files',route((req,res)=>res.json(swarm.workspace.files(req.params.id))));
+app.get('/api/repositories',route((_req,res)=>res.json(repositories.repositories())));
+app.post('/api/repositories',route((req,res)=>res.status(201).json(repositories.register(req.body))));
+app.get('/api/repositories/:id/worktrees',route((req,res)=>res.json(repositories.worktrees(req.params.id))));
+app.post('/api/repositories/:id/worktrees',route((req,res)=>res.status(201).json(repositories.createWorktree(req.params.id,req.body))));
+app.get('/api/repository-worktrees/:id',route((req,res)=>res.json(repositories.inspect(req.params.id))));
+app.post('/api/repository-worktrees/:id/retain',route((req,res)=>res.json(repositories.retain(req.params.id))));
+app.post('/api/repository-worktrees/:id/ready-for-gc',route((req,res)=>res.json(repositories.markReadyForGc(req.params.id))));
+app.post('/api/repository-worktrees/:id/gc',route((req,res)=>res.json(repositories.gc(req.params.id,req.body))));
+app.get('/api/terminal-agents',route((_req,res)=>res.json({adapters:[terminalAgents.adapter()],runs:terminalAgents.runs()})));
+app.get('/api/terminal-agent-runs/:id',route((req,res)=>res.json(terminalAgents.run(req.params.id))));
+app.post('/api/repository-worktrees/:id/terminal-runs',route(async(req,res)=>res.status(201).json(await terminalAgents.execute(req.params.id,req.body))));
+app.get('/api/skill-catalog',route((req,res)=>res.json(skillCatalog.list({
+  search: typeof req.query.search === 'string' ? req.query.search : undefined,
+  category: typeof req.query.category === 'string' ? req.query.category : undefined,
+  status: typeof req.query.status === 'string' ? req.query.status : undefined,
+  limit: req.query.limit ? Number(req.query.limit) : undefined,
+  offset: req.query.offset ? Number(req.query.offset) : undefined,
+}))));
+app.get('/api/skill-catalog/:id',route((req,res)=>res.json(skillCatalog.get(req.params.id))));
+app.get('/api/skill-catalog/:id/history',route((req,res)=>res.json(skillCatalog.history(req.params.id))));
+app.post('/api/skill-catalog/:id/enable',route((req,res)=>res.json(skillCatalog.decide(req.params.id,{...req.body,action:'enabled'}))));
+app.post('/api/skill-catalog/:id/disable',route((req,res)=>res.json(skillCatalog.decide(req.params.id,{...req.body,action:'disabled'}))));
+app.get('/api/setup/diagnostics',route(async(_req,res)=>res.json(await setupDiagnostics.inspect())));
+app.get('/api/attention',route((req,res)=>res.json(attention.list({unreadOnly:req.query.unread==='1',kind:typeof req.query.kind==='string'?req.query.kind:undefined}))));
+app.post('/api/attention/state',route((req,res)=>{const input=z.object({itemId:z.string().min(1).max(300),action:z.enum(['read','unread','dismiss'])}).strict().parse(req.body);res.json(attention.setState(input.itemId,input.action));}));
 app.post('/api/projects/:id/files',route((req,res)=>{const a=z.object({name:fileName,base64:z.string().max(8400000),expectedVersion:z.number().int().min(0)}).strict().parse(req.body);const bytes=Buffer.from(a.base64,'base64');if(bytes.toString('base64')!==a.base64)throw new HttpError(400,'Invalid file encoding');res.status(201).json(swarm.workspace.write(req.params.id,a.name,bytes,a.expectedVersion,'owner'));}));
 app.get('/api/projects/:id/files/download',route((req,res)=>{const f=swarm.workspace.file(req.params.id,fileName.parse(req.query.name),req.query.version?z.coerce.number().int().positive().parse(req.query.version):undefined);res.setHeader('Content-Type',f.mime);res.setHeader('Content-Disposition',`attachment; filename="${path.basename(f.name)}"`);res.setHeader('X-Content-SHA256',f.sha256);res.send(Buffer.from(f.base64,'base64'));}));
 app.get('/api/projects/:id/swarm-memory',route((req,res)=>res.json(swarm.workspace.memories(req.params.id))));

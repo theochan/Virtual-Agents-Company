@@ -19,6 +19,8 @@ import { AdminSettingsView } from './components/AdminSettingsView';
 import { api } from './lib/api';
 import { OperationsView } from './components/OperationsView';
 import { RunReviewView } from './components/RunReviewView';
+import { SkillCatalogView } from './components/SkillCatalogView';
+import { AttentionInboxView } from './components/AttentionInboxView';
 
 export const App: React.FC = () => {
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -27,10 +29,11 @@ export const App: React.FC = () => {
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [tools, setTools] = useState<Tool[]>([]);
   const [approvals, setApprovals] = useState<ApprovalRequest[]>([]);
+  const [attentionCount, setAttentionCount] = useState(0);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [workItems, setWorkItems] = useState<WorkItem[]>([]);
   const [settingsSection, setSettingsSection] = useState<'configuration' | 'operations'>('configuration');
-  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm'>('chat');
+  const [currentTab, setCurrentTab] = useState<'chat' | 'projects' | 'collaborate' | 'agents' | 'org_chart' | 'memory' | 'security' | 'settings' | 'runs' | 'swarm' | 'skills' | 'attention'>('chat');
   const [selectedAgentId, setSelectedAgentId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
@@ -54,12 +57,13 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('workspace-error', listener);
   }, []);
   const refresh = useCallback(async () => {
-    const [a, p, m, ar, to, ap, ta, w] = await Promise.all([
+    const [a, p, m, ar, to, ap, ta, w, attention] = await Promise.all([
       api<Agent[]>('/api/agents'), api<Project[]>('/api/projects'), api<MemoryItem[]>('/api/memories'),
       api<Artifact[]>('/api/artifacts'), api<Tool[]>('/api/tools'), api<ApprovalRequest[]>('/api/approvals'),
-      api<Task[]>('/api/tasks'), api<WorkItem[]>('/api/work-items'),
+      api<Task[]>('/api/tasks'), api<WorkItem[]>('/api/work-items'), api<{counts:{unread:number}}>('/api/attention'),
     ]);
     setAgents(a); setProjects(p); setMemories(m); setArtifacts(ar); setTools(to); setApprovals(ap); setTasks(ta); setWorkItems(w);
+    setAttentionCount(attention.counts.unread);
     setSelectedAgentId(old => a.some(v => v.id === old) ? old : a[0]?.id || '');
     setSelectedProjectId(old => p.some(v => v.id === old) ? old : p[0]?.id || '');
     setProfileAgent(old => old ? a.find(v => v.id === old.id) || null : null);
@@ -120,7 +124,7 @@ export const App: React.FC = () => {
       {/* Sidebar Navigation */}
       <Sidebar
         onSignOut={() => void api('/api/session', 'DELETE').then(() => window.dispatchEvent(new Event('workspace-signed-out')))}
-        attentionCount={approvals.filter(a => a.status === 'pending').length}
+        attentionCount={attentionCount}
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
         agents={agents}
@@ -142,6 +146,8 @@ export const App: React.FC = () => {
       {/* Main Panel Router */}
       <main className="flex-1 flex overflow-hidden">
         {currentTab === 'swarm' && <SwarmView agents={agents} projects={projects} />}
+        {currentTab === 'skills' && <SkillCatalogView />}
+        {currentTab === 'attention' && <AttentionInboxView onNavigate={setCurrentTab} onChanged={() => void refresh()} />}
         {currentTab === 'runs' && <RunReviewView onSelectAgent={(agentId, projectId) => { setSelectedAgentId(agentId); setSelectedProjectId(projectId); setCurrentTab('chat'); }} runs={tasks} approvals={approvals} onDecide={handleDecideApproval} onAction={async (id, action, reason) => { await change(`/api/runs/${id}/${action}`, 'POST', reason ? { reason } : {}); }} />}
         {currentTab === 'chat' && (!selectedAgent || !selectedProject) && <div className="p-8">Create an agent and a project to start a conversation.</div>}
         {currentTab === 'chat' && selectedAgent && selectedProject && (

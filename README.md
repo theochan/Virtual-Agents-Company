@@ -112,6 +112,18 @@ The default sandbox image matches this tag; configure `VAC_SANDBOX_IMAGE` for a 
 
 See [the swarm contract](docs/swarm-system.md) and [workspace operator guide](docs/SWARM-WORKSPACE.md) for API contracts, grants, recovery and limits.
 
+## Governed repository and terminal-agent work
+
+VAC can register an exact local Git top-level directory and create isolated managed worktrees for a run/node pair. It rejects submodules, symlink roots, unsafe local Git includes/hooks/worktree overrides, caller-selected output paths, and branch-name injection. Dirty worktrees are retained; cleanup requires a clean tree plus the exact reviewed HEAD. VAC never merges, pushes, rewrites, or deletes the source checkout.
+
+The optional terminal worker is a single named Codex CLI adapter, configured with the exact real executable through `VAC_CODEX_CLI_PATH`. It receives a clean managed worktree, internally constructed arguments, no network permission, no arbitrary CLI flags, one-process concurrency, bounded time/output, and durable hashes for the binary, objective, output, patch, paths, and HEAD. Completion means the process exited successfully; it does not mean the patch is correct or approved for merge. Configure `VAC_WORKTREE_ROOT` to keep generated worktrees in a private location outside registered repositories.
+
+## Skill catalog and attention inbox
+
+The **Skills** screen searches the pinned vendor inventory, displays the hash-verified source document, upstream revision, license notice, and script inventory, and records append-only owner enable/disable decisions. Enablement is documentation discovery only. It does not inject instructions into prompts or grant execution authority; all vendored scripts remain disabled unless a separate literal adapter has been qualified.
+
+The **Attention** screen aggregates manual and swarm approvals, blocked work, swarm and terminal outcomes, semantic-review requirements, and captured skill drafts. Read/dismiss state is separate from source evidence. Required approvals and reviews cannot be dismissed; resolve them at their owning workflow.
+
 ## Web search setup
 
 In **Settings → Web Search Providers**, enter a Tavily or Brave API key and save it. Equip the agent with **Web search** (`tool-web-search`) and set access level 3 or 4. Credentials belong to the workspace owner and are never supplied to the model.
@@ -233,6 +245,8 @@ npm audit
 npm run skills:inventory
 ```
 
+**Settings → Operations** runs bounded capability diagnostics for Node, Docker daemon, the pinned sandbox image, Playwright Chromium, Ollama, and backup configuration. A passing presence check is not a model-quality result. Updates remain manual: verified backup, new staged release, smoke test on a copy/separate port, cutover, then rollback to the preserved compatible release and snapshot if health fails. Set an absolute private `VAC_BACKUP_DIR` before relying on the backup policy.
+
 Most model decisions in the regression suite use deterministic fixtures and disposable localhost instances; browser integration exercises real Chromium. Docker tests run when `VAC_TEST_SANDBOX=1` is set. It covers authentication, the former file/script escape paths, malformed and failed inference, tool failures, bounded execution, idempotency, approval replay and restart, cancellation, interrupted-run recovery, conversation isolation, memory provenance and transaction rollback. It does not prove every live model's task quality.
 
 The [22 September frozen pilot](docs/reviews/2026-09-22-priority-one.md) failed: one of eight reviewer cases falsely accepted an incorrect report, and both single-agent and two-specialist invoice tasks produced incorrect totals. A subsequent consistency-confirmation regression passed on the exposed failure and a correct control; it is not unseen qualification. Repeated workflow operations, execution-cost admission and two-stage review are implemented. [Deterministic source accounting](docs/reviews/2026-09-22-source-accounting.md) is now implemented for pinned, owner-provided structured invoice records, including complete row coverage, duplicate handling, typed partitions and numerical completion checks. The [original-text accounting path](docs/reviews/2026-09-22-document-accounting.md) additionally supports explicit CSV/labeled-text grammars and the original pilot format, with field spans and direct verified-ledger materialization. General unstructured interpretation, unseen qualification and demonstrated swarm advantage remain open under VAC-23, VAC-28 and VAC-42. The [parity assessment](docs/reviews/2026-09-22-swarm-parity-assessment.md) documents the wider gaps.
@@ -243,7 +257,7 @@ The `qs` override in `package.json` selects the patched 6.16.0 release while the
 
 ## Skills and third-party assets
 
-`claude-skills/` contains vendored documents and scripts. `npm run skills:inventory` regenerates [the inventory](docs/skill-inventory.json), including content hashes, script paths, nearest license notices, and disabled execution status. Upstream revisions and capability contracts are not fully established; the inventory is not a security or licensing certification.
+`claude-skills/` contains vendored documents and scripts. `npm run skills:inventory` regenerates [the inventory](docs/skill-inventory.json), including content hashes, script paths, nearest license notices, and disabled execution status. Release artifacts include only inventoried `SKILL.md` documents and their license notices for catalog review; adjacent executable scripts are excluded. Upstream revisions and capability contracts are not fully established; the inventory is not a security or licensing certification.
 
 Stock photos load from Unsplash and require internet access. Their [license](https://unsplash.com/license) and other applicable third-party rights remain separate. Depicted people are not employees and do not endorse the agents. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
